@@ -142,7 +142,8 @@ export const Thread: any = ({ activeTab, setActiveTab, userId }: any) => {
               ?
               <>
 
-{isModalOpen ?<LoginModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSuccess={handleApiSuccess} />:<div className="flex  items-center justify-center"><h1 className="flex text-bold">pleaese fill the form first again click on Tax Calculation </h1></div>}
+{isModalOpen ?<LoginModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSuccess={handleApiSuccess} />
+:<div className="flex  items-center justify-center"><h1 className="flex text-bold">Please fill out the form first by clicking on "Tax Calculation" </h1></div>}
 
 
               </> :
@@ -277,7 +278,7 @@ const ThreadWelcome: FC = () => {
     <ThreadPrimitive.Empty>
       <div className="flex w-full max-w-[var(--thread-max-width)] flex-grow flex-col">
         <div className="flex w-full flex-grow flex-col items-center justify-center">
-          <p className="mt-4 font-medium">Stuck with Taxes. No Worries Uncle Sam is Here?</p>
+          <p className="mt-4 font-medium">Stuck with Taxes. No Worries Uncle Sam is Here</p>
         </div>
         <ThreadWelcomeSuggestions />
       </div>
