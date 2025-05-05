@@ -3,8 +3,6 @@ import {
   ThreadListItemPrimitive,
   ThreadListPrimitive,
 } from "@assistant-ui/react";
-import { ArchiveIcon } from "lucide-react";
-import { TooltipIconButton } from "./tooltip-icon-button";
 
 export const ThreadList: FC = () => {
   return (

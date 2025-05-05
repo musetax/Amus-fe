@@ -104,7 +104,7 @@ export const Thread: any = ({ activeTab, setActiveTab, userId }: any) => {
   useEffect(() => {
     setShowModal(true);
     setModalType("login");
-  }, [0]);
+  }, []);
 
   const handleChange=()=>{
     setActiveTab("tax");
@@ -367,7 +367,7 @@ const ComposerAction: FC<ComposerActionProps> = ({ composerRef }) => {
         composerRef.current.dispatchEvent(enterEvent);
       }
     }
-  }, [transcript, listening]);
+  }, [transcript, listening,composerRef]);
 
   return (
     <>
