@@ -29,84 +29,7 @@ import axios from "axios";
 import TaxDataModal from "./tax-data";
 import { useSpeechRecognition } from "./speech";
 import { useThread } from "@assistant-ui/react";
-const initialState = {
-  age: "",
-  payroll_id: '23',
-  blind: false,
-  other_credit: 0,
-  deductions: {
-    charitable_donations: 0,
-    home_mortgage_interest: 0,
-    ira_contribution: 0,
-    medical_expenses: 0,
-    other_deductions: 0,
-    state_or_local_tax: 0,
-    student_loan_interest: 0,
-  },
-  selectedDeductions: [], // Initialize empty
-  any_dependents: null,
-  // dependents: [
-  //   // {
-  //   //   age: "",
-  //   //   is_disabled: false,
-  //   //   is_living_together: false,
-  //   //   is_student: false,
-  //   // },
-  // ],
-  filing_status: "",
-  four_pay_cycle: false,
-  incomes: {
-    dividend_income: null,
-    interest_income: null,
-    retirement_income: null,
-    self_employment_income: null,
-    unemployment_income: null,
-    yearly_salary: [],
-  },
-  left_job: false,
-  left_spouse_job: null,
-  prior_job_value: [
-    {
-      salary: null,
-      withholding: null,
-    },
-  ],
-  self_jobs: [
-    {
-      type: "",
-      yearly_salary: null,
 
-      pay_frequency: "",
-      withholding_on_last_paycheck: null,
-      original_withholding_ytd: null,
-    },
-  ],
-  more_than_one_job: false,
-  pay_frequency: [],
-
-  take_standard_deduction: false,
-  otherCredits: null,
-  // total_withholding_ytd: 0,
-  original_withholding_ytd: [],
-  withholding_on_last_paycheck: [],
-  goal_type: "",
-  goal_amount: null,
-  most_recent_pay_date_dt: "",
-  start_pay_date_dt: "",
-  tax_calculation_id: "",
-  tax_token_value: "",
-  refresh_token_value: "",
-  set_refund_value: null,
-  set_tax_cal: "",
-  constant_boost: 0,
-  file_spouse: null,
-  head_household: null,
-  spouse_age: "",
-  spouseJobCount: null,
-  JobCount: null,
-  isCheck: false,
-
-}
 
 import {
   ComposerAttachments,
@@ -126,12 +49,9 @@ export const Thread: any = ({ activeTab, setActiveTab, userId }: any) => {
   const [modalType, setModalType] = useState<"login" | "taxdata">("login");
   const [message, setMessage] = useState<Message[]>([]);
 
-  const [user, setUser] = useState<any>({});
-  const [sessionId, setSessionId] = useState<any>("");
 
-  const [showModal, setShowModal] = useState(false);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [formData, setFormData] = useState(initialState);
+  const [modal, setShowModal] = useState(false);
+ 
 
   type startApi = {
 
@@ -161,11 +81,12 @@ export const Thread: any = ({ activeTab, setActiveTab, userId }: any) => {
     });
     setTaxBoxPopUp(true)
     console.log("Received API data:", data);
+    console.log(message,modal,modalType)
   };
   const taxBoxApi = async (data: any) => {
     try {
       const sessionId = startApiData?.session_id;
-      let response = await axios.post(`https://amus-devapi.musetax.com/api/tax-profile/checkboost/${sessionId}`, data)
+      await axios.post(`https://amus-devapi.musetax.com/api/tax-profile/checkboost/${sessionId}`, data)
       const userMessage: Message = {
         role: "assistant",
         content: "Ask Question",
@@ -183,8 +104,12 @@ export const Thread: any = ({ activeTab, setActiveTab, userId }: any) => {
   useEffect(() => {
     setShowModal(true);
     setModalType("login");
-  }, [1]);
+  }, [0]);
 
+  const handleChange=()=>{
+    setActiveTab("tax");
+     setIsModalOpen(true)
+  }
 
   return (
     <>
@@ -192,7 +117,7 @@ export const Thread: any = ({ activeTab, setActiveTab, userId }: any) => {
         <div className="flex items-center justify-center">
           <div className="flex items-center justify-center space-x-4 mb-10 border border-lightGray7 rounded-full p-2">
             <button
-              onClick={() => { setActiveTab("tax"), setIsModalOpen(true) }}
+              onClick={() => handleChange()}
               className={`px-4 py-2  rounded-full text-lg font-medium flex items-center justify-center gap-2  transition-all duration-200 ${activeTab === "tax"
                   ? "bg-mediumBlueGradient text-white"
                   : "text-textgray "

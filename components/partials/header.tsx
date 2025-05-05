@@ -3,14 +3,13 @@ import Image from "next/image";
 
 import Link from "next/link";
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+
 import {
   Dropdown,
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
   Navbar,
-  NavbarBrand,
   NavbarContent,
   NavbarItem,
   NavbarMenu,
@@ -22,11 +21,10 @@ import { MdClose, MdLogout } from "react-icons/md";
 import { ChevronDown, MenuIcon } from "lucide-react";
 import Logo from "public/images/logo/main-logo.svg";
 const HeaderBar: React.FC<any> = () => {
-  const router = useRouter();
+ 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {};
-
+ 
   return (
     <>
       <div className="w-full py-3 bg-lightGray">

@@ -2,16 +2,15 @@
 "use client";
 import React, {useState } from "react";
 import { Thread } from "@/components/chatbot/assistant-ui/thread";
-import { ThreadList } from "@/components/chatbot/assistant-ui/thread-list";
 import TaxDetails from "@/components/chatbot/taxDetails";
 import { AssistantRuntimeProvider, useLocalRuntime } from "@assistant-ui/react";
-import { useChatRuntime } from "@assistant-ui/react-ai-sdk";
+
 import { MyModelAdapter } from "./MyRuntimeProvider";
 import { TaxModelAdapter } from "./TaxModelAdapter";
-import { Toaster, toast } from 'react-hot-toast';
+
 import {
   CompositeAttachmentAdapter,
-  SimpleImageAttachmentAdapter,
+  
   SimpleTextAttachmentAdapter,
 } from "@assistant-ui/react";
 import {CustomAttachmentAdapter} from './AttachmentAdapter'

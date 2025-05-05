@@ -1,6 +1,6 @@
 import { AttachmentAdapter } from "@assistant-ui/react";
 import {
-  Attachment,
+  
   PendingAttachment,
   CompleteAttachment,
   ThreadUserContentPart,

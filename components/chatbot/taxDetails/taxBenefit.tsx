@@ -23,9 +23,9 @@ const TaxBenefitDetail = () => {
             </span>
           </div>
           <div className="text-sm font-normal text-slateColor">
-            HI John' Uncle Sam, your tax assistant. help you magnetize your tax
-            refund by asking a few questions about your situation. Let's get
-            started'
+            HI John`&lsquo;` Uncle Sam, your tax assistant. help you magnetize your tax
+            refund by asking a few questions about your situation. Let`&lsquo;`s get
+            started`&lsquo;`
           </div>
         </div>
         <div className="bg-[#F9F8F8] rounded-xl p-4">

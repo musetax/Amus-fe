@@ -1,6 +1,4 @@
 "use client";
- 
-import type { ReactNode } from "react";
 import {
  
   type ChatModelAdapter,
@@ -12,10 +10,9 @@ import {
  
  
  export const TaxModelAdapter = (sessionId: string): ChatModelAdapter => ({
-  async *run({ messages, abortSignal, context }) {
+  async *run({ messages }) {
     try {
-      console.log(messages, "messages", abortSignal, "abortSignal", context, "context");
-
+   
       const count = 5;
       const start = messages.length > count ? messages.length - count : 0;
       const history: string[] = [];

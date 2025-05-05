@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 
@@ -16,9 +16,9 @@ const PaycheckSlider: React.FC<PaycheckSliderProps> = ({
   setFixBoost,
 }) => {
   // Calculate the percentage position of the handle
-  const getLeftPosition = () => {
-    return ((fixboost - min) / (max - min)) * 100;
-  };
+  // const getLeftPosition = () => {
+  //   return ((fixboost - min) / (max - min)) * 100;
+  // };
 
   const handleChange = (newValue: number | number[]) => {
     if (typeof newValue === "number") {
