@@ -20,7 +20,7 @@ const TaxDetails = () => {
             Tax Benefits
           </button>
           <button
-         //   onClick={() => setActiveTab("profile")}
+           onClick={() => window.location.href="https://staging.musetax.com/FinancialSuite/main/financial-life.html"}
             className={`px-5 py-2  rounded-full text-lg font-medium flex items-center justify-center gap-2 transition-all duration-200 ${
               activeTab === "profile"
                 ? "bg-mediumBlueGradient text-white"
