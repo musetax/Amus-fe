@@ -1,18 +1,13 @@
 "use client";
-import {
- 
-  type ChatModelAdapter,
-} from "@assistant-ui/react";
- import axios from "axios";
+import { type ChatModelAdapter } from "@assistant-ui/react";
+import axios from "axios";
 
-
-
- 
- 
- export const TaxModelAdapter = (sessionId: string): ChatModelAdapter => ({
+export const TaxModelAdapter = (
+  sessionId: string,
+  email: any
+): ChatModelAdapter => ({
   async *run({ messages }) {
     try {
-   
       const count = 5;
       const start = messages.length > count ? messages.length - count : 0;
       const history: string[] = [];
@@ -29,25 +24,36 @@ import {
 
       const userMessage = message[message.length - 1].content[0].text;
 
+      // const response = await axios.post(
+      //   `https://amus-devapi.musetax.com/api/chat/${sessionId}/message`,
+      //   { message: userMessage },
+      //   // { signal: abortSignal }
+      // );
       const response = await axios.post(
-        `https://amus-devapi.musetax.com/api/chat/${sessionId}/message`,
-        { message: userMessage },
-        // { signal: abortSignal }
+        `https://amus-devapi.musetax.com/api/chat/message`,
+        {
+          email,
+          chat_request: {
+            message: userMessage,
+            chat_type: "CALCULATION",
+          },
+        }
+        // Optionally pass signal if using abort logic
       );
 
       console.log(response, "response");
 
       const text = response.data.response || "No response";
-      const suggestions = ["What are the tax benefits?", "Can I deduct this expense?"];
+      // const suggestions = ["What are the tax benefits?", "Can I deduct this expense?"];
 
       yield {
         content: [{ type: "text", text }],
-        metadata: {
-          custom: {
-            suggestions
-          }
-      }
-    }
+        //   metadata: {
+        //     custom: {
+        //       suggestions
+        //     }
+        // }
+      };
     } catch (error: any) {
       console.error("Error in TaxModelAdapter:", error);
 
