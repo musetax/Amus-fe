@@ -37,19 +37,19 @@ export const MyModelAdapter: ChatModelAdapter = {
    
    // const suggestions =[]
 
-    let text = "";
-    for await (const part of stream) {
-      text += part || "";
+   // let text = "";
+    // for await (const part of stream) {
+    //   text += part || "";
 
       yield {
-        content: [{ type: "text", text }],
+        content: [{ type: "text", text:stream }],
         metadata: {
           // custom: {
           //   suggestions
           // }
       }
       };
-    }
+   // }
   }catch(error){
     console.error("Error in TaxModelAdapter:", error);
 
