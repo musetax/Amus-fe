@@ -37,10 +37,10 @@ const PaycheckSlider: React.FC<PaycheckSliderProps> = ({
       <p className="text-white text-lg font-medium mb-2">
         Current Refund Estimate
       </p>
-      <h2 className="text-[32px] font-semibold text-white">$4,000</h2>
+      <h2 className="text-[32px] font-semibold text-white">$2,000</h2>
       <div className="relative">
         <div className="flex items-center justify-between gap-5 mt-3">
-          <div className="text-sm font-normal text-white">Based on so far </div>
+          {/* <div className="text-sm font-normal text-white">Based on so far </div> */}
           <div className="text-sm font-medium text-white">
             {" "}
             {fixboost}% Complete
@@ -74,7 +74,7 @@ const PaycheckSlider: React.FC<PaycheckSliderProps> = ({
         </div>
       </div>
       <div className="text-base font-normal text-white mt-3">
-        Filing Status: Married Filing Jointly
+        Filing Status: Single
       </div>
     </div>
   );
