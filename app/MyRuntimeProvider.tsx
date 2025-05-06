@@ -35,7 +35,7 @@ export const MyModelAdapter: ChatModelAdapter = {
    // console.log(result)
     const stream = result?.data?.response?.response || "Something went wrong"
    
-    const suggestions =[]
+   // const suggestions =[]
 
     let text = "";
     for await (const part of stream) {
