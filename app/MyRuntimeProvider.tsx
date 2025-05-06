@@ -30,11 +30,12 @@ export const MyModelAdapter: ChatModelAdapter = {
 
 
     console.log(history)
-    const result = await axios.post('https://amus-devapi.musetax.com/v1/api/message', { "question": message[messages.length - 1].content[0].text, "query": "", "chat_history": history, "options": [] })
-    console.log(result)
-    const stream = result.data.message || "hello"
-    console.log('hiihhihiih')
-    const suggestions =result.data.questions ;
+    const result = await axios.post('https://amus-devapi.musetax.com/tax_education/query', 
+      { "query": message[messages.length - 1].content[0].text})
+   // console.log(result)
+    const stream = result?.data?.response?.response || "Something went wrong"
+   
+    const suggestions =[]
 
     let text = "";
     for await (const part of stream) {
@@ -43,9 +44,9 @@ export const MyModelAdapter: ChatModelAdapter = {
       yield {
         content: [{ type: "text", text }],
         metadata: {
-          custom: {
-            suggestions
-          }
+          // custom: {
+          //   suggestions
+          // }
       }
       };
     }
