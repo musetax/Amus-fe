@@ -30,7 +30,7 @@ export const MyModelAdapter: ChatModelAdapter = {
 
 
     console.log(history)
-    const result = await axios.post('https://amus-devapi.musetax.com/api/message', { "question": message[messages.length - 1].content[0].text, "query": "", "chat_history": history, "options": [] })
+    const result = await axios.post('https://amus-devapi.musetax.com/v1/api/message', { "question": message[messages.length - 1].content[0].text, "query": "", "chat_history": history, "options": [] })
     console.log(result)
     const stream = result.data.message || "hello"
     console.log('hiihhihiih')
