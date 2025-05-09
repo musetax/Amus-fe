@@ -42,7 +42,8 @@ export const MyModelAdapter: ChatModelAdapter = {
         {
           query: message[messages.length - 1].content[0].text,
           history: history,
-          email: generateRandomEmail()
+          email: generateRandomEmail(),
+           "chat_type": "EDUCATION"
         }
       );
       console.log(result,'result?.data?.response?.response');
