@@ -46,7 +46,7 @@ export const Thread: any = ({ activeTab, setActiveTab, userId }: any) => {
   const latest = assistantMessages[0];
   const suggestions = (latest?.metadata?.custom?.suggestions ?? []) as string[];
 
-  const [modalType, setModalType] = useState<"login" | "taxdata">("login");
+  const [modalType, setModalType] = useState<"login" | "taxdata">("taxdata");
   const [message, setMessage] = useState<Message[]>([]);
 
 
@@ -86,7 +86,7 @@ export const Thread: any = ({ activeTab, setActiveTab, userId }: any) => {
   const taxBoxApi = async (data: any) => {
     try {
       const sessionId = startApiData?.session_id;
-      await axios.post(`https://amus-devapi.musetax.com/api/tax-profile/checkboost/${sessionId}`, data)
+      await axios.post(`https://amus-devapi.musetax.com/api/tax-profile/checkboost/`, data)
       const userMessage: Message = {
         role: "assistant",
         content: "Ask Question",
