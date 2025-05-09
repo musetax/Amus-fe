@@ -33,12 +33,12 @@ import { useThread } from "@assistant-ui/react";
 
 import {
   ComposerAttachments,
- 
+
 } from "@/components/assistant-ui/attachment";
 
 import { UserMessageAttachments } from "@/components/assistant-ui/attachment";
 export const Thread: any = ({ activeTab, setActiveTab, userId }: any) => {
- 
+
   const { messages } = useThread();
 
   const assistantMessages = [...messages].reverse().filter(msg => msg.role === "assistant");
@@ -51,7 +51,7 @@ export const Thread: any = ({ activeTab, setActiveTab, userId }: any) => {
 
 
   const [modal, setShowModal] = useState(false);
- 
+
 
   type startApi = {
 
@@ -64,7 +64,7 @@ export const Thread: any = ({ activeTab, setActiveTab, userId }: any) => {
     timestamp: string;
   };
   const [startApiData, setStartApiData] = useState<startApi>()
-  const [taxBoxPopUp, setTaxBoxPopUp] = useState(false)
+  const [taxBoxPopUp, setTaxBoxPopUp] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(true)
 
   const handleApiSuccess = async (data: any) => {
@@ -81,11 +81,11 @@ export const Thread: any = ({ activeTab, setActiveTab, userId }: any) => {
     });
     setTaxBoxPopUp(true)
     console.log("Received API data:", data);
-    console.log(message,modal,modalType)
+    console.log(message, modal, modalType)
   };
   const taxBoxApi = async (data: any) => {
     try {
-     // const sessionId = startApiData?.session_id;
+      // const sessionId = startApiData?.session_id;
       await axios.post(`https://amus-devapi.musetax.com/api/tax-profile/checkboost/`, data)
       const userMessage: Message = {
         role: "assistant",
@@ -106,9 +106,9 @@ export const Thread: any = ({ activeTab, setActiveTab, userId }: any) => {
     setModalType("taxdata");
   }, []);
 
-  const handleChange=()=>{
+  const handleChange = () => {
     setActiveTab("tax");
-     setIsModalOpen(true)
+    setIsModalOpen(true)
   }
 
   return (
@@ -119,8 +119,8 @@ export const Thread: any = ({ activeTab, setActiveTab, userId }: any) => {
             <button
               onClick={() => handleChange()}
               className={`px-4 py-2  rounded-full text-lg font-medium flex items-center justify-center gap-2  transition-all duration-200 ${activeTab === "tax"
-                  ? "bg-mediumBlueGradient text-white"
-                  : "text-textgray "
+                ? "bg-mediumBlueGradient text-white"
+                : "text-textgray "
                 }`}
             >
               <PieChart /> Tax Calculation
@@ -128,8 +128,8 @@ export const Thread: any = ({ activeTab, setActiveTab, userId }: any) => {
             <button
               onClick={() => setActiveTab("learn")}
               className={`px-5 py-2  rounded-full text-lg font-medium flex items-center justify-center gap-2 transition-all duration-200 ${activeTab === "learn"
-                  ? "bg-mediumBlueGradient text-white"
-                  : "text-textgray"
+                ? "bg-mediumBlueGradient text-white"
+                : "text-textgray"
                 }`}
             >
               <Percent /> Learn About Tax
@@ -138,15 +138,7 @@ export const Thread: any = ({ activeTab, setActiveTab, userId }: any) => {
         </div>
         {activeTab === "tax" ?
           <>
-            {!startApiData
-              ?
-              <>
-
-{isModalOpen ?<LoginModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSuccess={handleApiSuccess} />
-:<div className="flex  items-center justify-center"><h1 className="flex text-bold">Please fill out the form first by clicking on "Tax Calculation" </h1></div>}
-
-
-              </> :
+            {
               <>{taxBoxPopUp ? <TaxDataModal isOpen={taxBoxPopUp} onClose={() => setTaxBoxPopUp(false)} apiCall={taxBoxApi} />
                 :
                 <ThreadPrimitive.Root
@@ -318,7 +310,7 @@ const Composer: FC = () => {
 
   return (
     <ComposerPrimitive.Root className="focus-within:border-ring/20 flex w-full flex-wrap items-end rounded-lg border bg-inherit px-2.5 shadow-sm transition-colors ease-in gap-2">
-    <ComposerAttachments></ComposerAttachments>
+      <ComposerAttachments></ComposerAttachments>
       <ComposerPrimitive.Input
         ref={composerRef}
         rows={1}
@@ -368,19 +360,19 @@ const ComposerAction: FC<ComposerActionProps> = ({ composerRef }) => {
         composerRef.current.dispatchEvent(enterEvent);
       }
     }
-  }, [transcript, listening,composerRef]);
+  }, [transcript, listening, composerRef]);
 
   return (
     <>
       <ThreadPrimitive.If running={false}>
         <ComposerPrimitive.AddAttachment asChild>
-        <TooltipIconButton
-          tooltip="Link"
-          variant="default"
-          className="my-2.5 size-8 p-2 bg-transparent border border-lightGray4 rounded-full transition-opacity ease-in"
-        >
-          <Paperclip className="text-textgray" />
-        </TooltipIconButton>
+          <TooltipIconButton
+            tooltip="Link"
+            variant="default"
+            className="my-2.5 size-8 p-2 bg-transparent border border-lightGray4 rounded-full transition-opacity ease-in"
+          >
+            <Paperclip className="text-textgray" />
+          </TooltipIconButton>
         </ComposerPrimitive.AddAttachment >
 
         <TooltipIconButton
@@ -427,7 +419,7 @@ const UserMessage: FC = () => {
   return (
     <MessagePrimitive.Root className="grid auto-rows-auto grid-cols-[minmax(72px,1fr)_auto] gap-y-2 [&:where(>*)]:col-start-2 w-full max-w-[var(--thread-max-width)] py-4">
       <UserActionBar />
-     <UserMessageAttachments/>
+      <UserMessageAttachments />
 
       <div className="bg-lightBlue text-slateColor max-w-[calc(var(--thread-max-width)*0.8)] break-words rounded-3xl px-5 py-2.5 col-start-2 row-start-2">
         <MessagePrimitive.Content />
