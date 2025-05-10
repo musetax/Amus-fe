@@ -33,7 +33,7 @@ const learnRuntime = useLocalRuntime(MyModelAdapter, {
   adapters: commonAdapters,
 });
 
-const taxRuntime = useLocalRuntime(TaxModelAdapter(sessionId), {
+const taxRuntime = useLocalRuntime(TaxModelAdapter(), {
   adapters: commonAdapters,
 });
 
