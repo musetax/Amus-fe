@@ -37,7 +37,7 @@ import {
 } from "@/components/assistant-ui/attachment";
 
 import { UserMessageAttachments } from "@/components/assistant-ui/attachment";
-export const Thread: any = ({ activeTab, setActiveTab, userId }: any) => {
+export const Thread: any = ({ activeTab, setActiveTab }: any) => {
 
   const { messages } = useThread();
 
@@ -48,9 +48,12 @@ export const Thread: any = ({ activeTab, setActiveTab, userId }: any) => {
 
   const [modalType, setModalType] = useState<"login" | "taxdata">("taxdata");
   const [message, setMessage] = useState<Message[]>([]);
+console.log(modalType);
+console.log(message);
 
 
   const [modal, setShowModal] = useState(false);
+console.log(modal);
 
 
   type startApi = {
@@ -64,25 +67,29 @@ export const Thread: any = ({ activeTab, setActiveTab, userId }: any) => {
     timestamp: string;
   };
   const [startApiData, setStartApiData] = useState<startApi>()
+  console.log(setStartApiData);
+  
   const [taxBoxPopUp, setTaxBoxPopUp] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(true)
+console.log(startApiData);
+console.log(isModalOpen);
 
-  const handleApiSuccess = async (data: any) => {
-    setStartApiData(data);
-    userId(data.session_id)
-    const assistantReply: Message = {
-      role: "assistant",
-      content: data.greeting,
-      timestamp: new Date().toLocaleTimeString(),
-    };
-    setMessage(prev => [...prev, assistantReply])
-    await new Promise((resolve) => {
-      setTimeout(resolve, 5000); // waits 5 second
-    });
-    setTaxBoxPopUp(true)
-    console.log("Received API data:", data);
-    console.log(message, modal, modalType)
-  };
+  // const handleApiSuccess = async (data: any) => {
+  //   setStartApiData(data);
+  //   userId(data.session_id)
+  //   const assistantReply: Message = {
+  //     role: "assistant",
+  //     content: data.greeting,
+  //     timestamp: new Date().toLocaleTimeString(),
+  //   };
+  //   setMessage(prev => [...prev, assistantReply])
+  //   await new Promise((resolve) => {
+  //     setTimeout(resolve, 5000); // waits 5 second
+  //   });
+  //   setTaxBoxPopUp(true)
+  //   console.log("Received API data:", data);
+  //   console.log(message, modal, modalType)
+  // };
   const taxBoxApi = async (data: any) => {
      
     try {
@@ -551,83 +558,83 @@ const CircleStopIcon = () => {
 
 
 
-type LoginModalProps = {
-  isOpen: boolean;
-  onClose: () => void;
-  onSuccess: (data: any) => void
-};
+// type LoginModalProps = {
+//   isOpen: boolean;
+//   onClose: () => void;
+//   onSuccess: (data: any) => void
+// };
 
-const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSuccess }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-
-  if (!isOpen) return null;
-
-  const handleSubmit = async () => {
-    console.log("Email:", email);
-    console.log("Password:", password);
-    if (!email) {
-      alert("please enter the email")
-    }
-    if (!password) {
-      alert("please enter password")
-    }
-    try {
+// const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSuccess }) => {
+//   const [email, setEmail] = useState("");
+//   const [password, setPassword] = useState("");
 
 
-      const response = await axios.post("https://amus-devapi.musetax.com/api/chat/checkboost/start", { email, password })
-      console.log(response.data)
-      onSuccess(response.data)
-      onClose()
+//   if (!isOpen) return null;
 
-    } catch (err) {
-      console.log(err)
-      alert("something went wrong")
-    }
-    // You can now send this data to your backend or use it as needed
-  };
+//   const handleSubmit = async () => {
+//     console.log("Email:", email);
+//     console.log("Password:", password);
+//     if (!email) {
+//       alert("please enter the email")
+//     }
+//     if (!password) {
+//       alert("please enter password")
+//     }
+//     try {
 
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
 
-      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md relative">
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-800"
-        >
-          &times;
-        </button>
-        <h2 className="text-2xl font-bold mb-6">Login</h2>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full mb-4 px-4 py-3 bg-gray-100 rounded-lg outline-none"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full mb-6 px-4 py-3 bg-gray-100 rounded-lg outline-none"
-        />
-        <div className="flex justify-end space-x-4">
-          <button
-            onClick={handleSubmit}
-            className="bg-yellow-500 hover:bg-yellow-600 text-black px-6 py-2 rounded-lg"
-          >
-            Save Changes
-          </button>
-          <button
-            className="bg-pink-600 hover:bg-pink-700 text-white px-6 py-2 rounded-lg"
-            onClick={onClose}
-          >
-            Close
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
+//       const response = await axios.post("https://amus-devapi.musetax.com/api/chat/checkboost/start", { email, password })
+//       console.log(response.data)
+//       onSuccess(response.data)
+//       onClose()
+
+//     } catch (err) {
+//       console.log(err)
+//       alert("something went wrong")
+//     }
+//     // You can now send this data to your backend or use it as needed
+//   };
+
+//   return (
+//     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+
+//       <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md relative">
+//         <button
+//           onClick={onClose}
+//           className="absolute top-4 right-4 text-gray-500 hover:text-gray-800"
+//         >
+//           &times;
+//         </button>
+//         <h2 className="text-2xl font-bold mb-6">Login</h2>
+//         <input
+//           type="email"
+//           placeholder="Email"
+//           value={email}
+//           onChange={(e) => setEmail(e.target.value)}
+//           className="w-full mb-4 px-4 py-3 bg-gray-100 rounded-lg outline-none"
+//         />
+//         <input
+//           type="password"
+//           placeholder="Password"
+//           value={password}
+//           onChange={(e) => setPassword(e.target.value)}
+//           className="w-full mb-6 px-4 py-3 bg-gray-100 rounded-lg outline-none"
+//         />
+//         <div className="flex justify-end space-x-4">
+//           <button
+//             onClick={handleSubmit}
+//             className="bg-yellow-500 hover:bg-yellow-600 text-black px-6 py-2 rounded-lg"
+//           >
+//             Save Changes
+//           </button>
+//           <button
+//             className="bg-pink-600 hover:bg-pink-700 text-white px-6 py-2 rounded-lg"
+//             onClick={onClose}
+//           >
+//             Close
+//           </button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
