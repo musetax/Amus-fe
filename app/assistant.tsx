@@ -17,11 +17,8 @@ import {CustomAttachmentAdapter} from './AttachmentAdapter'
 export const Assistant = () => {
   const [activeTab, setActiveTab] = useState<"tax" | "learn">("learn");
   
-const [sessionId,setSessionId]=useState('')
- const userId=(data:any)=>{
 
-  setSessionId(data)
- }
+
  const commonAdapters = {
   attachments: new CompositeAttachmentAdapter([
     new CustomAttachmentAdapter(),
@@ -46,7 +43,7 @@ const runtime = activeTab === "tax" ? taxRuntime : learnRuntime;
     <AssistantRuntimeProvider key={activeTab} runtime={runtime}>
       <div className="flex justify-between px-4 py-5">
         <div className="grid h-dvh grid-cols-1 gap-x-2 px-4 py-4 w-full">
-          <Thread activeTab={activeTab} setActiveTab={setActiveTab} userId={userId} />
+          <Thread activeTab={activeTab} setActiveTab={setActiveTab} />
         </div>
         <div className="block w-96 min-w-[352px] ">
           <TaxDetails />
