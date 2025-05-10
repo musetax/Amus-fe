@@ -21,8 +21,8 @@ const TaxDataModal: React.FC<TaxDataModalProps> = ({ isOpen, onClose ,apiCall}) 
     withholdingYTD: "",
     lastPaycheckWithholding: "",
     email:'u01ynwyc@yopmail.com',
-    take_standard_deduction:false,
-    four_pay_cycle:true,
+    take_standard_deduction:true,
+    four_pay_cycle:false,
     payroll_id:'1',
     left_job:false
   });
