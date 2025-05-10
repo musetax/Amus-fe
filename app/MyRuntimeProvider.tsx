@@ -3,10 +3,7 @@
 import { type ChatModelAdapter } from "@assistant-ui/react";
 import axios from "axios";
 
-function generateRandomEmail() {
-  const randomString = Math.random().toString(36).substring(2, 10); // 8 random characters
-  return `${randomString}@yopmail.com`;
-}
+
 
 
 export const MyModelAdapter: ChatModelAdapter = {

@@ -56,11 +56,7 @@ console.log(message);
 console.log(modal);
 
 
-  type startApi = {
-
-    greeting: string;
-    session_id: string;
-  };
+  
   type Message = {
     role: any;
     content: string;

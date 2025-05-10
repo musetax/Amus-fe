@@ -7,11 +7,7 @@ type TaxDataModalProps = {
 };
 
 const TaxDataModal: React.FC<TaxDataModalProps> = ({ isOpen, onClose ,apiCall}) => {
-  function generateRandomEmail() {
-    const randomString = Math.random().toString(36).substring(2, 10); // 8 random characters
-    return `${randomString}@yopmail.com`;
-  }
-  
+
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",

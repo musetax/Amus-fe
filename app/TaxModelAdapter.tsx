@@ -9,7 +9,7 @@ import axios from "axios";
 
 
 
-export const TaxModelAdapter = (sessionId: string): ChatModelAdapter => ({
+export const TaxModelAdapter = (): ChatModelAdapter => ({
   async *run({ messages }) {
     try {
 
