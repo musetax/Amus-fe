@@ -84,9 +84,10 @@ export const Thread: any = ({ activeTab, setActiveTab, userId }: any) => {
     console.log(message, modal, modalType)
   };
   const taxBoxApi = async (data: any) => {
+     
     try {
       // const sessionId = startApiData?.session_id;
-      await axios.post(`https://amus-devapi.musetax.com/api/tax-profile/checkboost/`, data)
+      await axios.post(`https://amus-devapi.musetax.com/api/tax-profile/checkboost`, data)
       const userMessage: Message = {
         role: "assistant",
         content: "Ask Question",
