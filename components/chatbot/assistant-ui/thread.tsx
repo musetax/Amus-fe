@@ -66,13 +66,8 @@ console.log(modal);
     content: string;
     timestamp: string;
   };
-  const [startApiData, setStartApiData] = useState<startApi>()
-  console.log(setStartApiData);
-  
+
   const [taxBoxPopUp, setTaxBoxPopUp] = useState(true)
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(true)
-console.log(startApiData);
-console.log(isModalOpen);
 
   // const handleApiSuccess = async (data: any) => {
   //   setStartApiData(data);
@@ -116,7 +111,7 @@ console.log(isModalOpen);
 
   const handleChange = () => {
     setActiveTab("tax");
-    setIsModalOpen(true)
+  //  setIsModalOpen(true)
   }
 
   return (

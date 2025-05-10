@@ -24,7 +24,11 @@ const TaxDataModal: React.FC<TaxDataModalProps> = ({ isOpen, onClose ,apiCall}) 
     payFrequency: "",
     withholdingYTD: "",
     lastPaycheckWithholding: "",
-    email:generateRandomEmail()
+    email:'u01ynwyc@yopmail.com',
+    take_standard_deduction:false,
+    four_pay_cycle:true,
+    payroll_id:'1',
+    left_job:false
   });
 
   if (!isOpen) return null;
@@ -58,7 +62,15 @@ const TaxDataModal: React.FC<TaxDataModalProps> = ({ isOpen, onClose ,apiCall}) 
   
     return {
       email: data.email || "",
-      tax_info: taxInfo
+     
+     // W4 calculation failed: Missing required fields: four_pay_cycle, left_job, payroll_id, take_standard_deduction
+      tax_info: {...taxInfo,
+ four_pay_cycle:data.four_pay_cycle,
+      left_job:data.left_job,
+      payroll_id:data.payroll_id,
+      take_standard_deduction:data.take_standard_deduction,
+
+      }
     };
   };
 
