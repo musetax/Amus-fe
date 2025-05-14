@@ -12,13 +12,9 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   CopyIcon,
-  Mic,
-  Paperclip,
-  PencilIcon,
+  Mic, PencilIcon,
   Percent,
-  PieChart,
-  RefreshCwIcon,
-  SendHorizontalIcon,
+  PieChart, SendHorizontalIcon
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
