@@ -30,40 +30,34 @@ import TaxDataModal from "./tax-data";
 import { useSpeechRecognition } from "./speech";
 import { useThread } from "@assistant-ui/react";
 
-
-import {
-  ComposerAttachments,
-
-} from "@/components/assistant-ui/attachment";
+import { ComposerAttachments } from "@/components/assistant-ui/attachment";
 
 import { UserMessageAttachments } from "@/components/assistant-ui/attachment";
 export const Thread: any = ({ activeTab, setActiveTab }: any) => {
-
   const { messages } = useThread();
 
-  const assistantMessages = [...messages].reverse().filter(msg => msg.role === "assistant");
+  const assistantMessages = [...messages]
+    .reverse()
+    .filter((msg) => msg.role === "assistant");
 
   const latest = assistantMessages[0];
   const suggestions = (latest?.metadata?.custom?.suggestions ?? []) as string[];
 
   const [modalType, setModalType] = useState<"login" | "taxdata">("taxdata");
   const [message, setMessage] = useState<Message[]>([]);
-console.log(modalType);
-console.log(message);
-
+  console.log(modalType);
+  console.log(message);
 
   const [modal, setShowModal] = useState(false);
-console.log(modal);
+  console.log(modal);
 
-
-  
   type Message = {
     role: any;
     content: string;
     timestamp: string;
   };
 
-  const [taxBoxPopUp, setTaxBoxPopUp] = useState(true)
+  const [taxBoxPopUp, setTaxBoxPopUp] = useState(true);
 
   // const handleApiSuccess = async (data: any) => {
   //   setStartApiData(data);
@@ -82,23 +76,24 @@ console.log(modal);
   //   console.log(message, modal, modalType)
   // };
   const taxBoxApi = async (data: any) => {
-     
     try {
       // const sessionId = startApiData?.session_id;
-      await axios.post(`https://amus-devapi.musetax.com/api/tax-profile/checkboost`, data)
+      await axios.post(
+        `https://amus-devapi.musetax.com/api/tax-profile/checkboost`,
+        data
+      );
       const userMessage: Message = {
         role: "assistant",
         content: "Ask Question",
         timestamp: new Date().toLocaleTimeString(),
       };
 
-      setMessage(prev => [...prev, userMessage]);
-    }
-    catch (err) {
+      setMessage((prev) => [...prev, userMessage]);
+    } catch (err) {
       console.error(err);
       alert("Something went wrong");
     }
-  }
+  };
 
   useEffect(() => {
     setShowModal(true);
@@ -107,8 +102,8 @@ console.log(modal);
 
   const handleChange = () => {
     setActiveTab("tax");
-  //  setIsModalOpen(true)
-  }
+    //  setIsModalOpen(true)
+  };
 
   return (
     <>
@@ -117,86 +112,88 @@ console.log(modal);
           <div className="flex items-center justify-center space-x-4 mb-10 border border-lightGray7 rounded-full p-2">
             <button
               onClick={() => handleChange()}
-              className={`px-4 py-2  rounded-full text-lg font-medium flex items-center justify-center gap-2  transition-all duration-200 ${activeTab === "tax"
-                ? "bg-mediumBlueGradient text-white"
-                : "text-textgray "
-                }`}
+              className={`px-4 py-2  rounded-full text-lg font-medium flex items-center justify-center gap-2  transition-all duration-200 ${
+                activeTab === "tax"
+                  ? "bg-mediumBlueGradient text-white"
+                  : "text-textgray "
+              }`}
             >
               <PieChart /> Tax Calculation
             </button>
             <button
               onClick={() => setActiveTab("learn")}
-              className={`px-5 py-2  rounded-full text-lg font-medium flex items-center justify-center gap-2 transition-all duration-200 ${activeTab === "learn"
-                ? "bg-mediumBlueGradient text-white"
-                : "text-textgray"
-                }`}
+              className={`px-5 py-2  rounded-full text-lg font-medium flex items-center justify-center gap-2 transition-all duration-200 ${
+                activeTab === "learn"
+                  ? "bg-mediumBlueGradient text-white"
+                  : "text-textgray"
+              }`}
             >
               <Percent /> Learn About Tax
             </button>
           </div>
         </div>
-        {activeTab === "tax" ?
+        {activeTab === "tax" ? (
           <>
             {
-              <>{taxBoxPopUp ? <TaxDataModal isOpen={taxBoxPopUp} onClose={() => setTaxBoxPopUp(false)} apiCall={taxBoxApi} />
-                :
-                <ThreadPrimitive.Root
-                  className="bg-background box-border flex flex-col overflow-hidden"
-                  style={{
-                    ["--thread-max-width" as string]: "42rem",
-                  }}
-                >
+              <>
+                {taxBoxPopUp ? (
+                  <TaxDataModal
+                    isOpen={taxBoxPopUp}
+                    onClose={() => setTaxBoxPopUp(false)}
+                    apiCall={taxBoxApi}
+                  />
+                ) : (
+                  <ThreadPrimitive.Root
+                    className="bg-background box-border flex flex-col overflow-hidden"
+                    style={{
+                      ["--thread-max-width" as string]: "42rem",
+                    }}
+                  >
+                    <ThreadPrimitive.Viewport className="flex h-[calc(100vh-260px)] flex-col items-center chat-scroll overflow-y-scroll scroll-smooth bg-inherit px-4 pt-8">
+                      <ThreadWelcomeTax />
 
-                  <ThreadPrimitive.Viewport className="flex h-[calc(100vh-120px)] flex-col items-center chat-scroll overflow-y-scroll scroll-smooth bg-inherit px-4 pt-8">
+                      <ThreadPrimitive.Messages
+                        components={{
+                          UserMessage: UserMessage,
+                          EditComposer: EditComposer,
+                          AssistantMessage: AssistantMessage,
+                        }}
+                      />
 
-                    <ThreadWelcomeTax />
-
-                    <ThreadPrimitive.Messages
-                      components={{
-                        UserMessage: UserMessage,
-                        EditComposer: EditComposer,
-                        AssistantMessage: AssistantMessage,
-                      }}
-                    />
-
-                    <ThreadPrimitive.If empty={false}>
-                      <div className="min-h-8 flex-grow" />
-                    </ThreadPrimitive.If>
-                    <div className="mt-3 p-4 flex w-full items-stretch justify-center gap-4">
-                      {suggestions.map((s, i) => (
-                        <ThreadPrimitive.Suggestion
-                          key={i}
-                          prompt={s}
-                          autoSend
-                          method="replace"
-                          className="hover:bg-muted/80 flex max-w-sm grow basis-0 flex-col items-center justify-center rounded-lg border p-3 transition-colors ease-in"
-                        >
-                          <span className="line-clamp-2 text-ellipsis text-sm font-semibold">
-                            {s}
-                          </span>
-                        </ThreadPrimitive.Suggestion>
-                      ))}
-
-                    </div>
-                    {/* <ThreadPrimitive.Suggestion /> */}
-                    <Composer />
-
-                  </ThreadPrimitive.Viewport>
-
-                </ThreadPrimitive.Root>
-
-              }
-              </>}
+                      <ThreadPrimitive.If empty={false}>
+                        <div className="min-h-8 flex-grow" />
+                      </ThreadPrimitive.If>
+                      <div className="mt-3 p-4 flex w-full items-stretch justify-center gap-4">
+                        {suggestions.map((s, i) => (
+                          <ThreadPrimitive.Suggestion
+                            key={i}
+                            prompt={s}
+                            autoSend
+                            method="replace"
+                            className="hover:bg-muted/80 flex max-w-sm grow basis-0 flex-col items-center justify-center rounded-lg border p-3 transition-colors ease-in"
+                          >
+                            <span className="line-clamp-2 text-ellipsis text-sm font-semibold">
+                              {s}
+                            </span>
+                          </ThreadPrimitive.Suggestion>
+                        ))}
+                      </div>
+                      {/* <ThreadPrimitive.Suggestion /> */}
+                      <Composer />
+                    </ThreadPrimitive.Viewport>
+                  </ThreadPrimitive.Root>
+                )}
+              </>
+            }
           </>
-          :
-
+        ) : (
           <ThreadPrimitive.Root
             className="bg-background box-border flex flex-col overflow-hidden"
             style={{
               ["--thread-max-width" as string]: "42rem",
             }}
           >
-            <ThreadPrimitive.Viewport className="flex h-[calc(100vh-120px)] flex-col items-center chat-scroll overflow-y-scroll scroll-smooth bg-inherit px-4 pt-8">
+            <ThreadPrimitive.Viewport className="flex h-[calc(100vh-260px)] flex-col items-center chat-scroll overflow-y-scroll scroll-smooth bg-inherit px-4 pt-8">
               <ThreadWelcome />
 
               <ThreadPrimitive.Messages
@@ -227,12 +224,12 @@ console.log(modal);
                       </span>
                     </ThreadPrimitive.Suggestion>
                   ))}
-
                 </div>
                 <Composer />
               </div>
             </ThreadPrimitive.Viewport>
-          </ThreadPrimitive.Root>}
+          </ThreadPrimitive.Root>
+        )}
       </div>
     </>
   );
@@ -256,7 +253,10 @@ const ThreadWelcomeTax: FC = () => {
     <ThreadPrimitive.Empty>
       <div className="flex w-full max-w-[var(--thread-max-width)] flex-grow flex-col">
         <div className="flex w-full flex-grow flex-col items-center justify-center">
-          <p className="mt-4 font-medium">Hello valued customer! I'm Uncle Sam, your tax assistant. How can I help you today?</p>
+          <p className="mt-4 font-medium">
+            Hello valued customer! I'm Uncle Sam, your tax assistant. How can I
+            help you today?
+          </p>
         </div>
         <ThreadWelcomeSuggestions />
       </div>
@@ -269,7 +269,9 @@ const ThreadWelcome: FC = () => {
     <ThreadPrimitive.Empty>
       <div className="flex w-full max-w-[var(--thread-max-width)] flex-grow flex-col">
         <div className="flex w-full flex-grow flex-col items-center justify-center">
-          <p className="mt-4 font-medium">Stuck with Taxes. No Worries Uncle Sam is Here</p>
+          <p className="mt-4 font-medium">
+            Stuck with Taxes. No Worries Uncle Sam is Here
+          </p>
         </div>
         <ThreadWelcomeSuggestions />
       </div>
@@ -327,16 +329,13 @@ interface ComposerActionProps {
 }
 
 const ComposerAction: FC<ComposerActionProps> = ({ composerRef }) => {
-  const {
-    transcript,
-    listening,
-    startListening,
-    stopListening,
-  } = useSpeechRecognition();
+  const { transcript, listening, startListening, stopListening } =
+    useSpeechRecognition();
 
   useEffect(() => {
     if (transcript && composerRef.current) {
-      const message = typeof transcript === "string" ? transcript : String(transcript);
+      const message =
+        typeof transcript === "string" ? transcript : String(transcript);
       console.log("Voice transcript:", message);
 
       // Set value via native setter
@@ -365,21 +364,22 @@ const ComposerAction: FC<ComposerActionProps> = ({ composerRef }) => {
     <>
       <ThreadPrimitive.If running={false}>
         <ComposerPrimitive.AddAttachment asChild>
-          <TooltipIconButton
+          {/* <TooltipIconButton
             tooltip="Link"
             variant="default"
             className="my-2.5 size-8 p-2 bg-transparent border border-lightGray4 rounded-full transition-opacity ease-in"
           >
             <Paperclip className="text-textgray" />
-          </TooltipIconButton>
-        </ComposerPrimitive.AddAttachment >
+          </TooltipIconButton> */}
+        </ComposerPrimitive.AddAttachment>
 
         <TooltipIconButton
           tooltip={listening ? "Stop recording" : "Voice input"}
           onClick={listening ? stopListening : startListening}
           variant="default"
-          className={`my-2.5 size-8 p-2 border border-lightGray4 rounded-full transition-opacity ease-in ${listening ? "bg-lightGray2" : "bg-transparent"
-            }`}
+          className={`my-2.5 size-8 p-2 border border-lightGray4 rounded-full transition-opacity ease-in ${
+            listening ? "bg-lightGray2" : "bg-transparent"
+          }`}
         >
           {listening ? (
             <div className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
@@ -494,11 +494,11 @@ const AssistantActionBar: FC = () => {
           </MessagePrimitive.If>
         </TooltipIconButton>
       </ActionBarPrimitive.Copy>
-      <ActionBarPrimitive.Reload asChild>
+      {/* <ActionBarPrimitive.Reload asChild>
         <TooltipIconButton tooltip="Refresh">
           <RefreshCwIcon />
         </TooltipIconButton>
-      </ActionBarPrimitive.Reload>
+      </ActionBarPrimitive.Reload> */}
     </ActionBarPrimitive.Root>
   );
 };
@@ -547,8 +547,6 @@ const CircleStopIcon = () => {
   );
 };
 
-
-
 // type LoginModalProps = {
 //   isOpen: boolean;
 //   onClose: () => void;
@@ -558,7 +556,6 @@ const CircleStopIcon = () => {
 // const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSuccess }) => {
 //   const [email, setEmail] = useState("");
 //   const [password, setPassword] = useState("");
-
 
 //   if (!isOpen) return null;
 
@@ -572,7 +569,6 @@ const CircleStopIcon = () => {
 //       alert("please enter password")
 //     }
 //     try {
-
 
 //       const response = await axios.post("https://amus-devapi.musetax.com/api/chat/checkboost/start", { email, password })
 //       console.log(response.data)
