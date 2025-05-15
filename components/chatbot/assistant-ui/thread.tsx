@@ -38,7 +38,7 @@ export const Thread: any = ({
   setHasSubmittedTaxData,
   userId,
 }: any) => {
-  const { messages } = useThread();
+  const { messages  } = useThread();
 
   const assistantMessages = [...messages]
     .reverse()
