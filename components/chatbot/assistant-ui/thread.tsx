@@ -75,7 +75,7 @@ export const Thread: any = ({ activeTab, setActiveTab }: any) => {
     try {
       // const sessionId = startApiData?.session_id;
       await axios.post(
-        `https://amus-devapi.musetax.com/api/api/tax-profile/checkboost`,
+        `https://amus-devapi.musetax.com/api/tax-profile/checkboost`,
         data
       );
       const userMessage: Message = {
@@ -566,7 +566,7 @@ const CircleStopIcon = () => {
 //     }
 //     try {
 
-//       const response = await axios.post("https://amus-devapi.musetax.com/api/chat/checkboost/start", { email, password })
+//       const response = await axios.post("https://aa5d-122-176-23-81.ngrok-free.app/chat/checkboost/start", { email, password })
 //       console.log(response.data)
 //       onSuccess(response.data)
 //       onClose()
