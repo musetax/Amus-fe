@@ -32,7 +32,7 @@ export const TaxModelAdapter = (): ChatModelAdapter => ({
       const response = await axios.post(
         `https://amus-devapi.musetax.com/api/chat/message`,
         {
-          "email": "u01ynwyc@yopmail.com",
+          "email": "test@yopmail.com",
           "chat_request": {
             "message": userMessage,
             "chat_type": "CALCULATION"

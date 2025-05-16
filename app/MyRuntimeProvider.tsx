@@ -39,7 +39,7 @@ export const MyModelAdapter: ChatModelAdapter = {
         {
           query: message[messages.length - 1].content[0].text,
           // history: history,
-          email: "u01ynwyc@yopmail.com",
+          email: "test@yopmail.com",
           chat_type: "EDUCATION",
         }
       );
