@@ -1,0 +1,49 @@
+name: Deploy to AWS ECS
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  deploy:
+    name: Deploy to ECS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Configure AWS credentials before logging into ECR
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      # Log in to Amazon ECR
+      - name: Log in to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      # Build, Tag, and Push Docker image to ECR
+      - name: Build, Tag, and Push Docker image to ECR
+        id: build-push
+        run: |
+          # Build Docker image
+          docker build -t ${{ vars.ECR_REPOSITORY_URI }}:latest .
+ 
+          # Push Docker image to ECR
+          docker push ${{ vars.ECR_REPOSITORY_URI }}:latest
+
+        env:
+          AWS_REGION: ${{ vars.AWS_REGION }}
+
+      # Conditionally update ECS service based on the branch
+      - name: Update DEV ECS Service
+        run: |
+          aws ecs update-service --cluster ${{ vars.DEV_ECS_CLUSTER_NAME }} \
+            --service ${{ vars.DEV_ECS_SERVICE_NAME }} \
+            --force-new-deployment \
+            --region ${{ vars.AWS_REGION }}

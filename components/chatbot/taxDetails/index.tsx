@@ -7,7 +7,7 @@ const TaxDetails = () => {
   const [activeTab, setActiveTab] = useState<"benefit" | "profile">("benefit");
   return (
     <>
-      <div className="bg-bgGradientBox rounded-2xl p-4 min-h-[750px] mb-5">
+      <div className="bg-bgGradientBox rounded-2xl p-4 min-h-[610px] mb-5">
         <div className="flex items-center justify-between space-x-4 mb-10 border border-[#6A57F6] border-opacity-20 rounded-full p-2">
           <button
             onClick={() => setActiveTab("benefit")}
@@ -20,7 +20,10 @@ const TaxDetails = () => {
             Tax Benefits
           </button>
           <button
-            onClick={() => setActiveTab("profile")}
+            onClick={() =>
+              (window.location.href =
+                "https://staging.musetax.com/FinancialSuite/main/financial-life.html")
+            }
             className={`px-5 py-2  rounded-full text-lg font-medium flex items-center justify-center gap-2 transition-all duration-200 ${
               activeTab === "profile"
                 ? "bg-mediumBlueGradient text-white"

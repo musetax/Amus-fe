@@ -1,20 +1,17 @@
 "use client";
- 
-import type { ReactNode } from "react";
 import {
- 
+
   type ChatModelAdapter,
 } from "@assistant-ui/react";
- import axios from "axios";
+import axios from "axios";
 
 
 
- 
- 
- export const TaxModelAdapter = (sessionId: string): ChatModelAdapter => ({
-  async *run({ messages, abortSignal, context }) {
+
+
+export const TaxModelAdapter = (): ChatModelAdapter => ({
+  async *run({ messages }) {
     try {
-      console.log(messages, "messages", abortSignal, "abortSignal", context, "context");
 
       const count = 5;
       const start = messages.length > count ? messages.length - count : 0;
@@ -33,8 +30,14 @@ import {
       const userMessage = message[message.length - 1].content[0].text;
 
       const response = await axios.post(
-        `https://amus-devapi.musetax.com/api/chat/${sessionId}/message`,
-        { message: userMessage },
+        `https://amus-devapi.musetax.com/api/chat/message`,
+        {
+          "email": "test@yopmail.com",
+          "chat_request": {
+            "message": userMessage,
+            "chat_type": "CALCULATION"
+          }
+        },
         // { signal: abortSignal }
       );
 
@@ -49,8 +52,8 @@ import {
           custom: {
             suggestions
           }
+        }
       }
-    }
     } catch (error: any) {
       console.error("Error in TaxModelAdapter:", error);
 

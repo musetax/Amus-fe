@@ -3,10 +3,6 @@ import {
   ThreadListItemPrimitive,
   ThreadListPrimitive,
 } from "@assistant-ui/react";
-import { ArchiveIcon, PlusIcon } from "lucide-react";
-
-import { Button } from "@/components/chatbot/ui/button";
-import { TooltipIconButton } from "./tooltip-icon-button";
 
 export const ThreadList: FC = () => {
   return (
@@ -17,19 +13,19 @@ export const ThreadList: FC = () => {
   );
 };
 
-const ThreadListNew: FC = () => {
-  return (
-    <ThreadListPrimitive.New asChild>
-      <Button
-        className="data-[active]:bg-muted hover:bg-muted flex items-center justify-start gap-1 rounded-lg px-2.5 py-2 text-start"
-        variant="ghost"
-      >
-        <PlusIcon />
-        New Thread
-      </Button>
-    </ThreadListPrimitive.New>
-  );
-};
+// const ThreadListNew: FC = () => {
+//   return (
+//     <ThreadListPrimitive.New asChild>
+//       <Button
+//         className="data-[active]:bg-muted hover:bg-muted flex items-center justify-start gap-1 rounded-lg px-2.5 py-2 text-start"
+//         variant="ghost"
+//       >
+//         <PlusIcon />
+//         New Thread
+//       </Button>
+//     </ThreadListPrimitive.New>
+//   );
+// };
 
 const ThreadListItems: FC = () => {
   return <ThreadListPrimitive.Items components={{ ThreadListItem }} />;
@@ -46,24 +42,24 @@ const ThreadListItem: FC = () => {
   );
 };
 
-const ThreadListItemTitle: FC = () => {
-  return (
-    <p className="text-sm">
-      <ThreadListItemPrimitive.Title fallback="New Chat" />
-    </p>
-  );
-};
+// const ThreadListItemTitle: FC = () => {
+//   return (
+//     <p className="text-sm">
+//       <ThreadListItemPrimitive.Title fallback="New Chat" />
+//     </p>
+//   );
+// };
 
-const ThreadListItemArchive: FC = () => {
-  return (
-    <ThreadListItemPrimitive.Archive asChild>
-      <TooltipIconButton
-        className="hover:text-primary text-foreground ml-auto mr-3 size-4 p-0"
-        variant="ghost"
-        tooltip="Archive thread"
-      >
-        <ArchiveIcon />
-      </TooltipIconButton>
-    </ThreadListItemPrimitive.Archive>
-  );
-};
+// const ThreadListItemArchive: FC = () => {
+//   return (
+//     <ThreadListItemPrimitive.Archive asChild>
+//       <TooltipIconButton
+//         className="hover:text-primary text-foreground ml-auto mr-3 size-4 p-0"
+//         variant="ghost"
+//         tooltip="Archive thread"
+//       >
+//         <ArchiveIcon />
+//       </TooltipIconButton>
+//     </ThreadListItemPrimitive.Archive>
+//   );
+// };

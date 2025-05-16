@@ -7,6 +7,7 @@ type TaxDataModalProps = {
 };
 
 const TaxDataModal: React.FC<TaxDataModalProps> = ({ isOpen, onClose ,apiCall}) => {
+
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -19,6 +20,11 @@ const TaxDataModal: React.FC<TaxDataModalProps> = ({ isOpen, onClose ,apiCall}) 
     payFrequency: "",
     withholdingYTD: "",
     lastPaycheckWithholding: "",
+    email:'test@yopmail.com',
+    take_standard_deduction:true,
+    four_pay_cycle:false,
+    payroll_id:'1',
+    left_job:false
   });
 
   if (!isOpen) return null;
@@ -28,9 +34,46 @@ const TaxDataModal: React.FC<TaxDataModalProps> = ({ isOpen, onClose ,apiCall}) 
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const transformDataToTaxFormat = (data: any) => {
+    const taxInfo: any = {};
+  
+    if (data.age) taxInfo.age = parseInt(data.age);
+    if (data.blind !== undefined) taxInfo.blind = data.blind.toLowerCase?.() === "true";
+    if (data.filing_status) taxInfo.filing_status = data.filing_status;
+    if (data.first_name) taxInfo.first_name = data.first_name;
+    if (data.last_name) taxInfo.last_name = data.last_name;
+    if (data.most_recent_pay_date_dt) taxInfo.most_recent_pay_date_dt = data.most_recent_pay_date_dt;
+    if (data.start_pay_date_dt) taxInfo.start_pay_date_dt = data.start_pay_date_dt;
+  
+    if (data.withholdingYTD || data.payFrequency || data.lastPaycheckWithholding || data.yearlySalary) {
+      taxInfo.self_jobs = [
+        {
+          original_withholding_ytd: data.withholdingYTD || "",
+          pay_frequency: data.payFrequency || "",
+          withholding_on_last_paycheck: data.lastPaycheckWithholding || "",
+          yearly_salary: data.yearlySalary || ""
+        }
+      ];
+    }
+  
+    return {
+      email: data.email || "",
+     
+     // W4 calculation failed: Missing required fields: four_pay_cycle, left_job, payroll_id, take_standard_deduction
+      tax_info: {...taxInfo,
+ four_pay_cycle:data.four_pay_cycle,
+      left_job:data.left_job,
+      payroll_id:data.payroll_id,
+      take_standard_deduction:data.take_standard_deduction,
+
+      }
+    };
+  };
+
+  
   const handleSave = () => {
     console.log(formData);
-    apiCall(formData)
+    apiCall(transformDataToTaxFormat(formData))
     // Call API or pass data back to parent here
     onClose();
   };

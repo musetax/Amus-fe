@@ -19,13 +19,11 @@ const TaxBenefitDetail = () => {
               Child Tax Credit
             </h2>
             <span className="font-semibold text-xl text-primaryColor">
-              $4,000
+              $2,000
             </span>
           </div>
           <div className="text-sm font-normal text-slateColor">
-            HI John' Uncle Sam, your tax assistant. help you magnetize your tax
-            refund by asking a few questions about your situation. Let's get
-            started'
+          You have unlocked $2,000 in tax credits because you have a qualifying child.
           </div>
         </div>
         <div className="bg-[#F9F8F8] rounded-xl p-4">
@@ -38,10 +36,10 @@ const TaxBenefitDetail = () => {
         </div>
         <div className="bg-[#F9F8F8] rounded-xl p-4">
           <h2 className="text-lg font-medium text-[#9A9A9A] mb-2">
-            Mortgage Interest Deduction
+          Student Loan Interest Deduction
           </h2>
           <p className="text-sm font-normal text-[#8A8A8A]">
-            Continue chatting to unlock for homeowners with a mortgage
+          Continue chatting to unlock for students with loans.
           </p>
         </div>
       </div>
