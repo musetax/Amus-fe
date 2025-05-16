@@ -6,9 +6,6 @@ import {
 import axios from "axios";
 
 
-
-
-
 export const TaxModelAdapter = (): ChatModelAdapter => ({
   async *run({ messages }) {
     try {
@@ -30,7 +27,7 @@ export const TaxModelAdapter = (): ChatModelAdapter => ({
       const userMessage = message[message.length - 1].content[0].text;
 
       const response = await axios.post(
-        `https://amus-devapi.musetax.com/api/chat/message`,
+        `https://117b-2405-201-5004-703c-bad1-8e0a-5275-8a55.ngrok-free.app/chat/message`,
         {
           "email": "test@yopmail.com",
           "chat_request": {

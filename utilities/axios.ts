@@ -5,7 +5,7 @@ import axios, {
   } from "axios";
 
   
-  export const API_URL = "https://api-devbe.musetax.com/";
+  export const API_URL = "https://api-d.coevbe.musetaxm/";
   export const FRONTEND_URL = "http://localhost:4000/";
   
   

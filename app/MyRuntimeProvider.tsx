@@ -1,10 +1,11 @@
 "use client";
 
+import { getSessionId } from "@/services/chatbot";
 import { type ChatModelAdapter } from "@assistant-ui/react";
 import axios from "axios";
 
 
-
+ 
 
 export const MyModelAdapter: ChatModelAdapter = {
   async *run({ messages, abortSignal, context }) {
@@ -35,16 +36,17 @@ export const MyModelAdapter: ChatModelAdapter = {
 
       
       const result = await axios.post(
-        "https://amus-devapi.musetax.com/tax_education/query",
+        "https://117b-2405-201-5004-703c-bad1-8e0a-5275-8a55.ngrok-free.app/tax_education/query",
         {
           query: message[messages.length - 1].content[0].text,
           // history: history,
           email: "test@yopmail.com",
           chat_type: "EDUCATION",
+          session_id: getSessionId(), 
+
         }
       );
-      console.log(result,'result?.data?.response?.response');
-      
+       
       // console.log(result)
       const stream = result?.data?.response || "Something went wrong";
 

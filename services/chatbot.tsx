@@ -35,3 +35,12 @@ export const sendQuery = async (query:string) => {
       throw error.response?.data || { message: error.message };
     }
   };
+
+  let sessionId: string | null = null;
+
+  export function getSessionId() {
+    if (!sessionId) {
+      sessionId = crypto.randomUUID(); // Or use any other method to generate a unique ID
+    }
+    return sessionId;
+  }
