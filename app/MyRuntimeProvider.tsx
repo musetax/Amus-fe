@@ -1,6 +1,6 @@
 "use client";
 
-import { getSessionId } from "@/services/chatbot";
+import { getRandomEmail, getSessionId } from "@/services/chatbot";
 import { type ChatModelAdapter } from "@assistant-ui/react";
 import axios from "axios";
 
@@ -36,11 +36,11 @@ export const MyModelAdapter: ChatModelAdapter = {
 
       
       const result = await axios.post(
-        "https://117b-2405-201-5004-703c-bad1-8e0a-5275-8a55.ngrok-free.app/tax_education/query",
+        "https://aa5d-122-176-23-81.ngrok-free.app/tax_education/query",
         {
           query: message[messages.length - 1].content[0].text,
           // history: history,
-          email: "test@yopmail.com",
+          email: getRandomEmail(),
           chat_type: "EDUCATION",
           session_id: getSessionId(), 
 

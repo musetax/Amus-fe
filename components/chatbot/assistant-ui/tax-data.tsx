@@ -1,4 +1,4 @@
-import { getSessionId } from "@/services/chatbot";
+import { getRandomEmail, getSessionId } from "@/services/chatbot";
 import React, { useState } from "react";
 
 type TaxDataModalProps = {
@@ -24,7 +24,7 @@ const TaxDataModal: React.FC<TaxDataModalProps> = ({
     payFrequency: "",
     withholdingYTD: "",
     lastPaycheckWithholding: "",
-    email: "test@yopmail.com",
+    email: getRandomEmail(),
     take_standard_deduction: true,
     four_pay_cycle: false,
     payroll_id: "1",

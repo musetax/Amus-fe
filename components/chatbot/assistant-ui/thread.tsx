@@ -75,7 +75,7 @@ export const Thread: any = ({ activeTab, setActiveTab }: any) => {
     try {
       // const sessionId = startApiData?.session_id;
       await axios.post(
-        `https://117b-2405-201-5004-703c-bad1-8e0a-5275-8a55.ngrok-free.app/api/tax-profile/save`,
+        `https://aa5d-122-176-23-81.ngrok-free.app/api/tax-profile/checkboost`,
         data
       );
       const userMessage: Message = {

@@ -1,4 +1,5 @@
 "use client";
+import { getRandomEmail, getSessionId } from "@/services/chatbot";
 import {
 
   type ChatModelAdapter,
@@ -27,12 +28,13 @@ export const TaxModelAdapter = (): ChatModelAdapter => ({
       const userMessage = message[message.length - 1].content[0].text;
 
       const response = await axios.post(
-        `https://117b-2405-201-5004-703c-bad1-8e0a-5275-8a55.ngrok-free.app/chat/message`,
+        `https://aa5d-122-176-23-81.ngrok-free.app/api/chat/message`,
         {
-          "email": "test@yopmail.com",
+          "email":getRandomEmail(),
           "chat_request": {
             "message": userMessage,
-            "chat_type": "CALCULATION"
+            "chat_type": "CALCULATION",
+            session_id:getSessionId()
           }
         },
         // { signal: abortSignal }

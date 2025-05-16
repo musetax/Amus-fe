@@ -44,3 +44,9 @@ export const sendQuery = async (query:string) => {
     }
     return sessionId;
   }
+
+  export const getRandomEmail = (domain = "yopmail.com"): string => {
+    const randomStr = Math.random().toString(36).substring(2, 12);
+    return `${randomStr}@${domain}`;
+  };
+  
