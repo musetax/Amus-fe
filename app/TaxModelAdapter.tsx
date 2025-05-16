@@ -28,7 +28,8 @@ export const TaxModelAdapter = (): ChatModelAdapter => ({
       const userMessage = message[message.length - 1].content[0].text;
 
       const response = await axios.post(
-        `https://aa5d-122-176-23-81.ngrok-free.app/api/chat/message`,
+        `https://amus-devapi.musetax.com/api/api/chat/message`,
+        
         {
           "email":getRandomEmail(),
           "chat_request": {

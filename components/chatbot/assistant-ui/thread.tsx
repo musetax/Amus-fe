@@ -75,7 +75,7 @@ export const Thread: any = ({ activeTab, setActiveTab }: any) => {
     try {
       // const sessionId = startApiData?.session_id;
       await axios.post(
-        `https://aa5d-122-176-23-81.ngrok-free.app/api/tax-profile/checkboost`,
+        `https://amus-devapi.musetax.com/api/api/tax-profile/checkboost`,
         data
       );
       const userMessage: Message = {

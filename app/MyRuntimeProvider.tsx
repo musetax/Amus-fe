@@ -36,7 +36,7 @@ export const MyModelAdapter: ChatModelAdapter = {
 
       
       const result = await axios.post(
-        "https://aa5d-122-176-23-81.ngrok-free.app/tax_education/query",
+        "https://amus-devapi.musetax.com/api/tax_education/query",
         {
           query: message[messages.length - 1].content[0].text,
           // history: history,
