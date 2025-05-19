@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - dev
+      - main
 
 jobs:
   deploy:
@@ -20,6 +21,14 @@ jobs:
           echo "NEXT_PUBLIC_BACKEND_API='https://amus-devapi.musetax.com'" > .env
 
           cat .env
+
+      - name: Generate .env
+        if: github.ref_name == 'main'
+        run: |
+          echo "NEXT_PUBLIC_BACKEND_API='https://amus-api.musetax.com'" > .env
+
+          cat .env
+          
       # Configure AWS credentials before logging into ECR
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -35,7 +44,21 @@ jobs:
 
       # Build, Tag, and Push Docker image to ECR
       - name: Build, Tag, and Push Docker image to ECR
+        if: github.ref_name == 'dev'
         id: build-push
+        run: |
+          # Build Docker image
+          docker build -t ${{ vars.ECR_REPOSITORY_URI }}:dev_latest .
+ 
+          # Push Docker image to ECR
+          docker push ${{ vars.ECR_REPOSITORY_URI }}:dev_latest
+
+        env:
+          AWS_REGION: ${{ vars.AWS_REGION }}
+
+      - name: Build, Tag, and Push Docker image to ECR
+        if: github.ref_name == 'main'
+        id: build-push-prod
         run: |
           # Build Docker image
           docker build -t ${{ vars.ECR_REPOSITORY_URI }}:latest .
@@ -48,8 +71,17 @@ jobs:
 
       # Conditionally update ECS service based on the branch
       - name: Update DEV ECS Service
+        if: github.ref_name == 'dev'
         run: |
           aws ecs update-service --cluster ${{ vars.DEV_ECS_CLUSTER_NAME }} \
             --service ${{ vars.DEV_ECS_SERVICE_NAME }} \
+            --force-new-deployment \
+            --region ${{ vars.AWS_REGION }}
+
+      - name: Update PROD ECS Service
+        if: github.ref_name == 'main'
+        run: |
+          aws ecs update-service --cluster ${{ vars.PROD_ECS_CLUSTER_NAME }} \
+            --service ${{ vars.PROD_ECS_SERVICE_NAME }} \
             --force-new-deployment \
             --region ${{ vars.AWS_REGION }}
