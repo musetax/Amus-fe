@@ -29,7 +29,7 @@ import { useThread } from "@assistant-ui/react";
 import { ComposerAttachments } from "@/components/assistant-ui/attachment";
 
 import { UserMessageAttachments } from "@/components/assistant-ui/attachment";
-export const Thread: any = ({ activeTab, setActiveTab }: any) => {
+ export const Thread: any = ({ activeTab, setActiveTab }: any) => {
   const { messages } = useThread();
 
   const assistantMessages = [...messages]
@@ -75,7 +75,7 @@ export const Thread: any = ({ activeTab, setActiveTab }: any) => {
     try {
       // const sessionId = startApiData?.session_id;
       await axios.post(
-        `https://amus-devapi.musetax.com/api/tax-profile/checkboost`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API}/api/tax-profile/checkboost`,
         data
       );
       const userMessage: Message = {

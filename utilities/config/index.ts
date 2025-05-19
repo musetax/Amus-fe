@@ -1,3 +1,3 @@
 export const {
-    API_URL,
+     NEXT_PUBLIC_BACKEND_API
 }=process.env

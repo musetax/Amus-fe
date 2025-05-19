@@ -1,5 +1,6 @@
 "use client";
 
+import { getRandomEmail, getSessionId } from "@/services/chatbot";
 import { type ChatModelAdapter } from "@assistant-ui/react";
 import axios from "axios";
 
@@ -34,15 +35,17 @@ export const MyModelAdapter: ChatModelAdapter = {
       }
 
       
-      const result = await axios.post(
-        "https://amus-devapi.musetax.com/tax_education/query",
-        {
-          query: message[messages.length - 1].content[0].text,
-          // history: history,
-          email: "test@yopmail.com",
-          chat_type: "EDUCATION",
-        }
-      );
+ const result = await axios.post(
+   `${process.env.NEXT_PUBLIC_BACKEND_API}/api/tax_education/query`,
+   {
+     query: message[messages.length - 1].content[0].text,
+     // history: history,
+     email: getRandomEmail(),
+     chat_type: "EDUCATION",
+     session_id: getSessionId(), 
+ 
+   }
+ );
       console.log(result,'result?.data?.response?.response');
       
       // console.log(result)

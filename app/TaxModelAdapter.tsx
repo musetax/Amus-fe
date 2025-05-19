@@ -1,4 +1,5 @@
 "use client";
+import { getRandomEmail, getSessionId } from "@/services/chatbot";
 import {
 
   type ChatModelAdapter,
@@ -30,12 +31,14 @@ export const TaxModelAdapter = (): ChatModelAdapter => ({
       const userMessage = message[message.length - 1].content[0].text;
 
       const response = await axios.post(
-        `https://amus-devapi.musetax.com/api/chat/message`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API}/api/chat/message`,
+        
         {
-          "email": "test@yopmail.com",
+          "email":getRandomEmail(),
           "chat_request": {
             "message": userMessage,
-            "chat_type": "CALCULATION"
+            "chat_type": "CALCULATION",
+            session_id:getSessionId()
           }
         },
         // { signal: abortSignal }
