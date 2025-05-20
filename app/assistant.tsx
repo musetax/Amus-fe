@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Thread } from "@/components/chatbot/assistant-ui/thread";
-import TaxDetails from "@/components/chatbot/taxDetails";
+// import TaxDetails from "@/components/chatbot/taxDetails";
 import { AssistantRuntimeProvider, useLocalRuntime } from "@assistant-ui/react";
 
 import { MyModelAdapter } from "./MyRuntimeProvider";
