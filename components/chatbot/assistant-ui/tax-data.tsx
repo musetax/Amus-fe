@@ -1,4 +1,5 @@
-import { getRandomEmail, getSessionId } from "@/services/chatbot";
+import { getSessionId } from "@/services/chatbot";
+import { getCachedEmail } from "@/services/chatSession";
 import React, { useState } from "react";
 
 type TaxDataModalProps = {
@@ -21,7 +22,8 @@ const TaxDataModal: React.FC<TaxDataModalProps> = ({ isOpen, onClose ,apiCall}) 
     payFrequency: "",
     withholdingYTD: "",
     lastPaycheckWithholding: "",
-    email:getRandomEmail(),
+    email:getCachedEmail(),
+  
     take_standard_deduction:true,
     four_pay_cycle:false,
     payroll_id:'1',

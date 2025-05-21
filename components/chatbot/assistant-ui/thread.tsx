@@ -92,6 +92,7 @@ import { UserMessageAttachments } from "@/components/assistant-ui/attachment";
   };
 
   useEffect(() => {
+    localStorage.clear()
     setShowModal(true);
     setModalType("taxdata");
   }, []);

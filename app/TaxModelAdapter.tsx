@@ -1,5 +1,5 @@
 "use client";
-import { getRandomEmail, getSessionId } from "@/services/chatbot";
+import { getCachedEmail, getCachedSessionId } from "@/services/chatSession";
 import {
 
   type ChatModelAdapter,
@@ -34,11 +34,11 @@ export const TaxModelAdapter = (): ChatModelAdapter => ({
         `${process.env.NEXT_PUBLIC_BACKEND_API}/api/chat/message`,
         
         {
-          "email":getRandomEmail(),
+          "email":getCachedEmail(),
           "chat_request": {
             "message": userMessage,
             "chat_type": "CALCULATION",
-            session_id:getSessionId()
+            session_id:getCachedSessionId()
           }
         },
         // { signal: abortSignal }

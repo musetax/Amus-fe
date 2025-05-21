@@ -1,6 +1,6 @@
 "use client";
 
-import { getRandomEmail, getSessionId } from "@/services/chatbot";
+import { getCachedEmail, getCachedSessionId } from "@/services/chatSession";
 import { type ChatModelAdapter } from "@assistant-ui/react";
 import axios from "axios";
 
@@ -40,9 +40,9 @@ export const MyModelAdapter: ChatModelAdapter = {
    {
      query: message[messages.length - 1].content[0].text,
      // history: history,
-     email: getRandomEmail(),
+     email: getCachedEmail(),
      chat_type: "EDUCATION",
-     session_id: getSessionId(), 
+     session_id: getCachedSessionId(), 
  
    }
  );
