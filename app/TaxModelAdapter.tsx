@@ -41,11 +41,9 @@ export const TaxModelAdapter = (): ChatModelAdapter => ({
             session_id:getCachedSessionId()
           }
         },
-        // { signal: abortSignal }
-      );
+       );
 
-      console.log(response, "response");
-
+ 
       const text = response.data.response || "No response";
       const suggestions = ["What are the tax benefits?", "Can I deduct this expense?"];
 

@@ -84,8 +84,7 @@ const TaxDataModal: React.FC<TaxDataModalProps> = ({ isOpen, onClose ,apiCall}) 
 
   
   const handleSave = () => {
-    console.log(formData);
-    apiCall(transformDataToTaxFormat(formData))
+     apiCall(transformDataToTaxFormat(formData))
     // Call API or pass data back to parent here
     onClose();
   };

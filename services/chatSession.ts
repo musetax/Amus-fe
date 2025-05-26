@@ -1,16 +1,9 @@
 // utils/chatSession.ts
-let email: string | null = null;
-let sessionId: string | null = null;
-
-import { getRandomEmail, getSessionId } from "@/services/chatbot";
+                                                                                                                         
+import { getSessionId } from "@/services/chatbot";
 
 export function getCachedEmail() {
   let email = localStorage.getItem("chat_email");
- 
-  if (!email) {
-    email = getRandomEmail();
-    localStorage.setItem("chat_email", email);
-  }
   return email;
 }
 

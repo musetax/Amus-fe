@@ -1,8 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Thread } from "@/components/chatbot/assistant-ui/thread";
-// import TaxDetails from "@/components/chatbot/taxDetails";
-import { AssistantRuntimeProvider, useLocalRuntime } from "@assistant-ui/react";
+ import { AssistantRuntimeProvider, useLocalRuntime } from "@assistant-ui/react";
 
 import { MyModelAdapter } from "./MyRuntimeProvider";
 import { TaxModelAdapter } from "./TaxModelAdapter";
@@ -38,10 +37,7 @@ export const Assistant = () => {
       <div className="flex justify-between px-4 py-5">
         <div className="grid grid-cols-1 gap-x-2 px-4 py-4 w-full">
           <Thread activeTab={activeTab} setActiveTab={setActiveTab} />
-        </div>
-        {/* <div className="block w-96 min-w-[352px] ">
-          <TaxDetails />
-        </div> */}
+        </div> 
       </div>
     </AssistantRuntimeProvider>
   );

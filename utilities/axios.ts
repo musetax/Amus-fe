@@ -47,8 +47,7 @@ const refreshToken = async (): Promise<string | null> => {
       throw new Error("Failed to refresh token");
     }
   } catch (error) {
-    console.log("Error refreshing token:", error);
-    localStorage.clear();
+     localStorage.clear();
     window.location.href = "/login";
     return null;
   }

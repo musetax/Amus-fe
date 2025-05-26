@@ -1,3 +1,4 @@
 export const {
-     NEXT_PUBLIC_BACKEND_API
+     NEXT_PUBLIC_BACKEND_API,
+     NEXT_PUBLIC_FINANCIAL_API
 }=process.env
