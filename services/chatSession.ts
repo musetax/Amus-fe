@@ -1,5 +1,4 @@
-// utils/chatSession.ts
-                                                                                                                         
+                                                                                                                          
 import { getSessionId } from "@/services/chatbot";
 
 export function getCachedEmail() {
