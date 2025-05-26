@@ -3,14 +3,14 @@ import React, { useState } from "react";
 import { Thread } from "@/components/chatbot/assistant-ui/thread";
  import { AssistantRuntimeProvider, useLocalRuntime } from "@assistant-ui/react";
 
-import { MyModelAdapter } from "./MyRuntimeProvider";
-import { TaxModelAdapter } from "./TaxModelAdapter";
+import { MyModelAdapter } from "./myRuntimeProvider";
+import { TaxModelAdapter } from "./taxModelAdapter";
 
 import {
   CompositeAttachmentAdapter,
   SimpleTextAttachmentAdapter,
 } from "@assistant-ui/react";
-import { CustomAttachmentAdapter } from "./AttachmentAdapter";
+import { CustomAttachmentAdapter } from "./attachmentAdapter";
 export const Assistant = () => {
   const [activeTab, setActiveTab] = useState<"tax" | "learn">("learn");
 

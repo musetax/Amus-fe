@@ -20,6 +20,7 @@ export const sendMessagetax = async (data: any, session_id: string) => {
     throw error.response?.data || { message: error.message };
   }
 };
+
 export const authenticate = async (data: any) => {
   try {
     const response = await axiosInstance.post(
@@ -31,6 +32,7 @@ export const authenticate = async (data: any) => {
     throw error.response?.data || { message: error.message };
   }
 };
+
 export const taxProfile = async (taxdata: any, session_id: string) => {
   try {
     const response = await axiosInstance.post(

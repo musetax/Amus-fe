@@ -8,7 +8,6 @@ import { type ChatModelAdapter } from "@assistant-ui/react";
 export const MyModelAdapter: ChatModelAdapter = {
   async *run({ messages}) {
     try {
- 
       const history = [];
       const count = 5;
       const start = messages.length > count ? messages.length - count : 0;
