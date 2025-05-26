@@ -12,9 +12,11 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   CopyIcon,
-  Mic, PencilIcon,
+  Mic,
+  PencilIcon,
   Percent,
-  PieChart, SendHorizontalIcon
+  PieChart,
+  SendHorizontalIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -39,67 +41,24 @@ export const Thread: any = ({ activeTab, setActiveTab }: any) => {
   const latest = assistantMessages[0];
   const suggestions = (latest?.metadata?.custom?.suggestions ?? []) as string[];
 
-  const [modalType, setModalType] = useState<"login" | "taxdata">("taxdata");
-  const [message, setMessage] = useState<Message[]>([]);
-  console.log(modalType);
-  console.log(message);
-
-  const [modal, setShowModal] = useState(false);
-  console.log(modal);
-
-  type Message = {
-    role: any;
-    content: string;
-    timestamp: string;
-  };
-
   const [taxBoxPopUp, setTaxBoxPopUp] = useState(true);
 
-  // const handleApiSuccess = async (data: any) => {
-  //   setStartApiData(data);
-  //   userId(data.session_id)
-  //   const assistantReply: Message = {
-  //     role: "assistant",
-  //     content: data.greeting,
-  //     timestamp: new Date().toLocaleTimeString(),
-  //   };
-  //   setMessage(prev => [...prev, assistantReply])
-  //   await new Promise((resolve) => {
-  //     setTimeout(resolve, 5000); // waits 5 second
-  //   });
-  //   setTaxBoxPopUp(true)
-  //   console.log("Received API data:", data);
-  //   console.log(message, modal, modalType)
-  // };
   const taxBoxApi = async (data: any) => {
     try {
-      // const sessionId = startApiData?.session_id;
       await axios.post(
-        `https://amus-devapi.musetax.com/api/tax-profile/checkboost`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API}/api/tax-profile/checkboost`,
         data
       );
-      const userMessage: Message = {
-        role: "assistant",
-        content: "Ask Question",
-        timestamp: new Date().toLocaleTimeString(),
-      };
-
-      setMessage((prev) => [...prev, userMessage]);
     } catch (err) {
       console.error(err);
       alert("Something went wrong");
     }
   };
-
-  useEffect(() => {
-    setShowModal(true);
-    setModalType("taxdata");
-  }, []);
-
   const handleChange = () => {
     setActiveTab("tax");
-    //  setIsModalOpen(true)
   };
+
+
 
   return (
     <>
@@ -332,7 +291,6 @@ const ComposerAction: FC<ComposerActionProps> = ({ composerRef }) => {
     if (transcript && composerRef.current) {
       const message =
         typeof transcript === "string" ? transcript : String(transcript);
-      console.log("Voice transcript:", message);
 
       // Set value via native setter
       const nativeSetter = Object.getOwnPropertyDescriptor(
@@ -360,13 +318,7 @@ const ComposerAction: FC<ComposerActionProps> = ({ composerRef }) => {
     <>
       <ThreadPrimitive.If running={false}>
         <ComposerPrimitive.AddAttachment asChild>
-          {/* <TooltipIconButton
-            tooltip="Link"
-            variant="default"
-            className="my-2.5 size-8 p-2 bg-transparent border border-lightGray4 rounded-full transition-opacity ease-in"
-          >
-            <Paperclip className="text-textgray" />
-          </TooltipIconButton> */}
+          
         </ComposerPrimitive.AddAttachment>
 
         <TooltipIconButton
@@ -490,11 +442,7 @@ const AssistantActionBar: FC = () => {
           </MessagePrimitive.If>
         </TooltipIconButton>
       </ActionBarPrimitive.Copy>
-      {/* <ActionBarPrimitive.Reload asChild>
-        <TooltipIconButton tooltip="Refresh">
-          <RefreshCwIcon />
-        </TooltipIconButton>
-      </ActionBarPrimitive.Reload> */}
+      
     </ActionBarPrimitive.Root>
   );
 };
@@ -542,82 +490,3 @@ const CircleStopIcon = () => {
     </svg>
   );
 };
-
-// type LoginModalProps = {
-//   isOpen: boolean;
-//   onClose: () => void;
-//   onSuccess: (data: any) => void
-// };
-
-// const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSuccess }) => {
-//   const [email, setEmail] = useState("");
-//   const [password, setPassword] = useState("");
-
-//   if (!isOpen) return null;
-
-//   const handleSubmit = async () => {
-//     console.log("Email:", email);
-//     console.log("Password:", password);
-//     if (!email) {
-//       alert("please enter the email")
-//     }
-//     if (!password) {
-//       alert("please enter password")
-//     }
-//     try {
-
-//       const response = await axios.post("https://amus-devapi.musetax.com/api/chat/checkboost/start", { email, password })
-//       console.log(response.data)
-//       onSuccess(response.data)
-//       onClose()
-
-//     } catch (err) {
-//       console.log(err)
-//       alert("something went wrong")
-//     }
-//     // You can now send this data to your backend or use it as needed
-//   };
-
-//   return (
-//     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-
-//       <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md relative">
-//         <button
-//           onClick={onClose}
-//           className="absolute top-4 right-4 text-gray-500 hover:text-gray-800"
-//         >
-//           &times;
-//         </button>
-//         <h2 className="text-2xl font-bold mb-6">Login</h2>
-//         <input
-//           type="email"
-//           placeholder="Email"
-//           value={email}
-//           onChange={(e) => setEmail(e.target.value)}
-//           className="w-full mb-4 px-4 py-3 bg-gray-100 rounded-lg outline-none"
-//         />
-//         <input
-//           type="password"
-//           placeholder="Password"
-//           value={password}
-//           onChange={(e) => setPassword(e.target.value)}
-//           className="w-full mb-6 px-4 py-3 bg-gray-100 rounded-lg outline-none"
-//         />
-//         <div className="flex justify-end space-x-4">
-//           <button
-//             onClick={handleSubmit}
-//             className="bg-yellow-500 hover:bg-yellow-600 text-black px-6 py-2 rounded-lg"
-//           >
-//             Save Changes
-//           </button>
-//           <button
-//             className="bg-pink-600 hover:bg-pink-700 text-white px-6 py-2 rounded-lg"
-//             onClick={onClose}
-//           >
-//             Close
-//           </button>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };

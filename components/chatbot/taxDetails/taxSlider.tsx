@@ -15,10 +15,7 @@ const PaycheckSlider: React.FC<PaycheckSliderProps> = ({
   fixboost,
   setFixBoost,
 }) => {
-  // Calculate the percentage position of the handle
-  // const getLeftPosition = () => {
-  //   return ((fixboost - min) / (max - min)) * 100;
-  // };
+ 
 
   const handleChange = (newValue: number | number[]) => {
     if (typeof newValue === "number") {
@@ -40,22 +37,11 @@ const PaycheckSlider: React.FC<PaycheckSliderProps> = ({
       <h2 className="text-[32px] font-semibold text-white">$2,000</h2>
       <div className="relative">
         <div className="flex items-center justify-between gap-5 mt-3">
-          {/* <div className="text-sm font-normal text-white">Based on so far </div> */}
-          <div className="text-sm font-medium text-white">
+           <div className="text-sm font-medium text-white">
             {" "}
             {fixboost}% Complete
           </div>
-        </div>
-        {/* <div
-          className="absolute top-[-30px] w-6 h-6 rounded-full bg-transparent p-1 text-primaryColor flex items-center justify-center shadow text-[12px]"
-          style={{
-            left: `${getLeftPosition()}%`,
-            transform: "translateX(-50%)",
-            transition: "left 0.2s ease-out",
-          }}
-        >
-          ${fixboost}
-        </div> */}
+        </div> 
         <div className="relative customs-slider mt-1">
           <Slider
             min={min}
@@ -67,10 +53,7 @@ const PaycheckSlider: React.FC<PaycheckSliderProps> = ({
             handleStyle={{ borderColor: "#48297C" }}
           />
 
-          {/* <div className="flex justify-between text-sm mt-2">
-            <span className="text-sm font-semibold text-white">${min}</span>
-            <span className="text-sm font-semibold text-white">${max}</span>
-          </div> */}
+          
         </div>
       </div>
       <div className="text-base font-normal text-white mt-3">

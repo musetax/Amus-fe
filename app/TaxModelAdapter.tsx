@@ -1,4 +1,5 @@
 "use client";
+import { getCachedEmail, getCachedSessionId } from "@/services/chatSession";
 import {
 
   type ChatModelAdapter,
@@ -30,19 +31,19 @@ export const TaxModelAdapter = (): ChatModelAdapter => ({
       const userMessage = message[message.length - 1].content[0].text;
 
       const response = await axios.post(
-        `https://amus-devapi.musetax.com/api/chat/message`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API}/api/chat/message`,
+        
         {
-          "email": "test@yopmail.com",
+          "email":getCachedEmail(),
           "chat_request": {
             "message": userMessage,
-            "chat_type": "CALCULATION"
+            "chat_type": "CALCULATION",
+            session_id:getCachedSessionId()
           }
         },
-        // { signal: abortSignal }
-      );
+       );
 
-      console.log(response, "response");
-
+ 
       const text = response.data.response || "No response";
       const suggestions = ["What are the tax benefits?", "Can I deduct this expense?"];
 

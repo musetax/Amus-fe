@@ -1,3 +1,5 @@
+import { getSessionId } from "@/services/chatbot";
+import { getCachedEmail } from "@/services/chatSession";
 import React, { useState } from "react";
 
 type TaxDataModalProps = {
@@ -20,7 +22,8 @@ const TaxDataModal: React.FC<TaxDataModalProps> = ({ isOpen, onClose ,apiCall}) 
     payFrequency: "",
     withholdingYTD: "",
     lastPaycheckWithholding: "",
-    email:'test@yopmail.com',
+    email:getCachedEmail(),
+  
     take_standard_deduction:true,
     four_pay_cycle:false,
     payroll_id:'1',
@@ -38,42 +41,50 @@ const TaxDataModal: React.FC<TaxDataModalProps> = ({ isOpen, onClose ,apiCall}) 
     const taxInfo: any = {};
   
     if (data.age) taxInfo.age = parseInt(data.age);
-    if (data.blind !== undefined) taxInfo.blind = data.blind.toLowerCase?.() === "true";
+    if (data.blind !== undefined)
+      taxInfo.blind = data.blind.toLowerCase?.() === "true";
     if (data.filing_status) taxInfo.filing_status = data.filing_status;
     if (data.first_name) taxInfo.first_name = data.first_name;
     if (data.last_name) taxInfo.last_name = data.last_name;
-    if (data.most_recent_pay_date_dt) taxInfo.most_recent_pay_date_dt = data.most_recent_pay_date_dt;
-    if (data.start_pay_date_dt) taxInfo.start_pay_date_dt = data.start_pay_date_dt;
-  
-    if (data.withholdingYTD || data.payFrequency || data.lastPaycheckWithholding || data.yearlySalary) {
+    if (data.most_recent_pay_date_dt)
+      taxInfo.most_recent_pay_date_dt = data.most_recent_pay_date_dt;
+    if (data.start_pay_date_dt)
+      taxInfo.start_pay_date_dt = data.start_pay_date_dt;
+
+    if (
+      data.withholdingYTD ||
+      data.payFrequency ||
+      data.lastPaycheckWithholding ||
+      data.yearlySalary
+    ) {
       taxInfo.self_jobs = [
         {
           original_withholding_ytd: data.withholdingYTD || "",
           pay_frequency: data.payFrequency || "",
           withholding_on_last_paycheck: data.lastPaycheckWithholding || "",
-          yearly_salary: data.yearlySalary || ""
-        }
+          yearly_salary: data.yearlySalary || "",
+        },
       ];
     }
-  
+
     return {
       email: data.email || "",
-     
-     // W4 calculation failed: Missing required fields: four_pay_cycle, left_job, payroll_id, take_standard_deduction
-      tax_info: {...taxInfo,
- four_pay_cycle:data.four_pay_cycle,
-      left_job:data.left_job,
-      payroll_id:data.payroll_id,
-      take_standard_deduction:data.take_standard_deduction,
+          session_id: getSessionId(), 
 
-      }
+      // W4 calculation failed: Missing required fields: four_pay_cycle, left_job, payroll_id, take_standard_deduction
+      tax_info: {
+        ...taxInfo,
+        four_pay_cycle: data.four_pay_cycle,
+        left_job: data.left_job,
+        payroll_id: data.payroll_id,
+        take_standard_deduction: data.take_standard_deduction,
+      },
     };
   };
 
   
   const handleSave = () => {
-    console.log(formData);
-    apiCall(transformDataToTaxFormat(formData))
+     apiCall(transformDataToTaxFormat(formData))
     // Call API or pass data back to parent here
     onClose();
   };

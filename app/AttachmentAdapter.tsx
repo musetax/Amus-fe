@@ -78,8 +78,7 @@ export class CustomAttachmentAdapter implements AttachmentAdapter {
   }
 
   async add({ file }: { file: File }): Promise<PendingAttachment> {
-    console.log(file,"fduhfiu")
-    const maxSizeBytes = this.maxSizeMB * 1024 * 1024;
+     const maxSizeBytes = this.maxSizeMB * 1024 * 1024;
 
 
     if (file.size > maxSizeBytes) {
