@@ -58,8 +58,6 @@ export const Thread: any = ({ activeTab, setActiveTab }: any) => {
     setActiveTab("tax");
   };
 
-
-
   return (
     <>
       <div>
@@ -67,7 +65,7 @@ export const Thread: any = ({ activeTab, setActiveTab }: any) => {
           <div className="flex items-center justify-center space-x-4 mb-10 border border-lightGray7 rounded-full p-2">
             <button
               onClick={() => handleChange()}
-              className={`px-4 py-2  rounded-full text-lg font-medium flex items-center justify-center gap-2  transition-all duration-200 ${
+              className={`px-4 py-2  rounded-full text-sm font-medium flex items-center justify-center gap-2  transition-all duration-200 ${
                 activeTab === "tax"
                   ? "bg-mediumBlueGradient text-white"
                   : "text-textgray "
@@ -77,7 +75,7 @@ export const Thread: any = ({ activeTab, setActiveTab }: any) => {
             </button>
             <button
               onClick={() => setActiveTab("learn")}
-              className={`px-5 py-2  rounded-full text-lg font-medium flex items-center justify-center gap-2 transition-all duration-200 ${
+              className={`px-5 py-2  rounded-full text-sm font-medium flex items-center justify-center gap-2 transition-all duration-200 ${
                 activeTab === "learn"
                   ? "bg-mediumBlueGradient text-white"
                   : "text-textgray"
@@ -265,7 +263,7 @@ const Composer: FC = () => {
   const composerRef = useRef<HTMLTextAreaElement | null>(null);
 
   return (
-    <ComposerPrimitive.Root className="focus-within:border-ring/20 flex w-full flex-wrap items-end rounded-lg border bg-inherit px-2.5 shadow-sm transition-colors ease-in gap-2">
+    <ComposerPrimitive.Root className="focus-within:border-ring/20 flex w-full flex-wrap items-end rounded-lg border bg-inherit px-2.5 shadow-sm transition-colors ease-in gap-2 pt-0">
       <ComposerAttachments></ComposerAttachments>
       <ComposerPrimitive.Input
         ref={composerRef}
@@ -317,9 +315,9 @@ const ComposerAction: FC<ComposerActionProps> = ({ composerRef }) => {
   return (
     <>
       <ThreadPrimitive.If running={false}>
-        <ComposerPrimitive.AddAttachment asChild>
-          
-        </ComposerPrimitive.AddAttachment>
+        <ComposerPrimitive.AddAttachment
+          asChild
+        ></ComposerPrimitive.AddAttachment>
 
         <TooltipIconButton
           tooltip={listening ? "Stop recording" : "Voice input"}
@@ -442,7 +440,6 @@ const AssistantActionBar: FC = () => {
           </MessagePrimitive.If>
         </TooltipIconButton>
       </ActionBarPrimitive.Copy>
-      
     </ActionBarPrimitive.Root>
   );
 };

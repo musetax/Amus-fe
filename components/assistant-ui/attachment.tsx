@@ -53,7 +53,7 @@ const useAttachmentSrc = () => {
       const src = a.content?.filter((c) => c.type === "image")[0]?.image;
       if (!src) return {};
       return { src };
-    }),
+    })
   );
 
   return useFileSrc(file) ?? src;
@@ -67,7 +67,7 @@ const AttachmentPreview: FC<AttachmentPreviewProps> = ({ src }) => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   return (
-     <img
+    <img
       src={src}
       style={{
         width: "auto",
@@ -90,7 +90,10 @@ const AttachmentPreviewDialog: FC<PropsWithChildren> = ({ children }) => {
 
   return (
     <Dialog>
-      <DialogTrigger className="hover:bg-accent/50 cursor-pointer transition-colors" asChild>
+      <DialogTrigger
+        className="hover:bg-accent/50 cursor-pointer transition-colors"
+        asChild
+      >
         {children}
       </DialogTrigger>
       <AttachmentDialogContent>
@@ -181,11 +184,13 @@ export const UserMessageAttachments: FC = () => {
 
 export const ComposerAttachments: FC = () => {
   return (
-    <div className="flex w-full flex-row gap-3 px-10">
+    <>
+      {/* <div className="flex w-full flex-row gap-3 px-10">
       <ComposerPrimitive.Attachments
-        components={{ Attachment: AttachmentUI }}
-      />
-    </div>
+         components={{ Attachment: AttachmentUI }}
+       />
+     </div> */}
+    </>
   );
 };
 

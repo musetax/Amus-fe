@@ -19,10 +19,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-   
     <html lang="en">
-      <body className={`${generalSans.variable}  antialiased`}>{children}</body>
+      <body className={`${generalSans.variable}  antialiased overflow-hidden`}>
+        {children}
+      </body>
     </html>
- 
   );
 }
