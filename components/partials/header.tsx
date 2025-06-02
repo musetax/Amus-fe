@@ -34,6 +34,7 @@ const HeaderBar: React.FC<any> = () => {
   const handleLogout = async () => {
     localStorage.clear();
     dispatch(clearUserData(""));
+    router.push("/login");
   };
 
   const handleUserProfile = async () => {

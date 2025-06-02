@@ -1,146 +1,152 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
-import {
-  IconButton,
-  InputAdornment,
-  TextField,
-  Button,
-  Box,
-} from "@mui/material";
-import { resetPassword } from "../api/auth/authApis";
+import Link from "next/link";
+import { loginUser } from "../api/auth/authApis";
+import { withGuest } from "../utils/withGuest";
+import { setUserData } from "@/redux/slice/authSlice";
+import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 
-const ChangePassword = () => {
+const LoginPage = () => {
   const router = useRouter();
-  const [showOldPass, setShowOldPass] = useState(false);
-  const [showNewPass, setShowNewPass] = useState(false);
-  const [showConfirmPass, setShowConfirmPass] = useState(false);
+
+  const dispatch = useDispatch();
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const formik = useFormik({
     initialValues: {
-      oldPassword: "",
-      newPassword: "",
-      confirmPassword: "",
+      email: "",
+      password: "",
     },
     validationSchema: Yup.object({
-      oldPassword: Yup.string().required("Current password is required"),
-      newPassword: Yup.string()
-        .min(6, "Password should be at least 6 characters")
-        .required("New password is required"),
-      confirmPassword: Yup.string()
-        .oneOf([Yup.ref("newPassword"), ""], "Passwords must match")
-        .required("Confirm password is required"),
+      email: Yup.string().email("Invalid email").required("Email is required"),
+      password: Yup.string()
+        .min(6, "Password must be at least 6 characters")
+        .required("Password is required"),
     }),
-    onSubmit: async (values, { resetForm }) => {
+    onSubmit: async (values) => {
       setLoading(true);
       try {
-        const response = await resetPassword({
-          oldPassword: values.oldPassword,
-          newPassword: values.newPassword,
-        });
-        if (response?.stats_code === 200) {
-          toast.success(response?.message, { toastId: "change" });
-          resetForm();
-          router.push("/dashboard");
+        const response = await loginUser(values);
+        console.log(response, "responseresponseresponse");
+        if (response?.status_code == 200) {
+          localStorage.setItem("token", response?.tokens?.AccessToken);
+          dispatch(setUserData(response));
+          toast.success(response?.message, { toastId: "login" });
+          router.push(`/dashboard`);
         } else {
-          toast.error(response?.detail, { toastId: "change" });
+          toast.success(response?.detail, { toastId: "login" });
         }
+        // Show success message or redirect
       } catch (error) {
-        // error toast handled inside resetPassword API or catch here if needed
+        toast.success("Try after sometimg", { toastId: "login" });
       } finally {
-        setLoading(false);
+        setLoading(true);
       }
     },
   });
 
-  const renderPasswordField = (
-    name: "oldPassword" | "newPassword" | "confirmPassword",
-    label: string,
-    show: boolean,
-    setShow: React.Dispatch<React.SetStateAction<boolean>>
-  ) => (
-    <TextField
-      fullWidth
-      variant="outlined"
-      type={show ? "text" : "password"}
-      label={label}
-      name={name}
-      value={formik.values[name]}
-      onChange={formik.handleChange}
-      onBlur={formik.handleBlur}
-      error={formik.touched[name] && Boolean(formik.errors[name])}
-      helperText={formik.touched[name] && formik.errors[name]}
-      margin="normal"
-      InputProps={{
-        endAdornment: (
-          <InputAdornment position="end">
-            <IconButton
-              onClick={() => setShow(!show)}
-              edge="end"
-              aria-label={`toggle ${label.toLowerCase()} visibility`}
-            >
-              {show ? (
-                <EyeSlashIcon style={{ width: 24, height: 24 }} />
-              ) : (
-                <EyeIcon style={{ width: 24, height: 24 }} />
-              )}
-            </IconButton>
-          </InputAdornment>
-        ),
-      }}
-    />
-  );
-
   return (
-    <Box
-      maxWidth={400}
-      mx="auto"
-      mt={5}
-      p={3}
-      boxShadow={3}
-      borderRadius={2}
-      bgcolor="background.paper"
-    >
-      <h2>Change Password</h2>
-      <form onSubmit={formik.handleSubmit}>
-        {renderPasswordField(
-          "oldPassword",
-          "Current Password",
-          showOldPass,
-          setShowOldPass
-        )}
-        {renderPasswordField(
-          "newPassword",
-          "New Password",
-          showNewPass,
-          setShowNewPass
-        )}
-        {renderPasswordField(
-          "confirmPassword",
-          "Confirm New Password",
-          showConfirmPass,
-          setShowConfirmPass
-        )}
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
+      <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-8">
+        <h2 className="text-2xl font-semibold mb-6 text-center">Login</h2>
 
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          fullWidth
-          disabled={loading || !formik.isValid || !formik.dirty}
-          sx={{ mt: 2 }}
-        >
-          {loading ? "Changing..." : "Change Password"}
-        </Button>
-      </form>
-    </Box>
+        <form onSubmit={formik.handleSubmit} className="space-y-5">
+          {/* Email */}
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Email
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.email}
+              className="mt-1 w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            {formik.touched.email && formik.errors.email && (
+              <p className="text-red-500 text-sm mt-1">{formik.errors.email}</p>
+            )}
+          </div>
+
+          {/* Password */}
+          <div>
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Password
+            </label>
+            <div className="relative">
+              <input
+                id="password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.password}
+                className="mt-1 w-full border border-gray-300 rounded-lg px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 focus:outline-none"
+              >
+                {showPassword ? (
+                  <EyeSlashIcon className="h-5 w-5" />
+                ) : (
+                  <EyeIcon className="h-5 w-5" />
+                )}
+              </button>
+            </div>
+            {formik.touched.password && formik.errors.password && (
+              <p className="text-red-500 text-sm mt-1">
+                {formik.errors.password}
+              </p>
+            )}
+          </div>
+
+          {/* Submit */}
+          <div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+            >
+              {loading ? "Logging in..." : "Login"}
+            </button>
+          </div>
+        </form>
+
+        {/* Footer links */}
+        <div className="mt-6 text-sm text-center text-gray-600 space-y-2">
+          <Link
+            href="/forgot-password"
+            className="text-blue-600 hover:underline block"
+          >
+            Forgot Password?
+          </Link>
+          <p>
+            Don't have an account?{" "}
+            <Link href="/register" className="text-blue-600 hover:underline">
+              Sign up
+            </Link>
+          </p>
+        </div>
+      </div>
+    </div>
   );
 };
 
-export default ChangePassword;
+export default withGuest(LoginPage);
