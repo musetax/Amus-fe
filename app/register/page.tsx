@@ -1,12 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import "./RegisterForm.css";
 import { registerUser } from "@/app/api/auth/authApis";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { withGuest } from "../utils/withGuest";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
@@ -154,4 +153,4 @@ const RegisterForm = () => {
   );
 };
 
-export default withGuest(RegisterForm);
+export default RegisterForm;

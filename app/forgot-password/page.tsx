@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
-import { withGuest } from "../utils/withGuest";
 import { forgotPassword } from "../api/auth/authApis";
 
 // Validation schema
@@ -71,4 +70,4 @@ const ForgotPasswordPage = () => {
   );
 };
 
-export default withGuest(ForgotPasswordPage);
+export default ForgotPasswordPage;

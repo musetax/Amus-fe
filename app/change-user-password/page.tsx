@@ -15,7 +15,6 @@ import { resetPassword } from "../api/auth/authApis";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import HeaderBar from "@/components/partials/header";
-import { withGuest } from "../utils/withGuest";
  
 const ChangePassword = () => {
     const router = useRouter()
@@ -144,4 +143,4 @@ const ChangePassword = () => {
   );
 };
 
-export default withGuest(ChangePassword);
+export default ChangePassword;

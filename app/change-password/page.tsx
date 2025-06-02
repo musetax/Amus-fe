@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Eye, EyeOff } from "lucide-react";
-import { withAuth } from "../utils/withAuth";
 import { createNewPassword } from "../api/auth/authApis";
 
 // Yup validation schema
@@ -130,4 +129,4 @@ const ChangePasswordPage = () => {
   );
 };
 
-export default withAuth(ChangePasswordPage);
+export default ChangePasswordPage;

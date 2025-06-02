@@ -34,6 +34,12 @@ const HeaderBar: React.FC<any> = () => {
   const handleLogout = async () => {
     localStorage.clear();
     dispatch(clearUserData(""));
+    document.cookie = 'collintoken=; path=/; expires=0;';
+    document.cookie.split(';').forEach((c) => {
+      document.cookie = c
+        .replace(/^ +/, '')
+        .replace(/=.*/, `=;expires=${new Date().toUTCString()};path=/`);
+    });
     router.push("/login");
   };
 
