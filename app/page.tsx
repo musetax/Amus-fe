@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import HeaderBar from "@/components/partials/header";
 import { Assistant } from "./assistant";
+import { Provider } from "react-redux";
+import { store } from "@/redux/store";
 
 export default function Home() {
   const [email, setEmail] = useState("");
@@ -40,6 +42,7 @@ export default function Home() {
 
   return (
     <>
+    <Provider store={store}>
       <HeaderBar />
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -66,6 +69,7 @@ export default function Home() {
         </div>
       )}
       <Assistant />
+      </Provider>
     </>
   );
 }
