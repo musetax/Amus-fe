@@ -175,4 +175,4 @@ const ChangePasswordPage = () => {
   );
 };
 
-export default withGuest(ChangePasswordPage);
+export default ChangePasswordPage;

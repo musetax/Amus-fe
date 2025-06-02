@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
-import { withGuest } from "../utils/withGuest";
 import { forgotPassword } from "../api/auth/authApis";
 import { toast } from "react-toastify";
 
@@ -81,4 +80,4 @@ const ForgotPasswordPage = () => {
   );
 };
 
-export default withGuest(ForgotPasswordPage);
+export default ForgotPasswordPage;

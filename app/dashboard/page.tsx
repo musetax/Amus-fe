@@ -3,7 +3,6 @@
 
 import HeaderBar from "@/components/partials/header";
 import { Assistant } from "@/app/assistant";
-import { withAuth } from "../utils/withAuth";
 
 function Dashboard() {
   return (
@@ -14,4 +13,4 @@ function Dashboard() {
   );
 }
 
-export default withAuth(Dashboard);
+export default Dashboard;

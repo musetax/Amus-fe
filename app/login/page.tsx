@@ -6,7 +6,6 @@ import * as Yup from "yup";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { loginUser } from "../api/auth/authApis";
-import { withGuest } from "../utils/withGuest";
 import { setUserData } from "@/redux/slice/authSlice";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
@@ -35,19 +34,23 @@ const LoginPage = () => {
       try {
         const response = await loginUser(values);
         console.log(response, "responseresponseresponse");
-        if (response?.status_code == 200) {
-          localStorage.setItem("token", response?.tokens?.AccessToken);
+        if (response?.status_code == "200") {
+          const collintoken = response?.tokens;
+          if (collintoken) {
+            document.cookie = `collintoken=${response?.tokens?.AccessToken}; path=/; Secure; SameSite=Strict;`;
+          }
           dispatch(setUserData(response));
           toast.success(response?.message, { toastId: "login" });
           router.push(`/dashboard`);
+          setLoading(false);
         } else {
           toast.success(response?.detail, { toastId: "login" });
+          setLoading(false);
         }
         // Show success message or redirect
       } catch (error) {
-        toast.success("Try after sometimg", { toastId: "login" });
-      } finally {
-        setLoading(true);
+        console.log(error);
+        setLoading(false);
       }
     },
   });
@@ -149,4 +152,4 @@ const LoginPage = () => {
   );
 };
 
-export default withGuest(LoginPage);
+export default LoginPage;

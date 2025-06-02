@@ -34,6 +34,13 @@ const HeaderBar: React.FC<any> = () => {
   const handleLogout = async () => {
     localStorage.clear();
     dispatch(clearUserData(""));
+    document.cookie = 'collintoken=; path=/; expires=0;';
+    document.cookie.split(';').forEach((c) => {
+      document.cookie = c
+        .replace(/^ +/, '')
+        .replace(/=.*/, `=;expires=${new Date().toUTCString()};path=/`);
+    });
+    router.push("/login");
   };
 
   const handleUserProfile = async () => {
@@ -77,13 +84,13 @@ const HeaderBar: React.FC<any> = () => {
             {/* Desktop menu */}
             <NavbarContent className="hidden lg:flex gap-5 " justify="center">
               <NavbarItem>
-                <Link href="#">Dashboard</Link>
+                <Link href="/dashboard">Dashboard</Link>
               </NavbarItem>
               <NavbarItem>
                 <Link href="#">Financial Goals</Link>
               </NavbarItem>
               <NavbarItem>
-                <Link href="#">Settings</Link>
+                <Link href="/user-profile">Settings</Link>
               </NavbarItem>
               <NavbarItem>
                 <Link href="#">Support</Link>

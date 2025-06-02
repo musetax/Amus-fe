@@ -5,7 +5,6 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import OTPInput from "react-otp-input";
 import * as Yup from "yup";
 import { verifyOtp, resendOtp } from "../api/auth/authApis";
-import { withGuest } from "../utils/withGuest";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 
@@ -82,8 +81,7 @@ const VerifyOtpPage = () => {
       }
     } catch (error) {
       console.error("OTP verification failed:", error);
-      toast.error("OTP verification failed");
-    } finally {
+     } finally {
       setLoading(false);
     }
   };
@@ -193,4 +191,4 @@ const VerifyOtpPage = () => {
   );
 };
 
-export default withGuest(VerifyOtpPage);
+export default VerifyOtpPage;
