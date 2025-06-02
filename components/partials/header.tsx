@@ -20,9 +20,13 @@ import {
 import { MdClose, MdLogout } from "react-icons/md";
 import { ChevronDown, MenuIcon } from "lucide-react";
 import Logo from "public/images/logo/main-logo.svg";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 const HeaderBar: React.FC<any> = () => {
- 
+  const user = useSelector((state: RootState) => state.auth.user);
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+console.log(user,'useruser');
 
  
   return (
@@ -103,7 +107,7 @@ const HeaderBar: React.FC<any> = () => {
                     className="border-none user_img flex items-center"
                     name={
                       <span className="text-base font-normal break-all flex items-center gap-2 text-primaryColor">
-                        Muse
+                        {user?.first_name}{" "} {user?.last_name}
                         <ChevronDown />
                       </span>
                     }
