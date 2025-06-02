@@ -4,18 +4,27 @@ import { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Eye, EyeOff } from "lucide-react";
-import { withAuth } from "../utils/withAuth";
+import OTPInput from "react-otp-input";
 import { createNewPassword } from "../api/auth/authApis";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import { withGuest } from "../utils/withGuest";
 
-// Yup validation schema
+// Updated validation schema
 const ChangePasswordSchema = Yup.object().shape({
-  newPassword: Yup.string()
-    .min(6, "Password must be at least 6 characters")
+ 
+  
+  email: Yup.string().email("Invalid email").required("Email is required"),
+  new_password: Yup.string()
+    .min(8, "Password must be at least 8 characters")
+    .matches(/[!@#$%^&*(),.?":{}|<>]/, "Must include at least one special character")
     .required("New password is required"),
   confirmPassword: Yup.string()
-    .oneOf([Yup.ref("newPassword"), ""], "Passwords must match")
+    .oneOf([Yup.ref("new_password")], "Passwords must match")
     .required("Confirm your password"),
-  email: Yup.string().email().required("Email is required"),
+  confirmation_code: Yup.string()
+    .matches(/^\d{6}$/, "OTP must be exactly 6 digits")
+    .required("OTP is required"),
 });
 
 const ChangePasswordPage = () => {
@@ -23,6 +32,7 @@ const ChangePasswordPage = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [email, setEmail] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     const storedEmail = localStorage.getItem("email");
@@ -30,45 +40,87 @@ const ChangePasswordPage = () => {
   }, []);
 
   const handleChangePassword = async (values: {
-    newPassword: string;
-    confirmPassword: string;
+    new_password: string;
+    confirmation_code: string;
     email: string;
   }) => {
+     console.log()
     setLoading(true);
-
     try {
+      console.log('enter')
       const response = await createNewPassword(values);
-      console.log(response, "responseresponse");
+      console.log(response,"response");
+      
+      if (response?.status_code === '200') {
+        toast.success("Password changed successfully");
+        localStorage.removeItem("email");
+        router.push("/login");
+      } else {
+        toast.error(response?.message || "Something went wrong");
+      }
     } catch (error) {
-      console.log(error, "=====");
+      console.error(error);
+      // toast.error("Error changing password");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="max-w-md mx-auto mt-20 p-6 border rounded-xl shadow-md">
+    <div className="max-w-md mx-auto mt-20 p-6 border rounded-xl shadow-md bg-white">
       <h1 className="text-2xl font-bold mb-6 text-center">Change Password</h1>
-
       <Formik
         enableReinitialize
         initialValues={{
-          newPassword: "",
+          new_password: "",
           confirmPassword: "",
+          confirmation_code: "",
           email: email || "",
         }}
         validationSchema={ChangePasswordSchema}
-        onSubmit={handleChangePassword}
+        onSubmit={(values)=>{
+          console.log(values);
+          
+          handleChangePassword(values)}}
       >
-        {() => (
+        {({ values, setFieldValue }) => (
           <Form className="space-y-5">
+            {/* OTP */}
+            <div>
+              <label className="block mb-1 font-medium">OTP</label>
+              <div className="flex justify-center">
+                <OTPInput
+                  value={values.confirmation_code}
+                  onChange={(val) => setFieldValue("confirmation_code", val)}
+                  numInputs={6}
+                  inputType="tel"
+                  renderInput={(props) => <input {...props} />}
+                  inputStyle={{
+                    width: "2.8rem",
+                    height: "2.8rem",
+                    margin: "0 0.4rem",
+                    fontSize: "1.25rem",
+                    borderRadius: "0.5rem",
+                    border: "1px solid #ccc",
+                    textAlign: "center",
+                    outline: "none",
+                  }}
+                />
+              </div>
+              <ErrorMessage
+                name="confirmation_code"
+                component="div"
+                className="text-red-500 text-sm text-center mt-1"
+              />
+            </div>
+
             {/* New Password */}
             <div>
               <label className="block mb-1 font-medium">New Password</label>
               <div className="relative">
                 <Field
                   type={showNewPassword ? "text" : "password"}
-                  name="newPassword"
+                  name="new_password"
                   className="w-full border px-3 py-2 rounded-md pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <div
@@ -79,7 +131,7 @@ const ChangePasswordPage = () => {
                 </div>
               </div>
               <ErrorMessage
-                name="newPassword"
+                name="new_password"
                 component="div"
                 className="text-red-500 text-sm mt-1"
               />
@@ -98,11 +150,7 @@ const ChangePasswordPage = () => {
                   className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
-                  {showConfirmPassword ? (
-                    <EyeOff size={18} />
-                  ) : (
-                    <Eye size={18} />
-                  )}
+                  {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </div>
               </div>
               <ErrorMessage
@@ -111,9 +159,6 @@ const ChangePasswordPage = () => {
                 className="text-red-500 text-sm mt-1"
               />
             </div>
-
-            {/* Hidden Email Field */}
-            <Field type="hidden" name="email" />
 
             {/* Submit Button */}
             <button
@@ -130,4 +175,4 @@ const ChangePasswordPage = () => {
   );
 };
 
-export default withAuth(ChangePasswordPage);
+export default withGuest(ChangePasswordPage);

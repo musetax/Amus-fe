@@ -56,16 +56,17 @@ export const forgotPassword = async (email: string) => {
     const res = await axiosInstance.post(API_ENDPOINTS.FORGOT_PASSWORD, { email });
     return res.data;
   } catch (error: any) {
-    toast.error(error.response?.data?.message || "Forgot password request failed");
+    toast.error(error.response?.data?.detail || "Forgot password request failed");
     throw error;
   }
 };
 
 export const createNewPassword = async (values: {
   email: string;
-  newPassword: string;
-  confirmPassword: string;
-}) => {
+  confirmation_code:string;
+  new_password: string;
+  
+ }) => {
   try {
     const res = await axiosInstance.post(API_ENDPOINTS.CREATE_NEW_PASSWORD, values);
     return res.data;

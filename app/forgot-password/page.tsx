@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import { useRouter } from "next/navigation";
 import { withGuest } from "../utils/withGuest";
 import { forgotPassword } from "../api/auth/authApis";
+import { toast } from "react-toastify";
 
 // Validation schema
 const ForgotPasswordSchema = Yup.object().shape({
@@ -18,19 +19,28 @@ const ForgotPasswordPage = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleForgotPassword = async (values: { email: string }) => {
-    setLoading(true);
+ const handleForgotPassword = async (values: { email: string }) => {
+  setLoading(true)
 
-    try {
-      // Simulate API call — replace with actual API call
-      const response = await forgotPassword(values?.email);
-      console.log(response, "=======");
-    } catch (error) {
-      console.log(error, "====");
-    } finally {
-      setLoading(false);
+  try {
+    const response = await forgotPassword(values?.email)
+    localStorage.setItem('email',values?.email)
+    console.log(response,'-------------')
+
+    if (response.status_code === '200') {
+      console.log(response, "✔ Forgot password success")
+      router.push('/change-password')  // ✅ move this inside success block
+    } else {
+      toast.error(response.message, { toastId: "reg-er" })
     }
-  };
+  } catch (error) {
+    console.error(error)
+    // toast.error("Something went wrong. Please try again.", { toastId: "reg-er" })
+  } finally {
+    setLoading(false)
+  }
+}
+
 
   return (
     <div className="max-w-md mx-auto mt-20 p-6 border rounded-xl shadow-md">
