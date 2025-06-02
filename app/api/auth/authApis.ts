@@ -22,8 +22,8 @@ export const verifyEmail = async (data: { email: string; otp: string }) => {
   return res.data;
 };
 
-export const loginUser = async (data: { email: string; password: string }) => {
-  const res = await axiosInstance.post(API_ENDPOINTS.LOGIN, data);
+export const loginUser = async (values: { email: string; password: string }) => {
+  const res = await axiosInstance.post(API_ENDPOINTS.LOGIN, values);
   return res.data;
 };
 
