@@ -17,12 +17,15 @@ export const resendOtp = async (email: string) => {
   return res.data;
 };
 
-export const verifyEmail = async (data: { email: string; otp: string }) => {
+export const verifyOtp = async (data: { email: string; otp: string }) => {
   const res = await axiosInstance.post(API_ENDPOINTS.VERIFY_EMAIL, data);
   return res.data;
 };
 
-export const loginUser = async (values: { email: string; password: string }) => {
+export const loginUser = async (values: {
+  email: string;
+  password: string;
+}) => {
   const res = await axiosInstance.post(API_ENDPOINTS.LOGIN, values);
   return res.data;
 };
@@ -34,12 +37,12 @@ export const forgotPassword = async (email: string) => {
   return res.data;
 };
 
-export const createNewPassword = async (data: {
+export const createNewPassword = async (values: {
   email: string;
-  otp: string;
-  password: string;
+  newPassword: string;
+  confirmPassword: string;
 }) => {
-  const res = await axiosInstance.post(API_ENDPOINTS.CREATE_NEW_PASSWORD, data);
+  const res = await axiosInstance.post(API_ENDPOINTS.CREATE_NEW_PASSWORD, values);
   return res.data;
 };
 
