@@ -7,8 +7,15 @@ import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { loginUser } from "../api/auth/authApis";
 import { withGuest } from "../utils/withGuest";
+import { setUserData } from "@/redux/slice/authSlice";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
-const LoginPage =()=> {
+const LoginPage = () => {
+  const router = useRouter();
+
+  const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -28,9 +35,17 @@ const LoginPage =()=> {
       try {
         const response = await loginUser(values);
         console.log(response, "responseresponseresponse");
+        if (response?.status_code == 200) {
+          localStorage.setItem("token", response?.tokens?.AccessToken);
+          dispatch(setUserData(response));
+          toast.success(response?.message, { toastId: "login" });
+          router.push(`/dashboard`);
+        } else {
+          toast.success(response?.detail, { toastId: "login" });
+        }
         // Show success message or redirect
       } catch (error) {
-        console.error("Registration error:", error);
+        toast.success("Try after sometimg", { toastId: "login" });
       } finally {
         setLoading(true);
       }
@@ -132,6 +147,6 @@ const LoginPage =()=> {
       </div>
     </div>
   );
-}
+};
 
-export default withGuest(LoginPage)
+export default withGuest(LoginPage);

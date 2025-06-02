@@ -14,11 +14,11 @@ const authSlice = createSlice({
     restoreState: (state) => {
       return initialState; // Reset state to initial state
     },
-    setWorkAddress: (state, action) => {
-      state.workAddress = action.payload;
+    setUserData: (state, action) => {
+      state.user = action.payload;
     },
   },
 });
 
-export const { setWorkAddress, restoreState } = authSlice.actions;
+export const { setUserData, restoreState } = authSlice.actions;
 export default authSlice.reducer;

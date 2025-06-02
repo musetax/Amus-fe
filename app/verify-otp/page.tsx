@@ -8,7 +8,7 @@ import { verifyOtp, resendOtp } from "../api/auth/authApis";
 import { withGuest } from "../utils/withGuest";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
- 
+
 const OtpSchema = Yup.object().shape({
   confirmation_code: Yup.string()
     .required("OTP is required")
@@ -16,40 +16,53 @@ const OtpSchema = Yup.object().shape({
   email: Yup.string().email().required("Email is required"),
 });
 
+const TIMER_KEY = "otp_timer_expiry"; // Key for localStorage
+
 const VerifyOtpPage = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
   const [email, setEmail] = useState("");
-  const [timeLeft, setTimeLeft] = useState(0);
+  const [timer, setTimer] = useState(0);
 
-  // On mount: fetch stored email and timer from localStorage
+  // Load email and timer
   useEffect(() => {
     const storedEmail = localStorage.getItem("email");
     if (storedEmail) setEmail(storedEmail);
 
-    const expiryTime = Date.now() + 60 * 1000;
-    localStorage.setItem("otp_resend_expiry", expiryTime.toString());
-    setTimeLeft(60);
+    const expiry = localStorage.getItem(TIMER_KEY);
+    const now = new Date().getTime();
+    if (expiry && +expiry > now) {
+      setTimer(Math.floor((+expiry - now) / 1000));
+    } else {
+      startTimer(); // Start timer if none exists
+    }
   }, []);
 
   // Countdown effect
   useEffect(() => {
-    if (timeLeft <= 0) return;
-
-    const interval = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          localStorage.removeItem("otp_resend_expiry");
-          clearInterval(interval);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
+    let interval: NodeJS.Timeout;
+    if (timer > 0) {
+      interval = setInterval(() => {
+        setTimer((prev) => {
+          if (prev <= 1) {
+            localStorage.removeItem(TIMER_KEY);
+            clearInterval(interval);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
     return () => clearInterval(interval);
-  }, [timeLeft]);
+  }, [timer]);
+
+  // Function to set 60s timer in state and localStorage
+  const startTimer = () => {
+    const expiryTime = new Date().getTime() + 60 * 1000;
+    localStorage.setItem(TIMER_KEY, expiryTime.toString());
+    setTimer(60);
+  };
 
   const handleVerifyOtp = async (values: {
     confirmation_code: string;
@@ -58,13 +71,14 @@ const VerifyOtpPage = () => {
     setLoading(true);
     try {
       const response = await verifyOtp(values);
-      if (response?.status_code === 200) {
+      console.log(response,'responseresponse');
+      
+      if (response?.status_code == 200) {
         toast.success(response?.message, { toastId: "very" });
+        localStorage.removeItem(TIMER_KEY); // Clear timer on success
         router.push(`/login`);
       } else {
-        toast.error(response?.detail || "OTP verification failed", {
-          toastId: "not",
-        });
+        toast.error(response?.detail || "Invalid OTP", { toastId: "not" });
       }
     } catch (error) {
       console.error("OTP verification failed:", error);
@@ -84,16 +98,14 @@ const VerifyOtpPage = () => {
     try {
       const response = await resendOtp(email);
       if (response?.status_code === 200) {
-        toast.success(response?.message || "OTP resent successfully");
-
-        // Start 60-second countdown and store expiry
-        const expiryTime = Date.now() + 60 * 1000;
-        localStorage.setItem("otp_resend_expiry", expiryTime.toString());
-        setTimeLeft(60);
+        toast.success(response?.message || "OTP resent successfully",{toastId:'mes'});
+        startTimer(); // Reset timer
       } else {
-        toast.error(response?.message || "Failed to resend OTP");
+        toast.error(response?.detail || "Failed to resend OTP",{toastId:'err'});
       }
     } catch (error) {
+        console.log(error,'v');
+        
       toast.error("Failed to resend OTP. Please try again.");
     } finally {
       setResendLoading(false);
@@ -164,19 +176,17 @@ const VerifyOtpPage = () => {
         </Formik>
 
         <div className="mt-6 text-center">
-          {timeLeft > 0 ? (
-            <p className="text-gray-500">
-              Resend OTP in <span className="font-semibold">{timeLeft}</span> seconds
-            </p>
-          ) : (
-            <button
-              onClick={handleResendOtp}
-              disabled={resendLoading}
-              className="text-indigo-600 hover:underline disabled:opacity-50"
-            >
-              {resendLoading ? "Resending OTP..." : "Resend OTP"}
-            </button>
-          )}
+          <button
+            onClick={handleResendOtp}
+            disabled={resendLoading || timer > 0}
+            className="text-indigo-600 hover:underline disabled:opacity-50"
+          >
+            {resendLoading
+              ? "Resending OTP..."
+              : timer > 0
+              ? `Resend OTP in ${timer}s`
+              : "Resend OTP"}
+          </button>
         </div>
       </div>
     </div>
