@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import "./RegisterForm.css";
 import { registerUser } from "@/app/api/auth/authApis";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { withGuest } from "../utils/withGuest";
 
 const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -143,4 +144,4 @@ const RegisterForm = () => {
   );
 };
 
-export default RegisterForm;
+export default withGuest(RegisterForm);

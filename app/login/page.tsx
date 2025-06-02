@@ -6,8 +6,9 @@ import * as Yup from "yup";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { loginUser } from "../api/auth/authApis";
+import { withGuest } from "../utils/withGuest";
 
-export default function LoginPage() {
+const LoginPage =()=> {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -132,3 +133,5 @@ export default function LoginPage() {
     </div>
   );
 }
+
+export default withGuest(LoginPage)
