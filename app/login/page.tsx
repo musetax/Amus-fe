@@ -45,7 +45,7 @@ const LoginPage = () => {
         }
         // Show success message or redirect
       } catch (error) {
-        toast.success("Try after sometimg", { toastId: "login" });
+console.log(error)
       } finally {
         setLoading(true);
       }

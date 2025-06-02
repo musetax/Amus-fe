@@ -82,8 +82,7 @@ const VerifyOtpPage = () => {
       }
     } catch (error) {
       console.error("OTP verification failed:", error);
-      toast.error("OTP verification failed");
-    } finally {
+     } finally {
       setLoading(false);
     }
   };

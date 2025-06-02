@@ -54,7 +54,7 @@ const ChangePassword = () => {
           toast.error(response?.detail, { toastId: "change" });
         }
       } catch (error) {
-        // error toast handled inside resetPassword api or catch here if needed
+        console.log(error)
       } finally {
         setLoading(false);
       }
