@@ -7,8 +7,8 @@ import * as Yup from "yup";
 import { verifyOtp, resendOtp } from "../api/auth/authApis";
 import { withGuest } from "../utils/withGuest";
 import { toast } from "react-toastify";
-import { useRouter } from "next/router";
-
+import { useRouter } from "next/navigation";
+ 
 const OtpSchema = Yup.object().shape({
   confirmation_code: Yup.string()
     .required("OTP is required")
@@ -28,15 +28,9 @@ const VerifyOtpPage = () => {
     const storedEmail = localStorage.getItem("email");
     if (storedEmail) setEmail(storedEmail);
 
-    const expiry = localStorage.getItem("otp_resend_expiry");
-    if (expiry) {
-      const timeRemaining = Math.floor((+expiry - Date.now()) / 1000);
-      if (timeRemaining > 0) {
-        setTimeLeft(timeRemaining);
-      } else {
-        localStorage.removeItem("otp_resend_expiry");
-      }
-    }
+    const expiryTime = Date.now() + 60 * 1000;
+    localStorage.setItem("otp_resend_expiry", expiryTime.toString());
+    setTimeLeft(60);
   }, []);
 
   // Countdown effect
