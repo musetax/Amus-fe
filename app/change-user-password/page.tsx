@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   IconButton,
   InputAdornment,
@@ -14,9 +14,10 @@ import {
 import { resetPassword } from "../api/auth/authApis";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-
+import HeaderBar from "@/components/partials/header";
+ 
 const ChangePassword = () => {
-  const router = useRouter();
+    const router = useRouter()
   const [showOldPass, setShowOldPass] = useState(false);
   const [showNewPass, setShowNewPass] = useState(false);
   const [showConfirmPass, setShowConfirmPass] = useState(false);
@@ -44,15 +45,15 @@ const ChangePassword = () => {
           oldPassword: values.oldPassword,
           newPassword: values.newPassword,
         });
-        if (response?.stats_code === 200) {
+        if (response?.stats_code == 200) {
+            router.push('/dashboard')
           toast.success(response?.message, { toastId: "change" });
           resetForm();
-          router.push("/dashboard");
         } else {
           toast.error(response?.detail, { toastId: "change" });
         }
       } catch (error) {
-        // error toast handled inside resetPassword API or catch here if needed
+        // error toast handled inside resetPassword api or catch here if needed
       } finally {
         setLoading(false);
       }
@@ -85,11 +86,7 @@ const ChangePassword = () => {
               edge="end"
               aria-label={`toggle ${label.toLowerCase()} visibility`}
             >
-              {show ? (
-                <EyeSlashIcon style={{ width: 24, height: 24 }} />
-              ) : (
-                <EyeIcon style={{ width: 24, height: 24 }} />
-              )}
+              {show ? <VisibilityOff /> : <Visibility />}
             </IconButton>
           </InputAdornment>
         ),
@@ -98,6 +95,8 @@ const ChangePassword = () => {
   );
 
   return (
+    <>
+    <HeaderBar />
     <Box
       maxWidth={400}
       mx="auto"
@@ -140,6 +139,7 @@ const ChangePassword = () => {
         </Button>
       </form>
     </Box>
+    </>
   );
 };
 

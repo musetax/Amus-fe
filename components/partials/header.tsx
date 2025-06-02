@@ -77,13 +77,13 @@ const HeaderBar: React.FC<any> = () => {
             {/* Desktop menu */}
             <NavbarContent className="hidden lg:flex gap-5 " justify="center">
               <NavbarItem>
-                <Link href="#">Dashboard</Link>
+                <Link href="/dashboard">Dashboard</Link>
               </NavbarItem>
               <NavbarItem>
                 <Link href="#">Financial Goals</Link>
               </NavbarItem>
               <NavbarItem>
-                <Link href="#">Settings</Link>
+                <Link href="/user-profile">Settings</Link>
               </NavbarItem>
               <NavbarItem>
                 <Link href="#">Support</Link>
