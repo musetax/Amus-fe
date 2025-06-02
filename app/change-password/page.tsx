@@ -8,7 +8,7 @@ import OTPInput from "react-otp-input";
 import { createNewPassword } from "../api/auth/authApis";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { withGuest } from "../utils/withGuest";
+
 
 // Updated validation schema
 const ChangePasswordSchema = Yup.object().shape({
