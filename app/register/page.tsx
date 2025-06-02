@@ -7,11 +7,14 @@ import "./RegisterForm.css";
 import { registerUser } from "@/app/api/auth/authApis";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { withGuest } from "../utils/withGuest";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
 
   const togglePassword = () => setShowPassword((prev) => !prev);
   const toggleConfirm = () => setShowConfirm((prev) => !prev);
@@ -43,13 +46,20 @@ const RegisterForm = () => {
       setIsSubmitting(true);
       try {
         const response = await registerUser(values);
-        console.log(response, "responseresponseresponse");
+        if (response?.status_code == 200) {
+          console.log(values.email, "values.emailvalues.email");
+          toast.success(response?.message, { toastId: "reg-suc" });
+          localStorage.setItem("email", values.email);
+          router.push(`/verify-otp`);
+          setIsSubmitting(false);
+        } else {
+          toast.error(response?.detail, { toastId: "reg-er" });
+          setIsSubmitting(false);
+        }
         // Show success message or redirect
       } catch (error) {
         console.error("Registration error:", error);
-      } finally {
-        setIsSubmitting(false);
-      }
+      }  
     },
   });
 

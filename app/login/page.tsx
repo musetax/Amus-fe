@@ -124,7 +124,7 @@ const LoginPage =()=> {
           </Link>
           <p>
             Don't have an account?{" "}
-            <Link href="/signup" className="text-blue-600 hover:underline">
+            <Link href="/register" className="text-blue-600 hover:underline">
               Sign up
             </Link>
           </p>

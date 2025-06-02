@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import localFont from "next/font/local";
 import { Providers } from "./providers";
+import { ToastContainer } from 'react-toastify';
 
 const generalSans = localFont({
   src: "../components/assets/fonts/fonts/GeneralSans-Regular.woff",
@@ -24,6 +25,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${generalSans.variable} antialiased`}>
         <Providers>{children}</Providers>
+        <ToastContainer />
       </body>
     </html>
   );

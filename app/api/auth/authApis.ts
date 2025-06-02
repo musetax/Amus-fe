@@ -17,7 +17,7 @@ export const resendOtp = async (email: string) => {
   return res.data;
 };
 
-export const verifyOtp = async (data: { email: string; otp: string }) => {
+export const verifyOtp = async (data: { email: string; confirmation_code: string }) => {
   const res = await axiosInstance.post(API_ENDPOINTS.VERIFY_EMAIL, data);
   return res.data;
 };
