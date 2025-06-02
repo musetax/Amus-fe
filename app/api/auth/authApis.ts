@@ -2,12 +2,13 @@
 import axiosInstance from "@/utilities/axios";
 import { API_ENDPOINTS } from "../endPoints";
 
-export const registerUser = async (data: {
+export const registerUser = async (values: {
+  first_name: string;
+  last_name: string;
   email: string;
   password: string;
-  name: string;
 }) => {
-  const res = await axiosInstance.post(API_ENDPOINTS.REGISTER, data);
+  const res = await axiosInstance.post(API_ENDPOINTS.REGISTER, values);
   return res.data;
 };
 
