@@ -1,5 +1,6 @@
-import axiosInstance from "@/utilities/axios";
-   
+import { axiosInstance } from "@/utilities/axios";
+
+    
 export const sendQuery = async (query: string) => {
   try {
     const response = await axiosInstance.post(`${process.env.NEXT_PUBLIC_BACKEND_API}/query`, { query });

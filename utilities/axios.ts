@@ -3,9 +3,18 @@ import axios, {
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from "axios";
-  
+import Cookies from "js-cookie";
+
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_API,
+  timeout: 10000,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+const axiosInstanceAuth: AxiosInstance = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_AUTH_API,
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
@@ -33,9 +42,12 @@ const refreshToken = async (): Promise<string | null> => {
 
     if (!refreshToken) throw new Error("No refresh token available");
 
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API}auth/login/refresh`, {
-      refresh_token: refreshToken,
-    });
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_API}auth/login/refresh`,
+      {
+        refresh_token: refreshToken,
+      }
+    );
 
     const newAccessToken = response.data?.tokens?.AccessToken;
     const newRefreshToken = response.data?.tokens?.RefreshToken;
@@ -47,7 +59,7 @@ const refreshToken = async (): Promise<string | null> => {
       throw new Error("Failed to refresh token");
     }
   } catch (error) {
-     localStorage.clear();
+    localStorage.clear();
     window.location.href = "/login";
     return null;
   }
@@ -59,6 +71,20 @@ axiosInstance.interceptors.request.use(
     config: InternalAxiosRequestConfig
   ): Promise<InternalAxiosRequestConfig> => {
     const { accessToken } = getTokens();
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+    return config;
+  },
+  (error: any) => Promise.reject(error)
+);
+
+axiosInstanceAuth.interceptors.request.use(
+  async (
+    config: InternalAxiosRequestConfig
+  ): Promise<InternalAxiosRequestConfig> => {
+     const accessToken = Cookies.get("collintoken");
+
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
@@ -85,4 +111,22 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-export default axiosInstance;
+axiosInstanceAuth.interceptors.response.use(
+  (response: AxiosResponse) => response,
+  async (error: any) => {
+    const originalRequest = error.config;
+
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      const newAccessToken = Cookies.get("collintoken");
+
+      if (newAccessToken) {
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        return axiosInstanceAuth(originalRequest);
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
+export { axiosInstance, axiosInstanceAuth };
