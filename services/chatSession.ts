@@ -2,7 +2,7 @@
 import { getSessionId } from "@/services/chatbot";
 
 export function getCachedEmail() {
-  let email = localStorage.getItem("email");
+  let email = localStorage.getItem("chat_email");
   return email;
 }
 

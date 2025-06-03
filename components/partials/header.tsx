@@ -2,7 +2,7 @@
 import Image from "next/image";
 
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   Dropdown,
@@ -34,10 +34,10 @@ const HeaderBar: React.FC<any> = () => {
   const handleLogout = async () => {
     localStorage.clear();
     dispatch(clearUserData(""));
-    document.cookie = 'collintoken=; path=/; expires=0;';
-    document.cookie.split(';').forEach((c) => {
+    document.cookie = "collintoken=; path=/; expires=0;";
+    document.cookie.split(";").forEach((c) => {
       document.cookie = c
-        .replace(/^ +/, '')
+        .replace(/^ +/, "")
         .replace(/=.*/, `=;expires=${new Date().toUTCString()};path=/`);
     });
     router.push("/login");
@@ -46,6 +46,13 @@ const HeaderBar: React.FC<any> = () => {
   const handleUserProfile = async () => {
     router.push("/user-profile");
   };
+
+  useEffect(() => {
+    if (user?.profile?.email) {
+      localStorage.setItem("chat_email", user?.profile?.email);
+    }
+  }, [user]);
+
   return (
     <>
       <div className="w-full py-3 bg-lightGray">
