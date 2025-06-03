@@ -112,14 +112,12 @@ axiosInstance.interceptors.response.use(
 );
 
 axiosInstanceAuth.interceptors.response.use(
-  (response: AxiosResponse) => response,
+ (response: AxiosResponse) => response,
   async (error: any) => {
     const originalRequest = error.config;
-
     if (error.response?.status == 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       const newAccessToken = Cookies.get("collintoken");
-
       if (newAccessToken) {
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return axiosInstanceAuth(originalRequest);
@@ -130,3 +128,4 @@ axiosInstanceAuth.interceptors.response.use(
 );
 
 export { axiosInstance, axiosInstanceAuth };
+  

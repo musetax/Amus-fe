@@ -12,8 +12,7 @@ import { useRouter } from "next/navigation";
 
 // Updated validation schema
 const ChangePasswordSchema = Yup.object().shape({
- 
-  
+
   email: Yup.string().email("Invalid email").required("Email is required"),
   new_password: Yup.string()
     .min(8, "Password must be at least 8 characters")
@@ -33,11 +32,6 @@ const ChangePasswordPage = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [email, setEmail] = useState("");
   const router = useRouter();
-
-  useEffect(() => {
-    const storedEmail = localStorage.getItem("email");
-    if (storedEmail) setEmail(storedEmail);
-  }, []);
 
   const handleChangePassword = async (values: {
     new_password: string;
@@ -65,6 +59,11 @@ const ChangePasswordPage = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const storedEmail = localStorage.getItem("email");
+    if (storedEmail) setEmail(storedEmail);
+  }, []);
 
   return (
     <div className="max-w-md mx-auto mt-20 p-6 border rounded-xl shadow-md bg-white">
