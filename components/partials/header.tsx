@@ -25,6 +25,7 @@ import { RootState } from "@/redux/store";
 import { useDispatch } from "react-redux";
 import { clearUserData } from "@/redux/slice/authSlice";
 import { useRouter } from "next/navigation";
+
 const HeaderBar: React.FC<any> = () => {
   const user = useSelector((state: RootState) => state.auth.user);
   const router = useRouter();

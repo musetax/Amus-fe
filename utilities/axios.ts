@@ -99,7 +99,7 @@ axiosInstance.interceptors.response.use(
   async (error: any) => {
     const originalRequest = error.config;
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (error.response?.status == 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       const newAccessToken = await refreshToken();
       if (newAccessToken) {
@@ -116,7 +116,7 @@ axiosInstanceAuth.interceptors.response.use(
   async (error: any) => {
     const originalRequest = error.config;
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (error.response?.status == 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       const newAccessToken = Cookies.get("collintoken");
 

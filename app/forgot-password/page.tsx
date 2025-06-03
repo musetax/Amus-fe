@@ -26,9 +26,8 @@ const ForgotPasswordPage = () => {
     localStorage.setItem('email',values?.email)
     console.log(response,'-------------')
 
-    if (response.status_code === '200') {
-      console.log(response, "✔ Forgot password success")
-      router.push('/change-password')  // ✅ move this inside success block
+    if (response.status_code == '200') {
+       router.push('/change-password')  // ✅ move this inside success block
     } else {
       toast.error(response.message, { toastId: "reg-er" })
     }

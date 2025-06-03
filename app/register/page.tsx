@@ -8,6 +8,7 @@ import { registerUser } from "@/app/api/auth/authApis";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import Link from "next/link";
 
 const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -28,8 +29,15 @@ const RegisterForm = () => {
       service_key:"amus"
     },
     validationSchema: Yup.object({
-      first_name: Yup.string().required("First name is required"),
-      last_name: Yup.string().required("Last name is required"),
+      first_name: Yup.string()
+      .min(3, "First name must be at least 3 characters")
+      .max(15, "First name must be at most 15 characters")
+      .required("First name is required"),
+    
+    last_name: Yup.string()
+      .min(3, "Last name must be at least 3 characters")
+      .max(15, "Last name must be at most 15 characters")
+      .required("Last name is required"),
       email: Yup.string().email("Invalid email").required("Email is required"),
       password: Yup.string()
         .min(8, "Password must be at least 8 characters")
@@ -58,6 +66,8 @@ const RegisterForm = () => {
         }
         // Show success message or redirect
       } catch (error) {
+        setIsSubmitting(false);
+
         console.error("Registration error:", error);
       }  
     },
@@ -150,6 +160,16 @@ const RegisterForm = () => {
       <button type="submit" className="register-btn" disabled={isSubmitting}>
         {isSubmitting ? "Registering..." : "Register"}
       </button>
+       {/* Footer links */}
+       <div className="mt-6 text-sm text-center text-gray-600 space-y-2">
+           
+          <p>
+            Don't have an account?{" "}
+            <Link href="/login" className="text-blue-600 hover:underline">
+              Sign In
+            </Link>
+          </p>
+        </div>
     </form>
   );
 };

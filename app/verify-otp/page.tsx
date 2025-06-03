@@ -95,7 +95,7 @@ const VerifyOtpPage = () => {
     setResendLoading(true);
     try {
       const response = await resendOtp(email);
-      if (response?.status_code === 200) {
+      if (response?.status_code == 200) {
         toast.success(response?.message || "OTP resent successfully",{toastId:'mes'});
         startTimer(); // Reset timer
       } else {
