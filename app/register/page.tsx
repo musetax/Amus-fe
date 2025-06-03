@@ -25,6 +25,7 @@ const RegisterForm = () => {
       email: "",
       password: "",
       confirm_password: "",
+      service_key:"amus"
     },
     validationSchema: Yup.object({
       first_name: Yup.string().required("First name is required"),
