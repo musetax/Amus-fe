@@ -21,6 +21,11 @@ const axiosInstanceAuth: AxiosInstance = axios.create({
   },
 });
 
+axiosInstanceAuth.interceptors.request.use((config) => {
+  config.headers["service_key"] = "amus";
+  return config;
+});
+
 // Function to get tokens from localStorage
 const getTokens = () => ({
   accessToken: localStorage.getItem("authTokenMuse"),

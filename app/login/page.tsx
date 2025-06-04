@@ -34,7 +34,7 @@ const LoginPage = () => {
       try {
         const response = await loginUser(values);
         console.log(response, "responseresponseresponse");
-        if (response?.status_code == "200") {
+        if (response?.status_code == 200) {
           const collintoken = response?.tokens;
           if (collintoken) {
             document.cookie = `collintoken=${response?.tokens?.AccessToken}; path=/; Secure; SameSite=Strict;`;

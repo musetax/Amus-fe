@@ -45,7 +45,7 @@ const ChangePasswordPage = () => {
       const response = await createNewPassword(values);
       console.log(response,"response");
       
-      if (response?.status_code == '200') {
+      if (response?.status_code == 200) {
         toast.success("Password changed successfully");
         localStorage.removeItem("email");
         router.push("/login");
