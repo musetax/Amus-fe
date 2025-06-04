@@ -10,12 +10,24 @@ export default function Home() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    localStorage.clear();
-    const storedEmail = localStorage.getItem("chat_email");
-    if (!storedEmail) {
-      setShowModal(true);
+    // Get email from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const emailFromUrl = urlParams.get("email");
+  
+    if (emailFromUrl) {
+      const decodedEmail = decodeURIComponent(emailFromUrl);
+      console.log(decodedEmail, "decodedEmail from URL");
+  
+      localStorage.setItem("chat_email", decodedEmail);
+      setShowModal(false);
+    } else {
+      const storedEmail = localStorage.getItem("chat_email");
+      if (!storedEmail) {
+        setShowModal(true);
+      }
     }
   }, []);
+  
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
