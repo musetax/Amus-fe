@@ -17,6 +17,8 @@ import {
   Percent,
   PieChart,
   SendHorizontalIcon,
+  Volume2Icon,
+  VolumeXIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -32,6 +34,16 @@ import { ComposerAttachments } from "@/components/assistant-ui/attachment";
 
 import { UserMessageAttachments } from "@/components/assistant-ui/attachment";
 export const Thread: any = ({ activeTab, setActiveTab }: any) => {
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      window.speechSynthesis.cancel();
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
+
   const { messages } = useThread();
 
   const assistantMessages = [...messages]
@@ -57,8 +69,6 @@ export const Thread: any = ({ activeTab, setActiveTab }: any) => {
   const handleChange = () => {
     setActiveTab("tax");
   };
-
-
 
   return (
     <>
@@ -190,6 +200,7 @@ export const Thread: any = ({ activeTab, setActiveTab }: any) => {
   );
 };
 
+
 const ThreadScrollToBottom: FC = () => {
   return (
     <ThreadPrimitive.ScrollToBottom asChild>
@@ -317,9 +328,9 @@ const ComposerAction: FC<ComposerActionProps> = ({ composerRef }) => {
   return (
     <>
       <ThreadPrimitive.If running={false}>
-        <ComposerPrimitive.AddAttachment asChild>
-          
-        </ComposerPrimitive.AddAttachment>
+        <ComposerPrimitive.AddAttachment
+          asChild
+        ></ComposerPrimitive.AddAttachment>
 
         <TooltipIconButton
           tooltip={listening ? "Stop recording" : "Voice input"}
@@ -442,10 +453,27 @@ const AssistantActionBar: FC = () => {
           </MessagePrimitive.If>
         </TooltipIconButton>
       </ActionBarPrimitive.Copy>
-      
+
+      <MessagePrimitive.If speaking={false}>
+        <ActionBarPrimitive.Speak asChild>
+          <TooltipIconButton tooltip="Speak">
+            <Volume2Icon />
+          </TooltipIconButton>
+        </ActionBarPrimitive.Speak>
+      </MessagePrimitive.If>
+
+      <MessagePrimitive.If speaking>
+        <ActionBarPrimitive.StopSpeaking asChild>
+          <TooltipIconButton tooltip="Stop speaking">
+            <VolumeXIcon />
+          </TooltipIconButton>
+        </ActionBarPrimitive.StopSpeaking>
+      </MessagePrimitive.If>
     </ActionBarPrimitive.Root>
   );
 };
+
+
 
 const BranchPicker: FC<BranchPickerPrimitive.Root.Props> = ({
   className,

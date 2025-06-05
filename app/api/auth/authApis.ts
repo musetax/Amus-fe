@@ -46,7 +46,9 @@ export const loginUser = async (values: {
     const res = await axiosInstanceAuth.post(API_ENDPOINTS.LOGIN, values);
     return res.data;
   } catch (error: any) {
-    toast.error(error.response?.data?.message || "Login failed");
+    console.log(error,'errorerrorerror');
+    
+    toast.error(error.response?.data?.detail || "Login failed");
     throw error;
   }
 };
@@ -71,7 +73,7 @@ export const createNewPassword = async (values: {
     const res = await axiosInstanceAuth.post(API_ENDPOINTS.CREATE_NEW_PASSWORD, values);
     return res.data;
   } catch (error: any) {
-    toast.error(error.response?.data?.message || "Creating new password failed");
+    toast.error(error.response?.data?.detail || "Creating new password failed");
     throw error;
   }
 };
@@ -84,7 +86,7 @@ export const resetPassword = async (data: {
     const res = await axiosInstanceAuth.post(API_ENDPOINTS.RESET_PASSWORD, data);
     return res.data;
   } catch (error: any) {
-    toast.error(error.response?.data?.message || "Password reset failed");
+    toast.error(error.response?.data?.detail || "Password reset failed");
     throw error;
   }
 };
@@ -94,7 +96,18 @@ export const getAllUsers = async () => {
     const res = await axiosInstanceAuth.get(API_ENDPOINTS.GET_ALL_USERS);
     return res.data;
   } catch (error: any) {
-    toast.error(error.response?.data?.message || "Failed to fetch users");
+    toast.error(error.response?.data?.detail || "Failed to fetch users");
+    throw error;
+  }
+};
+
+
+export const logOut = async () => {
+  try {
+    const res = await axiosInstanceAuth.get(API_ENDPOINTS.LOGOUT);
+    return res.data;
+  } catch (error: any) {
+    toast.error(error.response?.data?.detail);
     throw error;
   }
 };

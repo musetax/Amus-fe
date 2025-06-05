@@ -22,7 +22,7 @@ const axiosInstanceAuth: AxiosInstance = axios.create({
 });
 
 axiosInstanceAuth.interceptors.request.use((config) => {
-  config.headers["service_key"] = "amus";
+  config.headers["service-key"] = "amus";
   return config;
 });
 

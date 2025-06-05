@@ -25,6 +25,8 @@ import { RootState } from "@/redux/store";
 import { useDispatch } from "react-redux";
 import { clearUserData } from "@/redux/slice/authSlice";
 import { useRouter } from "next/navigation";
+import { logOut } from "@/app/api/auth/authApis";
+import { toast } from "react-toastify";
 
 const HeaderBar: React.FC<any> = () => {
   const user = useSelector((state: RootState) => state.auth.user);
@@ -33,15 +35,21 @@ const HeaderBar: React.FC<any> = () => {
   console.log(user, "useruser");
   const dispatch = useDispatch();
   const handleLogout = async () => {
-    localStorage.clear();
-    dispatch(clearUserData(""));
-    document.cookie = "collintoken=; path=/; expires=0;";
-    document.cookie.split(";").forEach((c) => {
-      document.cookie = c
-        .replace(/^ +/, "")
-        .replace(/=.*/, `=;expires=${new Date().toUTCString()};path=/`);
-    });
-    router.push("/login");
+    const response = await logOut();
+    if (response?.status_code == 200) {
+      localStorage.clear();
+      dispatch(clearUserData(""));
+      document.cookie = "collintoken=; path=/; expires=0;";
+      document.cookie.split(";").forEach((c) => {
+        document.cookie = c
+          .replace(/^ +/, "")
+          .replace(/=.*/, `=;expires=${new Date().toUTCString()};path=/`);
+      });
+      router.push("/login");
+      toast.success(response?.message);
+    } else {
+      toast.error(response?.detail);
+    }
   };
 
   const handleUserProfile = async () => {
