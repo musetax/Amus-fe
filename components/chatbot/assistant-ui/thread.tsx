@@ -4,6 +4,7 @@ import {
   ComposerPrimitive,
   MessagePrimitive,
   ThreadPrimitive,
+  useMessage,
 } from "@assistant-ui/react";
 import { useEffect, useRef, useState, type FC } from "react";
 import {
@@ -33,6 +34,11 @@ import { useThread } from "@assistant-ui/react";
 import { ComposerAttachments } from "@/components/assistant-ui/attachment";
 
 import { UserMessageAttachments } from "@/components/assistant-ui/attachment";
+import debounce from "lodash.debounce";
+import { setSpeak } from "@/redux/slice/authSlice";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 export const Thread: any = ({ activeTab, setActiveTab }: any) => {
   useEffect(() => {
     const handleBeforeUnload = () => {
@@ -200,7 +206,6 @@ export const Thread: any = ({ activeTab, setActiveTab }: any) => {
   );
 };
 
-
 const ThreadScrollToBottom: FC = () => {
   return (
     <ThreadPrimitive.ScrollToBottom asChild>
@@ -274,16 +279,23 @@ const ThreadWelcomeSuggestions: FC = () => {
 
 const Composer: FC = () => {
   const composerRef = useRef<HTMLTextAreaElement | null>(null);
+  const dispatch = useDispatch();
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter") {
+      dispatch(setSpeak(false));
+    }
+  };
 
   return (
     <ComposerPrimitive.Root className="focus-within:border-ring/20 flex w-full flex-wrap items-end rounded-lg border bg-inherit px-2.5 shadow-sm transition-colors ease-in gap-2">
-      <ComposerAttachments></ComposerAttachments>
+      <ComposerAttachments />
       <ComposerPrimitive.Input
         ref={composerRef}
         rows={1}
         autoFocus
         placeholder="Write a message..."
         className="placeholder:text-muted-foreground max-h-40 flex-grow resize-none border-none bg-transparent px-2 py-4 text-sm outline-none focus:ring-0 disabled:cursor-not-allowed"
+        onKeyUp={handleKeyDown}
       />
       <ComposerAction composerRef={composerRef} />
     </ComposerPrimitive.Root>
@@ -297,11 +309,14 @@ interface ComposerActionProps {
 const ComposerAction: FC<ComposerActionProps> = ({ composerRef }) => {
   const { transcript, listening, startListening, stopListening } =
     useSpeechRecognition();
-
+  const message = composerRef.current?.value.trim();
+  console.log("Submitted message:", message);
+  const dispatch = useDispatch();
   useEffect(() => {
     if (transcript && composerRef.current) {
       const message =
         typeof transcript === "string" ? transcript : String(transcript);
+      console.log(message, "messages");
 
       // Set value via native setter
       const nativeSetter = Object.getOwnPropertyDescriptor(
@@ -320,6 +335,8 @@ const ComposerAction: FC<ComposerActionProps> = ({ composerRef }) => {
           code: "Enter",
           bubbles: true,
         });
+        console.log("ccccccccccccccccc");
+
         composerRef.current.dispatchEvent(enterEvent);
       }
     }
@@ -349,6 +366,7 @@ const ComposerAction: FC<ComposerActionProps> = ({ composerRef }) => {
 
         <ComposerPrimitive.Send asChild>
           <TooltipIconButton
+            onClick={() => dispatch(setSpeak(false))}
             tooltip="Send"
             variant="default"
             className="my-2.5 size-8 p-2 bg-mediumBlueGradient rounded-full transition-opacity ease-in"
@@ -421,15 +439,129 @@ const EditComposer: FC = () => {
   );
 };
 
-const AssistantMessage: FC = () => {
+const AssistantMessage: React.FC = () => {
+  const shouldSpeak = useSelector((state: RootState) => state.auth.shouldSpeak);
+
+  const [isPlaying, setIsPlaying] = useState(false);
+  const { content } = useMessage(); // streaming content parts
+  const audioQueue = useRef<string[]>([]); // queue of audio URLs or texts to play
+  const isPlayingRef = useRef(false);
+
+  // Helper to extract text from content parts (as you have)
+  const extractTextFromContent = (contentArray: any): string => {
+    if (!contentArray) return "";
+    return contentArray
+      .map((part: any) => {
+        if (typeof part === "string") return part;
+        if ("text" in part && typeof part.text === "string") return part.text;
+        return "";
+      })
+      .join(" ");
+  };
+
+  // Track the last chunk we played, so we don't resend duplicates
+  const lastPlayedText = useRef("");
+
+  // Function to get audio blob from ElevenLabs
+  const fetchAudio = async (text: string): Promise<string | null> => {
+    const voiceId = "Xb7hH8MSUJpSbSDYk0k2"; // your voice ID
+    const apiKey = "sk_93eefaaef4e81de480c4de761bb3164c7fa3a9a03d795a8c"; // keep secure!
+    if (!apiKey) {
+      console.warn("ElevenLabs API key missing");
+      return null;
+    }
+
+    const baseUrl = "https://api.elevenlabs.io/v1/text-to-speech";
+    const headers = {
+      "Content-Type": "application/json",
+      "xi-api-key": apiKey,
+    };
+
+    const requestBody = {
+      text,
+      voice_settings: {
+        stability: 0.5,
+        similarity_boost: 0.75,
+      },
+    };
+
+    try {
+      const response = await axios.post(`${baseUrl}/${voiceId}`, requestBody, {
+        headers,
+        responseType: "blob",
+      });
+
+      if (response.status === 200) {
+        return URL.createObjectURL(response.data);
+      } else {
+        console.error("Failed to get audio from ElevenLabs", response);
+        return null;
+      }
+    } catch (err) {
+      console.error("ElevenLabs audio error:", err);
+      return null;
+    }
+  };
+
+  // Play the next audio in queue if not already playing
+  const playNextAudio = async () => {
+    if (isPlayingRef.current) return; // already playing
+    if (audioQueue.current.length === 0) return;
+
+    const audioUrl = audioQueue.current.shift();
+    if (!audioUrl) return;
+
+    isPlayingRef.current = true;
+    setIsPlaying(true);
+
+    const audio = new Audio(audioUrl);
+    audio.play();
+
+    audio.onended = () => {
+      URL.revokeObjectURL(audioUrl);
+      isPlayingRef.current = false;
+      setIsPlaying(false);
+      // Play next if any
+      playNextAudio();
+    };
+  };
+  useEffect(() => {
+    console.log(shouldSpeak, "shouldSpeak111111");
+  }, [shouldSpeak]);
+  useEffect(() => {
+    console.log(shouldSpeak, "shouldSpeakshouldSpeak");
+
+    if (!shouldSpeak) return;
+    if (!content) return;
+
+    const text = extractTextFromContent(content);
+    if (text.trim() === "") return;
+
+    // Debounced function to run when content stops updating
+    const handleFinalText = debounce(async (finalText: string) => {
+      if (finalText === lastPlayedText.current) return;
+      lastPlayedText.current = finalText;
+
+      const audioUrl = await fetchAudio(finalText);
+      if (audioUrl) {
+        audioQueue.current.push(audioUrl);
+        playNextAudio();
+      }
+    }, 500); // 1 second of inactivity means "streaming done"
+
+    handleFinalText(text);
+
+    return () => {
+      handleFinalText.cancel();
+    };
+  }, [content]);
+
   return (
     <MessagePrimitive.Root className="grid grid-cols-[auto_auto_1fr] grid-rows-[auto_1fr] relative w-full max-w-[var(--thread-max-width)] py-4">
       <div className="text-foreground max-w-[calc(var(--thread-max-width)*0.8)] break-words leading-7 col-span-2 col-start-2 row-start-1 my-1.5">
         <MessagePrimitive.Content components={{ Text: MarkdownText }} />
       </div>
-
-      <AssistantActionBar />
-
+      {isPlayingRef?.current == false && <AssistantActionBar />}
       <BranchPicker className="col-start-2 row-start-2 -ml-2 mr-2" />
     </MessagePrimitive.Root>
   );
@@ -472,8 +604,6 @@ const AssistantActionBar: FC = () => {
     </ActionBarPrimitive.Root>
   );
 };
-
-
 
 const BranchPicker: FC<BranchPickerPrimitive.Root.Props> = ({
   className,

@@ -5,6 +5,7 @@ const initialState: any = {
   user: null,
   loading: false,
   error: null,
+  shouldSpeak:false
 };
 
 const authSlice = createSlice({
@@ -19,6 +20,10 @@ const authSlice = createSlice({
       
       state.user = action.payload;
     },
+    setSpeak: (state, action) => {
+       
+      state.shouldSpeak = action.payload;
+    },
     clearUserData: (state, action) => {
        
       state.user = null;
@@ -26,5 +31,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { setUserData, restoreState,clearUserData } = authSlice.actions;
+export const { setUserData, restoreState,clearUserData ,setSpeak} = authSlice.actions;
 export default authSlice.reducer;
