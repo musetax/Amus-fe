@@ -18,7 +18,7 @@ export const registerUser = async (values: {
     const res = await axiosInstanceAuth.post(API_ENDPOINTS.REGISTER, payload);
     return res.data;
   } catch (error: any) {
-    toast.error(error.response?.data?.message || "Registration failed");
+    toast.error(error.response?.data?.message || "Registration failed",{toastId:'reg-fail'});
     throw error;
   }
 };
@@ -28,7 +28,7 @@ export const resendOtp = async (email: string) => {
     const res = await axiosInstanceAuth.post(API_ENDPOINTS.RESEND_OTP, { email });
     return res.data;
   } catch (error: any) {
-    toast.error(error.response?.data?.message || "Failed to resend OTP");
+    toast.error(error.response?.data?.message || "Failed to resend OTP",{toastId:'fail-otp-resend'});
     throw error;
   }
 };
@@ -38,7 +38,7 @@ export const verifyOtp = async (data: { email: string; confirmation_code: string
     const res = await axiosInstanceAuth.post(API_ENDPOINTS.VERIFY_EMAIL, data);
     return res.data;
   } catch (error: any) {
-    toast.error(error.response?.data?.message || "OTP verification failed");
+    toast.error(error.response?.data?.message || "OTP verification failed",{toastId:'orp-fail-verify'});
     throw error;
   }
 };
@@ -57,7 +57,7 @@ export const loginUser = async (values: {
   } catch (error: any) {
     console.log(error,'errorerrorerror');
     
-    toast.error(error.response?.data?.detail || "Login failed");
+    toast.error(error.response?.data?.detail || "Login failed",{toastId:'login-failed'});
     throw error;
   }
 };
@@ -67,7 +67,7 @@ export const forgotPassword = async (email: string) => {
     const res = await axiosInstanceAuth.post(API_ENDPOINTS.FORGOT_PASSWORD, { email });
     return res.data;
   } catch (error: any) {
-    toast.error(error.response?.data?.detail || "Forgot password request failed");
+    toast.error(error.response?.data?.detail || "Forgot password request failed",{toastId:'forgot-pass-fail'});
     throw error;
   }
 };
@@ -82,7 +82,7 @@ export const createNewPassword = async (values: {
     const res = await axiosInstanceAuth.post(API_ENDPOINTS.CREATE_NEW_PASSWORD, values);
     return res.data;
   } catch (error: any) {
-    toast.error(error.response?.data?.detail || "Creating new password failed");
+    toast.error(error.response?.data?.detail || "Creating new password failed",{toastId:'crete-new-pass'});
     throw error;
   }
 };
@@ -95,7 +95,7 @@ export const resetPassword = async (data: {
     const res = await axiosInstanceAuth.post(API_ENDPOINTS.RESET_PASSWORD, data);
     return res.data;
   } catch (error: any) {
-    toast.error(error.response?.data?.detail || "Password reset failed");
+    toast.error(error.response?.data?.detail || "Password reset failed",{toastId:'rs-pass'});
     throw error;
   }
 };
@@ -105,7 +105,7 @@ export const getAllUsers = async () => {
     const res = await axiosInstanceAuth.get(API_ENDPOINTS.GET_ALL_USERS);
     return res.data;
   } catch (error: any) {
-    toast.error(error.response?.data?.detail || "Failed to fetch users");
+    toast.error(error.response?.data?.detail || "Failed to fetch users",{toastId:'fetch-suers'});
     throw error;
   }
 };

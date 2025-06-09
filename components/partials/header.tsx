@@ -45,7 +45,7 @@ const HeaderBar: React.FC<any> = () => {
           .replace(/=.*/, `=;expires=${new Date().toUTCString()};path=/`);
       });
       router.push("/login");
-      toast.success('Logout successfully.');
+      toast.success('Logout successfully.',{toastId:'logout-success'});
       await logOut();
 
     // } else {

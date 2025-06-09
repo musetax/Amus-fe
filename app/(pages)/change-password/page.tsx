@@ -72,7 +72,7 @@ const ChangePasswordPage = () => {
 
   const handleResendOtp = async () => {
     if (!email) {
-      toast.error("Email not found. Please reload the page.");
+      toast.error("Email not found. Please reload the page.",{toastId:'resend-otp'});
       return;
     }
 
@@ -88,7 +88,7 @@ const ChangePasswordPage = () => {
     } catch (error) {
       console.log(error,'-');
       
-      toast.error("Error resending OTP");
+      toast.error("Error resending OTP",{toastId:'otp-erro'});
     } finally {
       setResendLoading(false);
     }
@@ -103,12 +103,12 @@ const ChangePasswordPage = () => {
     try {
       const response = await createNewPassword(values);
       if (response?.status_code === 200) {
-        toast.success("Password changed successfully");
+        toast.success("Password changed successfully",{toastId:'pass-chnge'});
         localStorage.removeItem("email");
         localStorage.removeItem(TIMER_KEY);
         router.push("/login");
       } else {
-        toast.error(response?.message || "Something went wrong");
+        toast.error(response?.message || "Something went wrong",{toastId:'some-wrong'});
       }
     } catch (error) {
       console.error(error);

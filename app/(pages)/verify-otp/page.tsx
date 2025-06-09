@@ -104,7 +104,7 @@ const VerifyOtpPage = () => {
     } catch (error) {
         console.log(error,'v');
         
-      toast.error("Failed to resend OTP. Please try again.");
+      toast.error("Failed to resend OTP. Please try again.",{toastId:'failed-otp-error'});
     } finally {
       setResendLoading(false);
     }
