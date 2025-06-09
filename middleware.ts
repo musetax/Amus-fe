@@ -12,8 +12,7 @@ export function middleware(request: NextRequest) {
     "/reset-password",
     "/verify-otp",
     "/change-password",
-    "/dashboard"
-  ];
+   ];
  
   // Allow requests to static files and assets
   if (
@@ -34,10 +33,10 @@ export function middleware(request: NextRequest) {
   }
  
   // If the user is authenticated and trying to access a public route, redirect to /home
-//   if (isPublicPath.includes(path) && token) {
+  if (isPublicPath.includes(path) && token) {
      
-//     return NextResponse.redirect(new URL("/dashboard", request.url));
-//   }
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
 
 //   return NextResponse.next();
 }

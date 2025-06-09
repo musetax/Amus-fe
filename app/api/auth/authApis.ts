@@ -107,7 +107,7 @@ export const logOut = async () => {
     const res = await axiosInstanceAuth.get(API_ENDPOINTS.LOGOUT);
     return res.data;
   } catch (error: any) {
-    toast.error(error.response?.data?.detail);
+   console.log(error.response?.data?.detail);
     throw error;
   }
 };

@@ -36,7 +36,7 @@ const HeaderBar: React.FC<any> = () => {
   const dispatch = useDispatch();
   const handleLogout = async () => {
     const response = await logOut();
-    if (response?.status_code == 200) {
+    // if (response?.status_code == 200) {
       localStorage.clear();
       dispatch(clearUserData(""));
       document.cookie = "collintoken=; path=/; expires=0;";
@@ -46,10 +46,10 @@ const HeaderBar: React.FC<any> = () => {
           .replace(/=.*/, `=;expires=${new Date().toUTCString()};path=/`);
       });
       router.push("/login");
-      toast.success(response?.message);
-    } else {
-      toast.error(response?.detail);
-    }
+      toast.success('Logout successfully.');
+    // } else {
+    //   toast.error(response?.detail);
+    // }
   };
 
   const handleUserProfile = async () => {
