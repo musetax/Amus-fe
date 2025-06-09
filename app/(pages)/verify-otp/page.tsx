@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import OTPInput from "react-otp-input";
 import * as Yup from "yup";
-import { verifyOtp, resendOtp } from "../api/auth/authApis";
+import { verifyOtp, resendOtp } from "../../api/auth/authApis";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 

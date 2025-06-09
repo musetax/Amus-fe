@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
-import { forgotPassword } from "../api/auth/authApis";
+import { forgotPassword } from "../../api/auth/authApis";
 import { toast } from "react-toastify";
 
 // Validation schema
