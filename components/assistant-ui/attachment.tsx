@@ -24,6 +24,7 @@ import {
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { TooltipIconButton } from "@/components/assistant-ui/tooltip-icon-button";
 import { DialogContent as DialogPrimitiveContent } from "@radix-ui/react-dialog";
+import Image from "next/image";
 
 const useFileSrc = (file: File | undefined) => {
   const [src, setSrc] = useState<string | undefined>(undefined);
@@ -53,7 +54,7 @@ const useAttachmentSrc = () => {
       const src = a.content?.filter((c) => c.type === "image")[0]?.image;
       if (!src) return {};
       return { src };
-    }),
+    })
   );
 
   return useFileSrc(file) ?? src;
@@ -67,19 +68,24 @@ const AttachmentPreview: FC<AttachmentPreviewProps> = ({ src }) => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   return (
-     <img
-      src={src}
+    <div
       style={{
-        width: "auto",
-        height: "auto",
         maxWidth: "75dvh",
         maxHeight: "75dvh",
-        display: isLoaded ? "block" : "none",
         overflow: "clip",
+        display: isLoaded ? "block" : "none",
       }}
-      onLoad={() => setIsLoaded(true)}
-      alt="Preview"
-    />
+    >
+      <Image
+        src={src}
+        alt="Preview"
+        width={0} // These 3 allow for intrinsic sizing
+        height={0}
+        sizes="75dvh"
+        style={{ width: "auto", height: "auto" }}
+        onLoad={() => setIsLoaded(true)}
+      />
+    </div>
   );
 };
 
@@ -90,7 +96,10 @@ const AttachmentPreviewDialog: FC<PropsWithChildren> = ({ children }) => {
 
   return (
     <Dialog>
-      <DialogTrigger className="hover:bg-accent/50 cursor-pointer transition-colors" asChild>
+      <DialogTrigger
+        className="hover:bg-accent/50 cursor-pointer transition-colors"
+        asChild
+      >
         {children}
       </DialogTrigger>
       <AttachmentDialogContent>

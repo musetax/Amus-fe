@@ -3,8 +3,7 @@ import {
   BranchPickerPrimitive,
   ComposerPrimitive,
   MessagePrimitive,
-  ThreadPrimitive,
-  useMessage,
+  ThreadPrimitive
 } from "@assistant-ui/react";
 import { useEffect, useRef, useState, type FC } from "react";
 import {
@@ -34,10 +33,6 @@ import { useThread } from "@assistant-ui/react";
 import { ComposerAttachments } from "@/components/assistant-ui/attachment";
 
 import { UserMessageAttachments } from "@/components/assistant-ui/attachment";
-import debounce from "lodash.debounce";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
 export const Thread: any = ({ activeTab, setActiveTab }: any) => {
   useEffect(() => {
     const handleBeforeUnload = () => {
@@ -303,8 +298,7 @@ const ComposerAction: FC<ComposerActionProps> = ({ composerRef }) => {
     useSpeechRecognition();
   const message = composerRef.current?.value.trim();
   console.log("Submitted message:", message);
-  const dispatch = useDispatch();
-  useEffect(() => {
+   useEffect(() => {
     if (transcript && composerRef.current) {
       const message =
         typeof transcript === "string" ? transcript : String(transcript);

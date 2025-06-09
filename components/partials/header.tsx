@@ -35,7 +35,7 @@ const HeaderBar: React.FC<any> = () => {
   console.log(user, "useruser");
   const dispatch = useDispatch();
   const handleLogout = async () => {
-    const response = await logOut();
+     await logOut();
     // if (response?.status_code == 200) {
       localStorage.clear();
       dispatch(clearUserData(""));
