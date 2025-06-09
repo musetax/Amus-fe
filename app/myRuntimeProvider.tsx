@@ -3,17 +3,14 @@
 import { getCachedEmail, getCachedSessionId } from "@/services/chatSession";
 import { type ChatModelAdapter } from "@assistant-ui/react";
 
-
-
 export const MyModelAdapter: ChatModelAdapter = {
-  async *run({ messages}) {
+  async *run({ messages }) {
     try {
       const history = [];
       const count = 5;
       const start = messages.length > count ? messages.length - count : 0;
-       const message: any = messages;
+      const message: any = messages;
       for (let i = message.length - 1; i >= start; i--) {
- 
         const text = message[i].content[0].text;
         if (message[i].role === "user") {
           history.push(`user:${text}`);
@@ -21,25 +18,25 @@ export const MyModelAdapter: ChatModelAdapter = {
           history.push(`assistant:${text}`);
         }
       }
- 
 
-       const response = await fetch(
-           `${process.env.NEXT_PUBLIC_BACKEND_API}/api/tax_education/query`,
-         {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}/api/tax_education/query`,
+        {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-             //     // history: history,
+            //     // history: history,
             query: message[messages.length - 1].content[0].text,
             email: getCachedEmail(),
+
             chat_type: "EDUCATION",
             session_id: getCachedSessionId(),
           }),
         }
       );
-       if (!response.ok || !response.body) {
+      if (!response.ok || !response.body) {
         throw new Error("Network response was not ok or stream missing");
       }
 
@@ -63,13 +60,12 @@ export const MyModelAdapter: ChatModelAdapter = {
 
             text += chunkText; // ✅ Accumulate string correctly
 
- 
             yield {
               content: [{ type: "text", text: text }],
               metadata: {
-                 //       // custom: {
-      //       //   suggestions
-      //       // }
+                //       // custom: {
+                //       //   suggestions
+                //       // }
               },
             };
           } catch (err) {
@@ -77,9 +73,6 @@ export const MyModelAdapter: ChatModelAdapter = {
           }
         }
       }
-
-
-
     } catch (error) {
       console.error("Error in TaxModelAdapter:", error);
 

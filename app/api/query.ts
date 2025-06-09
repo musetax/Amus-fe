@@ -1,4 +1,4 @@
-import axiosInstance from '@/utilities/axios';
+ import { axiosInstance } from '@/utilities/axios';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 

@@ -4,6 +4,7 @@ import {
   ComposerPrimitive,
   MessagePrimitive,
   ThreadPrimitive,
+  useMessage,
 } from "@assistant-ui/react";
 import { useEffect, useRef, useState, type FC } from "react";
 import {
@@ -17,6 +18,8 @@ import {
   Percent,
   PieChart,
   SendHorizontalIcon,
+  Volume2Icon,
+  VolumeXIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -31,7 +34,21 @@ import { useThread } from "@assistant-ui/react";
 import { ComposerAttachments } from "@/components/assistant-ui/attachment";
 
 import { UserMessageAttachments } from "@/components/assistant-ui/attachment";
+import debounce from "lodash.debounce";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 export const Thread: any = ({ activeTab, setActiveTab }: any) => {
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      window.speechSynthesis.cancel();
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
+
   const { messages } = useThread();
 
   const assistantMessages = [...messages]
@@ -57,8 +74,6 @@ export const Thread: any = ({ activeTab, setActiveTab }: any) => {
   const handleChange = () => {
     setActiveTab("tax");
   };
-
-
 
   return (
     <>
@@ -266,7 +281,7 @@ const Composer: FC = () => {
 
   return (
     <ComposerPrimitive.Root className="focus-within:border-ring/20 flex w-full flex-wrap items-end rounded-lg border bg-inherit px-2.5 shadow-sm transition-colors ease-in gap-2">
-      <ComposerAttachments></ComposerAttachments>
+      <ComposerAttachments />
       <ComposerPrimitive.Input
         ref={composerRef}
         rows={1}
@@ -286,11 +301,14 @@ interface ComposerActionProps {
 const ComposerAction: FC<ComposerActionProps> = ({ composerRef }) => {
   const { transcript, listening, startListening, stopListening } =
     useSpeechRecognition();
-
+  const message = composerRef.current?.value.trim();
+  console.log("Submitted message:", message);
+  const dispatch = useDispatch();
   useEffect(() => {
     if (transcript && composerRef.current) {
       const message =
         typeof transcript === "string" ? transcript : String(transcript);
+      console.log(message, "messages");
 
       // Set value via native setter
       const nativeSetter = Object.getOwnPropertyDescriptor(
@@ -309,6 +327,8 @@ const ComposerAction: FC<ComposerActionProps> = ({ composerRef }) => {
           code: "Enter",
           bubbles: true,
         });
+        console.log("ccccccccccccccccc");
+
         composerRef.current.dispatchEvent(enterEvent);
       }
     }
@@ -317,9 +337,9 @@ const ComposerAction: FC<ComposerActionProps> = ({ composerRef }) => {
   return (
     <>
       <ThreadPrimitive.If running={false}>
-        <ComposerPrimitive.AddAttachment asChild>
-          
-        </ComposerPrimitive.AddAttachment>
+        <ComposerPrimitive.AddAttachment
+          asChild
+        ></ComposerPrimitive.AddAttachment>
 
         <TooltipIconButton
           tooltip={listening ? "Stop recording" : "Voice input"}
@@ -410,15 +430,13 @@ const EditComposer: FC = () => {
   );
 };
 
-const AssistantMessage: FC = () => {
+const AssistantMessage: React.FC = () => {
   return (
     <MessagePrimitive.Root className="grid grid-cols-[auto_auto_1fr] grid-rows-[auto_1fr] relative w-full max-w-[var(--thread-max-width)] py-4">
       <div className="text-foreground max-w-[calc(var(--thread-max-width)*0.8)] break-words leading-7 col-span-2 col-start-2 row-start-1 my-1.5">
         <MessagePrimitive.Content components={{ Text: MarkdownText }} />
       </div>
-
       <AssistantActionBar />
-
       <BranchPicker className="col-start-2 row-start-2 -ml-2 mr-2" />
     </MessagePrimitive.Root>
   );
@@ -442,7 +460,22 @@ const AssistantActionBar: FC = () => {
           </MessagePrimitive.If>
         </TooltipIconButton>
       </ActionBarPrimitive.Copy>
-      
+
+      <MessagePrimitive.If speaking={false}>
+        <ActionBarPrimitive.Speak asChild>
+          <TooltipIconButton tooltip="Speak">
+            <Volume2Icon />
+          </TooltipIconButton>
+        </ActionBarPrimitive.Speak>
+      </MessagePrimitive.If>
+
+      <MessagePrimitive.If speaking>
+        <ActionBarPrimitive.StopSpeaking asChild>
+          <TooltipIconButton tooltip="Stop speaking">
+            <VolumeXIcon />
+          </TooltipIconButton>
+        </ActionBarPrimitive.StopSpeaking>
+      </MessagePrimitive.If>
     </ActionBarPrimitive.Root>
   );
 };

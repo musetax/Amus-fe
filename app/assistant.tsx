@@ -1,7 +1,11 @@
 "use client";
 import React, { useState } from "react";
 import { Thread } from "@/components/chatbot/assistant-ui/thread";
- import { AssistantRuntimeProvider, useLocalRuntime } from "@assistant-ui/react";
+import {
+  AssistantRuntimeProvider,
+  useLocalRuntime,
+  WebSpeechSynthesisAdapter,
+} from "@assistant-ui/react";
 
 import { MyModelAdapter } from "./myRuntimeProvider";
 import { TaxModelAdapter } from "./taxModelAdapter";
@@ -18,15 +22,22 @@ export const Assistant = () => {
     attachments: new CompositeAttachmentAdapter([
       new CustomAttachmentAdapter(),
       new SimpleTextAttachmentAdapter(),
+      // new WebSpeechSynthesisAdapter(),
     ]),
   };
 
   const learnRuntime = useLocalRuntime(MyModelAdapter, {
-    adapters: commonAdapters,
+    adapters: {
+      ...commonAdapters, // Spread the commonAdapters properties here
+      speech: new WebSpeechSynthesisAdapter(),
+    },
   });
 
   const taxRuntime = useLocalRuntime(TaxModelAdapter(), {
-    adapters: commonAdapters,
+    adapters: {
+      ...commonAdapters, // Spread the commonAdapters properties here
+      speech: new WebSpeechSynthesisAdapter(),
+    },
   });
 
   // ✅ Choose runtime based on tab
@@ -37,7 +48,7 @@ export const Assistant = () => {
       <div className="flex justify-between px-4 py-5">
         <div className="grid grid-cols-1 gap-x-2 px-4 py-4 w-full">
           <Thread activeTab={activeTab} setActiveTab={setActiveTab} />
-        </div> 
+        </div>
       </div>
     </AssistantRuntimeProvider>
   );
