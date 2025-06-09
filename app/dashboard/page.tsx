@@ -2,12 +2,13 @@
 "use client";
 
 import HeaderBar from "@/components/partials/header";
+
 import { Assistant } from "@/app/assistant";
 
 function Dashboard() {
   return (
     <>
-      <HeaderBar />
+      <HeaderBar /> 
       <Assistant />
     </>
   );
