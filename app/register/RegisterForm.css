@@ -53,3 +53,22 @@
     background-color: #005ad1;
   }
   
+
+  .password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  .password-wrapper input {
+    width: 100%;
+    padding-right: 2.5rem; /* Leave space for the icon */
+  }
+  
+  .toggle-icon {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    color: #555;
+  }
+  
