@@ -1,13 +1,10 @@
-import { setSpeak } from "@/redux/slice/authSlice";
 import { useState, useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
 
 export const useSpeechRecognition = () => {
   const [transcript, setTranscript] = useState("");
   const [listening, setListening] = useState(false);
   const recognitionRef = useRef<any>(null);
-  const dispatch = useDispatch();
-  useEffect(() => {
+   useEffect(() => {
     const SpeechRecognition =
       (window as any).SpeechRecognition ||
       (window as any).webkitSpeechRecognition;
@@ -42,10 +39,8 @@ export const useSpeechRecognition = () => {
     recognitionRef.current = recognition;
   }, []);
   const startListening = () => {
-    console.log('truuuuuuuuuuuuu');
-    
-    dispatch(setSpeak(true));
-    recognitionRef.current?.start();
+     
+     recognitionRef.current?.start();
   };
   const stopListening = () => recognitionRef.current?.stop();
 
