@@ -5,7 +5,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Eye, EyeOff } from "lucide-react";
 import OTPInput from "react-otp-input";
-import { createNewPassword, forgotPassword, resendOtp } from "../api/auth/authApis";
+import { createNewPassword, forgotPassword } from "../api/auth/authApis";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 
@@ -86,6 +86,8 @@ const ChangePasswordPage = () => {
         toast.error(response?.detail || "Failed to resend OTP", { toastId: "resendFail" });
       }
     } catch (error) {
+      console.log(error,'-');
+      
       toast.error("Error resending OTP");
     } finally {
       setResendLoading(false);
