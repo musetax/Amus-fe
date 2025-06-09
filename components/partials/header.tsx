@@ -78,7 +78,7 @@ const HeaderBar: React.FC<any> = () => {
           >
             {/* Brand and toggle */}
             <div>
-              <Link href="/">
+              <Link href="/dashboard">
                 <Image
                   src={Logo}
                   alt="Paragon Gents"

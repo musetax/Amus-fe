@@ -29,14 +29,19 @@ const RegisterForm = () => {
      },
     validationSchema: Yup.object({
       first_name: Yup.string()
+      .trim()
       .min(3, "First name must be at least 3 characters")
       .max(15, "First name must be at most 15 characters")
-      .required("First name is required"),
-    
+      .required("First name is required")
+      .test("no-only-spaces", "First name cannot be just spaces", val => val?.trim().length > 0),
+  
     last_name: Yup.string()
+      .trim()
       .min(3, "Last name must be at least 3 characters")
       .max(15, "Last name must be at most 15 characters")
-      .required("Last name is required"),
+      .required("Last name is required")
+      .test("no-only-spaces", "Last name cannot be just spaces", val => val?.trim().length > 0),
+      
       email: Yup.string().email("Invalid email").required("Email is required"),
       password: Yup.string()
         .min(8, "Password must be at least 8 characters")
@@ -56,7 +61,7 @@ const RegisterForm = () => {
         if (response?.status_code == 200) {
           console.log(values.email, "values.emailvalues.email");
           toast.success(response?.message, { toastId: "reg-suc" });
-          localStorage.setItem("email", values.email);
+          localStorage.setItem("amus-email", values.email);
           router.push(`/verify-otp`);
           setIsSubmitting(false);
         } else {

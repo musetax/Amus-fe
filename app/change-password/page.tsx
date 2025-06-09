@@ -5,14 +5,13 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Eye, EyeOff } from "lucide-react";
 import OTPInput from "react-otp-input";
-import { createNewPassword } from "../api/auth/authApis";
+import { createNewPassword, forgotPassword, resendOtp } from "../api/auth/authApis";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 
+const TIMER_KEY = "otp_timer_expiry";
 
-// Updated validation schema
 const ChangePasswordSchema = Yup.object().shape({
-
   email: Yup.string().email("Invalid email").required("Email is required"),
   new_password: Yup.string()
     .min(8, "Password must be at least 8 characters")
@@ -28,42 +27,93 @@ const ChangePasswordSchema = Yup.object().shape({
 
 const ChangePasswordPage = () => {
   const [loading, setLoading] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [email, setEmail] = useState("");
+  const [timer, setTimer] = useState(0);
   const router = useRouter();
+
+  useEffect(() => {
+    const storedEmail = localStorage.getItem("amus-email");
+    if (storedEmail) setEmail(storedEmail);
+
+    const expiry = localStorage.getItem(TIMER_KEY);
+    const now = Date.now();
+    if (expiry && +expiry > now) {
+      setTimer(Math.floor((+expiry - now) / 1000));
+    } else {
+      startTimer();
+    }
+  }, []);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (timer > 0) {
+      interval = setInterval(() => {
+        setTimer((prev) => {
+          if (prev <= 1) {
+            localStorage.removeItem(TIMER_KEY);
+            clearInterval(interval);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [timer]);
+
+  const startTimer = () => {
+    const expiryTime = Date.now() + 60 * 1000;
+    localStorage.setItem(TIMER_KEY, expiryTime.toString());
+    setTimer(60);
+  };
+
+  const handleResendOtp = async () => {
+    if (!email) {
+      toast.error("Email not found. Please reload the page.");
+      return;
+    }
+
+    setResendLoading(true);
+    try {
+      const response = await forgotPassword(email);
+      if (response?.status_code == 200) {
+        toast.success(response?.message || "OTP resent successfully", { toastId: "resend" });
+        startTimer();
+      } else {
+        toast.error(response?.detail || "Failed to resend OTP", { toastId: "resendFail" });
+      }
+    } catch (error) {
+      toast.error("Error resending OTP");
+    } finally {
+      setResendLoading(false);
+    }
+  };
 
   const handleChangePassword = async (values: {
     new_password: string;
     confirmation_code: string;
     email: string;
   }) => {
-     console.log()
     setLoading(true);
     try {
-      console.log('enter')
       const response = await createNewPassword(values);
-      console.log(response,"response");
-      
-      if (response?.status_code == 200) {
+      if (response?.status_code === 200) {
         toast.success("Password changed successfully");
         localStorage.removeItem("email");
+        localStorage.removeItem(TIMER_KEY);
         router.push("/login");
       } else {
         toast.error(response?.message || "Something went wrong");
       }
     } catch (error) {
       console.error(error);
-      // toast.error("Error changing password");
     } finally {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    const storedEmail = localStorage.getItem("email");
-    if (storedEmail) setEmail(storedEmail);
-  }, []);
 
   return (
     <div className="max-w-md mx-auto mt-20 p-6 border rounded-xl shadow-md bg-white">
@@ -77,10 +127,7 @@ const ChangePasswordPage = () => {
           email: email || "",
         }}
         validationSchema={ChangePasswordSchema}
-        onSubmit={(values)=>{
-          console.log(values);
-          
-          handleChangePassword(values)}}
+        onSubmit={handleChangePassword}
       >
         {({ values, setFieldValue }) => (
           <Form className="space-y-5">
@@ -111,6 +158,22 @@ const ChangePasswordPage = () => {
                 component="div"
                 className="text-red-500 text-sm text-center mt-1"
               />
+
+              {/* Resend Button */}
+              <div className="text-center mt-3">
+                <button
+                  type="button"
+                  onClick={handleResendOtp}
+                  disabled={resendLoading || timer > 0}
+                  className="text-sm text-blue-600 hover:underline disabled:opacity-50"
+                >
+                  {resendLoading
+                    ? "Resending OTP..."
+                    : timer > 0
+                    ? `Resend OTP in ${timer}s`
+                    : "Resend OTP"}
+                </button>
+              </div>
             </div>
 
             {/* New Password */}

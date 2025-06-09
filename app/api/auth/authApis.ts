@@ -12,7 +12,8 @@ export const registerUser = async (values: {
   try {
     const payload = {
       ...values,
-      is_uncle_sam: true,
+      user_type:null,
+      provider:null
     }
     const res = await axiosInstanceAuth.post(API_ENDPOINTS.REGISTER, payload);
     return res.data;
@@ -87,8 +88,8 @@ export const createNewPassword = async (values: {
 };
 
 export const resetPassword = async (data: {
-  oldPassword: string;
-  newPassword: string;
+  old_password: string;
+  new_password: string;
 }) => {
   try {
     const res = await axiosInstanceAuth.post(API_ENDPOINTS.RESET_PASSWORD, data);

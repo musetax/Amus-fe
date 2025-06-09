@@ -23,9 +23,8 @@ const ForgotPasswordPage = () => {
 
   try {
     const response = await forgotPassword(values?.email)
-    localStorage.setItem('email',values?.email)
-    console.log(response,'-------------')
-
+    localStorage.setItem('amus-email',values?.email)
+ 
     if (response.status_code == 200) {
        router.push('/change-password')  // ✅ move this inside success block
     } else {

@@ -42,10 +42,10 @@ const ChangePassword = () => {
       setLoading(true);
       try {
         const response = await resetPassword({
-          oldPassword: values.oldPassword,
-          newPassword: values.newPassword,
+          old_password: values.oldPassword,
+          new_password: values.newPassword,
         });
-        if (response?.stats_code == 200) {
+        if (response?.status_code == 200) {
             router.push('/dashboard')
           toast.success(response?.message, { toastId: "change" });
           resetForm();

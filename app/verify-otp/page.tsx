@@ -26,7 +26,7 @@ const VerifyOtpPage = () => {
 
   // Load email and timer
   useEffect(() => {
-    const storedEmail = localStorage.getItem("email");
+    const storedEmail = localStorage.getItem("amus-email");
     if (storedEmail) setEmail(storedEmail);
 
     const expiry = localStorage.getItem(TIMER_KEY);
