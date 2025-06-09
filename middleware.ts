@@ -3,7 +3,7 @@ import { NextRequest } from "next/server"; // Import the correct type for the re
 
 export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
-  
+
   // Define the public routes that should remain unprotected
   const isPublicPath: string[] = [
     "/login",
@@ -12,8 +12,8 @@ export function middleware(request: NextRequest) {
     "/reset-password",
     "/verify-otp",
     "/change-password",
-   ];
- 
+  ];
+
   // Allow requests to static files and assets
   if (
     path.startsWith("/_next") ||
@@ -27,18 +27,22 @@ export function middleware(request: NextRequest) {
   // Retrieve the authentication token from cookies
   const token = request.cookies.get("collintoken")?.value; // Extract the token from the "malloryToken" cookie
 
+  // Redirect root path "/" to "/dashboard"
+  if (path === "/") {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
+
   // If the user is not authenticated and the route is not public, redirect to /login
   if (!isPublicPath.includes(path) && !token) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
- 
+
   // If the user is authenticated and trying to access a public route, redirect to /home
   if (isPublicPath.includes(path) && token) {
-     
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-//   return NextResponse.next();
+  //   return NextResponse.next();
 }
 
 export const config = {

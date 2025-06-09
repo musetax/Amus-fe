@@ -35,7 +35,6 @@ const HeaderBar: React.FC<any> = () => {
   console.log(user, "useruser");
   const dispatch = useDispatch();
   const handleLogout = async () => {
-     await logOut();
     // if (response?.status_code == 200) {
       localStorage.clear();
       dispatch(clearUserData(""));
@@ -47,6 +46,8 @@ const HeaderBar: React.FC<any> = () => {
       });
       router.push("/login");
       toast.success('Logout successfully.');
+      await logOut();
+
     // } else {
     //   toast.error(response?.detail);
     // }
