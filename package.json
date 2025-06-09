@@ -14,6 +14,7 @@
     "@assistant-ui/react-ai-sdk": "^0.9.7",
     "@assistant-ui/react-edge": "^0.2.5",
     "@assistant-ui/react-markdown": "^0.9.1",
+    "@elevenlabs/elevenlabs-js": "^2.2.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@heroicons/react": "^2.2.0",

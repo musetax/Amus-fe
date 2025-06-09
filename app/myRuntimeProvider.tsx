@@ -34,7 +34,7 @@ export const MyModelAdapter: ChatModelAdapter = {
              //     // history: history,
             query: message[messages.length - 1].content[0].text,
             // email: getCachedEmail(),
-            email: "raja@yopmail.com",
+            email: "raja1234@yopmail.com",
 
             chat_type: "EDUCATION",
             session_id: getCachedSessionId(),

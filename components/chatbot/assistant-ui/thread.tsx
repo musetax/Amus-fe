@@ -464,44 +464,28 @@ const AssistantMessage: React.FC = () => {
 
   // Function to get audio blob from ElevenLabs
   const fetchAudio = async (text: string): Promise<string | null> => {
-    const voiceId = "Xb7hH8MSUJpSbSDYk0k2"; // your voice ID
-    const apiKey = "sk_93eefaaef4e81de480c4de761bb3164c7fa3a9a03d795a8c"; // keep secure!
-    if (!apiKey) {
-      console.warn("ElevenLabs API key missing");
-      return null;
-    }
-
-    const baseUrl = "https://api.elevenlabs.io/v1/text-to-speech";
-    const headers = {
-      "Content-Type": "application/json",
-      "xi-api-key": apiKey,
-    };
-
-    const requestBody = {
-      text,
-      voice_settings: {
-        stability: 0.5,
-        similarity_boost: 0.75,
-      },
-    };
-
     try {
-      const response = await axios.post(`${baseUrl}/${voiceId}`, requestBody, {
-        headers,
-        responseType: "blob",
+      const response = await fetch('/api/generate-audio', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text }),
       });
-
-      if (response.status === 200) {
-        return URL.createObjectURL(response.data);
-      } else {
-        console.error("Failed to get audio from ElevenLabs", response);
+  
+      if (!response.ok) {
+        console.error('Audio generation failed');
         return null;
       }
-    } catch (err) {
-      console.error("ElevenLabs audio error:", err);
+  
+      const blob = await response.blob();
+      return URL.createObjectURL(blob);
+    } catch (error) {
+      console.error('Error fetching audio:', error);
       return null;
     }
   };
+  
 
   // Play the next audio in queue if not already playing
   const playNextAudio = async () => {
@@ -547,7 +531,7 @@ const AssistantMessage: React.FC = () => {
         audioQueue.current.push(audioUrl);
         playNextAudio();
       }
-    }, 500); // 1 second of inactivity means "streaming done"
+    }, 1); // 1 second of inactivity means "streaming done"
 
     handleFinalText(text);
 
