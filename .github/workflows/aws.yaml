@@ -20,6 +20,7 @@ jobs:
         run: |
           echo "NEXT_PUBLIC_BACKEND_API='https://amus-devapi.musetax.com'" > .env
           echo "NEXT_PUBLIC_FINANCIAL_API='https://staging.musetax.com/FinancialSuite/main/financial-life.html'" >> .env
+          echo "NEXT_PUBLIC_AUTH_API='https://dev-onboarding-api.musetax.com/'" >> .env
 
           cat .env
 
