@@ -10,7 +10,11 @@ export const registerUser = async (values: {
   password: string;
 }) => {
   try {
-    const res = await axiosInstanceAuth.post(API_ENDPOINTS.REGISTER, values);
+    const payload = {
+      ...values,
+      is_uncle_sam: true,
+    }
+    const res = await axiosInstanceAuth.post(API_ENDPOINTS.REGISTER, payload);
     return res.data;
   } catch (error: any) {
     toast.error(error.response?.data?.message || "Registration failed");
@@ -43,7 +47,11 @@ export const loginUser = async (values: {
   password: string;
 }) => {
   try {
-    const res = await axiosInstanceAuth.post(API_ENDPOINTS.LOGIN, values);
+    const payload = {
+      ...values,
+      is_uncle_sam: true,
+    }
+    const res = await axiosInstanceAuth.post(API_ENDPOINTS.LOGIN, payload);
     return res.data;
   } catch (error: any) {
     console.log(error,'errorerrorerror');
