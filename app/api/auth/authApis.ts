@@ -18,7 +18,7 @@ export const registerUser = async (values: {
     const res = await axiosInstanceAuth.post(API_ENDPOINTS.REGISTER, payload);
     return res.data;
   } catch (error: any) {
-    toast.error(error.response?.data?.message || "Registration failed",{toastId:'reg-fail'});
+    toast.error(error.response?.data?.detail || "Registration failed",{toastId:'reg-fail'});
     throw error;
   }
 };
@@ -28,7 +28,7 @@ export const resendOtp = async (email: string) => {
     const res = await axiosInstanceAuth.post(API_ENDPOINTS.RESEND_OTP, { email });
     return res.data;
   } catch (error: any) {
-    toast.error(error.response?.data?.message || "Failed to resend OTP",{toastId:'fail-otp-resend'});
+    toast.error(error.response?.data?.detail || "Failed to resend OTP",{toastId:'fail-otp-resend'});
     throw error;
   }
 };
@@ -38,7 +38,7 @@ export const verifyOtp = async (data: { email: string; confirmation_code: string
     const res = await axiosInstanceAuth.post(API_ENDPOINTS.VERIFY_EMAIL, data);
     return res.data;
   } catch (error: any) {
-    toast.error(error.response?.data?.message || "OTP verification failed",{toastId:'orp-fail-verify'});
+    toast.error(error.response?.data?.detail || "OTP verification failed",{toastId:'orp-fail-verify'});
     throw error;
   }
 };

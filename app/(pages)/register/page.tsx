@@ -58,6 +58,8 @@ const RegisterForm = () => {
       setIsSubmitting(true);
       try {
         const response = await registerUser(values);
+        console.log(response,'response');
+        
         if (response?.status_code == 200) {
           console.log(values.email, "values.emailvalues.email");
           toast.success(response?.message, { toastId: "reg-suc" });
