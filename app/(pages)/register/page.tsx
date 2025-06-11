@@ -66,7 +66,15 @@ const RegisterForm = () => {
           localStorage.setItem("amus-email", values.email);
           router.push(`/verify-otp`);
           setIsSubmitting(false);
-        } else {
+        } 
+        if (response?.status_code == 409) {
+          console.log(values.email, "values.emailvalues.email");
+          toast.success(response?.message, { toastId: "reg-sucx" });
+          localStorage.setItem("amus-email", values.email);
+          router.push(`/verify-otp`);
+          setIsSubmitting(false);
+        } 
+        else {
           toast.error(response?.detail, { toastId: "reg-er" });
           setIsSubmitting(false);
         }
