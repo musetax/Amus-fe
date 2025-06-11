@@ -29,6 +29,8 @@ const LoginPage = () => {
         .min(6, "Password must be at least 6 characters")
         .required("Password is required"),
     }),
+    validateOnBlur: false, // <-- disable onBlur validation
+    validateOnChange: false, // <-- disable onChange validation
     onSubmit: async (values) => {
       setLoading(true);
       try {
