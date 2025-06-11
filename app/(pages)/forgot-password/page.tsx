@@ -6,7 +6,6 @@ import * as Yup from "yup";
 import { useRouter } from "next/navigation";
 import { forgotPassword } from "../../api/auth/authApis";
 import { toast } from "react-toastify";
-import { Link } from "lucide-react";
 
 // Validation schema
 const ForgotPasswordSchema = Yup.object().shape({
