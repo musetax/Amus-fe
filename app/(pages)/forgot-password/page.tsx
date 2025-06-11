@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import { useRouter } from "next/navigation";
 import { forgotPassword } from "../../api/auth/authApis";
 import { toast } from "react-toastify";
+import { Link } from "lucide-react";
 
 // Validation schema
 const ForgotPasswordSchema = Yup.object().shape({
@@ -18,25 +19,25 @@ const ForgotPasswordPage = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
- const handleForgotPassword = async (values: { email: string }) => {
-  setLoading(true)
+  const handleForgotPassword = async (values: { email: string }) => {
+    setLoading(true)
 
-  try {
-    const response = await forgotPassword(values?.email)
-    localStorage.setItem('amus-email',values?.email)
- 
-    if (response.status_code == 200) {
-       router.push('/change-password')  // ✅ move this inside success block
-    } else {
-      toast.error(response.message, { toastId: "reg-er" })
+    try {
+      const response = await forgotPassword(values?.email)
+      localStorage.setItem('amus-email', values?.email)
+
+      if (response.status_code == 200) {
+        router.push('/change-password')  // ✅ move this inside success block
+      } else {
+        toast.error(response.message, { toastId: "reg-er" })
+      }
+    } catch (error) {
+      console.error(error)
+      // toast.error("Something went wrong. Please try again.", { toastId: "reg-er" })
+    } finally {
+      setLoading(false)
     }
-  } catch (error) {
-    console.error(error)
-    // toast.error("Something went wrong. Please try again.", { toastId: "reg-er" })
-  } finally {
-    setLoading(false)
   }
-}
 
 
   return (
@@ -74,6 +75,14 @@ const ForgotPasswordPage = () => {
           </Form>
         )}
       </Formik>
+      <div className="mt-6 text-sm text-center text-gray-600">
+        <p>
+          Back to{" "}
+          <a href="/login" className="text-blue-600 hover:underline">
+            Sign In
+          </a>
+        </p>
+      </div>
     </div>
   );
 };

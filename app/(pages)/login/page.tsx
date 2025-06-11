@@ -26,7 +26,8 @@ const LoginPage = () => {
     validationSchema: Yup.object({
       email: Yup.string().email("Invalid email").required("Email is required"),
       password: Yup.string()
-        .min(6, "Password must be at least 6 characters")
+        .min(8, "Password must be at least 8 characters")
+        .max(24, "Password must be at most 24 characters")
         .required("Password is required"),
     }),
     validateOnBlur: false, // <-- disable onBlur validation
@@ -69,7 +70,7 @@ const LoginPage = () => {
               htmlFor="email"
               className="block text-sm font-medium text-gray-700"
             >
-              Email
+              Email <span className="text-red-500">*</span>
             </label>
             <input
               id="email"
@@ -91,7 +92,7 @@ const LoginPage = () => {
               htmlFor="password"
               className="block text-sm font-medium text-gray-700"
             >
-              Password
+              Password <span className="text-red-500">*</span>
             </label>
             <div className="relative">
               <input

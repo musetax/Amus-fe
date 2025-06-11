@@ -26,30 +26,47 @@ const RegisterForm = () => {
       email: "",
       password: "",
       confirm_password: "",
-     },
+    },
     validationSchema: Yup.object({
       first_name: Yup.string()
-      .trim()
-      .min(3, "First name must be at least 3 characters")
-      .max(15, "First name must be at most 15 characters")
-      .required("First name is required")
-      .test("no-only-spaces", "First name cannot be just spaces", val => val?.trim().length > 0),
-  
-    last_name: Yup.string()
-      .trim()
-      .min(3, "Last name must be at least 3 characters")
-      .max(15, "Last name must be at most 15 characters")
-      .required("Last name is required")
-      .test("no-only-spaces", "Last name cannot be just spaces", val => val?.trim().length > 0),
-      
+        .required("First name is required")
+        .matches(/^[^\s]+(\s[^\s]+)*$/, "First name cannot start or end with spaces")
+        .min(3, "First name must be at least 3 characters")
+        .max(50, "First name must be at most 50 characters")
+        .test(
+          "no-only-spaces",
+          "First name cannot be just spaces",
+          (val) => val?.trim().length > 0
+        ),
+
+      last_name: Yup.string()
+        .required("Last name is required")
+        .matches(/^[^\s]+(\s[^\s]+)*$/, "Last name cannot start or end with spaces")
+        .min(3, "Last name must be at least 3 characters")
+        .max(50, "Last name must be at most 50 characters")
+        .test(
+          "no-only-spaces",
+          "Last name cannot be just spaces",
+          (val) => val?.trim().length > 0
+        ),
+
+
       email: Yup.string().email("Invalid email").required("Email is required"),
       password: Yup.string()
-        .min(8, "Password must be at least 8 characters")
-        .matches(/[A-Z]/, "Must contain an uppercase letter")
-        .matches(/[a-z]/, "Must contain a lowercase letter")
-        .matches(/[0-9]/, "Must contain a number")
-        .matches(/[@$!%*?&]/, "Must contain a special character")
-        .required("Password is required"),
+        .required("Password is required")
+        .test(
+          "is-strong",
+          "Password must be 8-24 characters and include uppercase, lowercase, number, and special character",
+          (value) =>
+            !!value &&
+            value.length >= 8 &&
+            value.length <= 24 &&
+            /[A-Z]/.test(value) &&
+            /[a-z]/.test(value) &&
+            /[0-9]/.test(value) &&
+            /[@$!%*?&]/.test(value)
+        )
+      ,
       confirm_password: Yup.string()
         .oneOf([Yup.ref("password"), ""], "Passwords must match")
         .required("Confirm password is required"),
@@ -58,22 +75,22 @@ const RegisterForm = () => {
       setIsSubmitting(true);
       try {
         const response = await registerUser(values);
-        console.log(response,'response');
-        
+        console.log(response, 'response');
+
         if (response?.status_code == 200) {
           console.log(values.email, "values.emailvalues.email");
           toast.success(response?.message, { toastId: "reg-suc" });
           localStorage.setItem("amus-email", values.email);
           router.push(`/verify-otp`);
           setIsSubmitting(false);
-        } 
+        }
         if (response?.status_code == 409) {
           console.log(values.email, "values.emailvalues.email");
           toast.success(response?.message, { toastId: "reg-sucx" });
           localStorage.setItem("amus-email", values.email);
           router.push(`/verify-otp`);
           setIsSubmitting(false);
-        } 
+        }
         else {
           toast.error(response?.detail, { toastId: "reg-er" });
           setIsSubmitting(false);
@@ -83,7 +100,7 @@ const RegisterForm = () => {
         setIsSubmitting(false);
 
         console.error("Registration error:", error);
-      }  
+      }
     },
   });
 
@@ -174,16 +191,16 @@ const RegisterForm = () => {
       <button type="submit" className="register-btn" disabled={isSubmitting}>
         {isSubmitting ? "Registering..." : "Register"}
       </button>
-       {/* Footer links */}
-       <div className="mt-6 text-sm text-center text-gray-600 space-y-2">
-           
-          <p>
-            Don't have an account?{" "}
-            <Link href="/login" className="text-blue-600 hover:underline">
-              Sign In
-            </Link>
-          </p>
-        </div>
+      {/* Footer links */}
+      <div className="mt-6 text-sm text-center text-gray-600 space-y-2">
+
+        <p>
+          Don't have an account?{" "}
+          <Link href="/login" className="text-blue-600 hover:underline">
+            Sign In
+          </Link>
+        </p>
+      </div>
     </form>
   );
 };
