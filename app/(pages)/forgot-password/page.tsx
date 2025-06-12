@@ -47,6 +47,8 @@ const ForgotPasswordPage = () => {
         initialValues={{ email: "" }}
         validationSchema={ForgotPasswordSchema}
         onSubmit={handleForgotPassword}
+        validateOnBlur={false} // <-- disable onBlur validation
+        validateOnChange={false} // <-- disable onChange validation
       >
         {() => (
           <Form className="space-y-4">

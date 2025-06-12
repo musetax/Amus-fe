@@ -29,17 +29,17 @@ const RegisterForm = () => {
     },
     validationSchema: Yup.object({
       first_name: Yup.string()
-      .required("First name is required")
-      .matches(/^[^\s]+$/, "First name cannot contain spaces")
-      .min(3, "First name must be at least 3 characters")
-      .max(50, "First name must be at most 50 characters"),
-    
-    last_name: Yup.string()
-      .required("Last name is required")
-      .matches(/^[^\s]+$/, "Last name cannot contain spaces")
-      .min(3, "Last name must be at least 3 characters")
-      .max(50, "Last name must be at most 50 characters"),
-    
+        .required("First name is required")
+        .matches(/^[^\s]+$/, "First name cannot contain spaces")
+        .min(3, "First name must be at least 3 characters")
+        .max(50, "First name must be at most 50 characters"),
+
+      last_name: Yup.string()
+        .required("Last name is required")
+        .matches(/^[^\s]+$/, "Last name cannot contain spaces")
+        .min(3, "Last name must be at least 3 characters")
+        .max(50, "Last name must be at most 50 characters"),
+
       email: Yup.string().email("Invalid email").required("Email is required"),
       password: Yup.string()
         .required("Password is required")
@@ -98,11 +98,16 @@ const RegisterForm = () => {
       <h2>Register</h2>
 
       <div className="form-group">
-        <label>First Name <span className="text-red-500">*</span></label>
+        <label>
+          First Name <span className="text-red-500">*</span>
+        </label>
         <input
           name="first_name"
           type="text"
-          onChange={formik.handleChange}
+          onChange={(e) => {
+            const noSpaces = e.target.value.replace(/\s/g, "");
+            formik.setFieldValue("first_name", noSpaces);
+          }}
           onBlur={formik.handleBlur}
           value={formik.values.first_name}
         />
@@ -112,21 +117,28 @@ const RegisterForm = () => {
       </div>
 
       <div className="form-group">
-        <label>Last Name <span className="text-red-500">*</span></label>
+        <label>
+          Last Name <span className="text-red-500">*</span>
+        </label>
         <input
-          name="last_name"
-          type="text"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.last_name}
-        />
+  name="last_name"
+  type="text"
+  onChange={(e) => {
+    const noSpaces = e.target.value.replace(/\s/g, "");
+    formik.setFieldValue("last_name", noSpaces);
+  }}
+  onBlur={formik.handleBlur}
+  value={formik.values.last_name}
+/>
         {formik.touched.last_name && formik.errors.last_name && (
           <div className="error">{formik.errors.last_name}</div>
         )}
       </div>
 
       <div className="form-group">
-        <label>Email <span className="text-red-500">*</span></label>
+        <label>
+          Email <span className="text-red-500">*</span>
+        </label>
         <input
           name="email"
           type="email"
@@ -140,7 +152,9 @@ const RegisterForm = () => {
       </div>
 
       <div className="form-group password-field">
-        <label>Password <span className="text-red-500">*</span></label>
+        <label>
+          Password <span className="text-red-500">*</span>
+        </label>
         <div className="password-wrapper">
           <input
             name="password"
@@ -159,7 +173,9 @@ const RegisterForm = () => {
       </div>
 
       <div className="form-group password-field">
-        <label>Confirm Password <span className="text-red-500">*</span></label>
+        <label>
+          Confirm Password <span className="text-red-500">*</span>
+        </label>
         <div className="password-wrapper">
           <input
             name="confirm_password"
