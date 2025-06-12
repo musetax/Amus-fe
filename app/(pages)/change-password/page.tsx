@@ -19,7 +19,7 @@ const ChangePasswordSchema = Yup.object().shape({
     .required("New password is required"),
   confirmPassword: Yup.string()
     .oneOf([Yup.ref("new_password")], "Passwords must match")
-    .required("Confirm password your password"),
+    .required("Confirm password is required"),
   confirmation_code: Yup.string()
     .matches(/^\d{6}$/, "OTP must be exactly 6 digits")
     .required("OTP is required"),
