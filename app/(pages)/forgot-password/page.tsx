@@ -51,7 +51,7 @@ const ForgotPasswordPage = () => {
         {() => (
           <Form className="space-y-4">
             <div>
-              <label className="block text-sm font-medium">Email Address</label>
+              <label className="block text-sm font-medium">Email Address <span className="text-red-500">*</span></label>
               <Field
                 name="email"
                 type="email"

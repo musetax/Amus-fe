@@ -19,7 +19,7 @@ const ChangePasswordSchema = Yup.object().shape({
     .required("New password is required"),
   confirmPassword: Yup.string()
     .oneOf([Yup.ref("new_password")], "Passwords must match")
-    .required("Confirm your password"),
+    .required("Confirm password your password"),
   confirmation_code: Yup.string()
     .matches(/^\d{6}$/, "OTP must be exactly 6 digits")
     .required("OTP is required"),
@@ -135,7 +135,7 @@ const ChangePasswordPage = () => {
           <Form className="space-y-5">
             {/* OTP */}
             <div>
-              <label className="block mb-1 font-medium">OTP</label>
+              <label className="block mb-1 font-medium">OTP <span className="text-red-500">*</span></label>
               <div className="flex justify-center">
                 <OTPInput
                   value={values.confirmation_code}
@@ -180,7 +180,7 @@ const ChangePasswordPage = () => {
 
             {/* New Password */}
             <div>
-              <label className="block mb-1 font-medium">New Password</label>
+              <label className="block mb-1 font-medium">New Password <span className="text-red-500">*</span></label>
               <div className="relative">
                 <Field
                   type={showNewPassword ? "text" : "password"}
@@ -203,7 +203,7 @@ const ChangePasswordPage = () => {
 
             {/* Confirm Password */}
             <div>
-              <label className="block mb-1 font-medium">Confirm Password</label>
+              <label className="block mb-1 font-medium">Confirm Password <span className="text-red-500">*</span></label>
               <div className="relative">
                 <Field
                   type={showConfirmPassword ? "text" : "password"}

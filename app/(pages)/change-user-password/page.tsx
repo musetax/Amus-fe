@@ -38,6 +38,8 @@ const ChangePassword = () => {
         .oneOf([Yup.ref("newPassword"), ""], "Passwords must match")
         .required("Confirm password is required"),
     }),
+    validateOnBlur: false, // <-- disable onBlur validation
+    validateOnChange: false, // <-- disable onChange validation
     onSubmit: async (values, { resetForm }) => {
       setLoading(true);
       try {
@@ -70,7 +72,6 @@ const ChangePassword = () => {
       fullWidth
       variant="outlined"
       type={show ? "text" : "password"}
-      label={label}
       name={name}
       value={formik.values[name]}
       onChange={formik.handleChange}
@@ -78,6 +79,11 @@ const ChangePassword = () => {
       error={formik.touched[name] && Boolean(formik.errors[name])}
       helperText={formik.touched[name] && formik.errors[name]}
       margin="normal"
+      label={
+        <span>
+          {label} <span className="text-red-500">*</span>
+        </span>
+      }
       InputProps={{
         endAdornment: (
           <InputAdornment position="end">
@@ -93,7 +99,7 @@ const ChangePassword = () => {
       }}
     />
   );
-
+  
   return (
     <>
     <HeaderBar />

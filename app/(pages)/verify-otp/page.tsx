@@ -70,8 +70,8 @@ const VerifyOtpPage = () => {
     setLoading(true);
     try {
       const response = await verifyOtp(values);
-      console.log(response,'responseresponse');
-      
+      console.log(response, "responseresponse");
+
       if (response?.status_code == 200) {
         toast.success(response?.message, { toastId: "very" });
         localStorage.removeItem(TIMER_KEY); // Clear timer on success
@@ -81,7 +81,7 @@ const VerifyOtpPage = () => {
       }
     } catch (error) {
       console.error("OTP verification failed:", error);
-     } finally {
+    } finally {
       setLoading(false);
     }
   };
@@ -96,15 +96,21 @@ const VerifyOtpPage = () => {
     try {
       const response = await resendOtp(email);
       if (response?.status_code == 200) {
-        toast.success(response?.message || "OTP resent successfully",{toastId:'mes'});
+        toast.success(response?.message || "OTP resent successfully", {
+          toastId: "mes",
+        });
         startTimer(); // Reset timer
       } else {
-        toast.error(response?.detail || "Failed to resend OTP",{toastId:'err'});
+        toast.error(response?.detail || "Failed to resend OTP", {
+          toastId: "err",
+        });
       }
     } catch (error) {
-        console.log(error,'v');
-        
-      toast.error("Failed to resend OTP. Please try again.",{toastId:'failed-otp-error'});
+      console.log(error, "v");
+
+      toast.error("Failed to resend OTP. Please try again.", {
+        toastId: "failed-otp-error",
+      });
     } finally {
       setResendLoading(false);
     }
@@ -125,6 +131,10 @@ const VerifyOtpPage = () => {
         >
           {({ setFieldValue, values }) => (
             <Form className="space-y-6">
+              <label className="block mb-1 font-medium">
+                OTP <span className="text-red-500">*</span>
+              </label>
+
               <div className="flex justify-center">
                 <OTPInput
                   value={values.confirmation_code}

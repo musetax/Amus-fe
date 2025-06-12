@@ -110,9 +110,9 @@ const LoginPage = () => {
                 className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 focus:outline-none"
               >
                 {showPassword ? (
-                  <EyeSlashIcon className="h-5 w-5" />
-                ) : (
                   <EyeIcon className="h-5 w-5" />
+                ) : (
+                  <EyeSlashIcon className="h-5 w-5" />
                 )}
               </button>
             </div>

@@ -29,28 +29,17 @@ const RegisterForm = () => {
     },
     validationSchema: Yup.object({
       first_name: Yup.string()
-        .required("First name is required")
-        .matches(/^[^\s]+(\s[^\s]+)*$/, "First name cannot start or end with spaces")
-        .min(3, "First name must be at least 3 characters")
-        .max(50, "First name must be at most 50 characters")
-        .test(
-          "no-only-spaces",
-          "First name cannot be just spaces",
-          (val) => val?.trim().length > 0
-        ),
-
-      last_name: Yup.string()
-        .required("Last name is required")
-        .matches(/^[^\s]+(\s[^\s]+)*$/, "Last name cannot start or end with spaces")
-        .min(3, "Last name must be at least 3 characters")
-        .max(50, "Last name must be at most 50 characters")
-        .test(
-          "no-only-spaces",
-          "Last name cannot be just spaces",
-          (val) => val?.trim().length > 0
-        ),
-
-
+      .required("First name is required")
+      .matches(/^[^\s]+$/, "First name cannot contain spaces")
+      .min(3, "First name must be at least 3 characters")
+      .max(50, "First name must be at most 50 characters"),
+    
+    last_name: Yup.string()
+      .required("Last name is required")
+      .matches(/^[^\s]+$/, "Last name cannot contain spaces")
+      .min(3, "Last name must be at least 3 characters")
+      .max(50, "Last name must be at most 50 characters"),
+    
       email: Yup.string().email("Invalid email").required("Email is required"),
       password: Yup.string()
         .required("Password is required")
@@ -65,17 +54,18 @@ const RegisterForm = () => {
             /[a-z]/.test(value) &&
             /[0-9]/.test(value) &&
             /[@$!%*?&]/.test(value)
-        )
-      ,
+        ),
       confirm_password: Yup.string()
         .oneOf([Yup.ref("password"), ""], "Passwords must match")
         .required("Confirm password is required"),
     }),
+    validateOnBlur: false, // <-- disable onBlur validation
+    validateOnChange: false, // <-- disable onChange validation
     onSubmit: async (values) => {
       setIsSubmitting(true);
       try {
         const response = await registerUser(values);
-        console.log(response, 'response');
+        console.log(response, "response");
 
         if (response?.status_code == 200) {
           console.log(values.email, "values.emailvalues.email");
@@ -90,8 +80,7 @@ const RegisterForm = () => {
           localStorage.setItem("amus-email", values.email);
           router.push(`/verify-otp`);
           setIsSubmitting(false);
-        }
-        else {
+        } else {
           toast.error(response?.detail, { toastId: "reg-er" });
           setIsSubmitting(false);
         }
@@ -109,7 +98,7 @@ const RegisterForm = () => {
       <h2>Register</h2>
 
       <div className="form-group">
-        <label>First Name</label>
+        <label>First Name <span className="text-red-500">*</span></label>
         <input
           name="first_name"
           type="text"
@@ -123,7 +112,7 @@ const RegisterForm = () => {
       </div>
 
       <div className="form-group">
-        <label>Last Name</label>
+        <label>Last Name <span className="text-red-500">*</span></label>
         <input
           name="last_name"
           type="text"
@@ -137,7 +126,7 @@ const RegisterForm = () => {
       </div>
 
       <div className="form-group">
-        <label>Email</label>
+        <label>Email <span className="text-red-500">*</span></label>
         <input
           name="email"
           type="email"
@@ -151,7 +140,7 @@ const RegisterForm = () => {
       </div>
 
       <div className="form-group password-field">
-        <label>Password</label>
+        <label>Password <span className="text-red-500">*</span></label>
         <div className="password-wrapper">
           <input
             name="password"
@@ -170,7 +159,7 @@ const RegisterForm = () => {
       </div>
 
       <div className="form-group password-field">
-        <label>Confirm Password</label>
+        <label>Confirm Password <span className="text-red-500">*</span></label>
         <div className="password-wrapper">
           <input
             name="confirm_password"
@@ -193,7 +182,6 @@ const RegisterForm = () => {
       </button>
       {/* Footer links */}
       <div className="mt-6 text-sm text-center text-gray-600 space-y-2">
-
         <p>
           Don't have an account?{" "}
           <Link href="/login" className="text-blue-600 hover:underline">
