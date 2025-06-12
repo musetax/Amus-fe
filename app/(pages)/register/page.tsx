@@ -121,15 +121,15 @@ const RegisterForm = () => {
           Last Name <span className="text-red-500">*</span>
         </label>
         <input
-  name="last_name"
-  type="text"
-  onChange={(e) => {
-    const noSpaces = e.target.value.replace(/\s/g, "");
-    formik.setFieldValue("last_name", noSpaces);
-  }}
-  onBlur={formik.handleBlur}
-  value={formik.values.last_name}
-/>
+          name="last_name"
+          type="text"
+          onChange={(e) => {
+            const noSpaces = e.target.value.replace(/\s/g, "");
+            formik.setFieldValue("last_name", noSpaces);
+          }}
+          onBlur={formik.handleBlur}
+          value={formik.values.last_name}
+        />
         {formik.touched.last_name && formik.errors.last_name && (
           <div className="error">{formik.errors.last_name}</div>
         )}
@@ -164,7 +164,7 @@ const RegisterForm = () => {
             value={formik.values.password}
           />
           <span className="toggle-icon" onClick={togglePassword}>
-            {showPassword ? <FaEyeSlash /> : <FaEye />}
+            {showPassword ? <FaEye /> : <FaEyeSlash />}
           </span>
         </div>
         {formik.touched.password && formik.errors.password && (
@@ -185,7 +185,7 @@ const RegisterForm = () => {
             value={formik.values.confirm_password}
           />
           <span className="toggle-icon" onClick={toggleConfirm}>
-            {showConfirm ? <FaEyeSlash /> : <FaEye />}
+            {showConfirm ?  <FaEye /> :<FaEyeSlash />}
           </span>
         </div>
         {formik.touched.confirm_password && formik.errors.confirm_password && (
