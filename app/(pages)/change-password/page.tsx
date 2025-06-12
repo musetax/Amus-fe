@@ -130,6 +130,8 @@ const ChangePasswordPage = () => {
         }}
         validationSchema={ChangePasswordSchema}
         onSubmit={handleChangePassword}
+        validateOnBlur={false} // <-- disable onBlur validation
+        validateOnChange={false} // <-- disable onChange validation
       >
         {({ values, setFieldValue }) => (
           <Form className="space-y-5">
@@ -214,7 +216,7 @@ const ChangePasswordPage = () => {
                   className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
-                  {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  {showConfirmPassword ? <Eye size={18} /> :<EyeOff size={18} /> }
                 </div>
               </div>
               <ErrorMessage

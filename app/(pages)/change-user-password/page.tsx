@@ -92,7 +92,7 @@ const ChangePassword = () => {
               edge="end"
               aria-label={`toggle ${label.toLowerCase()} visibility`}
             >
-              {show ? <VisibilityOff /> : <Visibility />}
+              {show ? <Visibility />:  <VisibilityOff /> }
             </IconButton>
           </InputAdornment>
         ),
