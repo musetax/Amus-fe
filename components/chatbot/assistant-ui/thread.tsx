@@ -25,7 +25,6 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/chatbot/ui/button";
 import { TooltipIconButton } from "./tooltip-icon-button";
 import { MarkdownText } from "./markdown-text";
-import axios from "axios";
 import TaxDataModal from "./tax-data";
 import { useSpeechRecognition } from "./speech";
 import { useThread } from "@assistant-ui/react";

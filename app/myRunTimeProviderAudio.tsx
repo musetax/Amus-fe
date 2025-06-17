@@ -1,6 +1,6 @@
 "use client";
 
-import { getCachedEmail, getCachedSessionId } from "@/services/chatSession";
+import { getCachedSessionId } from "@/services/chatSession";
 import { type ChatModelAdapter } from "@assistant-ui/react";
   import Cookies from "js-cookie";
 

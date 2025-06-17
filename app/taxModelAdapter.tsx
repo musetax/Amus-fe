@@ -1,11 +1,11 @@
 "use client";
-import { getCachedEmail, getCachedSessionId } from "@/services/chatSession";
+import { getCachedSessionId } from "@/services/chatSession";
 import { axiosInstance } from "@/utilities/axios";
 import {
 
   type ChatModelAdapter,
 } from "@assistant-ui/react";
-import axios from "axios";
+
 
 
 
