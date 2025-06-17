@@ -1,5 +1,6 @@
 "use client";
 import { getCachedEmail, getCachedSessionId } from "@/services/chatSession";
+import { axiosInstance } from "@/utilities/axios";
 import {
 
   type ChatModelAdapter,
@@ -30,16 +31,16 @@ export const TaxModelAdapter = (): ChatModelAdapter => ({
 
       const userMessage = message[message.length - 1].content[0].text;
 
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         `${process.env.NEXT_PUBLIC_BACKEND_API}/api/chat/message`,
-        
+        // 'https://3a20-103-223-15-108.ngrok-free.app/api/chat/message',
         {
-          "email":getCachedEmail(),
-          "chat_request": {
+          // "email":getCachedEmail(),
+          // "chat_request": {
             "message": userMessage,
             "chat_type": "CALCULATION",
             session_id:getCachedSessionId()
-          }
+          // }
         },
        );
 

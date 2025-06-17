@@ -2,6 +2,7 @@
 
 import { getCachedEmail, getCachedSessionId } from "@/services/chatSession";
 import { type ChatModelAdapter } from "@assistant-ui/react";
+  import Cookies from "js-cookie";
 
 export const myRunTimeProviderAudio: ChatModelAdapter = {
   async *run({ messages }) {
@@ -38,15 +39,20 @@ export const myRunTimeProviderAudio: ChatModelAdapter = {
         const text = message[i].content[0].text;
         history.push(`${message[i].role}:${text}`);
       }
+            const token = Cookies.get("collintoken");
 
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}/api/tax_education/query`,
+        // ` https://3a20-103-223-15-108.ngrok-free.app/api/tax_education/query`,
+       
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}` 
+           },
           body: JSON.stringify({
             query: message[messages.length - 1].content[0].text,
-            email: getCachedEmail(),
+            // email: getCachedEmail(),
              chat_type: "EDUCATION",
             session_id: getCachedSessionId(),
           }),

@@ -33,6 +33,7 @@ import { useThread } from "@assistant-ui/react";
 import { ComposerAttachments } from "@/components/assistant-ui/attachment";
 
 import { UserMessageAttachments } from "@/components/assistant-ui/attachment";
+import { axiosInstance } from "@/utilities/axios";
 export const Thread: any = ({ activeTab, setActiveTab }: any) => {
   useEffect(() => {
     const handleBeforeUnload = () => {
@@ -57,9 +58,14 @@ export const Thread: any = ({ activeTab, setActiveTab }: any) => {
 
   const taxBoxApi = async (data: any) => {
     try {
-      await axios.post(
+      console.log("usedddd-----")
+      
+
+      await axiosInstance.post(
         `${process.env.NEXT_PUBLIC_BACKEND_API}/api/tax-profile/checkboost`,
-        data
+        // `https://3a20-103-223-15-108.ngrok-free.app/api/tax-profile/checkboost`,
+
+        data,
       );
     } catch (err) {
       console.error(err);
@@ -128,7 +134,7 @@ export const Thread: any = ({ activeTab, setActiveTab }: any) => {
                       <ThreadPrimitive.If empty={false}>
                         <div className="min-h-8 flex-grow" />
                       </ThreadPrimitive.If>
-                      <div className="mt-3 p-4 flex w-full items-stretch justify-center gap-4">
+                      {/* <div className="mt-3 p-4 flex w-full items-stretch justify-center gap-4">
                         {suggestions.map((s, i) => (
                           <ThreadPrimitive.Suggestion
                             key={i}
@@ -142,7 +148,7 @@ export const Thread: any = ({ activeTab, setActiveTab }: any) => {
                             </span>
                           </ThreadPrimitive.Suggestion>
                         ))}
-                      </div>
+                      </div> */}
                       {/* <ThreadPrimitive.Suggestion /> */}
                       <Composer />
                     </ThreadPrimitive.Viewport>
@@ -223,7 +229,7 @@ const ThreadWelcomeTax: FC = () => {
             help you today?
           </p>
         </div>
-        <ThreadWelcomeSuggestions />
+        {/* <ThreadWelcomeSuggestions /> */}
       </div>
     </ThreadPrimitive.Empty>
   );

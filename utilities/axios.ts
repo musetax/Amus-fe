@@ -21,26 +21,27 @@ const axiosInstanceAuth: AxiosInstance = axios.create({
   },
 });
 
+// Set static service-key for all auth requests
 axiosInstanceAuth.interceptors.request.use((config) => {
   config.headers["service-key"] = "amus";
   return config;
 });
 
-// Function to get tokens from localStorage
+// ✅ Function to get tokens from Cookies
 const getTokens = () => ({
-  accessToken: localStorage.getItem("authTokenMuse"),
-  refreshToken: localStorage.getItem("refreshTokenMuse"),
+  accessToken: Cookies.get("collintoken"),
+  refreshToken: Cookies.get("collinrefresh"),
 });
 
-// Function to update tokens in localStorage
+// ✅ Function to set tokens into Cookies
 const setTokens = (accessToken: string, refreshToken?: string) => {
-  localStorage.setItem("authTokenMuse", accessToken);
+  Cookies.set("collintoken", accessToken);
   if (refreshToken) {
-    localStorage.setItem("refreshTokenMuse", refreshToken);
+    Cookies.set("collinrefresh", refreshToken);
   }
 };
 
-// Function to refresh token
+// ✅ Refresh Token Logic
 const refreshToken = async (): Promise<string | null> => {
   try {
     const { refreshToken } = getTokens();
@@ -64,73 +65,53 @@ const refreshToken = async (): Promise<string | null> => {
       throw new Error("Failed to refresh token");
     }
   } catch (error) {
-    localStorage.clear();
+    Cookies.remove("collintoken");
+    Cookies.remove("collinrefresh");
     window.location.href = "/login";
     return null;
   }
 };
 
-// **Request Interceptor**
-axiosInstance.interceptors.request.use(
-  async (
-    config: InternalAxiosRequestConfig
-  ): Promise<InternalAxiosRequestConfig> => {
-    const { accessToken } = getTokens();
-    if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
-    }
-    return config;
-  },
-  (error: any) => Promise.reject(error)
-);
-
-axiosInstanceAuth.interceptors.request.use(
-  async (
-    config: InternalAxiosRequestConfig
-  ): Promise<InternalAxiosRequestConfig> => {
-     const accessToken = Cookies.get("collintoken");
-
-    if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
-    }
-    return config;
-  },
-  (error: any) => Promise.reject(error)
-);
-
-// **Response Interceptor**
-axiosInstance.interceptors.response.use(
-  (response: AxiosResponse) => response,
-  async (error: any) => {
-    const originalRequest = error.config;
-
-    if (error.response?.status == 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      const newAccessToken = await refreshToken();
-      if (newAccessToken) {
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-        return axiosInstance(originalRequest);
+// ✅ Request Interceptors (BOTH use cookies now)
+const attachTokenInterceptor = (instance: AxiosInstance) => {
+  instance.interceptors.request.use(
+    async (
+      config: InternalAxiosRequestConfig
+    ): Promise<InternalAxiosRequestConfig> => {
+      const { accessToken } = getTokens();
+      if (accessToken) {
+        config.headers.Authorization = `Bearer ${accessToken}`;
       }
-    }
-    return Promise.reject(error);
-  }
-);
+      return config;
+    },
+    (error: any) => Promise.reject(error)
+  );
+};
 
-axiosInstanceAuth.interceptors.response.use(
- (response: AxiosResponse) => response,
-  async (error: any) => {
-    const originalRequest = error.config;
-    if (error.response?.status == 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      const newAccessToken = Cookies.get("collintoken");
-      if (newAccessToken) {
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-        return axiosInstanceAuth(originalRequest);
+attachTokenInterceptor(axiosInstance);
+attachTokenInterceptor(axiosInstanceAuth);
+
+// ✅ Response Interceptors (BOTH retry after refreshing token using cookie)
+const attachResponseInterceptor = (instance: AxiosInstance) => {
+  instance.interceptors.response.use(
+    (response: AxiosResponse) => response,
+    async (error: any) => {
+      const originalRequest = error.config;
+      if (error.response?.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true;
+        const newAccessToken = await refreshToken();
+        if (newAccessToken) {
+          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+          return instance(originalRequest);
+        }
       }
+      return Promise.reject(error);
     }
-    return Promise.reject(error);
-  }
-);
+  );
+};
 
+attachResponseInterceptor(axiosInstance);
+attachResponseInterceptor(axiosInstanceAuth);
+
+// ✅ Export ready-to-use instances
 export { axiosInstance, axiosInstanceAuth };
-  
