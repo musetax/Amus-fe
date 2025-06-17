@@ -41,6 +41,7 @@ const LoginPage = () => {
           const collintoken = response?.tokens;
           if (collintoken) {
             document.cookie = `collintoken=${response?.tokens?.AccessToken}; path=/; Secure; SameSite=Strict;`;
+            document.cookie= `collinrefresh=${response?.tokens?.RefreshToken}; path=/; Secure; SameSite=Strict;`
           }
           dispatch(setUserData(response));
           toast.success(response?.message, { toastId: "login" });

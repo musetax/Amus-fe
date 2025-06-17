@@ -1,8 +1,8 @@
 "use client";
 
-import {  getCachedSessionId } from "@/services/chatSession";
+import { getCachedSessionId } from "@/services/chatSession";
+import { getAccessToken, refreshAccessToken } from "@/utilities/auth";
 import { type ChatModelAdapter } from "@assistant-ui/react";
-  import Cookies from "js-cookie";
 
 export const MyModelAdapter: ChatModelAdapter = {
   async *run({ messages }) {
@@ -20,12 +20,12 @@ export const MyModelAdapter: ChatModelAdapter = {
         }
       }
 
-    
 
-      const token = Cookies.get("collintoken");
 
-      const response = await fetch(
-       `${process.env.NEXT_PUBLIC_BACKEND_API}/api/tax_education/query`,
+      const token = getAccessToken();
+
+      let response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}/api/tax_education/query`,
         // ` https://3a20-103-223-15-108.ngrok-free.app/api/tax_education/query`,
         {
           method: "POST",
@@ -44,6 +44,26 @@ export const MyModelAdapter: ChatModelAdapter = {
           }),
         }
       );
+      if (response.status === 401) {
+        const newAccessToken = await refreshAccessToken();
+        if (newAccessToken) {
+          response = await fetch(
+            `${process.env.NEXT_PUBLIC_BACKEND_API}/api/tax_education/query`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${newAccessToken}`,
+              },
+              body: JSON.stringify({
+                query: message[messages.length - 1].content[0].text,
+                chat_type: "EDUCATION",
+                session_id: getCachedSessionId(),
+              }),
+            }
+          );
+        }
+      }
       if (!response.ok || !response.body) {
         throw new Error("Network response was not ok or stream missing");
       }

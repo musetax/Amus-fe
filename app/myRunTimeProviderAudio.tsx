@@ -1,8 +1,8 @@
 "use client";
 
 import { getCachedSessionId } from "@/services/chatSession";
+import { getAccessToken, refreshAccessToken } from "@/utilities/auth";
 import { type ChatModelAdapter } from "@assistant-ui/react";
-  import Cookies from "js-cookie";
 
 export const myRunTimeProviderAudio: ChatModelAdapter = {
   async *run({ messages }) {
@@ -39,26 +39,47 @@ export const myRunTimeProviderAudio: ChatModelAdapter = {
         const text = message[i].content[0].text;
         history.push(`${message[i].role}:${text}`);
       }
-            const token = Cookies.get("collintoken");
+      const token = getAccessToken();
 
-      const response = await fetch(
+      let response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}/api/tax_education/query`,
         // ` https://3a20-103-223-15-108.ngrok-free.app/api/tax_education/query`,
-       
+
         {
           method: "POST",
-          headers: { "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}` 
-           },
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
           body: JSON.stringify({
             query: message[messages.length - 1].content[0].text,
             // email: getCachedEmail(),
-             chat_type: "EDUCATION",
+            chat_type: "EDUCATION",
             session_id: getCachedSessionId(),
           }),
         }
       );
 
+      if (response.status === 401) {
+        const newAccessToken = await refreshAccessToken();
+        if (newAccessToken) {
+          response = await fetch(
+            `${process.env.NEXT_PUBLIC_BACKEND_API}/api/tax_education/query`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${newAccessToken}`,
+              },
+              body: JSON.stringify({
+                query: message[messages.length - 1].content[0].text,
+                chat_type: "EDUCATION",
+                session_id: getCachedSessionId(),
+              }),
+            }
+          );
+        }
+      }
       if (!response.ok || !response.body) {
         throw new Error("Network response was not ok or stream missing");
       }
