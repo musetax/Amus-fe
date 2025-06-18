@@ -168,7 +168,7 @@ const ChangePasswordPage = () => {
                 <button
                   type="button"
                   onClick={handleResendOtp}
-                  disabled={resendLoading || timer > 0}
+                  disabled={resendLoading || timer > 0 || loading}
                   className="text-sm text-blue-600 hover:underline disabled:opacity-50"
                 >
                   {resendLoading
