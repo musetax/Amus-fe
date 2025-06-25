@@ -3,6 +3,7 @@ import {
   BranchPickerPrimitive,
   ComposerPrimitive,
   MessagePrimitive,
+  TextContentPartComponent,
   ThreadPrimitive
 } from "@assistant-ui/react";
 import { useEffect, useRef, useState, type FC } from "react";
@@ -380,6 +381,9 @@ const ComposerAction: FC<ComposerActionProps> = ({ composerRef }) => {
     </>
   );
 };
+const TrimmedText: TextContentPartComponent = ({ text, status }) => {
+  return <>{text.trimEnd()}</>;
+};
 
 const UserMessage: FC = () => {
   return (
@@ -388,7 +392,7 @@ const UserMessage: FC = () => {
       <UserMessageAttachments />
 
       <div className="bg-lightBlue text-slateColor max-w-[calc(var(--thread-max-width)*0.8)] break-words rounded-3xl px-5 py-2.5 col-start-2 row-start-2">
-        <MessagePrimitive.Content />
+      <MessagePrimitive.Content components={{ Text: TrimmedText }} />
       </div>
 
       <BranchPicker className="col-span-full col-start-1 row-start-3 -mr-1 justify-end" />
