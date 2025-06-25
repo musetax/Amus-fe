@@ -141,6 +141,10 @@
   width: 8px;
   height: 8px;
 }
+.hide-scrollbar::-webkit-scrollbar{
+ width: 0;
+ height: 0;
+}
 
 .chat-scroll::-webkit-scrollbar-track {
   background: transparent;

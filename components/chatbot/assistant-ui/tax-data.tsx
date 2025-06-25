@@ -151,7 +151,7 @@ const TaxDataModal: React.FC<TaxDataModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white rounded-2xl p-6 w-full max-w-2xl relative">
+      <div className="bg-white rounded-2xl p-6 w-full max-w-2xl relative h-[95vh] overflow-auto hide-scrollbar">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-500 text-xl"
@@ -164,7 +164,7 @@ const TaxDataModal: React.FC<TaxDataModalProps> = ({
           initialValues={initialValues}
           validationSchema={TaxDataSchema}
           validateOnBlur={false} // <-- disable onBlur validation
-          validateOnChange={false} // <-- disable onChange validation
+          validateOnChange={true} // <-- this will revalidate when values change
           onSubmit={(values) => {
             apiCall(transformDataToTaxFormat(values));
             onClose();
