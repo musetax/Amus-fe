@@ -14,7 +14,7 @@ export const refreshAccessToken = async (): Promise<string | null> => {
   if (!refreshToken) return null;
 
   try {
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API}auth/login/refresh`, {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_AUTH_API}v1/login/refresh`, {
       refresh_token: refreshToken,
     });
 

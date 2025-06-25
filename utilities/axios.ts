@@ -49,7 +49,7 @@ export const refreshToken = async (): Promise<string | null> => {
     if (!refreshToken) throw new Error("No refresh token available");
 
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BACKEND_API}auth/login/refresh`,
+      `${process.env.NEXT_PUBLIC_AUTH_API}v1/login/refresh`,
       {
         refresh_token: refreshToken,
       }

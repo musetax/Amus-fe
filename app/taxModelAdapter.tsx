@@ -24,7 +24,6 @@ export const TaxModelAdapter = (): ChatModelAdapter => ({
       const lastPart = messages[messages.length - 1].content[0];
       const userMessage = lastPart.type === "text" ? lastPart.text : "";
 
-      // 👇 Helper to perform the actual fetch with current token
       const fetchChat = async (token: string) => {
         return fetch(
           `${process.env.NEXT_PUBLIC_BACKEND_API}/api/chat/message`,
@@ -43,11 +42,9 @@ export const TaxModelAdapter = (): ChatModelAdapter => ({
         );
       };
 
-      // 🔁 First attempt
       let token = Cookies.get("collintoken") || "";
       let response = await fetchChat(token);
 
-      // 🔐 Retry logic if 401
       if (response.status === 401) {
         const newToken = await refreshToken();
         if (newToken) {
@@ -62,7 +59,6 @@ export const TaxModelAdapter = (): ChatModelAdapter => ({
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
-      // 🔁 Handle streamed response
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let buffer = "";
@@ -73,10 +69,16 @@ export const TaxModelAdapter = (): ChatModelAdapter => ({
         if (done) break;
 
         buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split("\n").filter(Boolean);
-        buffer = lines.pop() || "";
+        console.log('rajaaa', decoder.decode(value, { stream: true }));
+        
 
-        for (const line of lines) {
+        let newlineIndex;
+        while ((newlineIndex = buffer.indexOf("\n")) >= 0) {
+          const line = buffer.slice(0, newlineIndex).trim();
+          buffer = buffer.slice(newlineIndex + 1);
+
+          if (!line) continue;
+
           try {
             const parsed = JSON.parse(line);
             if (parsed?.response) {
@@ -89,6 +91,21 @@ export const TaxModelAdapter = (): ChatModelAdapter => ({
           } catch (err) {
             console.warn("Stream parse error:", err, "Chunk:", line);
           }
+        }
+      }
+
+      // Handle remaining buffer (no newline at end)
+      if (buffer.trim()) {
+        try {
+          const parsed = JSON.parse(buffer.trim());
+          if (parsed?.response) {
+            fullText += parsed.response;
+            yield {
+              content: [{ type: "text", text: fullText }],
+            };
+          }
+        } catch (err) {
+          console.warn("Final buffer parse error:", err, "Chunk:", buffer);
         }
       }
 
