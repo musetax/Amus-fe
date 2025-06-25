@@ -42,7 +42,7 @@ const setTokens = (accessToken: string, refreshToken?: string) => {
 };
 
 // ✅ Refresh Token Logic
-const refreshToken = async (): Promise<string | null> => {
+export const refreshToken = async (): Promise<string | null> => {
   try {
     const { refreshToken } = getTokens();
 

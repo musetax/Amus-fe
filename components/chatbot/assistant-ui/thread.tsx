@@ -57,7 +57,7 @@ export const Thread: any = ({ activeTab, setActiveTab }: any) => {
 
   const taxBoxApi = async (data: any) => {
     try {
-      console.log("usedddd-----")
+      console.log("2222-----")
       
 
       await axiosInstance.post(
