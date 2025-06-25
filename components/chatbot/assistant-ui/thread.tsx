@@ -381,7 +381,7 @@ const ComposerAction: FC<ComposerActionProps> = ({ composerRef }) => {
     </>
   );
 };
-const TrimmedText: TextContentPartComponent = ({ text, status }) => {
+const TrimmedText: TextContentPartComponent = ({ text }) => {
   return <>{text.trimEnd()}</>;
 };
 
