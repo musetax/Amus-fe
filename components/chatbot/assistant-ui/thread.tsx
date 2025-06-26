@@ -4,7 +4,7 @@ import {
   ComposerPrimitive,
   MessagePrimitive,
   TextContentPartComponent,
-  ThreadPrimitive
+  ThreadPrimitive,
 } from "@assistant-ui/react";
 import { useEffect, useRef, useState, type FC } from "react";
 import {
@@ -34,6 +34,10 @@ import { ComposerAttachments } from "@/components/assistant-ui/attachment";
 
 import { UserMessageAttachments } from "@/components/assistant-ui/attachment";
 import { axiosInstance } from "@/utilities/axios";
+import { useDispatch } from "react-redux";
+import { setFormSubmitted } from "@/redux/slice/authSlice";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 export const Thread: any = ({ activeTab, setActiveTab }: any) => {
   useEffect(() => {
     const handleBeforeUnload = () => {
@@ -44,7 +48,7 @@ export const Thread: any = ({ activeTab, setActiveTab }: any) => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, []);
-
+  const dispatch = useDispatch();
   const { messages } = useThread();
 
   const assistantMessages = [...messages]
@@ -55,18 +59,21 @@ export const Thread: any = ({ activeTab, setActiveTab }: any) => {
   const suggestions = (latest?.metadata?.custom?.suggestions ?? []) as string[];
 
   const [taxBoxPopUp, setTaxBoxPopUp] = useState(true);
+  const isFormFill = useSelector((state: RootState) => state.auth.isFormFill);
 
   const taxBoxApi = async (data: any) => {
     try {
-      console.log("2222-----")
-      
+      console.log("2222-----");
 
-      await axiosInstance.post(
+      const response = await axiosInstance.post(
         `${process.env.NEXT_PUBLIC_BACKEND_API}/api/tax-profile/checkboost`,
         // `https://3a20-103-223-15-108.ngrok-free.app/api/tax-profile/checkboost`,
 
-        data,
+        data
       );
+      if (response?.status == 200) {
+        dispatch(setFormSubmitted(true));
+      }
     } catch (err) {
       console.error(err);
       alert("Something went wrong");
@@ -103,14 +110,17 @@ export const Thread: any = ({ activeTab, setActiveTab }: any) => {
             </button>
           </div>
         </div>
-        {activeTab === "tax" ? (
+        {activeTab === "tax" && !isFormFill ? (
           <>
             {
               <>
                 {taxBoxPopUp ? (
                   <TaxDataModal
                     isOpen={taxBoxPopUp}
-                    onClose={() => setTaxBoxPopUp(false)}
+                    onClose={() => {
+                      setActiveTab("learn");
+                      setTaxBoxPopUp(false);
+                    }}
                     apiCall={taxBoxApi}
                   />
                 ) : (
@@ -304,7 +314,7 @@ const ComposerAction: FC<ComposerActionProps> = ({ composerRef }) => {
     useSpeechRecognition();
   const message = composerRef.current?.value.trim();
   console.log("Submitted message:", message);
-   useEffect(() => {
+  useEffect(() => {
     if (transcript && composerRef.current) {
       const message =
         typeof transcript === "string" ? transcript : String(transcript);
@@ -392,7 +402,7 @@ const UserMessage: FC = () => {
       <UserMessageAttachments />
 
       <div className="bg-lightBlue text-slateColor max-w-[calc(var(--thread-max-width)*0.8)] break-words rounded-3xl px-5 py-2.5 col-start-2 row-start-2">
-      <MessagePrimitive.Content components={{ Text: TrimmedText }} />
+        <MessagePrimitive.Content components={{ Text: TrimmedText }} />
       </div>
 
       <BranchPicker className="col-span-full col-start-1 row-start-3 -mr-1 justify-end" />

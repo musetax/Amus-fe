@@ -5,6 +5,7 @@ const initialState: any = {
   user: null,
   loading: false,
   error: null,
+  isFormFill:false
   };
 
 const authSlice = createSlice({
@@ -20,13 +21,20 @@ const authSlice = createSlice({
       state.user = action.payload;
     },
  
+    setFormSubmitted: (state, action) => {
+       
+      state.isFormFill = action.payload;
+    },
+ 
  
     clearUserData: (state, action) => {
        
       state.user = null;
+      state.isFormFill = false;
+
     },
   },
 });
 
-export const { setUserData, restoreState,clearUserData } = authSlice.actions;
+export const { setUserData, restoreState,clearUserData,setFormSubmitted } = authSlice.actions;
 export default authSlice.reducer;

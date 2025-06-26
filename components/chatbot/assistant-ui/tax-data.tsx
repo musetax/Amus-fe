@@ -190,7 +190,7 @@ const TaxDataModal: React.FC<TaxDataModalProps> = ({
                         {({ field: inputField, form }: any) => (
                           <input
                             {...inputField}
-                            placeholder={field.replace(/_/g, " ")}
+                            placeholder={field === "first_name" ? "First Name" : "Last Name"}
                             className="px-3 py-2 text-sm font-normal rounded-lg bg-white w-full border border-gray-100"
                             onChange={(e) => {
                               const cleanValue = e.target.value.replace(
