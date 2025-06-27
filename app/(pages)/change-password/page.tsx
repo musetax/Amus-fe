@@ -109,11 +109,13 @@ const ChangePasswordPage = () => {
         router.push("/login");
       } else {
         toast.error(response?.message || "Something went wrong",{toastId:'some-wrong'});
+        setLoading(false);
       }
     } catch (error) {
       console.error(error);
-    } finally {
       setLoading(false);
+    } finally {
+      // setLoading(false);
     }
   };
 
