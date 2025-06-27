@@ -117,9 +117,14 @@ export const Thread: any = ({ activeTab, setActiveTab }: any) => {
                 {taxBoxPopUp ? (
                   <TaxDataModal
                     isOpen={taxBoxPopUp}
-                    onClose={() => {
-                      setActiveTab("learn");
-                      setTaxBoxPopUp(false);
+                    onClose={(value) => {
+                       
+                      if (value == true) {
+                        setActiveTab("learn");
+                        setTaxBoxPopUp(false);
+                      } else {
+                        setTaxBoxPopUp(false);
+                      }
                     }}
                     apiCall={taxBoxApi}
                   />

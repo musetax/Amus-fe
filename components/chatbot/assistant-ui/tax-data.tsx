@@ -5,7 +5,7 @@ import { getSessionId } from "@/services/chatbot";
 
 type TaxDataModalProps = {
   isOpen: boolean;
-  onClose: () => void;
+  onClose: (value: any) => void;
   apiCall: (data: any) => void;
 };
 
@@ -153,7 +153,7 @@ const TaxDataModal: React.FC<TaxDataModalProps> = ({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white rounded-2xl p-6 w-full max-w-2xl relative h-[95vh] overflow-auto hide-scrollbar">
         <button
-          onClick={onClose}
+          onClick={() => onClose(true)}
           className="absolute top-4 right-4 text-gray-500 text-xl"
         >
           &times;
@@ -167,10 +167,10 @@ const TaxDataModal: React.FC<TaxDataModalProps> = ({
           validateOnChange={true} // <-- this will revalidate when values change
           onSubmit={(values) => {
             apiCall(transformDataToTaxFormat(values));
-            onClose();
+            onClose(false);
           }}
         >
-          {({ }) => (
+          {({}) => (
             <Form className="space-y-4">
               <div className="grid grid-cols-2 gap-3">
                 {[
@@ -190,7 +190,11 @@ const TaxDataModal: React.FC<TaxDataModalProps> = ({
                         {({ field: inputField, form }: any) => (
                           <input
                             {...inputField}
-                            placeholder={field === "first_name" ? "First Name" : "Last Name"}
+                            placeholder={
+                              field === "first_name"
+                                ? "First Name"
+                                : "Last Name"
+                            }
                             className="px-3 py-2 text-sm font-normal rounded-lg bg-white w-full border border-gray-100"
                             onChange={(e) => {
                               const cleanValue = e.target.value.replace(
@@ -383,7 +387,7 @@ const TaxDataModal: React.FC<TaxDataModalProps> = ({
                 </button>
                 <button
                   type="button"
-                  onClick={onClose}
+                  onClick={() => onClose(true)}
                   className="bg-pink-600 hover:bg-pink-700 text-white px-6 py-2 rounded-lg"
                 >
                   Close
