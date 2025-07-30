@@ -29,6 +29,9 @@ import { logOut } from "@/app/api/auth/authApis";
 import { toast } from "react-toastify";
 
 const HeaderBar: React.FC<any> = () => {
+  const isRedrectUser = useSelector(
+    (state: RootState) => state.auth.isRedrectUser
+  );
   const user = useSelector((state: RootState) => state.auth.user);
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -36,17 +39,17 @@ const HeaderBar: React.FC<any> = () => {
   const dispatch = useDispatch();
   const handleLogout = async () => {
     // if (response?.status_code == 200) {
-      localStorage.clear();
-      dispatch(clearUserData(""));
-      document.cookie = "collintoken=; path=/; expires=0;";
-      document.cookie.split(";").forEach((c) => {
-        document.cookie = c
-          .replace(/^ +/, "")
-          .replace(/=.*/, `=;expires=${new Date().toUTCString()};path=/`);
-      });
-      router.push("/login");
-      toast.success('Logout successfully.',{toastId:'logout-success'});
-      await logOut();
+    localStorage.clear();
+    dispatch(clearUserData(""));
+    document.cookie = "collintoken=; path=/; expires=0;";
+    document.cookie.split(";").forEach((c) => {
+      document.cookie = c
+        .replace(/^ +/, "")
+        .replace(/=.*/, `=;expires=${new Date().toUTCString()};path=/`);
+    });
+    router.push("/login");
+    toast.success("Logout successfully.", { toastId: "logout-success" });
+    await logOut();
 
     // } else {
     //   toast.error(response?.detail);
@@ -141,7 +144,10 @@ const HeaderBar: React.FC<any> = () => {
                     className="border-none user_img flex items-center"
                     name={
                       <span className="text-base font-normal break-all flex items-center gap-2 text-primaryColor">
-                        {user?.profile?.first_name} {user?.profile?.last_name}
+                        {isRedrectUser ||
+                          `${user?.profile?.first_name || ""} ${
+                            user?.profile?.last_name || ""
+                          }`.trim()}
                         <ChevronDown />
                       </span>
                     }
@@ -149,21 +155,25 @@ const HeaderBar: React.FC<any> = () => {
                 </DropdownTrigger>
 
                 <DropdownMenu aria-label="User Actions" variant="flat">
-                  <DropdownItem key="profile" onClick={handleUserProfile}>
-                    <span className="flex items-center gap-2.5">
-                      <MdLogout className="text-xl" /> User Profile
-                    </span>
-                  </DropdownItem>
+                  <>
+                    {!isRedrectUser && (
+                      <DropdownItem key="profile" onClick={handleUserProfile}>
+                        <span className="flex items-center gap-2.5">
+                          <MdLogout className="text-xl" /> User Profile
+                        </span>
+                      </DropdownItem>
+                    )}
 
-                  <DropdownItem
-                    key="logout"
-                    color="danger"
-                    onClick={handleLogout}
-                  >
-                    <span className="flex items-center gap-2.5">
-                      <MdLogout className="text-xl" /> Log Out
-                    </span>
-                  </DropdownItem>
+                    <DropdownItem
+                      key="logout"
+                      color="danger"
+                      onClick={handleLogout}
+                    >
+                      <span className="flex items-center gap-2.5">
+                        <MdLogout className="text-xl" /> Log Out
+                      </span>
+                    </DropdownItem>
+                  </>
                 </DropdownMenu>
               </Dropdown>
             </div>

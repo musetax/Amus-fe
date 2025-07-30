@@ -1,17 +1,54 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { loginUser } from "../../api/auth/authApis";
-import { setUserData } from "@/redux/slice/authSlice";
+import {
+  clearUserData,
+  setRedirectUser,
+  setUserData,
+} from "@/redux/slice/authSlice";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import Cookies from "js-cookie";
 
 const LoginPage = () => {
+  const searchParams = useSearchParams();
+  const tokenFromPramms = searchParams.get("token") || "";
+  const nameFromPramms = searchParams.get("name") || "";
+
+  useEffect(() => {
+    const handleRedirect = async () => {
+      if (tokenFromPramms && nameFromPramms) {
+        const token = Cookies.get("collintoken"); // returns the token or undefined
+        if (token) {
+          // if (response?.status_code == 200) {
+          localStorage.clear();
+          dispatch(clearUserData(""));
+          document.cookie = "collintoken=; path=/; expires=0;";
+          document.cookie.split(";").forEach((c) => {
+            document.cookie = c
+              .replace(/^ +/, "")
+              .replace(/=.*/, `=;expires=${new Date().toUTCString()};path=/`);
+          });
+        }
+        console.log("Token:", token);
+        setLoading(true);
+        document.cookie = `collintoken=${tokenFromPramms}; path=/; Secure; SameSite=Strict;`;
+        document.cookie = `collinrefresh=${tokenFromPramms}; path=/; Secure; SameSite=Strict;`;
+        await dispatch(setRedirectUser(nameFromPramms));
+        setLoading(false);
+        router.push(`/dashboard`);
+      }
+    };
+
+    handleRedirect();
+  }, []);
+
   const router = useRouter();
 
   const dispatch = useDispatch();
@@ -41,7 +78,7 @@ const LoginPage = () => {
           const collintoken = response?.tokens;
           if (collintoken) {
             document.cookie = `collintoken=${response?.tokens?.AccessToken}; path=/; Secure; SameSite=Strict;`;
-            document.cookie= `collinrefresh=${response?.tokens?.RefreshToken}; path=/; Secure; SameSite=Strict;`
+            document.cookie = `collinrefresh=${response?.tokens?.RefreshToken}; path=/; Secure; SameSite=Strict;`;
           }
           dispatch(setUserData(response));
           toast.success(response?.message, { toastId: "login" });
