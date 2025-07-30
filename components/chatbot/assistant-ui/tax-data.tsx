@@ -163,44 +163,31 @@ const TaxDataModal: React.FC<TaxDataModalProps> = ({
         <Formik
           initialValues={initialValues}
           validationSchema={TaxDataSchema}
-          validateOnBlur={false} // <-- disable onBlur validation
-          validateOnChange={true} // <-- this will revalidate when values change
+          validateOnBlur={false}
+          validateOnChange={true}
           onSubmit={(values) => {
             apiCall(transformDataToTaxFormat(values));
             onClose(false);
           }}
         >
-          {({}) => (
+          {({ values }) => (
             <Form className="space-y-4">
+              {/* FIRST BLOCK */}
               <div className="grid grid-cols-2 gap-3">
-                {[
-                  "first_name",
-                  "last_name",
-                  "age",
-                  "filing_status",
-                  "payFrequency",
-                ].map((field) => (
+                {["first_name", "last_name", "age", "filing_status", "payFrequency"].map((field) => (
                   <div key={field}>
                     <label className="block font-medium text-sm text-gray-700 mb-1 capitalize">
-                      {field.replace(/_/g, " ")}{" "}
-                      <span className="text-red-500">*</span>
+                      {field.replace(/_/g, " ")} <span className="text-red-500">*</span>
                     </label>
                     {field === "first_name" || field === "last_name" ? (
                       <Field name={field}>
                         {({ field: inputField, form }: any) => (
                           <input
                             {...inputField}
-                            placeholder={
-                              field === "first_name"
-                                ? "First Name"
-                                : "Last Name"
-                            }
+                            placeholder={field === "first_name" ? "First Name" : "Last Name"}
                             className="px-3 py-2 text-sm font-normal rounded-lg bg-white w-full border border-gray-100"
                             onChange={(e) => {
-                              const cleanValue = e.target.value.replace(
-                                /\d|\s/g,
-                                ""
-                              );
+                              const cleanValue = e.target.value.replace(/\d|\s/g, "");
                               form.setFieldValue(field, cleanValue);
                             }}
                           />
@@ -214,21 +201,14 @@ const TaxDataModal: React.FC<TaxDataModalProps> = ({
                             placeholder="Age"
                             className="px-3 py-2 text-sm font-normal rounded-lg bg-white w-full border border-gray-100"
                             onChange={(e) => {
-                              const numericValue = e.target.value.replace(
-                                /[^0-9]/g,
-                                ""
-                              );
+                              const numericValue = e.target.value.replace(/[^0-9]/g, "");
                               form.setFieldValue("age", numericValue);
                             }}
                           />
                         )}
                       </Field>
                     ) : field === "payFrequency" ? (
-                      <Field
-                        as="select"
-                        name="payFrequency"
-                        className="px-3 py-2 text-sm font-normal rounded-lg bg-white w-full border border-gray-100"
-                      >
+                      <Field as="select" name="payFrequency" className="px-3 py-2 text-sm font-normal rounded-lg bg-white w-full border border-gray-100">
                         <option value="">Select Pay Frequency</option>
                         {PAY_FREQUENCIES.map((freq) => (
                           <option key={freq} value={freq}>
@@ -237,159 +217,114 @@ const TaxDataModal: React.FC<TaxDataModalProps> = ({
                         ))}
                       </Field>
                     ) : field === "filing_status" ? (
-                      <Field
-                        as="select"
-                        name="filing_status"
-                        className="px-3 py-2 text-sm font-normal rounded-lg bg-white w-full border border-gray-100"
-                      >
+                      <Field as="select" name="filing_status" className="px-3 py-2 text-sm font-normal rounded-lg bg-white w-full border border-gray-100">
                         <option value="">Select Filing Status</option>
                         <option value="Single">Single</option>
-                        <option value="MarriedFilingJointly">
-                          Married Filing Jointly
-                        </option>
-                        <option value="MarriedFilingSeparately">
-                          Married Filing Separately
-                        </option>
-                        <option value="HeadOfHousehold">
-                          Head of Household
-                        </option>
+                        <option value="MarriedFilingJointly">Married Filing Jointly</option>
+                        <option value="MarriedFilingSeparately">Married Filing Separately</option>
+                        <option value="HeadOfHousehold">Head of Household</option>
                       </Field>
                     ) : null}
-                    <ErrorMessage
-                      name={field}
-                      component="p"
-                      className="text-red-500 text-sm"
-                    />
+                    <ErrorMessage name={field} component="p" className="text-red-500 text-sm" />
                   </div>
                 ))}
 
+                {/* Blind */}
                 <div>
-                  <label className="block font-medium text-sm  text-gray-700 mb-1">
+                  <label className="block font-medium text-sm text-gray-700 mb-1">
                     Blind Status <span className="text-red-500">*</span>
                   </label>
-                  <Field
-                    as="select"
-                    name="blind"
-                    className="px-3 py-2 text-sm font-normal rounded-lg bg-white w-full border border-gray-100"
-                  >
+                  <Field as="select" name="blind" className="px-3 py-2 text-sm font-normal rounded-lg bg-white w-full border border-gray-100">
                     <option value="">Blind Status</option>
                     <option value="yes">Yes</option>
                     <option value="no">No</option>
                   </Field>
-                  <ErrorMessage
-                    name="blind"
-                    component="p"
-                    className="text-red-500 text-sm"
-                  />
+                  <ErrorMessage name="blind" component="p" className="text-red-500 text-sm" />
                 </div>
 
+                {/* Dates */}
                 <div>
-                  <label className="block font-medium text-sm  text-gray-700 mb-1">
+                  <label className="block font-medium text-sm text-gray-700 mb-1">
                     Start Pay Date <span className="text-red-500">*</span>
                   </label>
-                  <Field
-                    type="date"
-                    name="start_pay_date_dt"
-                    className="px-3 py-2 text-sm font-normal rounded-lg bg-white w-full border border-gray-100"
-                  />
-                  <ErrorMessage
-                    name="start_pay_date_dt"
-                    component="p"
-                    className="text-red-500 text-sm"
-                  />
+                  <Field type="date" name="start_pay_date_dt" className="px-3 py-2 text-sm font-normal rounded-lg bg-white w-full border border-gray-100" />
+                  <ErrorMessage name="start_pay_date_dt" component="p" className="text-red-500 text-sm" />
                 </div>
 
                 <div>
-                  <label className="block text-sm  font-medium text-gray-700 mb-1">
+                  <label className="block font-medium text-sm text-gray-700 mb-1">
                     Most Recent Pay Date <span className="text-red-500">*</span>
                   </label>
-                  <Field
-                    type="date"
-                    name="most_recent_pay_date_dt"
-                    className="px-3 py-2 text-sm font-normal rounded-lg bg-white w-full border border-gray-100"
-                  />
-                  <ErrorMessage
-                    name="most_recent_pay_date_dt"
-                    component="p"
-                    className="text-red-500 text-sm"
-                  />
+                  <Field type="date" name="most_recent_pay_date_dt" className="px-3 py-2 text-sm font-normal rounded-lg bg-white w-full border border-gray-100" />
+                  <ErrorMessage name="most_recent_pay_date_dt" component="p" className="text-red-500 text-sm" />
                 </div>
               </div>
 
+              {/* NUMBER FIELDS WITH FORMATTING */}
               <div className="grid grid-cols-2 gap-3">
                 {[
                   { name: "yearlySalary", label: "Yearly Salary" },
                   { name: "withholdingYTD", label: "Withholding YTD" },
-                  {
-                    name: "lastPaycheckWithholding",
-                    label: "Last Paycheck Withholding",
-                  },
+                  { name: "lastPaycheckWithholding", label: "Last Paycheck Withholding" },
                 ].map(({ name, label }) => (
                   <div key={name}>
-                    <label className="block text-sm  font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
                       {label} <span className="text-red-500">*</span>
                     </label>
-                    <Field
-                      name={name}
-                      placeholder={label}
-                      className="px-3 py-2 text-sm font-normal rounded-lg bg-white w-full border border-gray-100"
-                      onKeyDown={(e: any) => {
-                        const allowedKeys = [
-                          "Backspace",
-                          "Tab",
-                          "ArrowLeft",
-                          "ArrowRight",
-                          "Delete",
-                          "Enter",
-                        ];
-                        if (allowedKeys.includes(e.key)) return;
-                        if (/[0-9]/.test(e.key)) return;
-                        if (
-                          e.key === "." &&
-                          !e.currentTarget.value.includes(".")
-                        )
-                          return;
-                        e.preventDefault();
+                    <Field name={name}>
+                      {({ field, form }: any) => {
+                        const rawValue = field.value;
+                        const formattedValue = rawValue
+                          ? Number(rawValue).toLocaleString("en-US", {
+                              maximumFractionDigits: 2,
+                            })
+                          : "";
+
+                        const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+                          const value = e.target.value.replace(/,/g, "");
+                          if (/^\d*\.?\d*$/.test(value)) {
+                            form.setFieldValue(name, value);
+                          }
+                        };
+
+                        return (
+                          <input
+                            {...field}
+                            value={formattedValue}
+                            onChange={handleChange}
+                            placeholder={label}
+                            className="px-3 py-2 text-sm font-normal rounded-lg bg-white w-full border border-gray-100"
+                          />
+                        );
                       }}
-                    />
-                    <ErrorMessage
-                      name={name}
-                      component="p"
-                      className="text-red-500 text-sm"
-                    />
+                    </Field>
+                    <ErrorMessage name={name} component="p" className="text-red-500 text-sm" />
                   </div>
                 ))}
               </div>
 
+              {/* CHECKBOXES */}
               <div className="grid grid-cols-2 gap-4 items-center">
-                <label className="flex items-center text-sm  space-x-2">
+                <label className="flex items-center text-sm space-x-2">
                   <Field type="checkbox" name="four_pay_cycle" />
                   <span>Four Pay Cycle</span>
                 </label>
-
-                <label className="flex items-center text-sm  space-x-2">
+                <label className="flex items-center text-sm space-x-2">
                   <Field type="checkbox" name="left_job" />
                   <span>Left Job</span>
                 </label>
-
-                <label className="flex items-center text-sm  space-x-2">
+                <label className="flex items-center text-sm space-x-2">
                   <Field type="checkbox" name="take_standard_deduction" />
                   <span>Take Standard Deduction</span>
                 </label>
               </div>
 
+              {/* BUTTONS */}
               <div className="flex justify-end mt-6 space-x-4">
-                <button
-                  type="submit"
-                  className="bg-yellow-500 hover:bg-yellow-600 text-black px-6 py-2 rounded-lg"
-                >
+                <button type="submit" className="bg-yellow-500 hover:bg-yellow-600 text-black px-6 py-2 rounded-lg">
                   Save Changes
                 </button>
-                <button
-                  type="button"
-                  onClick={() => onClose(true)}
-                  className="bg-pink-600 hover:bg-pink-700 text-white px-6 py-2 rounded-lg"
-                >
+                <button type="button" onClick={() => onClose(true)} className="bg-pink-600 hover:bg-pink-700 text-white px-6 py-2 rounded-lg">
                   Close
                 </button>
               </div>
