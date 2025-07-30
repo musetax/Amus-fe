@@ -66,6 +66,7 @@ const LoginPage = () => {
   });
 
   useEffect(() => {
+    setLoadingPage(true);
     console.log("new buil");
 
     const params = new URLSearchParams(window.location.search);
@@ -76,7 +77,6 @@ const LoginPage = () => {
     const emailParams = params?.get("email") || "";
     const handleRedirect = async () => {
       if (tokenFromPramms && nameFromPramms) {
-        setLoadingPage(true);
         const token = Cookies.get("collintoken"); // returns the token or undefined
         if (token) {
           // if (response?.status_code == 200) {
@@ -96,19 +96,21 @@ const LoginPage = () => {
         await dispatch(setRedirectUser(nameFromPramms));
         // setLoadingPage(false);
         router.push(`/dashboard`);
+      } else {
+        setLoadingPage(false);
       }
     };
 
     handleRedirect();
   }, []);
- 
+
   return (
     <>
       {loadingpage ? (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
-         <div className="flex justify-center items-center">
-        <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-      </div>
+          <div className="flex justify-center items-center">
+            <div className="h-6 w-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+          </div>
         </div>
       ) : (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
