@@ -13,42 +13,10 @@ import {
 } from "@/redux/slice/authSlice";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 
 const LoginPage = () => {
-  const searchParams = useSearchParams();
-  const tokenFromPramms = searchParams.get("token") || "";
-  const nameFromPramms = searchParams.get("name") || "";
-
-  useEffect(() => {
-    const handleRedirect = async () => {
-      if (tokenFromPramms && nameFromPramms) {
-        const token = Cookies.get("collintoken"); // returns the token or undefined
-        if (token) {
-          // if (response?.status_code == 200) {
-          localStorage.clear();
-          dispatch(clearUserData(""));
-          document.cookie = "collintoken=; path=/; expires=0;";
-          document.cookie.split(";").forEach((c) => {
-            document.cookie = c
-              .replace(/^ +/, "")
-              .replace(/=.*/, `=;expires=${new Date().toUTCString()};path=/`);
-          });
-        }
-        console.log("Token:", token);
-        setLoading(true);
-        document.cookie = `collintoken=${tokenFromPramms}; path=/; Secure; SameSite=Strict;`;
-        document.cookie = `collinrefresh=${tokenFromPramms}; path=/; Secure; SameSite=Strict;`;
-        await dispatch(setRedirectUser(nameFromPramms));
-        setLoading(false);
-        router.push(`/dashboard`);
-      }
-    };
-
-    handleRedirect();
-  }, []);
-
   const router = useRouter();
 
   const dispatch = useDispatch();
@@ -96,6 +64,37 @@ const LoginPage = () => {
     },
   });
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tokenFromPramms = params?.get("token") || "";
+    const nameFromPramms = params?.get("name") || "";
+    const handleRedirect = async () => {
+      if (tokenFromPramms && nameFromPramms) {
+        setLoading(true);
+        const token = Cookies.get("collintoken"); // returns the token or undefined
+        if (token) {
+          // if (response?.status_code == 200) {
+          localStorage.clear();
+          dispatch(clearUserData(""));
+          document.cookie = "collintoken=; path=/; expires=0;";
+          document.cookie.split(";").forEach((c) => {
+            document.cookie = c
+              .replace(/^ +/, "")
+              .replace(/=.*/, `=;expires=${new Date().toUTCString()};path=/`);
+          });
+        }
+        console.log("Token:", token);
+
+        document.cookie = `collintoken=${tokenFromPramms}; path=/; Secure; SameSite=Strict;`;
+        document.cookie = `collinrefresh=${tokenFromPramms}; path=/; Secure; SameSite=Strict;`;
+        await dispatch(setRedirectUser(nameFromPramms));
+        setLoading(false);
+        router.push(`/dashboard`);
+      }
+    };
+
+    handleRedirect();
+  }, []);
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
       <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-8">
