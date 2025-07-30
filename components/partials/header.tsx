@@ -65,6 +65,7 @@ const HeaderBar: React.FC<any> = () => {
       localStorage.setItem("chat_email", user?.profile?.email);
     }
   }, [user]);
+console.log(isRedrectUser,'isRedrectUserisRedrectUserisRedrectUser');
 
   return (
     <>
