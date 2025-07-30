@@ -1,6 +1,5 @@
 "use client";
 import Image from "next/image";
-
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
@@ -17,28 +16,38 @@ import {
   NavbarMenuToggle,
   User,
 } from "@heroui/react";
+
 import { MdClose, MdLogout } from "react-icons/md";
 import { ChevronDown, MenuIcon } from "lucide-react";
 import Logo from "public/images/logo/main-logo.svg";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/redux/store";
-import { useDispatch } from "react-redux";
 import { clearUserData } from "@/redux/slice/authSlice";
 import { useRouter } from "next/navigation";
 import { logOut } from "@/app/api/auth/authApis";
 import { toast } from "react-toastify";
 
 const HeaderBar: React.FC<any> = () => {
-  // const isRedrectUser = useSelector(
-  //   (state: RootState) => state.auth.isRedrectUser
-  // );
+  const isRedrectUser = useSelector(
+    (state: RootState) => state.auth.isRedrectUser
+  );
   const user = useSelector((state: RootState) => state.auth.user);
   const router = useRouter();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  console.log(user, "useruser");
   const dispatch = useDispatch();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false); // hydration fix
+
+  useEffect(() => {
+    setMounted(true); // mark as client-side only
+  }, []);
+
+  useEffect(() => {
+    if (user?.profile?.email) {
+      localStorage.setItem("chat_email", user?.profile?.email);
+    }
+  }, [user]);
+
   const handleLogout = async () => {
-    // if (response?.status_code == 200) {
     localStorage.clear();
     dispatch(clearUserData(""));
     document.cookie = "collintoken=; path=/; expires=0;";
@@ -50,143 +59,129 @@ const HeaderBar: React.FC<any> = () => {
     router.push("/login");
     toast.success("Logout successfully.", { toastId: "logout-success" });
     await logOut();
-
-    // } else {
-    //   toast.error(response?.detail);
-    // }
   };
 
   const handleUserProfile = async () => {
     router.push("/user-profile");
   };
 
-  useEffect(() => {
-    if (user?.profile?.email) {
-      localStorage.setItem("chat_email", user?.profile?.email);
-    }
-  }, [user]);
-// console.log(isRedrectUser,'isRedrectUserisRedrectUserisRedrectUser');
-console.log('build');
-
   return (
-    <>
-      <div className="w-full py-3 bg-lightGray">
-        <div className="px-4 xl:px-20 container-custom">
-          <Navbar
-            onMenuOpenChange={setIsMenuOpen}
-            isMenuOpen={isMenuOpen}
-            classNames={{
-              base: "bg-transparent backdrop-blur-none relative custom-backdrop-saturate",
-              wrapper: "w-full max-w-full px-0",
-              item: ` font-normal text-base text-black dropdown-menu`,
-              menuItem: ``,
-            }}
-          >
-            {/* Brand and toggle */}
-            <div>
-              <Link href="/dashboard">
-                <Image
-                  src={Logo}
-                  alt="Paragon Gents"
-                  width={280}
-                  height={30}
-                  className="w-[120px] min-w-[120px] dark:hidden"
-                />
-              </Link>
-            </div>
-
-            <NavbarContent className="lg:hidden" justify="end">
-              <NavbarMenuToggle
-                aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-                className="text-white text-2xl"
-                icon={isMenuOpen ? <MdClose /> : <MenuIcon />}
+    <div className="w-full py-3 bg-lightGray">
+      <div className="px-4 xl:px-20 container-custom">
+        <Navbar
+          onMenuOpenChange={setIsMenuOpen}
+          isMenuOpen={isMenuOpen}
+          classNames={{
+            base: "bg-transparent backdrop-blur-none relative custom-backdrop-saturate",
+            wrapper: "w-full max-w-full px-0",
+            item: ` font-normal text-base text-black dropdown-menu`,
+            menuItem: ``,
+          }}
+        >
+          {/* Brand and toggle */}
+          <div>
+            <Link href="/dashboard">
+              <Image
+                src={Logo}
+                alt="Paragon Gents"
+                width={280}
+                height={30}
+                className="w-[120px] min-w-[120px] dark:hidden"
               />
-            </NavbarContent>
+            </Link>
+          </div>
 
-            {/* Desktop menu */}
-            <NavbarContent className="hidden lg:flex gap-5 " justify="center">
-              <NavbarItem>
-                <Link href="/dashboard">Dashboard</Link>
-              </NavbarItem>
-              <NavbarItem>
-                <Link href="#">Financial Goals</Link>
-              </NavbarItem>
-              <NavbarItem>
-                <Link href="/user-profile">Settings</Link>
-              </NavbarItem>
-              <NavbarItem>
-                <Link href="#">Support</Link>
-              </NavbarItem>
-            </NavbarContent>
+          <NavbarContent className="lg:hidden" justify="end">
+            <NavbarMenuToggle
+              aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+              className="text-white text-2xl"
+              icon={isMenuOpen ? <MdClose /> : <MenuIcon />}
+            />
+          </NavbarContent>
 
-            {/* Mobile menu content */}
-            <NavbarMenu className="bg-primaryColor pt-10 gap-5">
-              <NavbarMenuItem>
-                <Link href="#">Dashboard</Link>
-              </NavbarMenuItem>
-              <NavbarMenuItem>
-                <Link href="#">Financial Goals</Link>
-              </NavbarMenuItem>
-              <NavbarMenuItem>
-                <Link href="#">Settings</Link>
-              </NavbarMenuItem>
-              <NavbarMenuItem>
-                <Link href="#">Support</Link>
-              </NavbarMenuItem>
-            </NavbarMenu>
+          {/* Desktop menu */}
+          <NavbarContent className="hidden lg:flex gap-5" justify="center">
+            <NavbarItem>
+              <Link href="/dashboard">Dashboard</Link>
+            </NavbarItem>
+            <NavbarItem>
+              <Link href="#">Financial Goals</Link>
+            </NavbarItem>
+            <NavbarItem>
+              <Link href="/user-profile">Settings</Link>
+            </NavbarItem>
+            <NavbarItem>
+              <Link href="#">Support</Link>
+            </NavbarItem>
+          </NavbarContent>
 
-            <div className="flex items-center gap-4">
-              <Dropdown
-                placement="bottom-start"
-                className="dark:bg-lightBlue bg-white dark:btn-hover"
-              >
-                <DropdownTrigger>
-                  <User
-                    as="button"
-                    className="border-none user_img flex items-center"
-                    name={
+          {/* Mobile menu */}
+          <NavbarMenu className="bg-primaryColor pt-10 gap-5">
+            <NavbarMenuItem>
+              <Link href="#">Dashboard</Link>
+            </NavbarMenuItem>
+            <NavbarMenuItem>
+              <Link href="#">Financial Goals</Link>
+            </NavbarMenuItem>
+            <NavbarMenuItem>
+              <Link href="#">Settings</Link>
+            </NavbarMenuItem>
+            <NavbarMenuItem>
+              <Link href="#">Support</Link>
+            </NavbarMenuItem>
+          </NavbarMenu>
+
+          <div className="flex items-center gap-4">
+            <Dropdown
+              placement="bottom-start"
+              className="dark:bg-lightBlue bg-white dark:btn-hover"
+            >
+              <DropdownTrigger>
+                <User
+                  as="button"
+                  className="border-none user_img flex items-center"
+                  name={
+                    mounted ? (
                       <span className="text-base font-normal break-all flex items-center gap-2 text-primaryColor">
-                        {
-                        // isRedrectUser ||
-
+                        {isRedrectUser ||
                           `${user?.profile?.first_name || ""} ${
                             user?.profile?.last_name || ""
                           }`.trim()}
                         <ChevronDown />
                       </span>
-                    }
-                  />
-                </DropdownTrigger>
+                    ) : (
+                      ""
+                    )
+                  }
+                />
+              </DropdownTrigger>
 
-                <DropdownMenu aria-label="User Actions" variant="flat">
-                  <>
-                    {
-                    // !isRedrectUser && (
-                      <DropdownItem key="profile" onClick={handleUserProfile}>
-                        <span className="flex items-center gap-2.5">
-                          <MdLogout className="text-xl" /> User Profile
-                        </span>
-                      </DropdownItem>
-                    // )
-                    }
-
-                    <DropdownItem
-                      key="logout"
-                      color="danger"
-                      onClick={handleLogout}
-                    >
+              <DropdownMenu aria-label="User Actions" variant="flat">
+                <>
+                  {!isRedrectUser && (
+                    <DropdownItem key="profile" onClick={handleUserProfile}>
                       <span className="flex items-center gap-2.5">
-                        <MdLogout className="text-xl" /> Log Out
+                        <MdLogout className="text-xl" /> User Profile
                       </span>
                     </DropdownItem>
-                  </>
-                </DropdownMenu>
-              </Dropdown>
-            </div>
-          </Navbar>
-        </div>
+                  )}
+
+                  <DropdownItem
+                    key="logout"
+                    color="danger"
+                    onClick={handleLogout}
+                  >
+                    <span className="flex items-center gap-2.5">
+                      <MdLogout className="text-xl" /> Log Out
+                    </span>
+                  </DropdownItem>
+                </>
+              </DropdownMenu>
+            </Dropdown>
+          </div>
+        </Navbar>
       </div>
-    </>
+    </div>
   );
 };
 
