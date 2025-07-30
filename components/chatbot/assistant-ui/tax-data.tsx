@@ -170,7 +170,7 @@ const TaxDataModal: React.FC<TaxDataModalProps> = ({
             onClose(false);
           }}
         >
-          {({ values }) => (
+          {({  }) => (
             <Form className="space-y-4">
               {/* FIRST BLOCK */}
               <div className="grid grid-cols-2 gap-3">
