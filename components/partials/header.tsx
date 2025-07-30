@@ -38,6 +38,8 @@ const HeaderBar: React.FC<any> = () => {
   const [mounted, setMounted] = useState(false); // hydration fix
 
   useEffect(() => {
+    console.log('moundted');
+    
     setMounted(true); // mark as client-side only
   }, []);
 
