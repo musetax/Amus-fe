@@ -66,6 +66,8 @@ const LoginPage = () => {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
+    console.log(params?.get("token"),'paramsparamsparams');
+    
     const tokenFromPramms = params?.get("token") || "";
     const nameFromPramms = params?.get("name") || "";
     const handleRedirect = async () => {

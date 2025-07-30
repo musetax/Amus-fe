@@ -29,9 +29,9 @@ import { logOut } from "@/app/api/auth/authApis";
 import { toast } from "react-toastify";
 
 const HeaderBar: React.FC<any> = () => {
-  const isRedrectUser = useSelector(
-    (state: RootState) => state.auth.isRedrectUser
-  );
+  // const isRedrectUser = useSelector(
+  //   (state: RootState) => state.auth.isRedrectUser
+  // );
   const user = useSelector((state: RootState) => state.auth.user);
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -65,7 +65,8 @@ const HeaderBar: React.FC<any> = () => {
       localStorage.setItem("chat_email", user?.profile?.email);
     }
   }, [user]);
-console.log(isRedrectUser,'isRedrectUserisRedrectUserisRedrectUser');
+// console.log(isRedrectUser,'isRedrectUserisRedrectUserisRedrectUser');
+console.log('build');
 
   return (
     <>
@@ -145,7 +146,9 @@ console.log(isRedrectUser,'isRedrectUserisRedrectUserisRedrectUser');
                     className="border-none user_img flex items-center"
                     name={
                       <span className="text-base font-normal break-all flex items-center gap-2 text-primaryColor">
-                        {isRedrectUser ||
+                        {
+                        // isRedrectUser ||
+
                           `${user?.profile?.first_name || ""} ${
                             user?.profile?.last_name || ""
                           }`.trim()}
@@ -157,13 +160,15 @@ console.log(isRedrectUser,'isRedrectUserisRedrectUserisRedrectUser');
 
                 <DropdownMenu aria-label="User Actions" variant="flat">
                   <>
-                    {!isRedrectUser && (
+                    {
+                    // !isRedrectUser && (
                       <DropdownItem key="profile" onClick={handleUserProfile}>
                         <span className="flex items-center gap-2.5">
                           <MdLogout className="text-xl" /> User Profile
                         </span>
                       </DropdownItem>
-                    )}
+                    // )
+                    }
 
                     <DropdownItem
                       key="logout"
