@@ -65,11 +65,14 @@ const LoginPage = () => {
   });
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    console.log(params?.get("token"),'paramsparamsparams');
+    console.log('new buil');
     
+    const params = new URLSearchParams(window.location.search);
+    console.log(params?.get("token"), "paramsparamsparams");
+
     const tokenFromPramms = params?.get("token") || "";
     const nameFromPramms = params?.get("name") || "";
+    const emailParams = params?.get("email") || "";
     const handleRedirect = async () => {
       if (tokenFromPramms && nameFromPramms) {
         setLoading(true);
@@ -86,7 +89,7 @@ const LoginPage = () => {
           });
         }
         console.log("Token:", token);
-
+        localStorage.setItem("chat_email", emailParams);
         document.cookie = `collintoken=${tokenFromPramms}; path=/; Secure; SameSite=Strict;`;
         document.cookie = `collinrefresh=${tokenFromPramms}; path=/; Secure; SameSite=Strict;`;
         await dispatch(setRedirectUser(nameFromPramms));
