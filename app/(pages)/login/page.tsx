@@ -94,26 +94,21 @@ const LoginPage = () => {
         document.cookie = `collintoken=${tokenFromPramms}; path=/; Secure; SameSite=Strict;`;
         document.cookie = `collinrefresh=${tokenFromPramms}; path=/; Secure; SameSite=Strict;`;
         await dispatch(setRedirectUser(nameFromPramms));
-        setLoadingPage(false);
+        // setLoadingPage(false);
         router.push(`/dashboard`);
       }
     };
 
     handleRedirect();
   }, []);
-  const Loader = async () => {
-    return (
-      <div className="flex justify-center items-center">
-        <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  };
-
+ 
   return (
     <>
       {loadingpage ? (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
-          <Loader />
+         <div className="flex justify-center items-center">
+        <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+      </div>
         </div>
       ) : (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
