@@ -6,6 +6,8 @@ export const sendQuery = async (query: string) => {
     const response = await axiosInstance.post(`${process.env.NEXT_PUBLIC_BACKEND_API}/query`, { query });
     return response.data;
   } catch (error: any) {
+    console.log(error,'error1');
+    
     throw error.response?.data || { message: error.message };
   }
 };
@@ -18,6 +20,8 @@ export const sendMessagetax = async (data: any, session_id: string) => {
     );
     return response.data;
   } catch (error: any) {
+        console.log(error,'error2');
+
     throw error.response?.data || { message: error.message };
   }
 };
@@ -30,6 +34,8 @@ export const authenticate = async (data: any) => {
     );
     return response.data;
   } catch (error: any) {
+        console.log(error,'error3');
+
     throw error.response?.data || { message: error.message };
   }
 };
@@ -42,6 +48,8 @@ export const taxProfile = async (taxdata: any, session_id: string) => {
     );
     return response.data;
   } catch (error: any) {
+        console.log(error,'error4');
+
     throw error.response?.data || { message: error.message };
   }
 };
