@@ -117,7 +117,7 @@ export const Thread: any = ({ activeTab, setActiveTab }: any) => {
                 {taxBoxPopUp ? (
                   <TaxDataModal
                     isOpen={taxBoxPopUp}
-                    onClose={(value) => {
+                    onClose={(value:any) => {
                        
                       if (value == true) {
                         setActiveTab("learn");

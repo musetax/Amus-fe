@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Thread } from "@/components/chatbot/assistant-ui/thread";
 import {
   AssistantRuntimeProvider,
-  useLocalRuntime,
+  useLocalThreadRuntime,
   WebSpeechSynthesisAdapter,
 } from "@assistant-ui/react";
 
@@ -26,14 +26,14 @@ export const Assistant = () => {
     ]),
   };
 
-  const learnRuntime = useLocalRuntime(MyModelAdapter, {
+  const learnRuntime = useLocalThreadRuntime(MyModelAdapter, {
     adapters: {
       ...commonAdapters, // Spread the commonAdapters properties here
       speech: new WebSpeechSynthesisAdapter(),
     },
   });
 
-  const taxRuntime = useLocalRuntime(TaxModelAdapter(), {
+  const taxRuntime = useLocalThreadRuntime(TaxModelAdapter(), {
     adapters: {
       ...commonAdapters, // Spread the commonAdapters properties here
       speech: new WebSpeechSynthesisAdapter(),
