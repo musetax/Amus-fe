@@ -20,81 +20,65 @@ export const MyModelAdapter: ChatModelAdapter = {
         }
       }
 
-
-
       const token = getAccessToken();
 
-      let response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}/api/tax_education/query`,
-        // ` https://3a20-103-223-15-108.ngrok-free.app/api/tax_education/query`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+      // ✅ Create FormData
+      const formData = new FormData();
+      formData.append("query", message[messages.length - 1].content[0].text);
+      formData.append("chat_type", "EDUCATION");
+      formData.append("session_id", getCachedSessionId() || "");
 
-          },
-          body: JSON.stringify({
-            //     // history: history,
-            query: message[messages.length - 1].content[0].text,
-            // email: getCachedEmail(),
+      let response = await fetch(`https://316f9c390f70.ngrok-free.app/chatbot`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`, // ✅ No Content-Type needed for FormData
+        },
+        body: formData,
+      });
 
-            chat_type: "EDUCATION",
-            session_id: getCachedSessionId(),
-          }),
-        }
-      );
+      // Handle 401 and retry with refreshed token
       if (response.status === 401) {
         const newAccessToken = await refreshAccessToken();
         if (newAccessToken) {
-          response = await fetch(
-            `${process.env.NEXT_PUBLIC_BACKEND_API}/api/tax_education/query`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${newAccessToken}`,
-              },
-              body: JSON.stringify({
-                query: message[messages.length - 1].content[0].text,
-                chat_type: "EDUCATION",
-                session_id: getCachedSessionId(),
-              }),
-            }
-          );
+          const retryFormData = new FormData();
+          retryFormData.append("query", message[messages.length - 1].content[0].text);
+          retryFormData.append("chat_type", "EDUCATION");
+          retryFormData.append("session_id", getCachedSessionId() || "");
+
+          response = await fetch(`https://316f9c390f70.ngrok-free.app/chatbot`, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${newAccessToken}`,
+            },
+            body: retryFormData,
+          });
         }
       }
+
       if (!response.ok || !response.body) {
         throw new Error("Network response was not ok or stream missing");
       }
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder("utf-8");
-      let text = ""; // ✅ Initialize as empty string
+      let text = "";
 
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
 
         const chunkStr = decoder.decode(value, { stream: true });
-
-        // Split by newlines in case multiple JSON objects are in one chunk
         const lines = chunkStr.split("\n").filter((line) => line.trim() !== "");
 
         for (const line of lines) {
           try {
-            const json = JSON.parse(line); // ✅ Parse chunk
+            const json = JSON.parse(line);
             const chunkText = json.response || "";
-
-            text += chunkText; // ✅ Accumulate string correctly
+            text += chunkText;
 
             yield {
               content: [{ type: "text", text: text }],
-              metadata: {
-                //       // custom: {
-                //       //   suggestions
-                //       // }
-              },
+              metadata: {},
             };
           } catch (err) {
             console.error("Failed to parse JSON chunk:", line, err);
@@ -103,7 +87,6 @@ export const MyModelAdapter: ChatModelAdapter = {
       }
     } catch (error) {
       console.error("Error in TaxModelAdapter:", error);
-
       yield {
         content: [
           {

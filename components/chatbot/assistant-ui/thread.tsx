@@ -26,8 +26,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/chatbot/ui/button";
 import { TooltipIconButton } from "./tooltip-icon-button";
 import { MarkdownText } from "./markdown-text";
-import TaxDataModal from "./tax-data";
-import { useSpeechRecognition } from "./speech";
+ import { useSpeechRecognition } from "./speech";
 import { useThread } from "@assistant-ui/react";
 
 import { ComposerAttachments } from "@/components/assistant-ui/attachment";
@@ -58,46 +57,17 @@ export const Thread: any = ({ activeTab, setActiveTab }: any) => {
   const latest = assistantMessages[0];
   const suggestions = (latest?.metadata?.custom?.suggestions ?? []) as string[];
 
-  const [taxBoxPopUp, setTaxBoxPopUp] = useState(true);
-  const isFormFill = useSelector((state: RootState) => state.auth.isFormFill);
+   const isFormFill = useSelector((state: RootState) => state.auth.isFormFill);
 
-  const taxBoxApi = async (data: any) => {
-    try {
-      console.log("2222-----");
-
-      const response = await axiosInstance.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}/api/tax-profile/checkboost`,
-        // `https://3a20-103-223-15-108.ngrok-free.app/api/tax-profile/checkboost`,
-
-        data
-      );
-      if (response?.status == 200) {
-        dispatch(setFormSubmitted(true));
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Something went wrong");
-    }
-  };
-  const handleChange = () => {
-    setActiveTab("tax");
-  };
+ 
+ 
 
   return (
     <>
       <div>
         <div className="flex items-center justify-center">
           <div className="flex items-center justify-center space-x-4 mb-10 border border-lightGray7 rounded-full p-2">
-            <button
-              onClick={() => handleChange()}
-              className={`px-4 py-2  rounded-full text-lg font-medium flex items-center justify-center gap-2  transition-all duration-200 ${
-                activeTab === "tax"
-                  ? "bg-mediumBlueGradient text-white"
-                  : "text-textgray "
-              }`}
-            >
-              <PieChart /> Tax Calculation
-            </button>
+          
             <button
               onClick={() => setActiveTab("learn")}
               className={`px-5 py-2  rounded-full text-lg font-medium flex items-center justify-center gap-2 transition-all duration-200 ${
@@ -112,23 +82,7 @@ export const Thread: any = ({ activeTab, setActiveTab }: any) => {
         </div>
         {activeTab === "tax" && !isFormFill ? (
           <>
-            {
-              <>
-                {taxBoxPopUp ? (
-                  <TaxDataModal
-                    isOpen={taxBoxPopUp}
-                    onClose={(value:any) => {
-                       
-                      if (value == true) {
-                        setActiveTab("learn");
-                        setTaxBoxPopUp(false);
-                      } else {
-                        setTaxBoxPopUp(false);
-                      }
-                    }}
-                    apiCall={taxBoxApi}
-                  />
-                ) : (
+             
                   <ThreadPrimitive.Root
                     className="bg-background box-border flex flex-col overflow-hidden"
                     style={{
@@ -168,9 +122,7 @@ export const Thread: any = ({ activeTab, setActiveTab }: any) => {
                       <Composer />
                     </ThreadPrimitive.Viewport>
                   </ThreadPrimitive.Root>
-                )}
-              </>
-            }
+           
           </>
         ) : (
           <ThreadPrimitive.Root
