@@ -13,19 +13,18 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "../../components/ui/tooltip";
 import {
   Dialog,
   DialogTitle,
   DialogTrigger,
   DialogOverlay,
   DialogPortal,
-} from "@/components/ui/dialog";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { TooltipIconButton } from "@/components/assistant-ui/tooltip-icon-button";
+} from "../../components/ui/dialog";
+import { Avatar, AvatarImage, AvatarFallback } from "../../components/ui/avatar";
+import { TooltipIconButton } from "../../components/assistant-ui/tooltip-icon-button";
 import { DialogContent as DialogPrimitiveContent } from "@radix-ui/react-dialog";
-import Image from "next/image";
-
+ 
 const useFileSrc = (file: File | undefined) => {
   const [src, setSrc] = useState<string | undefined>(undefined);
 
@@ -75,8 +74,9 @@ const AttachmentPreview: FC<AttachmentPreviewProps> = ({ src }) => {
         overflow: "clip",
         display: isLoaded ? "block" : "none",
       }}
+      
     >
-      <Image
+      {/* <Image
         src={src}
         alt="Preview"
         width={0} // These 3 allow for intrinsic sizing
@@ -84,7 +84,7 @@ const AttachmentPreview: FC<AttachmentPreviewProps> = ({ src }) => {
         sizes="75dvh"
         style={{ width: "auto", height: "auto" }}
         onLoad={() => setIsLoaded(true)}
-      />
+      /> */}
     </div>
   );
 };
