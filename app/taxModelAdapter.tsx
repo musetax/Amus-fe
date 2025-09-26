@@ -45,16 +45,20 @@ export const createUserInfo = async (taxPayload: any, email: string, url_type: a
 
 export const getPayrollDetails=async(userId:string)=>{
    try {
-    const response = await axios.get(`https://2b8c3cf85ec5.ngrok-free.app/user?user_id=${userId}`);
+    const response = await axios.get(`https://2b8c3cf85ec5.ngrok-free.app/user?user_id=${userId}`,
+     { headers:{
+        "ngrok-skip-browser-warning": "69420",
+      }}
+    );
 
     return response.data;
   } catch {
     throw new Error('Failed to create user info');
   }
 }
-export const payrollDetailsUpdate=async(userId:string)=>{
+export const payrollDetailsUpdate=async(userId:string,payload:any)=>{
    try {
-    const response = await axios.get(`https://2b8c3cf85ec5.ngrok-free.app/user?user_id=${userId}`);
+    const response = await axios.patch(`https://2b8c3cf85ec5.ngrok-free.app/user/${userId}`,payload);
 
     return response.data;
   } catch {

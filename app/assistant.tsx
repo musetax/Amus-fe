@@ -35,7 +35,7 @@ import {
   type ThreadMessage,
   type MessageStatus,
 } from "@assistant-ui/react";
-import { getPayrollDetails, getSessionId, getUserAndSessionId, tokenCreateFromclientIdandSecret } from "./taxModelAdapter";
+import { getPayrollDetails, getSessionId, getUserAndSessionId, payrollDetailsUpdate, tokenCreateFromclientIdandSecret } from "./taxModelAdapter";
 
 function makeThreadMessage(
   role: "user" | "assistant",
@@ -240,7 +240,9 @@ function Assistant() {
   }, [userId])
 
   // Handle tax chatbot completion
-  const handleTaxChatbotComplete = (taxData: any) => {
+  const handleTaxChatbotComplete =async (taxData: any) => {
+    const response=await payrollDetailsUpdate(userId,taxData)
+    console.log(response,"response")
     console.log('Tax form completed with data:', taxData);
     setShowTaxChatbot(false);
     setPayrollData(taxData);

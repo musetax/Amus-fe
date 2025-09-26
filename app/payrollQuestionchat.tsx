@@ -12,11 +12,11 @@ import { TooltipIconButton } from "../components/chatbot/assistant-ui/tooltip-ic
 // Type definitions
 interface TaxData {
   income_type: string;
-  annual_salary: number;
+  annual_salary: string;
   filing_status: string;
   pay_frequency: string;
-  current_withholding_per_paycheck: number;
-  spouse_income?: number;
+  current_withholding_per_paycheck: string;
+  spouse_income?: string;
 }
 
 interface TaxChatbotProps {
@@ -42,10 +42,10 @@ interface Message {
 
 interface FormData {
   filing_status: string | null;
-  annual_salary: number | null;
-  spouse_income: number | null;
+  annual_salary: string | null;
+  spouse_income: string | null;
   pay_frequency: string | null;
-  current_withholding_per_paycheck: number | null;
+  current_withholding_per_paycheck: string | null;
 }
 
 interface TaxUserMessageProps {
@@ -426,7 +426,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
 
     switch (currentStep) {
       case "annual_salary":
-        setFormData((prev) => ({ ...prev, annual_salary: numValue as number }));
+        setFormData((prev) => ({ ...prev, annual_salary: numValue as string }));
         addMessage("user", `My annual salary is ${(numValue as number).toLocaleString()}`);
 
         if (formData.filing_status === "Married") {
@@ -448,7 +448,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         break;
 
       case "spouse_income":
-        setFormData((prev) => ({ ...prev, spouse_income: numValue as number }));
+        setFormData((prev) => ({ ...prev, spouse_income: numValue as string }));
         addMessage("user", `My spouse's annual income is ${(numValue as number).toLocaleString()}`);
         addMessage("bot", {
           content: "Excellent! Now I need to know how often you get paid.",
@@ -471,7 +471,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         break;
 
       case "current_withholding":
-        setFormData((prev) => ({ ...prev, current_withholding_per_paycheck: numValue as number }));
+        setFormData((prev) => ({ ...prev, current_withholding_per_paycheck: numValue as string }));
         addMessage("user", `My current withholding is ${numValue} per paycheck`);
         addMessage("bot", "Perfect! I have all the information I need. Let me summarize everything for you:");
         setCurrentStep("complete");
