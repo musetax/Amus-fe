@@ -45,51 +45,50 @@ export const Thread: any = ({
   setActiveTab,
   typing,
   image,
-  email,
+  userId,
   loadingHistory,
-  url_type,
   sessionId
 }: any) => {
   const { messages } = useThread();
   const [isLoading, setIsLoading] = useState(false);
   const [pdfData, setPdfData] = useState<any[]>([]);
   const [showDownloadLink, setShowDownloadLink] = useState(false);
-  console.log(messages, "messages", url_type, "----------------");
+  console.log(messages, "messages", "----------------");
   const isStreaming = messages.some(
     (msg: any) => msg.role === "assistant" && msg.status?.type === "running"
   );
   console.log(isStreaming, "ishskh");
-  const handleDownloadPDF = async () => {
-    setIsLoading(true);
-    const toastId = toast.loading("Preparing PDF...");
-    try {
-      // Call your API to get the chat data
-      const data = await downloadPdf(email,sessionId,url_type);
+  // const handleDownloadPDF = async () => {
+  //   setIsLoading(true);
+  //   const toastId = toast.loading("Preparing PDF...");
+  //   try {
+  //     // Call your API to get the chat data
+  //     const data = await downloadPdf(userId,sessionId);
 
-      // Generate and download PDF immediately
-      if (data.url) {
-        const a = document.createElement("a");
-        a.href = data.url;
-        a.download = "chat-conversation.pdf"; // You can set the filename here
-        a.click();
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      toast.error("Failed to download PDF", { id: toastId });
-      // alert('Failed to generate PDF');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  //     // Generate and download PDF immediately
+  //     if (data.url) {
+  //       const a = document.createElement("a");
+  //       a.href = data.url;
+  //       a.download = "chat-conversation.pdf"; // You can set the filename here
+  //       a.click();
+  //     }
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //     toast.error("Failed to download PDF", { id: toastId });
+  //     // alert('Failed to generate PDF');
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
-  const handleSendEmail = async () => {
-    const data = await sendEmail(email,sessionId,url_type);
-    if (data.message) {
-      return;
-    }
+  // const handleSendEmail = async () => {
+  //   const data = await sendEmail(email,sessionId,url_type);
+  //   if (data.message) {
+  //     return;
+  //   }
 
-    // alert('Email functionality will be implemented soon');
-  };
+  //   // alert('Email functionality will be implemented soon');
+  // };
   const assistantMessages = [...messages]
     .reverse()
     .filter((msg) => msg.role === "assistant");
@@ -189,7 +188,7 @@ export const Thread: any = ({
                     Please wait while we retrieve your chat history...
                   </p>
                 </div>
-                </div>
+              </div>
             ) : (
               <div>
                 <ThreadPrimitive.Viewport
@@ -218,10 +217,13 @@ export const Thread: any = ({
                     <div className="min-h-8 flex-grow" />
                   </ThreadPrimitive.If>
                 </ThreadPrimitive.Viewport>
+                
+                   <Composer />
                 <div className="sticky bg-[#255be305] bottom-0 px-3 pt-3 flex w-full max-w-[var(--thread-max-width)] flex-col items-center justify-end rounded-t-lg pb-2">
+                 
                   <ThreadScrollToBottom />
 
-                  {messages.length > 0 && !typing && !isStreaming && (
+                  {/* {messages.length > 0 && !typing && !isStreaming && (
                     <div
                       className="flex justify-center gap-4 py-2 w-full"
                       style={{ background: "#ffffff" }}
@@ -300,7 +302,7 @@ export const Thread: any = ({
                          <span style={{whiteSpace:"nowrap"}}>Send Email</span>
                       </button>
                     </div>
-                  )}
+                  )} */}
 
                   {/* PDF Download Link (hidden until ready) */}
                   {/* {showDownloadLink && (
@@ -313,7 +315,7 @@ export const Thread: any = ({
             </PDFDownloadLink>
           </div>
         )} */}
-                  <Composer />
+                  {/* <Composer /> */}
                 </div>
               </div>
             )}
@@ -396,7 +398,9 @@ const Composer: FC = () => {
   const composerRef = useRef<HTMLTextAreaElement | null>(null);
 
   return (
-    <ComposerPrimitive.Root className="focus-within:border-ring/20 flex w-full flex-wrap items-end rounded-full border border-[#E9E9E9] bg-inherit px-2.5 py-0 shadow-sm transition-colors ease-in gap-2 bg-white ">
+    <ComposerPrimitive.Root 
+    className="focus-within:border-ring/20 flex w-full flex-wrap items-end rounded-full border border-[#E9E9E9] bg-inherit px-2.5 py-0 shadow-sm transition-colors ease-in gap-2 bg-white "
+    >
       {/* <ComposerAttachments /> */}
       <ComposerPrimitive.Input
         ref={composerRef}
@@ -607,16 +611,16 @@ const AssistantMessage: React.FC<any> = () => {
   const message = useMessage(); // ✅ Access current message
   const messageId = message?.id; //
   const time = formatTime(message?.createdAt || Date.now());
-  
+
   // Extract URLs, loading state, and streaming state from message metadata
-  const urls:any= message?.metadata?.custom?.urls;
+  const urls: any = message?.metadata?.custom?.urls;
   const isMessageLoading = message?.metadata?.custom?.loading;
   const isStreaming = message?.metadata?.custom?.streaming;
-   const [showUrls, setShowUrls] = useState(false);
-  console.log(urls,'urlsurlsurlsurls');
+  const [showUrls, setShowUrls] = useState(false);
+  console.log(urls, 'urlsurlsurlsurls');
   console.log('Message loading:', isMessageLoading);
   console.log('Message streaming:', isStreaming);
-  
+
   return (
     <div
       style={{
@@ -648,32 +652,32 @@ const AssistantMessage: React.FC<any> = () => {
           {/* Show loading state, streaming content, or final content */}
           {isMessageLoading ? (
             <div className="flex flex-col  py-4">
-  <div className="flex items-center gap-1">
-    <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '0s' }}></span>
-    <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></span>
-    <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></span>
-  </div>
+              <div className="flex items-center gap-1">
+                <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '0s' }}></span>
+                <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></span>
+                <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></span>
+              </div>
 
-  <span className="block text-sm text-gray-600 animate-pulse mt-2">
-    Searching for information....
-  </span>
-</div>
+              <span className="block text-sm text-gray-600 animate-pulse mt-2">
+                Searching for information....
+              </span>
+            </div>
 
           ) : (
             <>
               {/* Show message content */}
               <MessagePrimitive.Content components={{ Text: MarkdownText }} />
-              
+
               {/* Show simple streaming indicator when streaming */}
               {isStreaming && (
                 <span className="inline-block w-2 h-0.5 bg-blue-500 animate-pulse ml-1"></span>
               )}
-              
+
               {/* Show URLs only when streaming is complete */}
               {urls && !isStreaming && showUrls && (
                 <URLDisplay urls={urls} messageId={messageId} />
               )}
-              
+
               <span
                 style={{ color: "#45556c", fontSize: "12px", marginTop: "4px" }}
               >
@@ -682,7 +686,7 @@ const AssistantMessage: React.FC<any> = () => {
             </>
           )}
         </div>
-      <AssistantActionBar urls={urls}   onToggleUrls={() => setShowUrls((p) => !p)}/>
+        <AssistantActionBar urls={urls} onToggleUrls={() => setShowUrls((p) => !p)} />
         <BranchPicker className="col-start-2 row-start-2 -ml-2 mr-2" />
       </MessagePrimitive.Root>
     </div>
@@ -690,10 +694,10 @@ const AssistantMessage: React.FC<any> = () => {
 };
 interface ActionBarProps {
   urls: string[];
-   onToggleUrls: () => void; // NEW
+  onToggleUrls: () => void; // NEW
 }
 const AssistantActionBar: FC<ActionBarProps> = ({ urls, onToggleUrls }) => {
-   const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   if (!urls || !Array.isArray(urls) || urls.length === 0) return null;
 
   const firstUrl = urls[0];
@@ -732,21 +736,21 @@ const AssistantActionBar: FC<ActionBarProps> = ({ urls, onToggleUrls }) => {
         </ActionBarPrimitive.StopSpeaking>
       </MessagePrimitive.If>
 
-          <Tooltip open={open} onOpenChange={setOpen}>
+      <Tooltip open={open} onOpenChange={setOpen}>
         <TooltipTrigger asChild>
           <TooltipIconButton
             tooltip="Related resources"
-              onClick={(e) => {
+            onClick={(e) => {
               e.preventDefault();
               onToggleUrls();
             }} // stop default hover-only behaviour
-            
+
           >
             <LinkIcon />
           </TooltipIconButton>
         </TooltipTrigger>
 
-        
+
       </Tooltip>
     </ActionBarPrimitive.Root>
   );

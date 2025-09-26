@@ -36,7 +36,7 @@ import {
   type ThreadMessage,
   type MessageStatus,
 } from "@assistant-ui/react";
-import { createUserInfo } from "./taxModelAdapter";
+import { getSessionId, getUserAndSessionId, tokenCreateFromclientIdandSecret } from "./taxModelAdapter";
 
 
 function makeThreadMessage(
@@ -118,9 +118,8 @@ function mapApiChatsToRepository(
 
 
 function makeHistoryAdapter(
-  email: string,
+  userId: string,
   sessionId?: string,
-  url_type?: any,
   setLoadingHistory?: (loading: boolean) => void
 ): ThreadHistoryAdapter {
   return {
@@ -131,9 +130,8 @@ function makeHistoryAdapter(
         const res = await axios.post(
           "https://amus-devapi.musetax.com/v1/api/export/get-user-chats",
           {
-            email,
+            userId,
             session_id: sessionId,
-            chat_type: url_type,
           }
         );
 
@@ -167,12 +165,58 @@ function makeHistoryAdapter(
 }
 
 
-function Assistant({ email, image, sessionId, taxPayload, url_type, access_token, refresh_access_token }: { email: string; image?: string; sessionId?: string; taxPayload?: any, url_type?: string, access_token?: string, refresh_access_token?: string }) {
+function Assistant() {
   const [activeTab, setActiveTab] = useState<"tax" | "learn">("learn");
   const [typing, setTyping] = useState(false);
   const [loadingHistory, setloadingHistory] = useState(false)
-  const [currentSessionId, setCurrentSessionId] = useState<string | undefined>(sessionId);
-  console.log(access_token,refresh_access_token,"==========================")
+  const [currentSessionId, setCurrentSessionId] = useState<string | undefined>('123383892');
+  const params = new URLSearchParams(window.location.search);
+  const sessionId: any = params.get("sessionId");
+  const userId:any=params.get("userId")
+  const access_token: any = params.get("accessToken");
+  const refresh_access_token: any = params.get("refreshToken");
+
+
+
+  // localStorage.setItem("chatType", chatType)
+
+  // localStorage.setItem("sessionId",sessionId)
+
+
+
+  // useEffect(()=>{
+  //   const creatToken=async()=>{
+  //       try{
+  //         let payload={
+  //           client_id:clientId,
+  //           client_secret:clientSecret
+  //         }
+  //         const response=await tokenCreateFromclientIdandSecret(payload)
+  //         if(response&&!sessionId)
+  //         {
+  //           let sessionPayload={
+  //             payroll_details:payrollDetails,
+  //             company_name:companyName,
+  //             first_name:first_name,
+  //             last_name:last_name,
+  //             email:email
+  //           }
+  //           const sessionId=await getUserAndSessionId(sessionPayload)
+  //           return
+  //         }
+  //   }catch(error:any){
+  //     console.log(error)
+
+  //   }
+  //   }
+  //   if(clientId&&clientSecret)
+  //   {
+  //     creatToken()
+  //   }
+
+  // },[clientId,clientSecret])
+  // console.log(access_token,refresh_access_token,"==========================")
+
   useEffect(() => {
     const storedSessionId = localStorage.getItem("chat_session_id");
 
@@ -190,32 +234,32 @@ function Assistant({ email, image, sessionId, taxPayload, url_type, access_token
     if (refresh_access_token) {
       localStorage.setItem("refreshTokenMuse", refresh_access_token)
     }
-    if(url_type)
-    {
-      localStorage.setItem("url_type",url_type)
+    if (userId) {
+      localStorage.setItem("userId", userId)
     }
   }, [sessionId, access_token, refresh_access_token])
-  useEffect(() => {
-    const userInfo = async () => {
-      try {
-        const response = await createUserInfo(taxPayload, email, url_type)
-        console.log(response, "fjniudjnj")
-        loadHistory()
-      } catch (error) {
-        loadHistory()
-        console.log(error, "error")
-      }
-    }
-    userInfo()
-  }, [taxPayload])
+
+  // useEffect(() => {
+  //   const userInfo = async () => {
+  //     try {
+  //       const response = await createUserInfo(taxPayload, email, url_type)
+  //       console.log(response, "fjniudjnj")
+  //       loadHistory()
+  //     } catch (error) {
+  //       loadHistory()
+  //       console.log(error, "error")
+  //     }
+  //   }
+  //   userInfo()
+  // }, [taxPayload])
 
   // Load history when page renders
   const loadHistory = async () => {
     console.log(currentSessionId, 'currentSessionId');
-    console.log(email, 'emailemail');
+    console.log(userId, 'emailemail');
 
-    if (currentSessionId && email) {
-      const historyAdapter = makeHistoryAdapter(email, currentSessionId, url_type, setloadingHistory);
+    if (currentSessionId && userId) {
+      const historyAdapter = makeHistoryAdapter(userId, currentSessionId, setloadingHistory);
       try {
         await historyAdapter.load();
       } catch (error) {
@@ -226,13 +270,15 @@ function Assistant({ email, image, sessionId, taxPayload, url_type, access_token
 
 
 
+
+
   // IMPORTANT: history adapter is created with the current email so it can load the right messages
   const history = useMemo(
-    () => (currentSessionId ? makeHistoryAdapter(email, currentSessionId, url_type, setloadingHistory) : undefined),
-    [email, currentSessionId]
+    () => (currentSessionId ? makeHistoryAdapter(userId, currentSessionId,  setloadingHistory) : undefined),
+    [userId, currentSessionId]
   );
 
-  const learnRuntime = useLocalThreadRuntime(MyModelAdapter(email, setTyping, currentSessionId, url_type), {
+  const learnRuntime = useLocalThreadRuntime(MyModelAdapter(userId, setTyping, currentSessionId), {
     adapters: {
       // your existing adapters
       attachments: new CompositeAttachmentAdapter([
@@ -249,18 +295,18 @@ function Assistant({ email, image, sessionId, taxPayload, url_type, access_token
     <div className="myUniquechatbot">
       {/* key includes email so switching users re-initializes the runtime + history load */}
 
-      <AssistantRuntimeProvider key={`${activeTab}-${email}`} runtime={learnRuntime}>
+      <AssistantRuntimeProvider key={`${activeTab}-${userId}`} runtime={learnRuntime}>
         <div className="flex justify-between px-0 py-0 w-full">
           <div className="grid grid-cols-1 gap-x-2 px-0 py-0 w-full">
             <Thread
               activeTab={activeTab}
               setActiveTab={setActiveTab}
               typing={typing}
-              image={image}
-              email={email}
+              image={''}
+              // email={email}
               loadingHistory={loadingHistory}
-              url_type={url_type}
-              sessionId={sessionId}
+              // url_type={url_type}
+              sessionId={currentSessionId}
             />
           </div>
         </div>

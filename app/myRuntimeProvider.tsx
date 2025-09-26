@@ -2,10 +2,9 @@ import { saveMessagesToLocalStorage } from "../components/chatbot/assistant-ui/t
 import { getAccessToken, refreshAccessToken } from "../utilities/auth";
 
 export const MyModelAdapter = (
-  email: string,
+  userId: string,
   setTyping: (typing: boolean) => void,
   sessionId?: string,
-  url_type?: any
 ): any => ({
   async *run({ messages }: any) {
     setTyping(true);
@@ -13,7 +12,8 @@ export const MyModelAdapter = (
     // Start immediately - no loading placeholder!
     
     try {
-      const token = getAccessToken();
+      const token: string | null = getAccessToken();
+
       const lastUserText = messages[messages.length - 1].content[0]?.text || "";
 
       const makeRequest = async () =>
@@ -27,9 +27,8 @@ export const MyModelAdapter = (
           },
           keepalive: true,
           body: JSON.stringify({
-            email,
+            userId,
             query: lastUserText,
-            chat_type: url_type,
             session_id: sessionId,
           }),
         });

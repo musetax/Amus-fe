@@ -42,4 +42,86 @@ export const createUserInfo = async (taxPayload: any, email: string, url_type: a
     throw new Error('Failed to create user info');
   }
 }
+interface TokenPayload {
+  client_id: string,
+  client_secret: string
+}
 
+const tokenStore = (data: any) => {
+  localStorage.setItem('authTokenMuse', data.access_token)
+  localStorage.setItem("refreshTokenMuse", data.refresh_token)
+}
+
+export const tokenCreateFromclientIdandSecret = async (payload: TokenPayload) => {
+  try {
+    const response = await axios.post(`https://api-stgbe.musetax.com/auth/token`, payload)
+    console.log(response)
+    tokenStore(response.data)
+    return response
+
+
+  } catch (error: any) {
+    console.log(error, "error")
+    throw new Error('Failed to create token');
+  }
+}
+
+interface UserAndSessionId {
+  payroll_details: any;
+  company_name: string;
+  first_name:string,
+  email:string,
+  last_name:string
+}
+
+// Store session ID with 1-day expiry
+const storeSessionId = (data: { session_id: string }) => {
+  const ONE_DAY_MS = 24 * 60 * 60 * 1000; // 1 day in ms
+
+  // Store original session ID
+  localStorage.setItem("originalSessionId", data.session_id);
+
+  // Store expiry timestamp
+  const expiryTime = Date.now() + ONE_DAY_MS;
+  localStorage.setItem("sessionExpiry", expiryTime.toString());
+};
+
+// Get session ID if not expired, else return null
+export const getSessionId = (): string | null => {
+  const expiryStr = localStorage.getItem("sessionExpiry");
+  const sessionId = localStorage.getItem("originalSessionId");
+
+  if (!expiryStr || !sessionId) return null;
+
+  const expiryTime = parseInt(expiryStr, 10);
+  if (Date.now() > expiryTime) {
+    // Session expired
+    return null;
+  }
+
+  // Session still valid → return original session ID
+  return sessionId;
+};
+
+
+
+// API call to get session ID and store it
+export const getUserAndSessionId = async (
+  sessionPayload: UserAndSessionId
+) => {
+  try {
+    const response = await axios.post(
+      `https://api-stgbe.musetax.com/auth/token`, // <-- verify endpoint
+      sessionPayload
+    );
+    console.log(response.data);
+
+    // Store session ID with 1 day expiry
+    storeSessionId({ session_id: response.data.session_id });
+
+    return response.data; // return only the data
+  } catch (error: any) {
+    console.error(error, "Error fetching session ID");
+    throw new Error("Failed to get session id");
+  }
+};

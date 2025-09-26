@@ -4,7 +4,7 @@ import "./chatbot.css";
 import "./globals.css";
 import localFont from "next/font/local";
 import { ToastContainer } from "react-toastify";
-import ChatBot from "./chatbot";
+import Assistant from "./assistant";
 
 const generalSans = localFont({
   src: "../components/assets/fonts/fonts/GeneralSans-Regular.woff",
@@ -25,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${generalSans.variable} antialiased`}>
-        <ChatBot />
+        <Assistant />
 
         <ToastContainer />
       </body>
