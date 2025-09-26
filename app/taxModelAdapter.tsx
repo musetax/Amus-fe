@@ -42,6 +42,16 @@ export const createUserInfo = async (taxPayload: any, email: string, url_type: a
     throw new Error('Failed to create user info');
   }
 }
+
+export const getPayrollDetails=async(userId:string)=>{
+   try {
+    const response = await axios.get(`https://8145169e0868.ngrok-free.app/user?user_id${userId}`,);
+
+    return response.data;
+  } catch {
+    throw new Error('Failed to create user info');
+  }
+}
 interface TokenPayload {
   client_id: string,
   client_secret: string

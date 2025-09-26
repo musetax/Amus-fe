@@ -36,7 +36,7 @@ import {
   type ThreadMessage,
   type MessageStatus,
 } from "@assistant-ui/react";
-import { getSessionId, getUserAndSessionId, tokenCreateFromclientIdandSecret } from "./taxModelAdapter";
+import { getPayrollDetails, getSessionId, getUserAndSessionId, tokenCreateFromclientIdandSecret } from "./taxModelAdapter";
 
 
 function makeThreadMessage(
@@ -239,19 +239,19 @@ function Assistant() {
     }
   }, [sessionId, access_token, refresh_access_token])
 
-  // useEffect(() => {
-  //   const userInfo = async () => {
-  //     try {
-  //       const response = await createUserInfo(taxPayload, email, url_type)
-  //       console.log(response, "fjniudjnj")
-  //       loadHistory()
-  //     } catch (error) {
-  //       loadHistory()
-  //       console.log(error, "error")
-  //     }
-  //   }
-  //   userInfo()
-  // }, [taxPayload])
+  useEffect(() => {
+    const userInfo = async () => {
+      try {
+        const response = await getPayrollDetails(userId)
+        console.log(response, "fjniudjnj")
+        // loadHistory()
+      } catch (error) {
+        // loadHistory()
+        console.log(error, "error")
+      }
+    }
+    userInfo()
+  }, [userId])
 
   // Load history when page renders
   const loadHistory = async () => {
