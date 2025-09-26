@@ -170,11 +170,13 @@ function Assistant() {
   const [typing, setTyping] = useState(false);
   const [loadingHistory, setloadingHistory] = useState(false)
   const [currentSessionId, setCurrentSessionId] = useState<string | undefined>('123383892');
+  console.log(window.location.search)
   const params = new URLSearchParams(window.location.search);
-  const sessionId: any = params.get("sessionId");
-  const userId:any=params.get("userId")
-  const access_token: any = params.get("accessToken");
-  const refresh_access_token: any = params.get("refreshToken");
+  const sessionId: any = params.get("session_id");
+  const userId:any=params.get("user_id")
+  const access_token: any = params.get("access_token");
+  const refresh_access_token: any = params.get("refresh_token");
+  console.log(userId,sessionId)
 
 
 
