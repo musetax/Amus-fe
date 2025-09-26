@@ -25,7 +25,6 @@ export const CHAT_HISTORY_KEY = "chat_history";
 
 type ApiChat = { user?: string; assistant?: string; search_urls?: string[] };
 
-
 import {
   type ThreadHistoryAdapter,
   type ExportedMessageRepository,
@@ -37,7 +36,6 @@ import {
   type MessageStatus,
 } from "@assistant-ui/react";
 import { getPayrollDetails, getSessionId, getUserAndSessionId, tokenCreateFromclientIdandSecret } from "./taxModelAdapter";
-
 
 function makeThreadMessage(
   role: "user" | "assistant",
@@ -78,7 +76,6 @@ function makeThreadMessage(
   }
 }
 
-
 function mapApiChatsToRepository(
   chats: { user?: string; assistant?: string; search_urls?: string[] }[],
   setLoadingHistory?: (loading: boolean) => void
@@ -113,9 +110,6 @@ function mapApiChatsToRepository(
     headId: messages.length > 0 ? messages[messages.length - 1].id : null, // ✅ head is last msg
   };
 }
-
-
-
 
 function makeHistoryAdapter(
   userId: string,
@@ -164,60 +158,22 @@ function makeHistoryAdapter(
   };
 }
 
-
 function Assistant() {
   const [activeTab, setActiveTab] = useState<"tax" | "learn">("learn");
   const [typing, setTyping] = useState(false);
-  const [loadingHistory, setloadingHistory] = useState(false)
+  const [loadingHistory, setloadingHistory] = useState(false);
   const [currentSessionId, setCurrentSessionId] = useState<string | undefined>('123383892');
-  console.log(window.location.search)
+  const [payrollData, setPayrollData] = useState(null);
+  const [showTaxChatbot, setShowTaxChatbot] = useState(false);
+  const [isLoadingPayroll, setIsLoadingPayroll] = useState(false);
+  
+  // console.log(window.location.search)
   const params = new URLSearchParams(window.location.search);
   const sessionId: any = params.get("session_id");
   const userId:any=params.get("user_id")
   const access_token: any = params.get("access_token");
   const refresh_access_token: any = params.get("refresh_token");
   console.log(userId,sessionId)
-
-
-
-  // localStorage.setItem("chatType", chatType)
-
-  // localStorage.setItem("sessionId",sessionId)
-
-
-
-  // useEffect(()=>{
-  //   const creatToken=async()=>{
-  //       try{
-  //         let payload={
-  //           client_id:clientId,
-  //           client_secret:clientSecret
-  //         }
-  //         const response=await tokenCreateFromclientIdandSecret(payload)
-  //         if(response&&!sessionId)
-  //         {
-  //           let sessionPayload={
-  //             payroll_details:payrollDetails,
-  //             company_name:companyName,
-  //             first_name:first_name,
-  //             last_name:last_name,
-  //             email:email
-  //           }
-  //           const sessionId=await getUserAndSessionId(sessionPayload)
-  //           return
-  //         }
-  //   }catch(error:any){
-  //     console.log(error)
-
-  //   }
-  //   }
-  //   if(clientId&&clientSecret)
-  //   {
-  //     creatToken()
-  //   }
-
-  // },[clientId,clientSecret])
-  // console.log(access_token,refresh_access_token,"==========================")
 
   useEffect(() => {
     const storedSessionId = localStorage.getItem("chat_session_id");
@@ -241,24 +197,65 @@ function Assistant() {
     }
   }, [sessionId, access_token, refresh_access_token])
 
+  // Check if payroll data is complete
+  const isPayrollDataComplete = (data: any) => {
+    if (!data) return false;
+    
+    return !!(
+      data.income_type &&
+      data.annual_salary !== null && 
+      data.annual_salary !== undefined &&
+      data.filing_status &&
+      data.pay_frequency &&
+      data.current_withholding_per_paycheck !== null && 
+      data.current_withholding_per_paycheck !== undefined
+    );
+  };
+
   useEffect(() => {
     const userInfo = async () => {
       try {
-        const response = await getPayrollDetails(userId)
-        console.log(response, "fjniudjnj")
-        // loadHistory()
+        setIsLoadingPayroll(true);
+        const response = await getPayrollDetails(userId);
+        console.log(response, "payroll response");
+        
+        setPayrollData(response);
+        
+        // Check if any required field is missing
+        const isComplete = isPayrollDataComplete(response);
+        setShowTaxChatbot(!isComplete);
+        
+        setIsLoadingPayroll(false);
       } catch (error) {
-        // loadHistory()
-        console.log(error, "error")
+        console.log(error, "error fetching payroll");
+        // If error fetching payroll data, show tax chatbot to collect info
+        setShowTaxChatbot(true);
+        setIsLoadingPayroll(false);
       }
     }
-    userInfo()
+    
+    if (userId) {
+      userInfo();
+    }
   }, [userId])
+
+  // Handle tax chatbot completion
+  const handleTaxChatbotComplete = (taxData: any) => {
+    console.log('Tax form completed with data:', taxData);
+    setShowTaxChatbot(false);
+    setPayrollData(taxData);
+    // You might want to save this data to your backend here
+  };
+
+  // Handle continue to chat action
+  const handleContinueToChat = () => {
+    setShowTaxChatbot(false);
+  };
 
   // Load history when page renders
   const loadHistory = async () => {
     console.log(currentSessionId, 'currentSessionId');
-    console.log(userId, 'emailemail');
+    console.log(userId, 'userId');
 
     if (currentSessionId && userId) {
       const historyAdapter = makeHistoryAdapter(userId, currentSessionId, setloadingHistory);
@@ -270,13 +267,9 @@ function Assistant() {
     }
   };
 
-
-
-
-
-  // IMPORTANT: history adapter is created with the current email so it can load the right messages
+  // IMPORTANT: history adapter is created with the current userId so it can load the right messages
   const history = useMemo(
-    () => (currentSessionId ? makeHistoryAdapter(userId, currentSessionId,  setloadingHistory) : undefined),
+    () => (currentSessionId ? makeHistoryAdapter(userId, currentSessionId, setloadingHistory) : undefined),
     [userId, currentSessionId]
   );
 
@@ -293,10 +286,28 @@ function Assistant() {
     },
   });
 
+  // Show loading state while checking payroll data
+  if (isLoadingPayroll) {
+    return (
+      <div className="myUniquechatbot">
+        <div className="flex items-center justify-center py-10 min-h-[400px]">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-4"></div>
+            <h3 className="text-lg font-medium text-gray-800 mb-2">
+              Loading your information...
+            </h3>
+            <p className="text-sm text-gray-500">
+              Please wait while we check your profile
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="myUniquechatbot">
-      {/* key includes email so switching users re-initializes the runtime + history load */}
-
+      {/* key includes userId so switching users re-initializes the runtime + history load */}
       <AssistantRuntimeProvider key={`${activeTab}-${userId}`} runtime={learnRuntime}>
         <div className="flex justify-between px-0 py-0 w-full">
           <div className="grid grid-cols-1 gap-x-2 px-0 py-0 w-full">
@@ -305,15 +316,17 @@ function Assistant() {
               setActiveTab={setActiveTab}
               typing={typing}
               image={''}
-              // email={email}
               loadingHistory={loadingHistory}
-              // url_type={url_type}
               sessionId={currentSessionId}
+              userId={userId}
+              showTaxChatbot={showTaxChatbot}
+              payrollData={payrollData}
+              onTaxChatbotComplete={handleTaxChatbotComplete}
+              onContinueToChat={handleContinueToChat}
             />
           </div>
         </div>
       </AssistantRuntimeProvider>
-
     </div>
   );
 }
