@@ -17,7 +17,7 @@ export const MyModelAdapter = (
       const lastUserText = messages[messages.length - 1].content[0]?.text || "";
 
       const makeRequest = async () =>
-        fetch("https://amus-devapi.musetax.com/api/tax_education/query", {
+        fetch(`https://amus-devapi.musetax.com/v1/api/amus/chat/${userId}/${sessionId}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -27,8 +27,8 @@ export const MyModelAdapter = (
           },
           keepalive: true,
           body: JSON.stringify({
-            userId,
-            query: lastUserText,
+            user_id:userId,
+            message: lastUserText,
             session_id: sessionId,
           }),
         });
@@ -53,6 +53,7 @@ export const MyModelAdapter = (
       const MIN_YIELD_INTERVAL = 16; // ~60fps
 
       while (true) {
+        console.log(reader)
         const { done, value } = await reader.read();
         if (done) break;
 

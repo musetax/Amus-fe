@@ -62,7 +62,7 @@ export const Thread: any = ({
   const isStreaming = messages.some(
     (msg: any) => msg.role === "assistant" && msg.status?.type === "running"
   );
-
+  console.log(payrollData,"p--hjegsj")
   const assistantMessages = [...messages]
     .reverse()
     .filter((msg) => msg.role === "assistant");
@@ -181,10 +181,12 @@ export const Thread: any = ({
               <div>
                 {/* Show tax chatbot if no messages and form not completed */}
                 {shouldShowTaxChatbot ? (
+                  
                   <div style={{ height: "calc(100vh - 375px)", minHeight: "440px" }}>
                     <TaxChatbot 
                       onComplete={handleTaxChatbotComplete}
                       onContinueToChat={handleContinueToChat}
+                      prefilledData={payrollData.payroll}
                     />
                   </div>
                 ) : (

@@ -45,10 +45,10 @@ export const createUserInfo = async (taxPayload: any, email: string, url_type: a
 
 export const getPayrollDetails=async(userId:string)=>{
    try {
-    const response = await axios.get(`https://2b8c3cf85ec5.ngrok-free.app/user?user_id=${userId}`,
-     { headers:{
-        "ngrok-skip-browser-warning": "69420",
-      }}
+    const response = await axios.get(`https://amus-devapi.musetax.com/user?user_id=${userId}`,
+    //  { headers:{
+    //     "ngrok-skip-browser-warning": "69420",
+    //   }}
     );
 
     return response.data;
@@ -58,7 +58,7 @@ export const getPayrollDetails=async(userId:string)=>{
 }
 export const payrollDetailsUpdate=async(userId:string,payload:any)=>{
    try {
-    const response = await axios.patch(`https://2b8c3cf85ec5.ngrok-free.app/user/${userId}`,payload);
+    const response = await axios.patch(`https://amus-devapi.musetax.com/user/${userId}`,payload);
 
     return response.data;
   } catch {

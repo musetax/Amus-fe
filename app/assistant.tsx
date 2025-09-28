@@ -162,7 +162,9 @@ function Assistant() {
   const [activeTab, setActiveTab] = useState<"tax" | "learn">("learn");
   const [typing, setTyping] = useState(false);
   const [loadingHistory, setloadingHistory] = useState(false);
-  const [currentSessionId, setCurrentSessionId] = useState<string | undefined>('123383892');
+  const [currentSessionId, setCurrentSessionId] = useState<string | undefined>();
+  const [currentUserId, setCurrentUserId] = useState<string | undefined>();
+
   const [payrollData, setPayrollData] = useState(null);
   const [showTaxChatbot, setShowTaxChatbot] = useState(false);
   const [isLoadingPayroll, setIsLoadingPayroll] = useState(false);
@@ -173,7 +175,7 @@ function Assistant() {
   const userId:any=params.get("user_id")
   const access_token: any = params.get("access_token");
   const refresh_access_token: any = params.get("refresh_token");
-  console.log(userId,sessionId)
+  console.log(userId,sessionId,access_token)
 
   useEffect(() => {
     const storedSessionId = localStorage.getItem("chat_session_id");
@@ -194,6 +196,7 @@ function Assistant() {
     }
     if (userId) {
       localStorage.setItem("userId", userId)
+      setCurrentUserId(userId)
     }
   }, [sessionId, access_token, refresh_access_token])
 
