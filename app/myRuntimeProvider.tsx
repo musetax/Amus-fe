@@ -8,9 +8,9 @@ export const MyModelAdapter = (
 ): any => ({
   async *run({ messages }: any) {
     setTyping(true);
-    
+
     // Start immediately - no loading placeholder!
-    
+
     try {
       const token: string | null = getAccessToken();
 
@@ -27,7 +27,7 @@ export const MyModelAdapter = (
           },
           keepalive: true,
           body: JSON.stringify({
-            user_id:userId,
+            user_id: userId,
             message: lastUserText,
             session_id: sessionId,
           }),
@@ -53,7 +53,7 @@ export const MyModelAdapter = (
       const MIN_YIELD_INTERVAL = 16; // ~60fps
 
       while (true) {
-        console.log(reader)
+        // console.log(reader)
         const { done, value } = await reader.read();
         if (done) break;
 
@@ -63,22 +63,33 @@ export const MyModelAdapter = (
 
         for (const line of lines) {
           if (!line.trim()) continue;
-          
-          try {
-            const json = JSON.parse(line);
 
-            if (json.response) {
-              accumulated += json.response;
-              hasNewContent = true;
-            }
+          // Only process lines starting with "data:"
+          if (line.startsWith("data: ")) {
+            const jsonStr = line.slice("data: ".length).trim();
 
-            if (json.urls && Array.isArray(json.urls)) {
-              urls = json.urls;
+            if (!jsonStr || jsonStr === "[DONE]") continue;
+
+            try {
+              const json = JSON.parse(jsonStr);
+
+              if (json.response || json.llm_message) {
+                // You might be using `response` or `llm_message` depending on your API
+                accumulated += json.response || json.llm_message;
+                hasNewContent = true;
+              }
+
+              if (json.urls && Array.isArray(json.urls)) {
+                urls = json.urls;
+              }
+            } catch (err) {
+              console.error("JSON parse error:", jsonStr, err);
             }
-          } catch (err) {
-            console.error("JSON parse error:", line, err);
+          } else {
+            console.warn("Skipping non-data line:", line);
           }
         }
+
 
         // Yield immediately for first chunk, then throttle
         const now = Date.now();
@@ -115,7 +126,7 @@ export const MyModelAdapter = (
         ...accumulatedMessages,
         { role: "assistant", content: [{ type: "text", text: accumulated }] },
       ]);
-      
+
     } catch (error) {
       console.error("Adapter error:", error);
       setTyping(false);

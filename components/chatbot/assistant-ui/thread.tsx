@@ -49,7 +49,7 @@ export const Thread: any = ({
   userId,
   loadingHistory,
   sessionId,
-  showTaxChatbot = false,
+  showTaxChatbot ,
   payrollData,
   onTaxChatbotComplete,
   onContinueToChat

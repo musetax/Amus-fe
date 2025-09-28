@@ -225,7 +225,8 @@ function Assistant() {
         setPayrollData(response);
         
         // Check if any required field is missing
-        const isComplete = isPayrollDataComplete(response);
+        const isComplete = isPayrollDataComplete(response.payroll);
+        console.log(isComplete,"iscomplete")
         setShowTaxChatbot(!isComplete);
         
         setIsLoadingPayroll(false);
