@@ -174,12 +174,17 @@ function Assistant() {
   const sessionId: any = params.get("session_id");
   const userId:any=params.get("user_id")
   const access_token: any = params.get("access_token");
-  const refresh_access_token: any = params.get("refresh_token");
+  // const refresh_access_token: any = params.get("refresh_token");
+    const [globalError, setGlobalError] = useState<string | null>(null);
+
   console.log(userId,sessionId,access_token)
 
   useEffect(() => {
     const storedSessionId = localStorage.getItem("chat_session_id");
-
+       if (!sessionId || !userId || !access_token) {
+      setGlobalError("Missing session_id, user_id or access_token in URL.");
+      return;
+    }
     if (sessionId) {
       // Save new sessionId to localStorage
       localStorage.setItem("chat_session_id", sessionId);
@@ -191,14 +196,14 @@ function Assistant() {
     if (access_token) {
       localStorage.setItem("authTokenMuse", access_token)
     }
-    if (refresh_access_token) {
-      localStorage.setItem("refreshTokenMuse", refresh_access_token)
-    }
+    // if (refresh_access_token) {
+    //   localStorage.setItem("refreshTokenMuse", refresh_access_token)
+    // }
     if (userId) {
       localStorage.setItem("userId", userId)
       setCurrentUserId(userId)
     }
-  }, [sessionId, access_token, refresh_access_token])
+  }, [sessionId, access_token,userId])
 
   // Check if payroll data is complete
   const isPayrollDataComplete = (data: any) => {
@@ -230,26 +235,27 @@ function Assistant() {
         setShowTaxChatbot(!isComplete);
         
         setIsLoadingPayroll(false);
-      } catch (error) {
-        console.log(error, "error fetching payroll");
-        // If error fetching payroll data, show tax chatbot to collect info
+       } catch (error) {
+        console.error("Error fetching payroll:", error);
         setShowTaxChatbot(true);
+      } finally {
         setIsLoadingPayroll(false);
       }
     }
-    
-    if (userId) {
+    if (!globalError && userId) {
       userInfo();
     }
-  }, [userId])
-
+  }, [userId, globalError]);
   // Handle tax chatbot completion
   const handleTaxChatbotComplete =async (taxData: any) => {
+    try{
     const response=await payrollDetailsUpdate(userId,taxData)
     console.log(response,"response")
-    console.log('Tax form completed with data:', taxData);
     setShowTaxChatbot(false);
     setPayrollData(taxData);
+     } catch (error) {
+      setGlobalError("Failed to update payroll data.");
+    }
     // You might want to save this data to your backend here
   };
 
@@ -329,6 +335,7 @@ function Assistant() {
               payrollData={payrollData}
               onTaxChatbotComplete={handleTaxChatbotComplete}
               onContinueToChat={handleContinueToChat}
+              globalError={globalError}
             />
           </div>
         </div>

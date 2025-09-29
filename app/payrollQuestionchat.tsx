@@ -1,725 +1,3 @@
-// import React, { useState, useEffect, useRef } from "react";
-// import {
-//   CheckIcon,
-//   CopyIcon,
-//   PencilIcon,
-//   SendHorizontalIcon,
-//   Volume2Icon,
-//   VolumeXIcon,
-// } from "lucide-react";
-// import { TooltipIconButton } from "../components/chatbot/assistant-ui/tooltip-icon-button";
-
-// // Type definitions
-// interface TaxData {
-//   income_type: string;
-//   annual_salary: string;
-//   filing_status: string;
-//   pay_frequency: string;
-//   current_withholding_per_paycheck: string;
-//   spouse_income?: string;
-// }
-
-// interface TaxChatbotProps {
-//   onComplete?: (taxData: TaxData) => void;
-//   onContinueToChat?: () => void;
-//   image?: string;
-// }
-
-// interface MessageContent {
-//   content?: string;
-//   inputType?: string;
-//   placeholder?: string;
-//   selectType?: string;
-//   options?: string[];
-// }
-
-// interface Message {
-//   type: "bot" | "user";
-//   content: string | MessageContent;
-//   options?: string[];
-//   createdAt: Date;
-// }
-
-// interface FormData {
-//   filing_status: string | null;
-//   annual_salary: string | null;
-//   spouse_income: string | null;
-//   pay_frequency: string | null;
-//   current_withholding_per_paycheck: string | null;
-// }
-
-// interface TaxUserMessageProps {
-//   message: Message;
-//   image?: string;
-// }
-
-// interface TaxBotMessageProps {
-//   message: Message;
-//   isLast: boolean;
-//   onOptionSelect: (option: string) => void;
-//   onInputSubmit: (value: string) => void;
-//   currentStep: string;
-//   isTyping: boolean;
-// }
-
-// interface TaxInputFieldProps {
-//   type: string;
-//   placeholder: string;
-//   onSubmit: (value: string) => void;
-// }
-
-// interface SummaryCardProps {
-//   icon: React.ComponentType;
-//   title: string;
-//   value: string;
-//   color: string;
-// }
-
-// type StepType = "filing_status" | "annual_salary" | "spouse_income" | "pay_frequency" | "current_withholding" | "complete" | "saved";
-
-// // Helper function to format time like the original thread
-// const formatTime = (date: Date | number): string => {
-//   const d = new Date(date);
-//   return d
-//     .toLocaleTimeString("en-US", {
-//       hour: "2-digit",
-//       minute: "2-digit",
-//       hour12: true,
-//     })
-//     .replace("AM", "AM")
-//     .replace("PM", "PM");
-// };
-
-// // Tax User Message Component - matches Thread UserMessage structure exactly
-// const TaxUserMessage: React.FC<TaxUserMessageProps> = ({ message, image }) => {
-//   const time = formatTime(message.createdAt || Date.now());
-
-//   return (
-//     <div className="grid auto-rows-auto grid-cols-[minmax(72px,1fr)_auto] gap-y-2 [&:where(>*)]:col-start-2 w-full max-w-[var(--thread-max-width)] py-4">
-//       <div style={{ minWidth: "70px" }}>
-//         {/* User Action Bar */}
-//         <div className="flex flex-col items-end col-start-1 row-start-2 mr-3 mt-2.5">
-//           <TooltipIconButton tooltip="Edit" variant="ghost" size="sm">
-//             <PencilIcon size={16} />
-//           </TooltipIconButton>
-//         </div>
-//       </div>
-
-//       <div
-//         style={{
-//           display: "flex",
-//           justifyContent: "end",
-//           gap: "8px",
-//           alignItems: "start",
-//           paddingLeft: "16px",
-//           paddingRight: "10px",
-//         }}
-//       >
-//         <div
-//           style={{
-//             display: "flex",
-//             flexDirection: "column",
-//             alignItems: "end",
-//           }}
-//         >
-//           <div className="bg-ChatBtnGradient text-white d max-w-[calc(var(--thread-max-width)*0.8)] text-sm break-all break-words rounded-3xl px-5 py-2.5 col-start-2 row-start-2">
-//             <pre className="whitespace-pre-wrap font-sans">
-//               {typeof message.content === "string" ? message.content : ""}
-//             </pre>
-//           </div>
-//           <span style={{ color: "#45556c", fontSize: "12px", marginTop: "4px" }}>
-//             {time}
-//           </span>
-//         </div>
-//         {image ? (
-//           <img
-//             style={{
-//               width: "25px",
-//               height: "25px",
-//               minHeight: "25px",
-//               objectFit: "cover",
-//               borderRadius: "50%",
-//             }}
-//             src={image}
-//             alt="useIcon"
-//           />
-//         ) : (
-//           <img
-//             style={{
-//               width: "25px",
-//               height: "25px",
-//               minHeight: "25px",
-//               objectFit: "cover",
-//               borderRadius: "50%",
-//             }}
-//             src="https://i.ibb.co/Ty3Grj0/dummy-Icon.png"
-//             alt="useIcon"
-//           />
-//         )}
-//       </div>
-//     </div>
-//   );
-// };
-
-// // Tax Bot Message Component - matches Thread AssistantMessage structure exactly
-// const TaxBotMessage: React.FC<TaxBotMessageProps> = ({ 
-//   message, 
-//   isLast, 
-//   onOptionSelect, 
-//   onInputSubmit, 
-//   currentStep, 
-//   isTyping 
-// }) => {
-//   const time = formatTime(message.createdAt || Date.now());
-
-//   return (
-//     <div
-//       style={{
-//         display: "flex",
-//         alignItems: "baseline",
-//         gap: "8px",
-//         width: "100%",
-//         paddingLeft: "16px",
-//         paddingRight: "10px",
-//       }}
-//     >
-//       <span style={{ position: "relative", top: "10px" }}>
-//         <img
-//           style={{
-//             width: "25px",
-//             height: "25px",
-//             minWidth: "25px",
-//             minHeight: "25px",
-//             objectFit: "cover",
-//             borderRadius: "50%",
-//             background: "white",
-//           }}
-//           src="https://appweb-bucket.s3.us-east-1.amazonaws.com/muse-logo.png"
-//           alt="useIcon"
-//         />
-//       </span>
-//       <div className="grid grid-cols-[auto_auto_1fr] grid-rows-[auto_1fr] relative w-full max-w-[var(--thread-max-width)] py-4 pr-2">
-//         <div className="text-foreground max-w-[calc(var(--thread-max-width)*0.8)] break-words leading-7 col-span-2 col-start-2 row-start-1 my-1.5">
-//           <pre className="whitespace-pre-wrap text-sm leading-relaxed font-sans">
-//             {typeof message.content === "object" ? (message.content as MessageContent).content : message.content}
-//           </pre>
-
-//           {/* Show options as buttons */}
-//           {message.options && isLast && !isTyping && (
-//             <div className="mt-4 space-y-2">
-//               {message.options.map((option) => (
-//                 <button
-//                   key={option}
-//                   onClick={() => onOptionSelect(option)}
-//                   className="block w-full p-3 text-left text-sm bg-white text-gray-900 rounded-2xl hover:bg-gray-50 transition-colors font-medium border border-gray-200"
-//                 >
-//                   {option}
-//                 </button>
-//               ))}
-//             </div>
-//           )}
-
-//           {/* Show dropdown */}
-//           {typeof message.content === "object" &&
-//             (message.content as MessageContent).selectType === "dropdown" &&
-//             isLast &&
-//             !isTyping && (
-//               <div className="mt-4">
-//                 <select
-//                   onChange={(e) => {
-//                     if (e.target.value) {
-//                       if (e.target.value === "Other") {
-//                         const customValue = prompt("Please enter your custom pay frequency:");
-//                         if (customValue && customValue.trim()) {
-//                           onInputSubmit(customValue);
-//                         }
-//                       } else {
-//                         onInputSubmit(e.target.value);
-//                       }
-//                       e.target.value = "";
-//                     }
-//                   }}
-//                   className="w-full px-4 py-3 bg-white border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-900"
-//                   defaultValue=""
-//                 >
-//                   <option value="" disabled>
-//                     {(message.content as MessageContent).placeholder}
-//                   </option>
-//                   {(message.content as MessageContent).options?.map((option) => (
-//                     <option key={option} value={option}>
-//                       {option}
-//                     </option>
-//                   ))}
-//                 </select>
-//               </div>
-//             )}
-
-//           {/* Show input field */}
-//           {typeof message.content === "object" &&
-//             (message.content as MessageContent).inputType &&
-//             isLast &&
-//             currentStep !== "filing_status" &&
-//             currentStep !== "complete" &&
-//             !isTyping && (
-//               <TaxInputField
-//                 type={(message.content as MessageContent).inputType!}
-//                 placeholder={(message.content as MessageContent).placeholder!}
-//                 onSubmit={onInputSubmit}
-//               />
-//             )}
-
-//           <span style={{ color: "#45556c", fontSize: "12px", marginTop: "4px" }}>
-//             {time}
-//           </span>
-//         </div>
-        
-//         {/* Assistant Action Bar - same styling as Thread */}
-//         <div className="text-muted-foreground flex gap-1 col-start-3 row-start-2 -ml-1">
-//           <TooltipIconButton tooltip="Copy" variant="ghost" size="sm">
-//             <CopyIcon size={16} />
-//           </TooltipIconButton>
-//           <TooltipIconButton tooltip="Speak" variant="ghost" size="sm">
-//             <Volume2Icon size={16} />
-//           </TooltipIconButton>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// // Tax Input Field Component - matches Thread Composer styling exactly
-// const TaxInputField: React.FC<TaxInputFieldProps> = ({ type, placeholder, onSubmit }) => {
-//   const [value, setValue] = useState<string>("");
-//   const inputRef = useRef<HTMLInputElement>(null);
-
-//   useEffect(() => {
-//     if (inputRef.current) {
-//       inputRef.current.focus();
-//     }
-//   }, []);
-
-//   const handleSubmit = (): void => {
-//     if (!value.trim()) return;
-//     onSubmit(value);
-//     setValue("");
-//   };
-
-//   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>): void => {
-//     if (e.key === "Enter") {
-//       handleSubmit();
-//     }
-//   };
-
-//   return (
-//     <div className="mt-4">
-//       {/* Exact Composer styling */}
-//       <div className="focus-within:border-ring/20 flex w-full flex-wrap items-end rounded-full border border-[#E9E9E9] bg-inherit px-2.5 py-0 shadow-sm transition-colors ease-in gap-2 bg-white">
-//         <input
-//           ref={inputRef}
-//           type={type}
-//           value={value}
-//           onChange={(e) => setValue(e.target.value)}
-//           onKeyPress={handleKeyPress}
-//           placeholder={placeholder}
-//           className="placeholder:text-muted-foreground custom_input flex-grow resize-none border-none bg-transparent px-2 py-4 text-sm outline-none focus:ring-0 disabled:cursor-not-allowed"
-//         />
-//         <TooltipIconButton
-//           tooltip="Send"
-//           variant="default"
-//           className="my-2.5 size-8 p-2 bg-ChatBtnGradient rounded-full transition-opacity ease-in"
-//           onClick={handleSubmit}
-//           disabled={!value.trim()}
-//         >
-//           <SendHorizontalIcon />
-//         </TooltipIconButton>
-//       </div>
-//     </div>
-//   );
-// };
-
-// // Icon components for summary
-// const DollarSign: React.FC = () => <div className="text-white text-lg">💰</div>;
-// const User: React.FC = () => <div className="text-white text-lg">👤</div>;
-// const Heart: React.FC = () => <div className="text-white text-lg">💕</div>;
-// const Calendar: React.FC = () => <div className="text-white text-lg">📅</div>;
-// const CheckCircle: React.FC<{ className?: string }> = ({ className }) => <div className={`text-xl ${className}`}>✅</div>;
-// const RotateCcw: React.FC = () => <div className="text-base">🔄</div>;
-
-// const SummaryCard: React.FC<SummaryCardProps> = ({ icon: Icon, title, value, color }) => (
-//   <div className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm">
-//     <div className="flex items-center gap-3">
-//       <div className={`w-10 h-10 rounded-2xl flex items-center justify-center ${color}`}>
-//         <Icon />
-//       </div>
-//       <div>
-//         <p className="text-xs text-gray-600 uppercase tracking-wide">{title}</p>
-//         <p className="text-lg font-bold text-gray-900">{value}</p>
-//       </div>
-//     </div>
-//   </div>
-// );
-
-// const TaxChatbot: React.FC<TaxChatbotProps> = ({ 
-//   onComplete, 
-//   onContinueToChat, 
-//   image = '' 
-// }) => {
-//   const [messages, setMessages] = useState<Message[]>([
-//     {
-//       type: "bot",
-//       content:
-//         "Hi! I'm your tax information assistant. I'll help you collect the information needed for your tax calculation.\n\nLet's start with your filing status:",
-//       options: ["Single", "Married"],
-//       createdAt: new Date(),
-//     },
-//   ]);
-//   const [currentStep, setCurrentStep] = useState<StepType>("filing_status");
-//   const [formData, setFormData] = useState<FormData>({
-//     filing_status: null,
-//     annual_salary: null,
-//     spouse_income: null,
-//     pay_frequency: null,
-//     current_withholding_per_paycheck: null,
-//   });
-//   const [isTyping, setIsTyping] = useState<boolean>(false);
-//   const [isSaving, setIsSaving] = useState<boolean>(false);
-//   const [saveError, setSaveError] = useState<string | null>(null);
-//   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-//   const scrollToBottom = (): void => {
-//     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-//   };
-
-//   useEffect(() => {
-//     scrollToBottom();
-//   }, [messages]);
-
-//   const addMessage = (type: "bot" | "user", content: string | MessageContent): void => {
-//     setIsTyping(true);
-//     setTimeout(
-//       () => {
-//         setMessages((prev) => [...prev, { 
-//           type, 
-//           content,
-//           createdAt: new Date()
-//         }]);
-//         setIsTyping(false);
-//       },
-//       type === "bot" ? 800 : 0
-//     );
-//   };
-
-//   const handleFilingStatusSelect = (status: string): void => {
-//     setFormData((prev) => ({ ...prev, filing_status: status }));
-//     addMessage("user", `I am ${status.toLowerCase()}`);
-//     addMessage("bot", {
-//       content: "Perfect! Now I need to know your annual salary to calculate your tax information accurately.",
-//       inputType: "number",
-//       placeholder: "Enter your annual salary (e.g., 75000)...",
-//     });
-//     setCurrentStep("annual_salary");
-//   };
-
-//   const handleInputSubmit = (value: string): void => {
-//     if (!value.trim()) return;
-//     const numValue = parseFloat(value) || value;
-
-//     switch (currentStep) {
-//       case "annual_salary":
-//         setFormData((prev) => ({ ...prev, annual_salary: numValue as string }));
-//         addMessage("user", `My annual salary is ${(numValue as number).toLocaleString()}`);
-
-//         if (formData.filing_status === "Married") {
-//           addMessage("bot", {
-//             content: "Since you're married, I also need your spouse's annual income.",
-//             inputType: "number",
-//             placeholder: "Enter spouse annual income...",
-//           });
-//           setCurrentStep("spouse_income");
-//         } else {
-//           addMessage("bot", {
-//             content: "Great! Now I need to know how often you get paid.",
-//             selectType: "dropdown",
-//             options: ["Weekly", "Bi-weekly", "Semi-monthly", "Monthly", "Other"],
-//             placeholder: "Select your pay frequency...",
-//           });
-//           setCurrentStep("pay_frequency");
-//         }
-//         break;
-
-//       case "spouse_income":
-//         setFormData((prev) => ({ ...prev, spouse_income: numValue as string }));
-//         addMessage("user", `My spouse's annual income is ${(numValue as number).toLocaleString()}`);
-//         addMessage("bot", {
-//           content: "Excellent! Now I need to know how often you get paid.",
-//           selectType: "dropdown",
-//           options: ["Weekly", "Bi-weekly", "Semi-monthly", "Monthly", "Other"],
-//           placeholder: "Select your pay frequency...",
-//         });
-//         setCurrentStep("pay_frequency");
-//         break;
-
-//       case "pay_frequency":
-//         setFormData((prev) => ({ ...prev, pay_frequency: value as string }));
-//         addMessage("user", `I get paid ${(value as string).toLowerCase()}`);
-//         addMessage("bot", {
-//           content: "Finally, what is your current withholding amount per paycheck?",
-//           inputType: "number",
-//           placeholder: "Enter withholding amount per paycheck...",
-//         });
-//         setCurrentStep("current_withholding");
-//         break;
-
-//       case "current_withholding":
-//         setFormData((prev) => ({ ...prev, current_withholding_per_paycheck: numValue as string }));
-//         addMessage("user", `My current withholding is ${numValue} per paycheck`);
-//         addMessage("bot", "Perfect! I have all the information I need. Let me summarize everything for you:");
-//         setCurrentStep("complete");
-//         break;
-//     }
-//   };
-
-//   const resetChat = (): void => {
-//     setMessages([
-//       {
-//         type: "bot",
-//         content:
-//           "Hi! I'm your tax information assistant. I'll help you collect the information needed for your tax calculation.\n\nLet's start with your filing status:",
-//         options: ["Single", "Married"],
-//         createdAt: new Date(),
-//       },
-//     ]);
-//     setCurrentStep("filing_status");
-//     setFormData({
-//       filing_status: null,
-//       annual_salary: null,
-//       spouse_income: null,
-//       pay_frequency: null,
-//       current_withholding_per_paycheck: null,
-//     });
-//     setIsSaving(false);
-//     setSaveError(null);
-//   };
-
-//   const handleSaveTaxes = async (): Promise<void> => {
-//     setIsSaving(true);
-//     setSaveError(null);
-
-//     try {
-//       await new Promise(resolve => setTimeout(resolve, 2000));
-      
-//       const taxDataToSave: TaxData = {
-//         income_type: "salary",
-//         annual_salary: formData.annual_salary!,
-//         filing_status: formData.filing_status!,
-//         pay_frequency: formData.pay_frequency!,
-//         current_withholding_per_paycheck: formData.current_withholding_per_paycheck!,
-//         spouse_income: formData.spouse_income || undefined
-//       };
-
-//       if (onComplete) {
-//         onComplete(taxDataToSave);
-//       }
-      
-//       setCurrentStep("saved");
-//     } catch (error) {
-//       console.error("Error saving tax information:", error);
-//       setSaveError("Failed to save your tax information. Please try again.");
-//     } finally {
-//       setIsSaving(false);
-//     }
-//   };
-
-//   const handleContinueToChat = (): void => {
-//     if (onContinueToChat) {
-//       onContinueToChat();
-//     }
-//   };
-
-//   return (
-//     <div className="bg-inherit h-full">
-//       {/* Using exact Thread Viewport styling */}
-//       <div 
-//         style={{
-//           height: "calc(100vh - 375px)",
-//           minHeight: "120px",
-//           maxHeight: "440px",
-//         }}
-//         className="flex flex-col items-center chat-scroll overflow-y-scroll scroll-smooth bg-inherit pr-0 pl-3 pt-0"
-//       >
-//         {/* Thread Welcome equivalent */}
-//         <div className="flex w-full max-w-[var(--thread-max-width)] flex-grow flex-col px-4">
-//           <div className="flex w-full flex-grow flex-col items-center justify-center">
-//             <p className="mt-4 font-medium text-sm">
-//               Stuck with Taxes. No Worries Uncle Sam is Here
-//             </p>
-//           </div>
-//         </div>
-
-//         {/* Messages using exact Thread message structure */}
-//         {messages.map((message, index) => (
-//           message.type === "user" ? (
-//             <TaxUserMessage key={index} message={message} image={image} />
-//           ) : (
-//             <TaxBotMessage 
-//               key={index} 
-//               message={message} 
-//               isLast={index === messages.length - 1}
-//               onOptionSelect={handleFilingStatusSelect}
-//               onInputSubmit={handleInputSubmit}
-//               currentStep={currentStep}
-//               isTyping={isTyping}
-//             />
-//           )
-//         ))}
-
-//         {/* Typing indicator matching Thread style exactly */}
-//         {isTyping && (
-//           <div style={{ 
-//             display: "flex", 
-//             alignItems: "baseline", 
-//             gap: "8px", 
-//             width: "100%",
-//             paddingLeft: "16px",
-//             paddingRight: "10px",
-//           }}>
-//             <span style={{ position: "relative", top: "10px" }}>
-//               <img
-//                 style={{
-//                   width: "25px",
-//                   height: "25px",
-//                   minWidth: "25px",
-//                   minHeight: "25px",
-//                   objectFit: "cover",
-//                   borderRadius: "50%",
-//                   background: "white",
-//                 }}
-//                 src="https://appweb-bucket.s3.us-east-1.amazonaws.com/muse-logo.png"
-//                 alt="botIcon"
-//               />
-//             </span>
-//             <div className="bg-gray-100 text-gray-900 px-6 py-4 rounded-3xl">
-//               <div className="flex space-x-1">
-//                 <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
-//                 <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
-//                 <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
-//               </div>
-//             </div>
-//           </div>
-//         )}
-
-//         <div ref={messagesEndRef} />
-
-//         {/* Thread empty space equivalent */}
-//         <div className="min-h-8 flex-grow" />
-//       </div>
-
-//       {/* Completion Summary - positioned like Thread composer area */}
-//       {currentStep === "complete" && (
-//         <div className="sticky bg-[#255be305] bottom-0 px-3 pt-3 flex w-full max-w-[var(--thread-max-width)] flex-col items-center justify-end rounded-t-lg pb-2">
-//           <div className="w-full bg-white border border-gray-200 rounded-2xl p-6 mb-4">
-//             <div className="flex items-center gap-3 mb-6">
-//               <CheckCircle className="text-green-600" />
-//               <h3 className="text-lg font-bold text-gray-900">Information Collection Complete!</h3>
-//             </div>
-
-//             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-//               <SummaryCard
-//                 icon={User}
-//                 title="Filing Status"
-//                 value={formData.filing_status || ""}
-//                 color="bg-gradient-to-r from-purple-600 to-purple-400"
-//               />
-//               <SummaryCard
-//                 icon={DollarSign}
-//                 title="Annual Salary"
-//                 value={`$${formData.annual_salary?.toLocaleString()}`}
-//                 color="bg-gradient-to-r from-orange-600 to-orange-400"
-//               />
-//               {formData.spouse_income && (
-//                 <SummaryCard
-//                   icon={Heart}
-//                   title="Spouse Income"
-//                   value={`$${formData.spouse_income?.toLocaleString()}`}
-//                   color="bg-gradient-to-r from-pink-600 to-pink-400"
-//                 />
-//               )}
-//               <SummaryCard
-//                 icon={Calendar}
-//                 title="Pay Frequency"
-//                 value={formData.pay_frequency || ""}
-//                 color="bg-gradient-to-r from-green-600 to-green-400"
-//               />
-//               <SummaryCard
-//                 icon={DollarSign}
-//                 title="Current Withholding"
-//                 value={`$${formData.current_withholding_per_paycheck} per paycheck`}
-//                 color="bg-gradient-to-r from-blue-600 to-blue-400"
-//               />
-//             </div>
-
-//             <div className="flex flex-col sm:flex-row gap-3">
-//               <button
-//                 onClick={resetChat}
-//                 disabled={isSaving}
-//                 className="flex items-center justify-center gap-2 px-6 py-3 bg-white border border-gray-300 text-gray-900 rounded-2xl hover:bg-gray-50 transition-colors font-medium disabled:opacity-50"
-//               >
-//                 <RotateCcw />
-//                 Start Over
-//               </button>
-//               <button
-//                 onClick={handleSaveTaxes}
-//                 disabled={isSaving}
-//                 className="flex-1 px-6 py-3 bg-ChatBtnGradient text-white rounded-2xl font-semibold hover:bg-opacity-90 transition-all duration-200 disabled:opacity-50"
-//               >
-//                 {isSaving ? "Saving..." : "Save My Taxes"}
-//               </button>
-//             </div>
-
-//             {saveError && (
-//               <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-2xl">
-//                 <p className="text-red-600 text-sm">{saveError}</p>
-//               </div>
-//             )}
-//           </div>
-//         </div>
-//       )}
-
-//       {/* Saved Success State */}
-//       {currentStep === "saved" && (
-//         <div className="sticky bg-[#255be305] bottom-0 px-3 pt-3 flex w-full max-w-[var(--thread-max-width)] flex-col items-center justify-end rounded-t-lg pb-2">
-//           <div className="w-full bg-white border border-gray-200 rounded-2xl p-6 mb-4">
-//             <div className="text-center">
-//               <div className="inline-flex items-center justify-center w-16 h-16 bg-ChatBtnGradient rounded-3xl mb-4">
-//                 <CheckCircle className="text-white" />
-//               </div>
-//               <h3 className="text-2xl font-bold text-gray-900 mb-4">Tax Information Saved Successfully!</h3>
-//               <p className="text-gray-600 mb-6 max-w-md mx-auto">
-//                 Your tax information has been saved. You can now continue to chat with me about your taxes.
-//               </p>
-
-//               <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-6 max-w-lg mx-auto">
-//                 <p className="text-sm text-blue-800 leading-relaxed">
-//                   <strong>💡 Pro Tip:</strong> You can now continue to chat with me about your taxes, ask questions, or request updates anytime!
-//                 </p>
-//               </div>
-
-//               <button
-//                 onClick={handleContinueToChat}
-//                 className="px-8 py-3 bg-ChatBtnGradient text-white rounded-2xl font-semibold hover:bg-opacity-90 transition-all duration-200"
-//               >
-//                 Continue to Chat
-//               </button>
-//             </div>
-//           </div>
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default TaxChatbot;
-
 import React, { useState, useEffect, useRef } from "react";
 
 // Simple icon components to replace lucide-react
@@ -798,6 +76,8 @@ interface Message {
   type: "bot" | "user";
   content: string | MessageContent;
   options?: string[];
+  inputType?: string;
+  placeholder?: string;
   createdAt: Date;
 }
 
@@ -859,9 +139,9 @@ const TaxUserMessage: React.FC<TaxUserMessageProps> = ({ message, image }) => {
     <div className="grid auto-rows-auto grid-cols-[minmax(72px,1fr)_auto] gap-y-2 [&:where(>*)]:col-start-2 w-full max-w-[var(--thread-max-width)] py-4">
       <div style={{ minWidth: "70px" }}>
         <div className="flex flex-col items-end col-start-1 row-start-2 mr-3 mt-2.5">
-          <TooltipIconButton tooltip="Edit" variant="ghost" size="sm">
+          {/* <TooltipIconButton tooltip="Edit" variant="ghost" size="sm">
             <PencilIcon size={16} />
-          </TooltipIconButton>
+          </TooltipIconButton> */}
         </div>
       </div>
 
@@ -883,7 +163,7 @@ const TaxUserMessage: React.FC<TaxUserMessageProps> = ({ message, image }) => {
           }}
         >
           <div className="bg-gradient-to-r from-blue-600 to-blue-500 text-white max-w-[calc(var(--thread-max-width)*0.8)] text-sm break-all break-words rounded-3xl px-5 py-2.5 col-start-2 row-start-2">
-            <pre className="whitespace-pre-wrap font-sans">
+            <pre className="whitespace-normal text-foreground font-sans">
               {typeof message.content === "string" ? message.content : ""}
             </pre>
           </div>
@@ -922,13 +202,13 @@ const TaxUserMessage: React.FC<TaxUserMessageProps> = ({ message, image }) => {
 };
 
 // Tax Bot Message Component
-const TaxBotMessage: React.FC<TaxBotMessageProps> = ({ 
-  message, 
-  isLast, 
-  onOptionSelect, 
-  onInputSubmit, 
-  currentStep, 
-  isTyping 
+const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
+  message,
+  isLast,
+  onOptionSelect,
+  onInputSubmit,
+  currentStep,
+  isTyping
 }) => {
   const time = formatTime(message.createdAt || Date.now());
 
@@ -960,7 +240,7 @@ const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
       </span>
       <div className="grid grid-cols-[auto_auto_1fr] grid-rows-[auto_1fr] relative w-full max-w-[var(--thread-max-width)] py-4 pr-2">
         <div className="text-foreground max-w-[calc(var(--thread-max-width)*0.8)] break-words leading-7 col-span-2 col-start-2 row-start-1 my-1.5">
-          <pre className="whitespace-pre-wrap text-sm leading-relaxed font-sans">
+          <pre className="whitespace-normal text-sm leading-relaxed font-sans">
             {typeof message.content === "object" ? (message.content as MessageContent).content : message.content}
           </pre>
 
@@ -1029,16 +309,17 @@ const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
             {time}
           </span>
         </div>
-        
+
         <div className="text-muted-foreground flex gap-1 col-start-3 row-start-2 -ml-1">
           <TooltipIconButton tooltip="Copy" variant="ghost" size="sm">
             <CopyIcon size={16} />
           </TooltipIconButton>
-          <TooltipIconButton tooltip="Speak" variant="ghost" size="sm">
+          {/* <TooltipIconButton tooltip="Speak" variant="ghost" size="sm">
             <Volume2Icon size={16} />
-          </TooltipIconButton>
+          </TooltipIconButton> */}
         </div>
       </div>
+      
     </div>
   );
 };
@@ -1114,42 +395,42 @@ const SummaryCard: React.FC<SummaryCardProps> = ({ icon: Icon, title, value, col
   </div>
 );
 
-const TaxChatbot: React.FC<TaxChatbotProps> = ({ 
-  onComplete, 
-  onContinueToChat, 
+const TaxChatbot: React.FC<TaxChatbotProps> = ({
+  onComplete,
+  onContinueToChat,
   prefilledData = {},
   image = ''
 }) => {
   // Helper function to determine what needs to be asked
   const getQuestionsToAsk = (): StepType[] => {
     const questions: StepType[] = [];
-    
+
     if (!prefilledData.filing_status) {
       questions.push("filing_status");
     }
-    
+
     if (!prefilledData.annual_salary) {
       questions.push("annual_salary");
     }
-    
+
     if ((prefilledData.filing_status === "Married" || prefilledData.filing_status === "married") && !prefilledData.spouse_income) {
       questions.push("spouse_income");
     }
-    
+
     if (!prefilledData.pay_frequency) {
       questions.push("pay_frequency");
     }
-    
+
     if (!prefilledData.current_withholding_per_paycheck) {
       questions.push("current_withholding");
     }
-    
+
     return questions;
   };
 
   const [questionsToAsk] = useState<StepType[]>(getQuestionsToAsk());
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
-  
+
   const [formData, setFormData] = useState<FormData>({
     filing_status: prefilledData.filing_status || null,
     annual_salary: prefilledData.annual_salary || null,
@@ -1173,7 +454,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
 
     const prefilledCount = Object.values(prefilledData).filter(value => value && value !== "").length;
     let greeting = "Hi! I'm your tax information assistant.";
-    
+
     if (prefilledCount > 0) {
       greeting += ` I can see you already have some tax information filled out. Let me collect the remaining details.`;
     } else {
@@ -1191,25 +472,42 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
       case "annual_salary":
         return {
           type: "bot",
-          content: `${greeting}\n\nI need to know your annual salary:`,
+          content: {
+            content: `${greeting}\n\nI need to know your annual salary:`,
+            inputType: "number",
+            placeholder: "Enter your annual salary (e.g., 75000)...",
+          },
           createdAt: new Date(),
         };
       case "spouse_income":
         return {
           type: "bot",
-          content: `${greeting}\n\nSince you're married, I need your spouse's annual income:`,
+          content: {
+            content: `${greeting}\n\nSince you're married, I need your spouse's annual income:`,
+            inputType: "number",
+            placeholder: "Enter spouse annual income...",
+          },
           createdAt: new Date(),
         };
       case "pay_frequency":
         return {
           type: "bot",
-          content: `${greeting}\n\nI need to know how often you get paid:`,
+          content: {
+            content: `${greeting}\n\nI need to know how often you get paid:`,
+            selectType: "dropdown",
+            options: ["Weekly", "Bi-weekly", "Semi-monthly", "Monthly"],
+            placeholder: "Select your pay frequency...",
+          },
           createdAt: new Date(),
         };
       case "current_withholding":
         return {
           type: "bot",
-          content: `${greeting}\n\nWhat is your current withholding amount per paycheck?`,
+          content: {
+            content: `${greeting}\n\nWhat is your current withholding amount per paycheck?`,
+            inputType: "number",
+            placeholder: "Enter withholding amount per paycheck...",
+          },
           createdAt: new Date(),
         };
       default:
@@ -1245,8 +543,8 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
     setIsTyping(true);
     setTimeout(
       () => {
-        setMessages((prev) => [...prev, { 
-          type, 
+        setMessages((prev) => [...prev, {
+          type,
           content,
           createdAt: new Date()
         }]);
@@ -1265,7 +563,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
       setCurrentQuestionIndex(nextIndex);
       const nextStep = questionsToAsk[nextIndex];
       setCurrentStep(nextStep);
-      
+
       switch (nextStep) {
         case "annual_salary":
           addMessage("bot", {
@@ -1285,7 +583,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
           addMessage("bot", {
             content: "Great! Now I need to know how often you get paid.",
             selectType: "dropdown",
-            options: ["Weekly", "Bi-weekly", "Semi-monthly", "Monthly", "Other"],
+            options: ["Weekly", "Bi-weekly", "Semi-monthly", "Monthly"],
             placeholder: "Select your pay frequency...",
           });
           break;
@@ -1359,7 +657,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
 
     try {
       await new Promise(resolve => setTimeout(resolve, 2000));
-      
+
       const taxDataToSave: TaxData = {
         income_type: "salary",
         annual_salary: formData.annual_salary!,
@@ -1372,7 +670,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
       if (onComplete) {
         onComplete(taxDataToSave);
       }
-      
+
       setCurrentStep("saved");
     } catch (error) {
       console.error("Error saving tax information:", error);
@@ -1390,11 +688,11 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
 
   return (
     <div className="bg-inherit h-full">
-      <div 
+      <div
         style={{
-          height: "calc(100vh - 375px)",
+          height: "calc(100vh - 210px)",
           minHeight: "120px",
-          maxHeight: "440px",
+          maxHeight: "740px",
         }}
         className="flex flex-col items-center chat-scroll overflow-y-scroll scroll-smooth bg-inherit pr-0 pl-3 pt-0"
       >
@@ -1410,9 +708,9 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
           message.type === "user" ? (
             <TaxUserMessage key={index} message={message} image={image} />
           ) : (
-            <TaxBotMessage 
-              key={index} 
-              message={message} 
+            <TaxBotMessage
+              key={index}
+              message={message}
               isLast={index === messages.length - 1}
               onOptionSelect={handleFilingStatusSelect}
               onInputSubmit={handleInputSubmit}
@@ -1423,10 +721,10 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         ))}
 
         {isTyping && (
-          <div style={{ 
-            display: "flex", 
-            alignItems: "baseline", 
-            gap: "8px", 
+          <div style={{
+            display: "flex",
+            alignItems: "baseline",
+            gap: "8px",
             width: "100%",
             paddingLeft: "16px",
             paddingRight: "10px",
@@ -1461,9 +759,9 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
       </div>
 
       {currentStep === "complete" && (
-        <div className="sticky bg-[#255be305] bottom-0 px-3 pt-3 flex w-full max-w-[var(--thread-max-width)] flex-col items-center justify-end rounded-t-lg pb-2">
+        <div className=" bg-[#255be305] bottom-0 px-3 pt-3 flex w-full max-w-[var(--thread-max-width)] flex-col items-center justify-end rounded-t-lg pb-2">
           <div className="w-full bg-white border border-gray-200 rounded-2xl p-6 mb-4">
-            <div className="flex items-center gap-3 mb-6">
+            <div className="flex items-center gap-3 mb-6" style={{marginBottom:"20px"}}>
               <CheckCircle className="text-green-600" />
               <h3 className="text-lg font-bold text-gray-900">
                 {questionsToAsk.length === 0 ? "Tax Information Already Complete!" : "Information Collection Complete!"}
@@ -1505,10 +803,11 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
               />
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex flex-col sm:flex-row gap-3 items-center justify-center" style={{ marginTop: "10px" }}>
               <button
                 onClick={resetChat}
                 disabled={isSaving}
+                style={{ paddingTop: "12px", paddingBottom: "12px" }}
                 className="flex items-center justify-center gap-2 px-6 py-3 bg-white border border-gray-300 text-gray-900 rounded-2xl hover:bg-gray-50 transition-colors font-medium disabled:opacity-50"
               >
                 <RotateCcw />
@@ -1517,9 +816,10 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
               <button
                 onClick={handleSaveTaxes}
                 disabled={isSaving}
-                className="flex-1 px-6 py-3 bg-gradient-to-r from-green-600 to-green-500 text-white rounded-2xl font-semibold hover:bg-opacity-90 transition-all duration-200 disabled:opacity-50"
+                style={{ paddingTop: "12px", paddingBottom: "12px",backgroundColor:"#1595ea",color:"#ffffff",border:"1px solid #1595ea" }}
+                className="flex items-center justify-center gap-2 px-6 py-3 bg-white border border-gray-300 text-gray-900 rounded-2xl hover:bg-gray-50 transition-colors font-medium disabled:opacity-50"
               >
-                {isSaving ? "Saving..." : "Save My Taxes"}
+                {isSaving ? "Saving..." : "Save My Information"}
               </button>
             </div>
 

@@ -9,6 +9,7 @@ import {
 } from "@assistant-ui/react";
 import { useEffect, useRef, useState, type FC } from "react";
 import {
+  AlertCircle,
   ArrowDownIcon,
   CheckIcon,
   ChevronLeftIcon,
@@ -33,6 +34,7 @@ import { downloadPdf, sendEmail } from "../../../app/taxModelAdapter";
 import { URLDisplay } from "./url-display";
 import { Tooltip, TooltipTrigger } from "../ui/tooltip";
 import TaxChatbot from "../../../app/payrollQuestionchat";
+import {ErrorBanner} from './error-ui'
 
 export const CHAT_HISTORY_KEY = "chat_history";
 
@@ -52,13 +54,14 @@ export const Thread: any = ({
   showTaxChatbot ,
   payrollData,
   onTaxChatbotComplete,
-  onContinueToChat
+  onContinueToChat,
+  globalError
 }: any) => {
   const { messages } = useThread();
   const [isLoading, setIsLoading] = useState(false);
   const [pdfData, setPdfData] = useState<any[]>([]);
   const [showDownloadLink, setShowDownloadLink] = useState(false);
-  console.log(messages, "messages", "----------------");
+  console.log(globalError, "messages", "----------------");
   const isStreaming = messages.some(
     (msg: any) => msg.role === "assistant" && msg.status?.type === "running"
   );
@@ -109,7 +112,7 @@ export const Thread: any = ({
         >
           <div
             className="bg-[#255be305] overflow-hidden rounded-xl as"
-            style={{ maxHeight: "635px" }}
+            style={{ maxHeight: "935px" }}
           >
             <div
               style={{
@@ -180,9 +183,25 @@ export const Thread: any = ({
             ) : (
               <div>
                 {/* Show tax chatbot if no messages and form not completed */}
-                {shouldShowTaxChatbot ? (
+
+              
+             {/* { <div key={1} className="flex justify-center my-8">
+                <div className="bg-red-50 border-l-4 border-red-500 rounded-lg p-4 max-w-md w-full shadow-sm">
+                  <div className="flex items-start gap-3">
+                    <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+                    <div className="flex-1">
+                      <p className="text-red-800 font-semibold text-sm mb-1">Error</p>
+                      <p className="text-red-700 text-sm">{"123432"}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>} */}
+           
+
+                {globalError?<ErrorBanner message={globalError} />
+                :shouldShowTaxChatbot ? (
                   
-                  <div style={{ height: "calc(100vh - 375px)", minHeight: "440px" }}>
+                  <div style={{ height: "calc(100vh - 105px)", minHeight: "440px",overflowY:"auto" }}>
                     <TaxChatbot 
                       onComplete={handleTaxChatbotComplete}
                       onContinueToChat={handleContinueToChat}
@@ -193,9 +212,9 @@ export const Thread: any = ({
                   <>
                     <ThreadPrimitive.Viewport
                       style={{
-                        height: "calc(100vh - 375px)",
+                        height: "calc(100vh - 210px)",
                         minHeight: "120px",
-                        maxHeight: "440px",
+                        maxHeight: "740px",
                       }}
                       className="flex flex-col items-center chat-scroll overflow-y-scroll scroll-smooth bg-inherit pr-0 pl-3 pt-0"
                     >

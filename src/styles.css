@@ -786,12 +786,12 @@ video {
 .myUniquechatbot .max-w-\[calc\(100\%-2rem\)\] {
   max-width: calc(100% - 2rem);
 }
-.myUniquechatbot .max-w-\[calc\(var\(--thread-max-width\)\*0\.8\)\] {
+ .myUniquechatbot .max-w-\[calc\(var\(--thread-max-width\)\*0\.8\)\] {
   max-width: calc(var(--thread-max-width) * 0.8);
 }
-.myUniquechatbot .max-w-\[var\(--thread-max-width\)\] {
+/* .myUniquechatbot .max-w-\[var\(--thread-max-width\)\] {
   max-width: var(--thread-max-width);
-}
+} */
 .myUniquechatbot .max-w-sm {
   max-width: 24rem;
 }
