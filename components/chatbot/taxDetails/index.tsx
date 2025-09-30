@@ -1,9 +1,9 @@
 import { useState } from "react";
-import TaxBenefitDetail from "./taxBenefit";
-import PaycheckSlider from "./taxSlider";
+// import TaxBenefitDetail from "./taxBenefit";
+// import PaycheckSlider from "./taxSlider";
 
 const TaxDetails = () => {
-  const [fixboost, setFixBoost] = useState<number>(0);
+  // const [fixboost, setFixBoost] = useState<number>(0);
   const [activeTab, setActiveTab] = useState<"benefit" | "profile">("benefit");
   return (
     <>

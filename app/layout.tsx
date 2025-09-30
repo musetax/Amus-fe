@@ -26,7 +26,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${generalSans.variable} antialiased`}>
         <Assistant />
-
+        {children}
         <ToastContainer />
       </body>
     </html>

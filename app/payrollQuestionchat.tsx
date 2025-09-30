@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 
 // Simple icon components to replace lucide-react
-const PencilIcon: React.FC<{ size?: number }> = ({ size = 16 }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
-  </svg>
-);
+// const PencilIcon: React.FC<{ size?: number }> = ({ size = 16 }) => (
+//   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+//     <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+//   </svg>
+// );
 
 const CopyIcon: React.FC<{ size?: number }> = ({ size = 16 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -21,12 +21,12 @@ const SendHorizontalIcon: React.FC = () => (
   </svg>
 );
 
-const Volume2Icon: React.FC<{ size?: number }> = ({ size = 16 }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
-  </svg>
-);
+// const Volume2Icon: React.FC<{ size?: number }> = ({ size = 16 }) => (
+//   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+//     <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+//     <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
+//   </svg>
+// );
 
 // Simple tooltip icon button component
 const TooltipIconButton: React.FC<{

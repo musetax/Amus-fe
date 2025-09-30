@@ -23,7 +23,7 @@ import { CustomAttachmentAdapter } from "../app/attachmentAdapter";
 
 export const CHAT_HISTORY_KEY = "chat_history";
 
-type ApiChat = { user?: string; assistant?: string; search_urls?: string[] };
+// type ApiChat = { user?: string; assistant?: string; search_urls?: string[] };
 
 import {
   type ThreadHistoryAdapter,
@@ -35,7 +35,7 @@ import {
   type ThreadMessage,
   type MessageStatus,
 } from "@assistant-ui/react";
-import { getPayrollDetails, getSessionId, getUserAndSessionId, payrollDetailsUpdate, tokenCreateFromclientIdandSecret } from "./taxModelAdapter";
+import { getPayrollDetails, payrollDetailsUpdate } from "./taxModelAdapter";
 
 function makeThreadMessage(
   role: "user" | "assistant",
@@ -78,7 +78,7 @@ function makeThreadMessage(
 
 function mapApiChatsToRepository(
   chats: { user?: string; assistant?: string; search_urls?: string[] }[],
-  setLoadingHistory?: (loading: boolean) => void
+  // setLoadingHistory?: (loading: boolean) => void
 ): ExportedMessageRepository {
   const messages: { id: string; message: ThreadMessage; parentId: string | null }[] = [];
 
@@ -179,6 +179,7 @@ function Assistant() {
 
   console.log(userId, sessionId, access_token)
 
+  console.log(currentUserId)
   useEffect(() => {
     const storedSessionId = localStorage.getItem("chat_session_id");
     if (!sessionId || !userId || !access_token) {

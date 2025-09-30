@@ -1,5 +1,5 @@
 import { saveMessagesToLocalStorage } from "../components/chatbot/assistant-ui/thread";
-import { getAccessToken, refreshAccessToken } from "../utilities/auth";
+import { getAccessToken } from "../utilities/auth";
 
 export const MyModelAdapter = (
   userId: string,
@@ -34,7 +34,7 @@ export const MyModelAdapter = (
           }),
         });
 
-      let response = await makeRequest();
+      const response = await makeRequest();
 
       if (response.status !== 200) {
         setGlobalError?.("Your session has timed out for security. Please sign in again.")

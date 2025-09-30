@@ -9,7 +9,6 @@ import {
 } from "@assistant-ui/react";
 import { useEffect, useRef, useState, type FC } from "react";
 import {
-  AlertCircle,
   ArrowDownIcon,
   CheckIcon,
   ChevronLeftIcon,
@@ -29,8 +28,8 @@ import { MarkdownText } from "./markdown-text";
 import { useSpeechRecognition } from "./speech";
 import { useThread } from "@assistant-ui/react";
 import { UserMessageAttachments } from "../../../components/assistant-ui/attachment";
-import toast from "react-hot-toast";
-import { downloadPdf, sendEmail } from "../../../app/taxModelAdapter";
+// import toast from "react-hot-toast";
+// import { downloadPdf, sendEmail } from "../../../app/taxModelAdapter";
 import { URLDisplay } from "./url-display";
 import { Tooltip, TooltipTrigger } from "../ui/tooltip";
 import TaxChatbot from "../../../app/payrollQuestionchat";
@@ -44,13 +43,13 @@ export function saveMessagesToLocalStorage(messages: any[]) {
 }
 
 export const Thread: any = ({
-  activeTab,
-  setActiveTab,
-  typing,
+  // activeTab,
+  // setActiveTab,
+  // typing,
   image,
-  userId,
+  // userId,
   loadingHistory,
-  sessionId,
+  // sessionId,
   showTaxChatbot,
   payrollData,
   onTaxChatbotComplete,
@@ -58,20 +57,20 @@ export const Thread: any = ({
   globalError
 }: any) => {
   const { messages } = useThread();
-  const [isLoading, setIsLoading] = useState(false);
-  const [pdfData, setPdfData] = useState<any[]>([]);
-  const [showDownloadLink, setShowDownloadLink] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [pdfData, setPdfData] = useState<any[]>([]);
+  // const [showDownloadLink, setShowDownloadLink] = useState(false);
   console.log(globalError, "messages", "----------------");
-  const isStreaming = messages.some(
-    (msg: any) => msg.role === "assistant" && msg.status?.type === "running"
-  );
+  // const isStreaming = messages.some(
+  //   (msg: any) => msg.role === "assistant" && msg.status?.type === "running"
+  // );
   console.log(payrollData, "p--hjegsj")
-  const assistantMessages = [...messages]
-    .reverse()
-    .filter((msg) => msg.role === "assistant");
+  // const assistantMessages = [...messages]
+  //   .reverse()
+  //   .filter((msg) => msg.role === "assistant");
 
-  const latest = assistantMessages[0];
-  const suggestions = (latest?.metadata?.custom?.suggestions ?? []) as string[];
+  // const latest = assistantMessages[0];
+  // const suggestions = (latest?.metadata?.custom?.suggestions ?? []) as string[];
 
   // Handle tax chatbot completion - now using props
   const handleTaxChatbotComplete = (taxData: any) => {
@@ -348,9 +347,11 @@ interface ComposerActionProps {
 }
 
 const ComposerAction: FC<ComposerActionProps> = ({ composerRef }) => {
-  const { transcript, listening, startListening, stopListening } =
+  // const { transcript, listening, startListening, stopListening } =
+  const { transcript, listening } =
+
     useSpeechRecognition();
-  const message = composerRef.current?.value.trim();
+  // const message = composerRef.current?.value.trim();
 
   useEffect(() => {
     if (transcript && composerRef.current) {
@@ -605,7 +606,7 @@ const AssistantActionBar: FC<ActionBarProps> = ({ urls, onToggleUrls }) => {
   const [open, setOpen] = useState(false);
   if (!urls || !Array.isArray(urls) || urls.length === 0) return null;
 
-  const firstUrl = urls[0];
+  // const firstUrl = urls[0];
 
   return (
     <ActionBarPrimitive.Root
