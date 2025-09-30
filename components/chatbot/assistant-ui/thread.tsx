@@ -34,7 +34,7 @@ import { downloadPdf, sendEmail } from "../../../app/taxModelAdapter";
 import { URLDisplay } from "./url-display";
 import { Tooltip, TooltipTrigger } from "../ui/tooltip";
 import TaxChatbot from "../../../app/payrollQuestionchat";
-import {ErrorBanner} from './error-ui'
+import { ErrorBanner } from './error-ui'
 
 export const CHAT_HISTORY_KEY = "chat_history";
 
@@ -51,7 +51,7 @@ export const Thread: any = ({
   userId,
   loadingHistory,
   sessionId,
-  showTaxChatbot ,
+  showTaxChatbot,
   payrollData,
   onTaxChatbotComplete,
   onContinueToChat,
@@ -65,7 +65,7 @@ export const Thread: any = ({
   const isStreaming = messages.some(
     (msg: any) => msg.role === "assistant" && msg.status?.type === "running"
   );
-  console.log(payrollData,"p--hjegsj")
+  console.log(payrollData, "p--hjegsj")
   const assistantMessages = [...messages]
     .reverse()
     .filter((msg) => msg.role === "assistant");
@@ -172,20 +172,23 @@ export const Thread: any = ({
             {loadingHistory ? (
               <div className="flex items-center justify-center py-10 min-h-300">
                 <div className="text-center">
+                    <div className="flex items-center justify-center w-full mb-2"><div className="smooth-ring"></div></div>
+                  {/* <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#4d37f5] mb-4"></div> */}
                   <h3 className="text-lg font-medium text-gray-800 mb-2">
                     Loading your conversation
                   </h3>
                   <p className="text-sm text-gray-500 animate-pulse">
                     Please wait while we retrieve your chat history...
                   </p>
+        
                 </div>
               </div>
             ) : (
               <div>
                 {/* Show tax chatbot if no messages and form not completed */}
 
-              
-             {/* { <div key={1} className="flex justify-center my-8">
+
+                {/* { <div key={1} className="flex justify-center my-8">
                 <div className="bg-red-50 border-l-4 border-red-500 rounded-lg p-4 max-w-md w-full shadow-sm">
                   <div className="flex items-start gap-3">
                     <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
@@ -196,53 +199,53 @@ export const Thread: any = ({
                   </div>
                 </div>
               </div>} */}
-           
 
-                {globalError?<ErrorBanner message={globalError} />
-                :shouldShowTaxChatbot ? (
-                  
-                  <div style={{ height: "calc(100vh - 105px)", minHeight: "440px",overflowY:"auto" }}>
-                    <TaxChatbot 
-                      onComplete={handleTaxChatbotComplete}
-                      onContinueToChat={handleContinueToChat}
-                      prefilledData={payrollData.payroll}
-                    />
-                  </div>
-                ) : (
-                  <>
-                    <ThreadPrimitive.Viewport
-                      style={{
-                        height: "calc(100vh - 210px)",
-                        minHeight: "120px",
-                        maxHeight: "740px",
-                      }}
-                      className="flex flex-col items-center chat-scroll overflow-y-scroll scroll-smooth bg-inherit pr-0 pl-3 pt-0"
-                    >
-                      <ThreadWelcome />
 
-                      <ThreadPrimitive.Messages
-                        components={{
-                          UserMessage: (props) => (
-                            <UserMessage {...props} image={image} />
-                          ),
-                          EditComposer: EditComposer,
-                          AssistantMessage: (props) => (
-                            <AssistantMessage {...props} />
-                          ),
-                        }}
+                {globalError ? <ErrorBanner message={globalError} />
+                  : shouldShowTaxChatbot ? (
+
+                    <div style={{ height: "calc(100vh - 105px)", minHeight: "440px", overflowY: "auto" }}>
+                      <TaxChatbot
+                        onComplete={handleTaxChatbotComplete}
+                        onContinueToChat={handleContinueToChat}
+                        prefilledData={payrollData.payroll}
                       />
-
-                      <ThreadPrimitive.If empty={false}>
-                        <div className="min-h-8 flex-grow" />
-                      </ThreadPrimitive.If>
-                    </ThreadPrimitive.Viewport>
-
-                    <div className="sticky bg-[#255be305] bottom-0 px-3 pt-3 flex w-full max-w-[var(--thread-max-width)] flex-col items-center justify-end rounded-t-lg pb-2">
-                      <Composer />
-                      <ThreadScrollToBottom />
                     </div>
-                  </>
-                )}
+                  ) : (
+                    <>
+                      <ThreadPrimitive.Viewport
+                        style={{
+                          height: "calc(100vh - 210px)",
+                          minHeight: "120px",
+                          maxHeight: "740px",
+                        }}
+                        className="flex flex-col items-center chat-scroll overflow-y-scroll scroll-smooth bg-inherit pr-0 pl-3 pt-0"
+                      >
+                        <ThreadWelcome />
+
+                        <ThreadPrimitive.Messages
+                          components={{
+                            UserMessage: (props) => (
+                              <UserMessage {...props} image={image} />
+                            ),
+                            EditComposer: EditComposer,
+                            AssistantMessage: (props) => (
+                              <AssistantMessage {...props} />
+                            ),
+                          }}
+                        />
+
+                        <ThreadPrimitive.If empty={false}>
+                          <div className="min-h-8 flex-grow" />
+                        </ThreadPrimitive.If>
+                      </ThreadPrimitive.Viewport>
+
+                      <div className="sticky bg-[#255be305] bottom-0 px-3 pt-3 flex w-full max-w-[var(--thread-max-width)] flex-col items-center justify-end rounded-t-lg pb-2">
+                        <Composer />
+                        <ThreadScrollToBottom />
+                      </div>
+                    </>
+                  )}
               </div>
             )}
           </div>
@@ -325,8 +328,8 @@ const Composer: FC = () => {
   const composerRef = useRef<HTMLTextAreaElement | null>(null);
 
   return (
-    <ComposerPrimitive.Root 
-    className="focus-within:border-ring/20 flex w-full flex-wrap items-end rounded-full border border-[#E9E9E9] bg-inherit px-2.5 py-0 shadow-sm transition-colors ease-in gap-2 bg-white "
+    <ComposerPrimitive.Root
+      className="focus-within:border-ring/20 flex w-full flex-wrap items-end rounded-full border border-[#E9E9E9] bg-inherit px-2.5 py-0 shadow-sm transition-colors ease-in gap-2 bg-white "
     >
       <ComposerPrimitive.Input
         ref={composerRef}

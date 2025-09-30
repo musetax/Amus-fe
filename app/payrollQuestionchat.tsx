@@ -175,8 +175,8 @@ const TaxUserMessage: React.FC<TaxUserMessageProps> = ({ message, image }) => {
             alignItems: "end",
           }}
         >
-          <div className="bg-gradient-to-r from-blue-600 to-blue-500 text-white max-w-[calc(var(--thread-max-width)*0.8)] text-sm break-all break-words rounded-3xl px-5 py-2.5 col-start-2 row-start-2">
-            <pre className="whitespace-normal text-foreground font-sans">
+          <div className="bg_custom max-w-[calc(var(--thread-max-width)*0.8)] text-sm break-all break-words rounded-3xl px-5 py-2.5 col-start-2 row-start-2">
+            <pre className="whitespace-normal text-white font-sans">
               {typeof message.content === "string" ? message.content : ""}
             </pre>
           </div>

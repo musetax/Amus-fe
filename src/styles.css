@@ -2111,3 +2111,7 @@ video {
 .custom_input {
   max-height: 52px !important;
 }
+
+  .bg_custom {
+  background: linear-gradient(to right, #2563eb, #3b82f6) !important;
+}

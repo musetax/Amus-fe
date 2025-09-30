@@ -124,7 +124,7 @@ function makeHistoryAdapter(
         const res = await axios.post(
           "https://amus-devapi.musetax.com/v1/api/amus/get-user-chats",
           {
-            user_id:userId,
+            user_id: userId,
             session_id: sessionId,
           }
         );
@@ -168,20 +168,20 @@ function Assistant() {
   const [payrollData, setPayrollData] = useState(null);
   const [showTaxChatbot, setShowTaxChatbot] = useState(false);
   const [isLoadingPayroll, setIsLoadingPayroll] = useState(false);
-  
+
   // console.log(window.location.search)
   const params = new URLSearchParams(window.location.search);
   const sessionId: any = params.get("session_id");
-  const userId:any=params.get("user_id")
+  const userId: any = params.get("user_id")
   const access_token: any = params.get("access_token");
   // const refresh_access_token: any = params.get("refresh_token");
-    const [globalError, setGlobalError] = useState<string | null>(null);
+  const [globalError, setGlobalError] = useState<string | null>(null);
 
-  console.log(userId,sessionId,access_token)
+  console.log(userId, sessionId, access_token)
 
   useEffect(() => {
     const storedSessionId = localStorage.getItem("chat_session_id");
-       if (!sessionId || !userId || !access_token) {
+    if (!sessionId || !userId || !access_token) {
       setGlobalError("Missing session_id, user_id or access_token in URL.");
       return;
     }
@@ -203,23 +203,23 @@ function Assistant() {
       localStorage.setItem("userId", userId)
       setCurrentUserId(userId)
     }
-  }, [sessionId, access_token,userId])
+  }, [sessionId, access_token, userId])
 
   // Check if payroll data is complete
   const isPayrollDataComplete = (data: any) => {
     if (!data) return false;
-    
+
     return !!(
       data.income_type &&
-      data.annual_salary !== null && 
+      data.annual_salary !== null &&
       data.annual_salary !== undefined &&
       data.filing_status &&
       data.pay_frequency &&
-      data.current_withholding_per_paycheck !== null && 
-      data.current_withholding_per_paycheck !== undefined&&
-      data.additional_income!==0&&
-      data.deductions!==0&&
-      data.dependents!==0
+      data.current_withholding_per_paycheck !== null &&
+      data.current_withholding_per_paycheck !== undefined &&
+      data.additional_income !== 0 &&
+      data.deductions !== 0 &&
+      data.dependents !== 0
     );
   };
 
@@ -229,18 +229,18 @@ function Assistant() {
         setIsLoadingPayroll(true);
         const response = await getPayrollDetails(userId);
         // console.log(response, "payroll response");
-        
+
         setPayrollData(response);
-        
+
         // Check if any required field is missing
         const isComplete = isPayrollDataComplete(response.payroll);
         // console.log(isComplete,"iscomplete")
         setShowTaxChatbot(!isComplete);
-        
+
         setIsLoadingPayroll(false);
         // loadHistory()
-       } catch (error:any) {
-        setGlobalError(error.response.data.detail||"User ID not found")
+      } catch (error: any) {
+        setGlobalError(error.response.data.detail || "User ID not found")
         console.error("Error fetching payroll:", error);
         setShowTaxChatbot(true);
       } finally {
@@ -249,18 +249,18 @@ function Assistant() {
     }
     if (!globalError && userId) {
       userInfo();
-      
+
     }
   }, [userId, globalError]);
   // Handle tax chatbot completion
-  const handleTaxChatbotComplete =async (taxData: any) => {
-    try{
-    const response=await payrollDetailsUpdate(userId,taxData)
-    console.log(response,"response")
-    setShowTaxChatbot(false);
-    setPayrollData(taxData);
-     } catch (error:any) {
-      setGlobalError(error.response.data.details||"Failed to update payroll data.");
+  const handleTaxChatbotComplete = async (taxData: any) => {
+    try {
+      const response = await payrollDetailsUpdate(userId, taxData)
+      console.log(response, "response")
+      setShowTaxChatbot(false);
+      setPayrollData(taxData);
+    } catch (error: any) {
+      setGlobalError(error.response.data.details || "Failed to update payroll data.");
     }
     // You might want to save this data to your backend here
   };
@@ -272,7 +272,7 @@ function Assistant() {
 
   // Load history when page renders
   // const loadHistory = async () => {
-  
+
 
   //   if (currentSessionId && userId) {
   //     const historyAdapter = makeHistoryAdapter(userId, sessionId, setloadingHistory);
@@ -290,7 +290,7 @@ function Assistant() {
     [userId, sessionId]
   );
 
-  const learnRuntime = useLocalThreadRuntime(MyModelAdapter(userId, setTyping, currentSessionId), {
+  const learnRuntime = useLocalThreadRuntime(MyModelAdapter(userId, setTyping, currentSessionId, setGlobalError), {
     adapters: {
       // your existing adapters
       attachments: new CompositeAttachmentAdapter([
@@ -309,7 +309,9 @@ function Assistant() {
       <div className="myUniquechatbot">
         <div className="flex items-center justify-center py-10 min-h-[400px]">
           <div className="text-center">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-4"></div>
+            <div className="flex items-center justify-center w-full mb-2"><div className="smooth-ring"></div></div>
+
+            {/* <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#4d37f5] mb-4"></div> */}
             <h3 className="text-lg font-medium text-gray-800 mb-2">
               Loading your information...
             </h3>

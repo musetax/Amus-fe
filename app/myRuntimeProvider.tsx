@@ -5,6 +5,7 @@ export const MyModelAdapter = (
   userId: string,
   setTyping: (typing: boolean) => void,
   sessionId?: string,
+  setGlobalError?:(message:string|null)=>void
 ): any => ({
   async *run({ messages }: any) {
     setTyping(true);
@@ -35,10 +36,11 @@ export const MyModelAdapter = (
 
       let response = await makeRequest();
 
-      if (response.status === 401) {
-        const newToken = await refreshAccessToken();
-        if (!newToken) throw new Error("Token refresh failed");
-        response = await makeRequest();
+      if (response.status !== 200) {
+        setGlobalError?.("Your session has timed out for security. Please sign in again.")
+        // const newToken = await refreshAccessToken();
+        // if (!newToken) throw new Error("Token refresh failed");
+        // response = await makeRequest();
       }
 
       if (!response.ok || !response.body) throw new Error("Bad response");
@@ -130,12 +132,14 @@ export const MyModelAdapter = (
     } catch (error) {
       console.error("Adapter error:", error);
       setTyping(false);
-      yield {
-        content: [
-          { type: "text", text: "Sorry, something went wrong. Please try again." },
-        ],
-        metadata: { custom: { loading: false, streaming: false } },
-      };
+      setGlobalError?.("Your session has timed out for security. Please sign in again.")
+
+      // yield {
+      //   content: [
+      //     { type: "text", text: "Sorry, something went wrong. Please try again." },
+      //   ],
+      //   metadata: { custom: { loading: false, streaming: false } },
+      // };
     }
   },
 });

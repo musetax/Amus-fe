@@ -2223,3 +2223,28 @@ video {
   width: 0;
   background: transparent;
 }
+
+
+
+:root {
+  --ring-size: 26px;       /* size */
+  --ring-border: 2px;      /* thickness */
+  --ring-color: #2563eb;   /* color */
+  --ring-speed: 0.6s;        /* speed */
+}
+
+.smooth-ring {
+  width: var(--ring-size);
+  height: var(--ring-size);
+  border: var(--ring-border) solid transparent;
+  border-top: var(--ring-border) solid var(--ring-color);
+  border-radius: 50%;
+  animation: spin var(--ring-speed) linear infinite;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+  .bg_custom {
+  background: linear-gradient(146.02deg, #48c2d4 7.64%, #1595ea 128.45%) !important;
+}
