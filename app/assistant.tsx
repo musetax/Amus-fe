@@ -122,9 +122,9 @@ function makeHistoryAdapter(
       try {
         setLoadingHistory?.(true);
         const res = await axios.post(
-          "https://amus-devapi.musetax.com/v1/api/export/get-user-chats",
+          "https://amus-devapi.musetax.com/v1/api/amus/get-user-chats",
           {
-            userId,
+            user_id:userId,
             session_id: sessionId,
           }
         );
@@ -216,7 +216,10 @@ function Assistant() {
       data.filing_status &&
       data.pay_frequency &&
       data.current_withholding_per_paycheck !== null && 
-      data.current_withholding_per_paycheck !== undefined
+      data.current_withholding_per_paycheck !== undefined&&
+      data.additional_income!==0&&
+      data.deductions!==0&&
+      data.dependents!==0
     );
   };
 
@@ -225,16 +228,17 @@ function Assistant() {
       try {
         setIsLoadingPayroll(true);
         const response = await getPayrollDetails(userId);
-        console.log(response, "payroll response");
+        // console.log(response, "payroll response");
         
         setPayrollData(response);
         
         // Check if any required field is missing
         const isComplete = isPayrollDataComplete(response.payroll);
-        console.log(isComplete,"iscomplete")
+        // console.log(isComplete,"iscomplete")
         setShowTaxChatbot(!isComplete);
         
         setIsLoadingPayroll(false);
+        // loadHistory()
        } catch (error) {
         console.error("Error fetching payroll:", error);
         setShowTaxChatbot(true);
@@ -244,6 +248,7 @@ function Assistant() {
     }
     if (!globalError && userId) {
       userInfo();
+      
     }
   }, [userId, globalError]);
   // Handle tax chatbot completion
@@ -265,24 +270,23 @@ function Assistant() {
   };
 
   // Load history when page renders
-  const loadHistory = async () => {
-    console.log(currentSessionId, 'currentSessionId');
-    console.log(userId, 'userId');
+  // const loadHistory = async () => {
+  
 
-    if (currentSessionId && userId) {
-      const historyAdapter = makeHistoryAdapter(userId, currentSessionId, setloadingHistory);
-      try {
-        await historyAdapter.load();
-      } catch (error) {
-        console.log("Error loading history on page render:", error);
-      }
-    }
-  };
+  //   if (currentSessionId && userId) {
+  //     const historyAdapter = makeHistoryAdapter(userId, sessionId, setloadingHistory);
+  //     try {
+  //       await historyAdapter.load();
+  //     } catch (error) {
+  //       console.log("Error loading history on page render:", error);
+  //     }
+  //   }
+  // };
 
   // IMPORTANT: history adapter is created with the current userId so it can load the right messages
   const history = useMemo(
-    () => (currentSessionId ? makeHistoryAdapter(userId, currentSessionId, setloadingHistory) : undefined),
-    [userId, currentSessionId]
+    () => (sessionId ? makeHistoryAdapter(userId, sessionId, setloadingHistory) : undefined),
+    [userId, sessionId]
   );
 
   const learnRuntime = useLocalThreadRuntime(MyModelAdapter(userId, setTyping, currentSessionId), {
@@ -329,7 +333,7 @@ function Assistant() {
               typing={typing}
               image={''}
               loadingHistory={loadingHistory}
-              sessionId={currentSessionId}
+              sessionId={sessionId}
               userId={userId}
               showTaxChatbot={showTaxChatbot}
               payrollData={payrollData}

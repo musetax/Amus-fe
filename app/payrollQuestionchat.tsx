@@ -55,6 +55,12 @@ interface TaxData {
   pay_frequency: string;
   current_withholding_per_paycheck: string;
   spouse_income?: string;
+  // NEW OPTIONAL FIELDS ADDED ↓
+  additional_income?: string;
+  deductions?: string;
+  dependents?: string;
+  start_pay_date?: string;
+  most_recent_pay_date?: string;
 }
 
 interface TaxChatbotProps {
@@ -87,6 +93,12 @@ interface FormData {
   spouse_income: string | null;
   pay_frequency: string | null;
   current_withholding_per_paycheck: string | null;
+  // NEW FIELDS ADDED ↓
+  additional_income: string | null;
+  deductions: string | null;
+  dependents: string | null;
+  start_pay_date: string | null;
+  most_recent_pay_date: string | null;
 }
 
 interface TaxUserMessageProps {
@@ -116,7 +128,8 @@ interface SummaryCardProps {
   color: string;
 }
 
-type StepType = "filing_status" | "annual_salary" | "spouse_income" | "pay_frequency" | "current_withholding" | "complete" | "saved";
+// type StepType = "filing_status" | "annual_salary" | "spouse_income" | "pay_frequency" | "current_withholding" | "complete" | "saved";
+type StepType = "filing_status" | "annual_salary" | "spouse_income" | "pay_frequency" | "current_withholding" | "additional_income" | "deductions" | "dependents" | "start_pay_date" | "most_recent_pay_date" | "complete" | "saved";
 
 // Helper function to format time
 const formatTime = (date: Date | number): string => {
@@ -298,11 +311,26 @@ const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
             currentStep !== "filing_status" &&
             currentStep !== "complete" &&
             !isTyping && (
-              <TaxInputField
-                type={(message.content as MessageContent).inputType!}
-                placeholder={(message.content as MessageContent).placeholder!}
-                onSubmit={onInputSubmit}
-              />
+              <div className="mt-4 space-y-2">
+                <TaxInputField
+                  type={(message.content as MessageContent).inputType!}
+                  placeholder={(message.content as MessageContent).placeholder!}
+                  onSubmit={onInputSubmit}
+                />
+                {/* NEW: Skip button for optional fields ↓ */}
+                {(currentStep === "additional_income" ||
+                  currentStep === "deductions" ||
+                  currentStep === "dependents" ||
+                  currentStep === "start_pay_date" ||
+                  currentStep === "most_recent_pay_date") && (
+                    <button
+                      onClick={() => onInputSubmit("skip")}
+                      className="w-full p-3 text-sm bg-gray-100 text-gray-700 rounded-2xl hover:bg-gray-200 transition-colors font-medium"
+                    >
+                      Skip this question
+                    </button>
+                  )}
+              </div>
             )}
 
           <span style={{ color: "#45556c", fontSize: "12px", marginTop: "4px" }}>
@@ -319,7 +347,7 @@ const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
           </TooltipIconButton> */}
         </div>
       </div>
-      
+
     </div>
   );
 };
@@ -425,6 +453,13 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
       questions.push("current_withholding");
     }
 
+    // NEW: Always ask optional questions ↓
+    questions.push("additional_income");
+    questions.push("deductions");
+    questions.push("dependents");
+    questions.push("start_pay_date");
+    questions.push("most_recent_pay_date");
+
     return questions;
   };
 
@@ -437,6 +472,12 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
     spouse_income: prefilledData.spouse_income || null,
     pay_frequency: prefilledData.pay_frequency || null,
     current_withholding_per_paycheck: prefilledData.current_withholding_per_paycheck || null,
+    // NEW FIELDS INITIALIZED ↓
+    additional_income: null,
+    deductions: null,
+    dependents: null,
+    start_pay_date: null,
+    most_recent_pay_date: null,
   });
 
   const [currentStep, setCurrentStep] = useState<StepType>(
@@ -510,6 +551,66 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
           },
           createdAt: new Date(),
         };
+      case "additional_income":
+        return {
+          type: 'bot',
+          content: {
+            content: `${greeting}\n\nHow many aditional income do you have? (Optional)`,
+            inputType: "number",
+            placeholder: "Enter additional income.. or skip",
+
+          },
+          createdAt: new Date(),
+
+        }
+      case "deductions":
+        return {
+          type: 'bot',
+          content: {
+            content: `${greeting}\n\nHow many dependents do you have? (Optional)`,
+            inputType: "number",
+            placeholder: "Enter number of dependents or skip",
+
+          },
+          createdAt: new Date(),
+
+        }
+      case "dependents":
+        return {
+          type: 'bot',
+          content: {
+            content: `${greeting}\n\nHow many dependents do you have? (Optional)`,
+            inputType: "number",
+            placeholder: "Enter number of dependents or skip",
+
+          },
+          createdAt: new Date(),
+
+        }
+      case "start_pay_date":
+        return {
+          type: 'bot',
+          content: {
+            content: `${greeting}\n\nWhen did you start your current job? (Optional)`,
+            inputType: "date",
+            placeholder: "Select start date or skip",
+
+          },
+          createdAt: new Date(),
+
+        }
+      case "most_recent_pay_date":
+        return {
+          type: 'bot',
+          content: {
+            content: `${greeting}\n\nWhat was your most recent pay date? (Optional)`,
+            inputType: "date",
+            placeholder: "Select most recent pay date or skip",
+
+          },
+          createdAt: new Date(),
+
+        }
       default:
         return {
           type: "bot",
@@ -594,6 +695,46 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
             placeholder: "Enter withholding amount per paycheck...",
           });
           break;
+        // Add these cases to the switch statement in moveToNextQuestion
+        case "additional_income":
+          addMessage("bot", {
+            content: "Do you have any additional income? (Optional - freelance, investments, etc.)",
+            inputType: "number",
+            placeholder: "Enter additional annual income or skip",
+          });
+          break;
+
+        case "deductions":
+          addMessage("bot", {
+            content: "Do you have any deductions? (Optional - mortgage, charitable contributions, etc.)",
+            inputType: "number",
+            placeholder: "Enter annual deductions or skip",
+          });
+          break;
+
+        case "dependents":
+          addMessage("bot", {
+            content: "How many dependents do you have? (Optional)",
+            inputType: "number",
+            placeholder: "Enter number of dependents or skip",
+          });
+          break;
+
+        case "start_pay_date":
+          addMessage("bot", {
+            content: "When did you start your current job? (Optional)",
+            inputType: "date",
+            placeholder: "Select start date or skip",
+          });
+          break;
+
+        case "most_recent_pay_date":
+          addMessage("bot", {
+            content: "What was your most recent pay date? (Optional)",
+            inputType: "date",
+            placeholder: "Select most recent pay date or skip",
+          });
+          break;
       }
     }
   };
@@ -604,36 +745,88 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
     moveToNextQuestion();
   };
 
-  const handleInputSubmit = (value: string): void => {
-    if (!value.trim()) return;
-    const numValue = parseFloat(value) || value;
+const handleInputSubmit = (value: string): void => {
+  if (!value.trim()) return;
+  
+  const isSkipped = value.toLowerCase() === "skip";
+  const numValue = parseFloat(value) || value;
 
-    switch (currentStep) {
-      case "annual_salary":
-        setFormData((prev) => ({ ...prev, annual_salary: numValue as string }));
-        addMessage("user", `My annual salary is ${(numValue as number).toLocaleString()}`);
-        moveToNextQuestion();
-        break;
+  switch (currentStep) {
+    case "annual_salary":
+      setFormData((prev) => ({ ...prev, annual_salary: numValue as string }));
+      addMessage("user", `My annual salary is $${(numValue as number).toLocaleString()}`);
+      moveToNextQuestion();
+      break;
 
-      case "spouse_income":
-        setFormData((prev) => ({ ...prev, spouse_income: numValue as string }));
-        addMessage("user", `My spouse's annual income is ${(numValue as number).toLocaleString()}`);
-        moveToNextQuestion();
-        break;
+    case "spouse_income":
+      setFormData((prev) => ({ ...prev, spouse_income: numValue as string }));
+      addMessage("user", `My spouse's annual income is $${(numValue as number).toLocaleString()}`);
+      moveToNextQuestion();
+      break;
 
-      case "pay_frequency":
-        setFormData((prev) => ({ ...prev, pay_frequency: value as string }));
-        addMessage("user", `I get paid ${(value as string).toLowerCase()}`);
-        moveToNextQuestion();
-        break;
+    case "pay_frequency":
+      setFormData((prev) => ({ ...prev, pay_frequency: value as string }));
+      addMessage("user", `I get paid ${(value as string).toLowerCase()}`);
+      moveToNextQuestion();
+      break;
 
-      case "current_withholding":
-        setFormData((prev) => ({ ...prev, current_withholding_per_paycheck: numValue as string }));
-        addMessage("user", `My current withholding is ${numValue} per paycheck`);
-        moveToNextQuestion();
-        break;
-    }
-  };
+    case "current_withholding":
+      setFormData((prev) => ({ ...prev, current_withholding_per_paycheck: numValue as string }));
+      addMessage("user", `My current withholding is $${numValue} per paycheck`);
+      moveToNextQuestion();
+      break;
+
+    case "additional_income":
+      if (isSkipped) {
+        addMessage("user", "I'll skip this question");
+      } else {
+        setFormData((prev) => ({ ...prev, additional_income: numValue as string }));
+        addMessage("user", `My additional annual income is $${(numValue as number).toLocaleString()}`);
+      }
+      moveToNextQuestion();
+      break;
+
+    case "deductions":
+      if (isSkipped) {
+        addMessage("user", "I'll skip this question");
+      } else {
+        setFormData((prev) => ({ ...prev, deductions: numValue as string }));
+        addMessage("user", `My annual deductions are $${(numValue as number).toLocaleString()}`);
+      }
+      moveToNextQuestion();
+      break;
+
+    case "dependents":
+      if (isSkipped) {
+        addMessage("user", "I'll skip this question");
+      } else {
+        setFormData((prev) => ({ ...prev, dependents: numValue as string }));
+        addMessage("user", `I have ${numValue} dependent(s)`);
+      }
+      moveToNextQuestion();
+      break;
+
+    case "start_pay_date":
+      if (isSkipped) {
+        addMessage("user", "I'll skip this question");
+      } else {
+        setFormData((prev) => ({ ...prev, start_pay_date: value as string }));
+        addMessage("user", `My job start date is ${value}`);
+      }
+      moveToNextQuestion();
+      break;
+
+    case "most_recent_pay_date":
+      if (isSkipped) {
+        addMessage("user", "I'll skip this question");
+      } else {
+        setFormData((prev) => ({ ...prev, most_recent_pay_date: value as string }));
+        addMessage("user", `My most recent pay date was ${value}`);
+      }
+      moveToNextQuestion();
+      break;
+  }
+};
 
   const resetChat = (): void => {
     const newQuestionsToAsk = getQuestionsToAsk();
@@ -646,6 +839,12 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
       spouse_income: prefilledData.spouse_income || null,
       pay_frequency: prefilledData.pay_frequency || null,
       current_withholding_per_paycheck: prefilledData.current_withholding_per_paycheck || null,
+      // NEW: Reset optional fields ↓
+      additional_income: null,
+      deductions: null,
+      dependents: null,
+      start_pay_date: null,
+      most_recent_pay_date: null,
     });
     setIsSaving(false);
     setSaveError(null);
@@ -664,7 +863,13 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         filing_status: formData.filing_status!,
         pay_frequency: formData.pay_frequency!,
         current_withholding_per_paycheck: formData.current_withholding_per_paycheck!,
-        spouse_income: formData.spouse_income || undefined
+        spouse_income: formData.spouse_income || undefined,
+        // NEW: Include optional fields ↓
+        additional_income: formData.additional_income || undefined,
+        deductions: formData.deductions || undefined,
+        dependents: formData.dependents || undefined,
+        start_pay_date: formData.start_pay_date || undefined,
+        most_recent_pay_date: formData.most_recent_pay_date || undefined
       };
 
       if (onComplete) {
@@ -761,7 +966,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
       {currentStep === "complete" && (
         <div className=" bg-[#255be305] bottom-0 px-3 pt-3 flex w-full max-w-[var(--thread-max-width)] flex-col items-center justify-end rounded-t-lg pb-2">
           <div className="w-full bg-white border border-gray-200 rounded-2xl p-6 mb-4">
-            <div className="flex items-center gap-3 mb-6" style={{marginBottom:"20px"}}>
+            <div className="flex items-center gap-3 mb-6" style={{ marginBottom: "20px" }}>
               <CheckCircle className="text-green-600" />
               <h3 className="text-lg font-bold text-gray-900">
                 {questionsToAsk.length === 0 ? "Tax Information Already Complete!" : "Information Collection Complete!"}
@@ -778,14 +983,14 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
               <SummaryCard
                 icon={DollarSign}
                 title="Annual Salary"
-                value={`${formData.annual_salary?.toLocaleString()}`}
+                value={`$${formData.annual_salary?.toLocaleString()}`}
                 color="bg-gradient-to-r from-orange-600 to-orange-400"
               />
               {formData.spouse_income && (
                 <SummaryCard
                   icon={Heart}
                   title="Spouse Income"
-                  value={`${formData.spouse_income?.toLocaleString()}`}
+                  value={`$${formData.spouse_income?.toLocaleString()}`}
                   color="bg-gradient-to-r from-pink-600 to-pink-400"
                 />
               )}
@@ -798,9 +1003,51 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
               <SummaryCard
                 icon={DollarSign}
                 title="Current Withholding"
-                value={`${formData.current_withholding_per_paycheck} per paycheck`}
+                value={`$${formData.current_withholding_per_paycheck} per paycheck`}
                 color="bg-gradient-to-r from-blue-600 to-blue-400"
               />
+
+              {/* NEW: Optional fields only show if they have values ↓ */}
+              {formData.additional_income && (
+                <SummaryCard
+                  icon={DollarSign}
+                  title="Additional Income"
+                  value={`$${formData.additional_income?.toLocaleString()}`}
+                  color="bg-gradient-to-r from-teal-600 to-teal-400"
+                />
+              )}
+              {formData.deductions && (
+                <SummaryCard
+                  icon={DollarSign}
+                  title="Deductions"
+                  value={`$${formData.deductions?.toLocaleString()}`}
+                  color="bg-gradient-to-r from-indigo-600 to-indigo-400"
+                />
+              )}
+              {formData.dependents && (
+                <SummaryCard
+                  icon={User}
+                  title="Dependents"
+                  value={formData.dependents}
+                  color="bg-gradient-to-r from-rose-600 to-rose-400"
+                />
+              )}
+              {formData.start_pay_date && (
+                <SummaryCard
+                  icon={Calendar}
+                  title="Job Start Date"
+                  value={formData.start_pay_date}
+                  color="bg-gradient-to-r from-cyan-600 to-cyan-400"
+                />
+              )}
+              {formData.most_recent_pay_date && (
+                <SummaryCard
+                  icon={Calendar}
+                  title="Recent Pay Date"
+                  value={formData.most_recent_pay_date}
+                  color="bg-gradient-to-r from-amber-600 to-amber-400"
+                />
+              )}
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 items-center justify-center" style={{ marginTop: "10px" }}>
@@ -816,7 +1063,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
               <button
                 onClick={handleSaveTaxes}
                 disabled={isSaving}
-                style={{ paddingTop: "12px", paddingBottom: "12px",backgroundColor:"#1595ea",color:"#ffffff",border:"1px solid #1595ea" }}
+                style={{ paddingTop: "12px", paddingBottom: "12px", backgroundColor: "#1595ea", color: "#ffffff", border: "1px solid #1595ea" }}
                 className="flex items-center justify-center gap-2 px-6 py-3 bg-white border border-gray-300 text-gray-900 rounded-2xl hover:bg-gray-50 transition-colors font-medium disabled:opacity-50"
               >
                 {isSaving ? "Saving..." : "Save My Information"}

@@ -78,7 +78,6 @@ const tokenStore = (data: any) => {
 export const tokenCreateFromclientIdandSecret = async (payload: TokenPayload) => {
   try {
     const response = await axios.post(`https://api-stgbe.musetax.com/auth/token`, payload)
-    console.log(response)
     tokenStore(response.data)
     return response
 
