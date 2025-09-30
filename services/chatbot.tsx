@@ -1,66 +1,46 @@
-import { axiosInstance } from "@/utilities/axios";
+import { default as axios } from "axios";
 
-    
+const BASE_URL = "https://amus-devapi.musetax.com";
+
 export const sendQuery = async (query: string) => {
   try {
-    const response = await axiosInstance.post(`${process.env.NEXT_PUBLIC_BACKEND_API}/query`, { query });
+    const response = await axios.post(`${BASE_URL}/query`, { query });
     return response.data;
   } catch (error: any) {
-    console.log(error,'error1');
-    
+    console.log(error, 'error1');
     throw error.response?.data || { message: error.message };
   }
 };
 
 export const sendMessagetax = async (data: any, session_id: string) => {
   try {
-    const response = await axiosInstance.post(
-      `${process.env.NEXT_PUBLIC_BACKEND_API}/api/chat/${session_id}/message`,
-      { message: data }
-    );
+    const response = await axios.post(`${BASE_URL}/api/chat/${session_id}/message`, {
+      message: data,
+    });
     return response.data;
   } catch (error: any) {
-        console.log(error,'error2');
-
+    console.log(error, 'error2');
     throw error.response?.data || { message: error.message };
   }
 };
 
 export const authenticate = async (data: any) => {
   try {
-    const response = await axiosInstance.post(
-      `${process.env.NEXT_PUBLIC_BACKEND_API}/api/chat/checkboost/start`,
-      { ...data }
-    );
+    const response = await axios.post(`${BASE_URL}/api/chat/checkboost/start`, data);
     return response.data;
   } catch (error: any) {
-        console.log(error,'error3');
-
+    console.log(error, 'error3');
     throw error.response?.data || { message: error.message };
   }
 };
 
 export const taxProfile = async (taxdata: any, session_id: string) => {
   try {
-    const response = await axiosInstance.post(
-      `${process.env.NEXT_PUBLIC_BACKEND_API}/api/tax-profile/checkboost/` + session_id,
-      { ...taxdata }
-    );
+    const response = await axios.post(`${BASE_URL}/api/tax-profile/checkboost/${session_id}`, taxdata);
     return response.data;
   } catch (error: any) {
-        console.log(error,'error4');
-
+    console.log(error, 'error4');
     throw error.response?.data || { message: error.message };
   }
 };
-
-let sessionId: string | null = null;
-
-export function getSessionId() {
-  if (!sessionId) {
-    sessionId = crypto.randomUUID(); // Or use any other method to generate a unique ID
-  }
-  return sessionId;
-}
-
  

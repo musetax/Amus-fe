@@ -11,8 +11,8 @@ import {
 import remarkGfm from "remark-gfm";
 import { FC, memo, useState } from "react";
 import { CheckIcon, CopyIcon } from "lucide-react";
+import { cn } from "../../../lib/utils";
 
-import { cn } from "@/lib/utils";
 import { TooltipIconButton } from "./tooltip-icon-button";
 
 const MarkdownTextImpl = () => {
@@ -86,7 +86,7 @@ const defaultComponents = memoizeMarkdownComponents({
   h3: ({ className, ...props }) => (
     <h3
       className={cn(
-        "mb-4 mt-6 scroll-m-20 text-2xl font-semibold tracking-tight first:mt-0 last:mb-0",
+        "mb-4 mt-6 scroll-m-20 text-lg font-semibold tracking-tight first:mt-0 last:mb-0",
         className
       )}
       {...props}
@@ -95,7 +95,7 @@ const defaultComponents = memoizeMarkdownComponents({
   h4: ({ className, ...props }) => (
     <h4
       className={cn(
-        "mb-4 mt-6 scroll-m-20 text-xl font-semibold tracking-tight first:mt-0 last:mb-0",
+        "mb-4 mt-6 scroll-m-20 text-lg font-semibold tracking-tight first:mt-0 last:mb-0",
         className
       )}
       {...props}
@@ -118,7 +118,7 @@ const defaultComponents = memoizeMarkdownComponents({
   ),
   p: ({ className, ...props }) => (
     <p
-      className={cn("mb-5 mt-5 leading-7 first:mt-0 last:mb-0", className)}
+      className={cn("mb-5 mt-5  text-sm first:mt-0 last:mb-0", className)}
       {...props}
     />
   ),
@@ -139,7 +139,7 @@ const defaultComponents = memoizeMarkdownComponents({
   ),
   ul: ({ className, ...props }) => (
     <ul
-      className={cn("my-5 ml-6 list-disc [&>li]:mt-2", className)}
+      className={cn("my-5 ml-6 list-disc text-sm [&>li]:mt-2", className)}
       {...props}
     />
   ),

@@ -1,135 +1,150 @@
 "use client";
-import { getCachedSessionId } from "@/services/chatSession";
-import { refreshToken } from "@/utilities/axios";
-import { type ChatModelAdapter } from "@assistant-ui/react";
-import Cookies from "js-cookie";
+
+import { default as axios } from "axios";
+import "../utilities/auth"; // Import to activate axios interceptors
+export const downloadPdf = async (email: string, sessionId: any, url_type: any) => {
+  try {
+    const response = await axios.post('https://amus-devapi.musetax.com/v1/api/export/chats', {
+      email: email,
+      session_id: sessionId,
+      chat_type: url_type
+    });
+
+    return response.data;
+  }
+  catch {
+    throw new Error('Failed to download Pdf');
+  }
+}
+export const sendEmail = async (email: string, sessionId: any, url_type: any) => {
+  try {
+    const response = await axios.post('https://amus-devapi.musetax.com/v1/api/export/email-notification', {
+      email: email,
+      session_id: sessionId,
+      chat_type: url_type
+    });
+
+    return response.data;
+  }
+  catch {
+    throw new Error('Failed to send email');
+  }
+}
+export const createUserInfo = async (taxPayload: any, email: string, url_type: any) => {
+  try {
+    const response = await axios.post(`https://amus-devapi.musetax.com/api/tax_education/create-user-info/${url_type}`, {
+      email_id: email,
+      userinfo: taxPayload
+    });
+
+    return response.data;
+  } catch {
+    throw new Error('Failed to create user info');
+  }
+}
+
+export const getPayrollDetails=async(userId:string)=>{
+   try {
+    const response = await axios.get(`https://amus-devapi.musetax.com/user?user_id=${userId}`,
+    //  { headers:{
+    //     "ngrok-skip-browser-warning": "69420",
+    //   }}
+    );
+
+    return response.data;
+  } catch (error:any){
+
+    throw error
+  }
+}
+export const payrollDetailsUpdate=async(userId:string,payload:any)=>{
+   try {
+    const response = await axios.patch(`https://amus-devapi.musetax.com/user/${userId}`,payload);
+
+    return response.data;
+  } catch(error:any) {
+    throw error;
+  }
+}
+interface TokenPayload {
+  client_id: string,
+  client_secret: string
+}
+
+const tokenStore = (data: any) => {
+  localStorage.setItem('authTokenMuse', data.access_token)
+  localStorage.setItem("refreshTokenMuse", data.refresh_token)
+}
+
+export const tokenCreateFromclientIdandSecret = async (payload: TokenPayload) => {
+  try {
+    const response = await axios.post(`https://api-stgbe.musetax.com/auth/token`, payload)
+    tokenStore(response.data)
+    return response
+
+
+  } catch (error: any) {
+    console.log(error, "error")
+    throw new Error('Failed to create token');
+  }
+}
+
+interface UserAndSessionId {
+  payroll_details: any;
+  company_name: string;
+  first_name:string,
+  email:string,
+  last_name:string
+}
+
+// Store session ID with 1-day expiry
+const storeSessionId = (data: { session_id: string }) => {
+  const ONE_DAY_MS = 24 * 60 * 60 * 1000; // 1 day in ms
+
+  // Store original session ID
+  localStorage.setItem("originalSessionId", data.session_id);
+
+  // Store expiry timestamp
+  const expiryTime = Date.now() + ONE_DAY_MS;
+  localStorage.setItem("sessionExpiry", expiryTime.toString());
+};
+
+// Get session ID if not expired, else return null
+export const getSessionId = (): string | null => {
+  const expiryStr = localStorage.getItem("sessionExpiry");
+  const sessionId = localStorage.getItem("originalSessionId");
+
+  if (!expiryStr || !sessionId) return null;
+
+  const expiryTime = parseInt(expiryStr, 10);
+  if (Date.now() > expiryTime) {
+    // Session expired
+    return null;
+  }
+
+  // Session still valid → return original session ID
+  return sessionId;
+};
 
 
 
-export const TaxModelAdapter = (): ChatModelAdapter => ({
-  async *run({ messages }) {
-    try {
-      const count = 5;
-      const start = messages.length > count ? messages.length - count : 0;
-      const history: string[] = [];
+// API call to get session ID and store it
+export const getUserAndSessionId = async (
+  sessionPayload: UserAndSessionId
+) => {
+  try {
+    const response = await axios.post(
+      `https://api-stgbe.musetax.com/auth/token`, // <-- verify endpoint
+      sessionPayload
+    );
+    console.log(response.data);
 
-      for (let i = messages.length - 1; i >= start; i--) {
-        const part = messages[i].content[0];
-        if (part.type === "text") {
-          const text = part.text;
-          history.push(`${messages[i].role}:${text}`);
-        }
-      }
+    // Store session ID with 1 day expiry
+    storeSessionId({ session_id: response.data.session_id });
 
-      const lastPart = messages[messages.length - 1].content[0];
-      const userMessage = lastPart.type === "text" ? lastPart.text : "";
-
-      const fetchChat = async (token: string) => {
-        return fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_API}/api/chat/message`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: token ? `Bearer ${token}` : "",
-            },
-            body: JSON.stringify({
-              message: userMessage,
-              chat_type: "CALCULATION",
-              session_id: getCachedSessionId(),
-            }),
-          }
-        );
-      };
-
-      let token = Cookies.get("collintoken") || "";
-      let response = await fetchChat(token);
-
-      if (response.status === 401) {
-        const newToken = await refreshToken();
-        if (newToken) {
-          token = newToken;
-          response = await fetchChat(token);
-        } else {
-          throw new Error("Unauthorized and failed to refresh token");
-        }
-      }
-
-      if (!response.ok || !response.body) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = "";
-      let fullText = "";
-
-      while (true) {
-        const { value, done } = await reader.read();
-        if (done) break;
-
-        buffer += decoder.decode(value, { stream: true });
-        console.log('rajaaa', decoder.decode(value, { stream: true }));
-        
-
-        let newlineIndex;
-        while ((newlineIndex = buffer.indexOf("\n")) >= 0) {
-          const line = buffer.slice(0, newlineIndex).trim();
-          buffer = buffer.slice(newlineIndex + 1);
-
-          if (!line) continue;
-
-          try {
-            const parsed = JSON.parse(line);
-            if (parsed?.response) {
-              fullText += parsed.response;
-
-              yield {
-                content: [{ type: "text", text: fullText }],
-              };
-            }
-          } catch (err) {
-            console.warn("Stream parse error:", err, "Chunk:", line);
-          }
-        }
-      }
-
-      // Handle remaining buffer (no newline at end)
-      if (buffer.trim()) {
-        try {
-          const parsed = JSON.parse(buffer.trim());
-          if (parsed?.response) {
-            fullText += parsed.response;
-            yield {
-              content: [{ type: "text", text: fullText }],
-            };
-          }
-        } catch (err) {
-          console.warn("Final buffer parse error:", err, "Chunk:", buffer);
-        }
-      }
-
-      yield {
-        content: [{ type: "text", text: fullText }],
-        metadata: {
-          custom: {
-            suggestions: [
-              "What are the tax benefits?",
-              "Can I deduct this expense?",
-            ],
-          },
-        },
-      };
-    } catch (error) {
-      console.error("Error in TaxModelAdapter:", error);
-      yield {
-        content: [
-          {
-            type: "text",
-            text: "Sorry, something went wrong. Please try again.",
-          },
-        ],
-      };
-    }
-  },
-});
+    return response.data; // return only the data
+  } catch (error: any) {
+    console.error(error, "Error fetching session ID");
+    throw new Error("Failed to get session id");
+  }
+};

@@ -1,117 +1,145 @@
-"use client";
+import { saveMessagesToLocalStorage } from "../components/chatbot/assistant-ui/thread";
+import { getAccessToken } from "../utilities/auth";
 
-import { getCachedSessionId } from "@/services/chatSession";
-import { getAccessToken, refreshAccessToken } from "@/utilities/auth";
-import { type ChatModelAdapter } from "@assistant-ui/react";
+export const MyModelAdapter = (
+  userId: string,
+  setTyping: (typing: boolean) => void,
+  sessionId?: string,
+  setGlobalError?:(message:string|null)=>void
+): any => ({
+  async *run({ messages }: any) {
+    setTyping(true);
 
-export const MyModelAdapter: ChatModelAdapter = {
-  async *run({ messages }) {
+    // Start immediately - no loading placeholder!
+
     try {
-      const history = [];
-      const count = 5;
-      const start = messages.length > count ? messages.length - count : 0;
-      const message: any = messages;
-      for (let i = message.length - 1; i >= start; i--) {
-        const text = message[i].content[0].text;
-        if (message[i].role === "user") {
-          history.push(`user:${text}`);
-        } else {
-          history.push(`assistant:${text}`);
-        }
-      }
+      const token: string | null = getAccessToken();
 
+      const lastUserText = messages[messages.length - 1].content[0]?.text || "";
 
-
-      const token = getAccessToken();
-
-      let response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}/api/tax_education/query`,
-        // ` https://3a20-103-223-15-108.ngrok-free.app/api/tax_education/query`,
-        {
+      const makeRequest = async () =>
+        fetch(`https://amus-devapi.musetax.com/v1/api/amus/chat/${userId}/${sessionId}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
-
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
           },
+          keepalive: true,
           body: JSON.stringify({
-            //     // history: history,
-            query: message[messages.length - 1].content[0].text,
-            // email: getCachedEmail(),
-
-            chat_type: "EDUCATION",
-            session_id: getCachedSessionId(),
+            user_id: userId,
+            message: lastUserText,
+            session_id: sessionId,
           }),
-        }
-      );
-      if (response.status === 401) {
-        const newAccessToken = await refreshAccessToken();
-        if (newAccessToken) {
-          response = await fetch(
-            `${process.env.NEXT_PUBLIC_BACKEND_API}/api/tax_education/query`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${newAccessToken}`,
-              },
-              body: JSON.stringify({
-                query: message[messages.length - 1].content[0].text,
-                chat_type: "EDUCATION",
-                session_id: getCachedSessionId(),
-              }),
-            }
-          );
-        }
+        });
+
+      const response = await makeRequest();
+
+      if (response.status !== 200) {
+        setGlobalError?.("Your session has timed out for security. Please sign in again.")
+        // const newToken = await refreshAccessToken();
+        // if (!newToken) throw new Error("Token refresh failed");
+        // response = await makeRequest();
       }
-      if (!response.ok || !response.body) {
-        throw new Error("Network response was not ok or stream missing");
-      }
+
+      if (!response.ok || !response.body) throw new Error("Bad response");
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder("utf-8");
-      let text = ""; // ✅ Initialize as empty string
+
+      let accumulated = "";
+      let urls: string[] = [];
+      const accumulatedMessages = [...messages];
+      let lastYield = 0;
+      const MIN_YIELD_INTERVAL = 16; // ~60fps
 
       while (true) {
+        // console.log(reader)
         const { done, value } = await reader.read();
         if (done) break;
 
         const chunkStr = decoder.decode(value, { stream: true });
-
-        // Split by newlines in case multiple JSON objects are in one chunk
-        const lines = chunkStr.split("\n").filter((line) => line.trim() !== "");
+        const lines = chunkStr.split("\n");
+        let hasNewContent = false;
 
         for (const line of lines) {
-          try {
-            const json = JSON.parse(line); // ✅ Parse chunk
-            const chunkText = json.response || "";
+          if (!line.trim()) continue;
 
-            text += chunkText; // ✅ Accumulate string correctly
+          // Only process lines starting with "data:"
+          if (line.startsWith("data: ")) {
+            const jsonStr = line.slice("data: ".length).trim();
 
-            yield {
-              content: [{ type: "text", text: text }],
-              metadata: {
-                //       // custom: {
-                //       //   suggestions
-                //       // }
-              },
-            };
-          } catch (err) {
-            console.error("Failed to parse JSON chunk:", line, err);
+            if (!jsonStr || jsonStr === "[DONE]") continue;
+
+            try {
+              const json = JSON.parse(jsonStr);
+
+              if (json.response || json.llm_message) {
+                // You might be using `response` or `llm_message` depending on your API
+                accumulated += json.response || json.llm_message;
+                hasNewContent = true;
+              }
+
+              if (json.urls && Array.isArray(json.urls)) {
+                urls = json.urls;
+              }
+            } catch (err) {
+              console.error("JSON parse error:", jsonStr, err);
+            }
+          } else {
+            console.warn("Skipping non-data line:", line);
           }
         }
-      }
-    } catch (error) {
-      console.error("Error in TaxModelAdapter:", error);
 
+
+        // Yield immediately for first chunk, then throttle
+        const now = Date.now();
+        if (hasNewContent && (accumulated.length < 50 || now - lastYield >= MIN_YIELD_INTERVAL)) {
+          yield {
+            content: [{ type: "text", text: accumulated }],
+            metadata: {
+              custom: {
+                loading: false,
+                streaming: true,
+                urls: urls.length > 0 ? urls : undefined,
+              },
+            },
+          };
+          lastYield = now;
+        }
+      }
+
+      // Final yield
+      setTyping(false);
       yield {
-        content: [
-          {
-            type: "text",
-            text: "Sorry, something went wrong. Please try again.",
+        content: [{ type: "text", text: accumulated }],
+        metadata: {
+          custom: {
+            loading: false,
+            streaming: false,
+            urls: urls.length > 0 ? urls : undefined,
           },
-        ],
+        },
       };
+
+      // Save to localStorage
+      saveMessagesToLocalStorage([
+        ...accumulatedMessages,
+        { role: "assistant", content: [{ type: "text", text: accumulated }] },
+      ]);
+
+    } catch (error) {
+      console.error("Adapter error:", error);
+      setTyping(false);
+      setGlobalError?.("Your session has timed out for security. Please sign in again.")
+
+      // yield {
+      //   content: [
+      //     { type: "text", text: "Sorry, something went wrong. Please try again." },
+      //   ],
+      //   metadata: { custom: { loading: false, streaming: false } },
+      // };
     }
   },
-};
+});
