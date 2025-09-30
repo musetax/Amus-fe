@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Thread } from "../components/chatbot/assistant-ui/thread";
 import "../utilities/auth"; // Import to activate axios interceptors
 import axios from "axios";
@@ -169,11 +170,10 @@ function Assistant() {
   const [showTaxChatbot, setShowTaxChatbot] = useState(false);
   const [isLoadingPayroll, setIsLoadingPayroll] = useState(false);
 
-  // console.log(window.location.search)
-  const params = new URLSearchParams(window.location.search);
-  const sessionId: any = params.get("session_id");
-  const userId: any = params.get("user_id")
-  const access_token: any = params.get("access_token");
+  const searchParams = useSearchParams();
+  const sessionId: any = searchParams.get("session_id");
+  const userId: any = searchParams.get("user_id")
+  const access_token: any = searchParams.get("access_token");
   // const refresh_access_token: any = params.get("refresh_token");
   const [globalError, setGlobalError] = useState<string | null>(null);
 
