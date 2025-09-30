@@ -10,9 +10,12 @@ This is a reusable Assistant UI component package (`@muse-prod/muse-node-chatbot
 
 ### Development
 - `npm run dev` - Start development server with Turbo (opens on http://localhost:3000)
-- `npm run build` - Build the package for distribution using tsup (outputs to dist/)
+- `npm run build` - Build Next.js application for production
 - `npm run start` - Start production server
 - `npm run lint` - Run ESLint for code quality
+
+### Package Distribution
+- `npx tsup` - Build package for distribution using tsup configuration (outputs to dist/)
 
 ### Environment Setup
 Requires `.env.local` file with:
@@ -23,9 +26,10 @@ OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ## Architecture Overview
 
 ### Core Structure
-- **Entry Point**: `src/index.tsx` - Exports the main Assistant component and styles
+- **Package Entry Point**: `src/index.tsx` - Exports the main Assistant component and styles
 - **Main Component**: `app/assistant.tsx` - Primary chatbot component with runtime management
-- **Build Output**: Package builds to `dist/` directory with both ESM and CJS formats
+- **Development**: Next.js application for development and testing
+- **Package Build Output**: tsup builds to `dist/` directory with both ESM and CJS formats
 
 ### Key Directories
 - `app/` - Main application components and runtime providers
@@ -51,10 +55,13 @@ OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   - Form handling (Formik + Yup)
   - State management (Zustand)
 
-### Package Distribution
-- Built as both ESM and CommonJS modules
-- Includes TypeScript declarations
-- Bundles CSS styles for distribution
+### Dual Build System
+- **Development**: Next.js application (`npm run build`) for local development and testing
+- **Package Distribution**: tsup configuration builds library to `dist/` for npm publishing
+  - Entry: `src/index.tsx`
+  - Outputs: ESM and CommonJS modules with TypeScript declarations
+  - Bundles CSS styles from `src/styles.css`
+  - Externals: React, Next.js, and major UI libraries (not bundled)
 - Configured as peer dependency package requiring Next.js and React
 
 ### Key Integrations
@@ -76,7 +83,8 @@ OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 After making code changes, run:
 - `npm run lint` - Check code quality and style
-- `npm run build` - Verify package builds successfully
+- `npm run build` - Verify Next.js application builds successfully
+- `npx tsup` - Verify package distribution builds successfully
 
 ## Package Build Process
 
@@ -92,5 +100,6 @@ The package uses tsup for building:
 The chatbot integrates with external APIs:
 - User chat history via `/v1/api/export/get-user-chats`  
 - Tax profile services via `/api/tax-profile/checkboost/`
+- Health check endpoint at `/api/health` (returns service status)
 - Session-based chat management
 - Requires proper authentication and session handling
