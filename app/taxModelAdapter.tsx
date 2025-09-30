@@ -52,8 +52,9 @@ export const getPayrollDetails=async(userId:string)=>{
     );
 
     return response.data;
-  } catch {
-    throw new Error('Failed to create user info');
+  } catch (error:any){
+
+    throw error
   }
 }
 export const payrollDetailsUpdate=async(userId:string,payload:any)=>{
@@ -61,8 +62,8 @@ export const payrollDetailsUpdate=async(userId:string,payload:any)=>{
     const response = await axios.patch(`https://amus-devapi.musetax.com/user/${userId}`,payload);
 
     return response.data;
-  } catch {
-    throw new Error('Failed to create user info');
+  } catch(error:any) {
+    throw error;
   }
 }
 interface TokenPayload {

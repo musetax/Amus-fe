@@ -239,7 +239,8 @@ function Assistant() {
         
         setIsLoadingPayroll(false);
         // loadHistory()
-       } catch (error) {
+       } catch (error:any) {
+        setGlobalError(error.response.data.detail||"User ID not found")
         console.error("Error fetching payroll:", error);
         setShowTaxChatbot(true);
       } finally {
@@ -258,8 +259,8 @@ function Assistant() {
     console.log(response,"response")
     setShowTaxChatbot(false);
     setPayrollData(taxData);
-     } catch (error) {
-      setGlobalError("Failed to update payroll data.");
+     } catch (error:any) {
+      setGlobalError(error.response.data.details||"Failed to update payroll data.");
     }
     // You might want to save this data to your backend here
   };
