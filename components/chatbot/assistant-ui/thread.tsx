@@ -21,7 +21,6 @@ import {
   VolumeXIcon,
 } from "lucide-react";
 import { cn } from "../../../lib/utils";
-
 import { Button } from "../../../components/chatbot/ui/button";
 import { TooltipIconButton } from "./tooltip-icon-button";
 import { MarkdownText } from "./markdown-text";
@@ -33,7 +32,8 @@ import { UserMessageAttachments } from "../../../components/assistant-ui/attachm
 import { URLDisplay } from "./url-display";
 import { Tooltip, TooltipTrigger } from "../ui/tooltip";
 import TaxChatbot from "../../../app/payrollQuestionchat";
-import { ErrorBanner } from './error-ui'
+import { ErrorBanner } from "./error-ui";
+// import Image from "next/image";
 
 export const CHAT_HISTORY_KEY = "chat_history";
 
@@ -54,7 +54,7 @@ export const Thread: any = ({
   payrollData,
   onTaxChatbotComplete,
   onContinueToChat,
-  globalError
+  globalError,
 }: any) => {
   const { messages } = useThread();
   // const [isLoading, setIsLoading] = useState(false);
@@ -64,7 +64,7 @@ export const Thread: any = ({
   // const isStreaming = messages.some(
   //   (msg: any) => msg.role === "assistant" && msg.status?.type === "running"
   // );
-  console.log(payrollData, "p--hjegsj")
+  console.log(payrollData, "p--hjegsj");
   // const assistantMessages = [...messages]
   //   .reverse()
   //   .filter((msg) => msg.role === "assistant");
@@ -74,7 +74,7 @@ export const Thread: any = ({
 
   // Handle tax chatbot completion - now using props
   const handleTaxChatbotComplete = (taxData: any) => {
-    console.log('Tax data collected:', taxData);
+    console.log("Tax data collected:", taxData);
     if (onTaxChatbotComplete) {
       onTaxChatbotComplete(taxData);
     }
@@ -116,8 +116,8 @@ export const Thread: any = ({
             <div
               style={{
                 backgroundImage:
-                  "url(https://i.ibb.co/0p2p5DSG/chat-Header-Bg.png)",
-                backgroundSize: "cover",
+                  "url(https://i.postimg.cc/5y3yqfhC/chat-Header-Bglatest.png)",
+                backgroundSize: "100% 140px",
                 backgroundColor: "#255be305",
                 backgroundRepeat: "no-repeat",
                 borderTopLeftRadius: "8px",
@@ -127,24 +127,96 @@ export const Thread: any = ({
                 alignItems: "center",
                 backgroundPosition: "bottom",
                 width: "100%",
-                padding: "20px 16px 55px",
+                padding: "20px 16px 60px",
                 position: "relative",
               }}
             >
               <div
                 style={{ display: "flex", alignItems: "center", gap: "10px" }}
               >
-                <img
-                  src='https://appweb-bucket.s3.us-east-1.amazonaws.com/muse-logo.png'
+                <span
                   style={{
-                    width: "40px",
-                    height: "40px",
+                    width: "48px",
+                    height: "48px",
+                    backgroundColor: "#ffffff",
                     borderRadius: "50%",
-                    maxHeight: "40px",
-                    background: "white",
+                    padding: "4px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                   }}
-                  alt="chatbot-Icon"
-                />
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="60"
+                    height="41"
+                    viewBox="0 0 60 41"
+                    fill="none"
+                  >
+                    <path
+                      d="M12.7905 7.42385L1.20752 31.1693C-0.502414 34.6745 1.17634 38.2925 4.9571 39.2503C8.73794 40.2081 13.189 38.1427 14.899 34.6375L26.482 10.892C28.192 7.38677 26.5131 3.76859 22.7323 2.81097C18.9515 1.85316 14.5005 3.91858 12.7905 7.42385Z"
+                      fill="url(#paint0_linear_7768_1391)"
+                    />
+                    <path
+                      d="M27.7745 7.0597L34.9048 21.6752C36.5827 25.1143 34.9357 28.6641 31.2263 29.6037C27.5169 30.5435 23.1499 28.5174 21.4722 25.0783L14.3417 10.4628C12.6637 7.02373 14.3107 3.47396 18.0201 2.53433C21.7295 1.59451 26.0967 3.62062 27.7745 7.0597Z"
+                      fill="url(#paint1_linear_7768_1391)"
+                    />
+                    <path
+                      d="M30.0391 7.08014L22.9286 21.6547C21.2453 25.1051 22.8975 28.6665 26.6189 29.6095C30.3406 30.5523 34.7221 28.5195 36.4055 25.0691L43.5158 10.4946C45.1993 7.04417 43.547 3.48272 39.8253 2.53993C36.1039 1.59696 31.7224 3.62975 30.0391 7.08014Z"
+                      fill="url(#paint2_linear_7768_1391)"
+                    />
+                    <path
+                      d="M45.5962 7.19045L57.2931 31.1693C59.0031 34.6746 57.3244 38.2927 53.5436 39.2504C49.7629 40.2082 45.3116 38.1427 43.6017 34.6375L31.9048 10.6586C30.1948 7.15337 31.8737 3.53519 35.6544 2.57757C39.435 1.61976 43.8864 3.68518 45.5962 7.19045Z"
+                      fill="url(#paint3_linear_7768_1391)"
+                    />
+                    <defs>
+                      <linearGradient
+                        id="paint0_linear_7768_1391"
+                        x1="4.04851"
+                        y1="38.9984"
+                        x2="28.5694"
+                        y2="6.83259"
+                        gradientUnits="userSpaceOnUse"
+                      >
+                        <stop stop-color="#69DEC6" />
+                        <stop offset="1" stop-color="#49C2D4" />
+                      </linearGradient>
+                      <linearGradient
+                        id="paint1_linear_7768_1391"
+                        x1="16.9186"
+                        y1="3.08128"
+                        x2="44.3829"
+                        y2="35.4655"
+                        gradientUnits="userSpaceOnUse"
+                      >
+                        <stop stop-color="#48C2D4" />
+                        <stop offset="1" stop-color="#1595EA" />
+                      </linearGradient>
+                      <linearGradient
+                        id="paint2_linear_7768_1391"
+                        x1="25.1579"
+                        y1="29.422"
+                        x2="62.1925"
+                        y2="-12.9475"
+                        gradientUnits="userSpaceOnUse"
+                      >
+                        <stop stop-color="#1695EA" />
+                        <stop offset="1" stop-color="#548CE7" />
+                      </linearGradient>
+                      <linearGradient
+                        id="paint3_linear_7768_1391"
+                        x1="36.5681"
+                        y1="2.06437"
+                        x2="61.2194"
+                        y2="35.6826"
+                        gradientUnits="userSpaceOnUse"
+                      >
+                        <stop stop-color="#518DE7" />
+                        <stop offset="1" stop-color="#7687E5" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                </span>
                 <div style={{ display: "flex", flexDirection: "column" }}>
                   <h3
                     style={{
@@ -171,7 +243,9 @@ export const Thread: any = ({
             {loadingHistory ? (
               <div className="flex items-center justify-center py-10 min-h-300">
                 <div className="text-center">
-                    <div className="flex items-center justify-center w-full mb-2"><div className="smooth-ring"></div></div>
+                  <div className="flex items-center justify-center w-full mb-2">
+                    <div className="smooth-ring"></div>
+                  </div>
                   {/* <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#4d37f5] mb-4"></div> */}
                   <h3 className="text-lg font-medium text-gray-800 mb-2">
                     Loading your conversation
@@ -179,13 +253,11 @@ export const Thread: any = ({
                   <p className="text-sm text-gray-500 animate-pulse">
                     Please wait while we retrieve your chat history...
                   </p>
-        
                 </div>
               </div>
             ) : (
               <div>
                 {/* Show tax chatbot if no messages and form not completed */}
-
 
                 {/* { <div key={1} className="flex justify-center my-8">
                 <div className="bg-red-50 border-l-4 border-red-500 rounded-lg p-4 max-w-md w-full shadow-sm">
@@ -199,52 +271,57 @@ export const Thread: any = ({
                 </div>
               </div>} */}
 
+                {globalError ? (
+                  <ErrorBanner message={globalError} />
+                ) : shouldShowTaxChatbot ? (
+                  <div
+                    style={{
+                      height: "calc(100vh - 130px)",
+                      minHeight: "440px",
+                      overflowY: "auto",
+                    }}
+                  >
+                    <TaxChatbot
+                      onComplete={handleTaxChatbotComplete}
+                      onContinueToChat={handleContinueToChat}
+                      prefilledData={payrollData.payroll}
+                    />
+                  </div>
+                ) : (
+                  <>
+                    <ThreadPrimitive.Viewport
+                      style={{
+                        height: "calc(100vh - 210px)",
+                        minHeight: "120px",
+                        maxHeight: "740px",
+                      }}
+                      className="flex flex-col items-center chat-scroll overflow-y-scroll scroll-smooth bg-inherit pr-0 pl-3 pt-0"
+                    >
+                      <ThreadWelcome />
 
-                {globalError ? <ErrorBanner message={globalError} />
-                  : shouldShowTaxChatbot ? (
-
-                    <div style={{ height: "calc(100vh - 105px)", minHeight: "440px", overflowY: "auto" }}>
-                      <TaxChatbot
-                        onComplete={handleTaxChatbotComplete}
-                        onContinueToChat={handleContinueToChat}
-                        prefilledData={payrollData.payroll}
-                      />
-                    </div>
-                  ) : (
-                    <>
-                      <ThreadPrimitive.Viewport
-                        style={{
-                          height: "calc(100vh - 210px)",
-                          minHeight: "120px",
-                          maxHeight: "740px",
+                      <ThreadPrimitive.Messages
+                        components={{
+                          UserMessage: (props) => (
+                            <UserMessage {...props} image={image} />
+                          ),
+                          EditComposer: EditComposer,
+                          AssistantMessage: (props) => (
+                            <AssistantMessage {...props} />
+                          ),
                         }}
-                        className="flex flex-col items-center chat-scroll overflow-y-scroll scroll-smooth bg-inherit pr-0 pl-3 pt-0"
-                      >
-                        <ThreadWelcome />
+                      />
 
-                        <ThreadPrimitive.Messages
-                          components={{
-                            UserMessage: (props) => (
-                              <UserMessage {...props} image={image} />
-                            ),
-                            EditComposer: EditComposer,
-                            AssistantMessage: (props) => (
-                              <AssistantMessage {...props} />
-                            ),
-                          }}
-                        />
+                      <ThreadPrimitive.If empty={false}>
+                        <div className="min-h-8 flex-grow" />
+                      </ThreadPrimitive.If>
+                    </ThreadPrimitive.Viewport>
 
-                        <ThreadPrimitive.If empty={false}>
-                          <div className="min-h-8 flex-grow" />
-                        </ThreadPrimitive.If>
-                      </ThreadPrimitive.Viewport>
-
-                      <div className="sticky bg-[#255be305] bottom-0 px-3 pt-3 flex w-full max-w-[var(--thread-max-width)] flex-col items-center justify-end rounded-t-lg pb-2">
-                        <Composer />
-                        <ThreadScrollToBottom />
-                      </div>
-                    </>
-                  )}
+                    <div className="sticky bg-[#255be305] bottom-0 px-3 pt-3 flex w-full max-w-[var(--thread-max-width)] flex-col items-center justify-end rounded-t-lg pb-2">
+                      <Composer />
+                      <ThreadScrollToBottom />
+                    </div>
+                  </>
+                )}
               </div>
             )}
           </div>
@@ -261,7 +338,10 @@ const ThreadWelcome: FC = () => {
       <div className="flex w-full max-w-[var(--thread-max-width)] flex-grow flex-col px-4">
         <div className="flex w-full flex-grow flex-col items-center justify-center">
           <p className="mt-4 font-medium text-sm">
-            Stuck with Taxes. No Worries Uncle Sam is Here
+            {/* Stuck with Taxes. No Worries Uncle Sam is Here */}
+            "Hi, I’m Uncle Sam—your personal tax helper! 🧾 Have questions about
+            your taxes, want to check your refund, or need to update your
+            profile after a life event? Don’t worry—Uncle Sam is here to help!"
           </p>
         </div>
         <ThreadWelcomeSuggestions />
@@ -327,9 +407,7 @@ const Composer: FC = () => {
   const composerRef = useRef<HTMLTextAreaElement | null>(null);
 
   return (
-    <ComposerPrimitive.Root
-      className="focus-within:border-ring/20 flex w-full flex-wrap items-end rounded-full border border-[#E9E9E9] bg-inherit px-2.5 py-0 shadow-sm transition-colors ease-in gap-2 bg-white "
-    >
+    <ComposerPrimitive.Root className="focus-within:border-ring/20 flex w-full flex-wrap items-end rounded-full border border-[#E9E9E9] bg-inherit px-2.5 py-0 shadow-sm transition-colors ease-in gap-2 bg-white ">
       <ComposerPrimitive.Input
         ref={composerRef}
         rows={1}
@@ -348,9 +426,7 @@ interface ComposerActionProps {
 
 const ComposerAction: FC<ComposerActionProps> = ({ composerRef }) => {
   // const { transcript, listening, startListening, stopListening } =
-  const { transcript, listening } =
-
-    useSpeechRecognition();
+  const { transcript, listening } = useSpeechRecognition();
   // const message = composerRef.current?.value.trim();
 
   useEffect(() => {
@@ -560,16 +636,24 @@ const AssistantMessage: React.FC<any> = () => {
           {isMessageLoading ? (
             <div className="flex flex-col  py-4">
               <div className="flex items-center gap-1">
-                <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '0s' }}></span>
-                <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></span>
-                <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></span>
+                <span
+                  className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"
+                  style={{ animationDelay: "0s" }}
+                ></span>
+                <span
+                  className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"
+                  style={{ animationDelay: "0.2s" }}
+                ></span>
+                <span
+                  className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"
+                  style={{ animationDelay: "0.4s" }}
+                ></span>
               </div>
 
               <span className="block text-sm text-gray-600 animate-pulse mt-2">
                 Searching for information....
               </span>
             </div>
-
           ) : (
             <>
               <MessagePrimitive.Content components={{ Text: MarkdownText }} />
@@ -590,7 +674,10 @@ const AssistantMessage: React.FC<any> = () => {
             </>
           )}
         </div>
-        <AssistantActionBar urls={urls} onToggleUrls={() => setShowUrls((p) => !p)} />
+        <AssistantActionBar
+          urls={urls}
+          onToggleUrls={() => setShowUrls((p) => !p)}
+        />
         <BranchPicker className="col-start-2 row-start-2 -ml-2 mr-2" />
       </MessagePrimitive.Root>
     </div>

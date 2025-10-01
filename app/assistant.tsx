@@ -220,7 +220,9 @@ function Assistant() {
       data.current_withholding_per_paycheck !== undefined &&
       data.additional_income !== 0 &&
       data.deductions !== 0 &&
-      data.dependents !== 0
+      data.dependents !== 0 &&
+      data.home_address !==null &&
+      data.work_address!==null
     );
   };
 
