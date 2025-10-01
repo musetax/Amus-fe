@@ -76,8 +76,10 @@ interface TaxData {
   additional_income?: string;
   deductions?: string;
   dependents?: string;
-  start_pay_date?: string;
-  most_recent_pay_date?: string;
+  current_date?: string;
+  home_address?: string;
+  work_address?: string;
+  // most_recent_pay_date?: string;
 }
 
 interface TaxChatbotProps {
@@ -114,8 +116,10 @@ interface FormData {
   additional_income: string | null;
   deductions: string | null;
   dependents: string | null;
-  start_pay_date: string | null;
-  most_recent_pay_date: string | null;
+  current_date: string | null;
+  home_address: string | null;
+  work_address: string | null;
+  // most_recent_pay_date: string | null;
 }
 
 interface TaxUserMessageProps {
@@ -130,6 +134,7 @@ interface TaxBotMessageProps {
   onInputSubmit: (value: string) => void;
   currentStep: string;
   isTyping: boolean;
+  error: string;
 }
 
 interface TaxInputFieldProps {
@@ -155,8 +160,9 @@ type StepType =
   | "additional_income"
   | "deductions"
   | "dependents"
-  | "start_pay_date"
-  | "most_recent_pay_date"
+  | "current_date"
+  | "work_address"
+  | "home_address"
   | "complete"
   | "saved";
 
@@ -256,6 +262,7 @@ const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
   onInputSubmit,
   currentStep,
   isTyping,
+  error,
 }) => {
   const time = formatTime(message.createdAt || Date.now());
 
@@ -567,6 +574,8 @@ const Calendar: React.FC = () => <div className="text-white text-lg">📅</div>;
 const CheckCircle: React.FC<{ className?: string }> = ({ className }) => (
   <div className={`text-xl ${className}`}>✅</div>
 );
+const Home: React.FC = () => <div className="text-white text-lg">🏠</div>;
+
 const RotateCcw: React.FC = () => <div className="text-base">🔄</div>;
 
 const SummaryCard: React.FC<SummaryCardProps> = ({
@@ -628,8 +637,10 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
     questions.push("additional_income");
     questions.push("deductions");
     questions.push("dependents");
-    questions.push("start_pay_date");
-    questions.push("most_recent_pay_date");
+    questions.push("current_date");
+    questions.push("work_address");
+    questions.push("home_address");
+    // questions.push("most_recent_pay_date");
 
     return questions;
   };
@@ -648,8 +659,10 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
     additional_income: null,
     deductions: null,
     dependents: null,
-    start_pay_date: null,
-    most_recent_pay_date: null,
+    current_date: null,
+    home_address: null,
+    work_address: null,
+    // most_recent_pay_date: null,
   });
 
   const [currentStep, setCurrentStep] = useState<StepType>(
@@ -731,7 +744,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         return {
           type: "bot",
           content: {
-            content: `${greeting}\n\nHow many aditional income do you have? (Optional)`,
+            content: `${greeting}\n\nIf you have any additional income (e.g., freelance, investments, or rental), please enter the total amount. If not, you can skip this question.`,
             inputType: "number",
             placeholder: "Enter additional income.. or skip",
           },
@@ -741,7 +754,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         return {
           type: "bot",
           content: {
-            content: `${greeting}\n\nHow many dependents do you have? (Optional)`,
+            content: `${greeting}\n\nIf you have any deductions (such as mortgage interest, charitable contributions, or medical expenses), please enter the total amount. If not, you can skip this question.`,
             inputType: "number",
             placeholder: "Enter number of dependents or skip",
           },
@@ -757,7 +770,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
           },
           createdAt: new Date(),
         };
-      case "start_pay_date":
+      case "current_date":
         return {
           type: "bot",
           content: {
@@ -767,16 +780,38 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
           },
           createdAt: new Date(),
         };
-      case "most_recent_pay_date":
+      case "work_address":
         return {
           type: "bot",
           content: {
-            content: `${greeting}\n\nWhat was your most recent pay date? (Optional)`,
-            inputType: "date",
-            placeholder: "Select most recent pay date or skip",
+            content: `${greeting}\n\nPlease enter your work address (Optional):`,
+            inputType: "text",
+            placeholder: "Enter work address or skip",
           },
           createdAt: new Date(),
         };
+      case "home_address":
+        return {
+          type: "bot",
+          content: {
+            content: `${greeting}\n\nPlease enter your home address (Optional):`,
+            inputType: "text",
+            placeholder: "Enter home address or skip",
+          },
+          createdAt: new Date(),
+        };
+      // case "most_recent_pay_date":
+      //   return {
+      //     type: 'bot',
+      //     content: {
+      //       content: `${greeting}\n\nWhat was your most recent pay date? (Optional)`,
+      //       inputType: "date",
+      //       placeholder: "Select most recent pay date or skip",
+
+      //     },
+      //     createdAt: new Date(),
+
+      //   }
       default:
         return {
           type: "bot",
@@ -879,7 +914,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         case "additional_income":
           addMessage("bot", {
             content:
-              "Do you have any additional income? (Optional - freelance, investments, etc.)",
+              "If you have any additional income (e.g., freelance, investments, or rental), please enter the total amount. If not, you can skip this question.",
             inputType: "number",
             placeholder: "Enter additional annual income or skip",
           });
@@ -888,7 +923,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         case "deductions":
           addMessage("bot", {
             content:
-              "Do you have any deductions? (Optional - mortgage, charitable contributions, etc.)",
+              "If you have any deductions (such as mortgage interest, charitable contributions, or medical expenses), please enter the total amount. If not, you can skip this question.",
             inputType: "number",
             placeholder: "Enter annual deductions or skip",
           });
@@ -902,7 +937,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
           });
           break;
 
-        case "start_pay_date":
+        case "current_date":
           addMessage("bot", {
             content: "When did you start your current job? (Optional)",
             inputType: "date",
@@ -910,13 +945,29 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
           });
           break;
 
-        case "most_recent_pay_date":
+        case "work_address":
           addMessage("bot", {
-            content: "What was your most recent pay date? (Optional)",
-            inputType: "date",
-            placeholder: "Select most recent pay date or skip",
+            content: `Please enter your work address (Optional):`,
+            inputType: "text",
+            placeholder: "Enter work address or skip",
           });
           break;
+
+        case "home_address":
+          addMessage("bot", {
+            content: `Please enter your home address (Optional):`,
+            inputType: "text",
+            placeholder: "Enter home address or skip",
+          });
+          break;
+
+        // case "most_recent_pay_date":
+        //   addMessage("bot", {
+        //     content: "What was your most recent pay date? (Optional)",
+        //     inputType: "date",
+        //     placeholder: "Select most recent pay date or skip",
+        //   });
+        //   break;
       }
     }
   };
@@ -926,114 +977,253 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
     addMessage("user", `I am ${status.toLowerCase()}`);
     moveToNextQuestion();
   };
+  const [error, setError] = useState<string>("");
 
   const handleInputSubmit = (value: string): void => {
+    setError(""); // reset before validation
     if (!value.trim()) return;
 
     const isSkipped = value.toLowerCase() === "skip";
-    const numValue = parseFloat(value) || value;
+    const numValue = parseFloat(value);
+
+    const today = new Date();
 
     switch (currentStep) {
       case "annual_salary":
-        setFormData((prev) => ({ ...prev, annual_salary: numValue as string }));
+        if (!isSkipped) {
+          if (isNaN(numValue) || numValue < 0) {
+            setError("Annual salary must be a positive number.");
+            return;
+          }
+          if (numValue > 500000) {
+            setError("Annual salary cannot exceed $500,000.");
+            return;
+          }
+        }
+        setFormData((prev) => ({
+          ...prev,
+          annual_salary: isSkipped ? "" : numValue.toString(),
+        }));
         addMessage(
           "user",
-          `My annual salary is $${(numValue as number).toLocaleString()}`
+          isSkipped
+            ? "I'll skip this question"
+            : `My annual salary is $${numValue.toLocaleString()}`
         );
         moveToNextQuestion();
         break;
 
       case "spouse_income":
-        setFormData((prev) => ({ ...prev, spouse_income: numValue as string }));
+        if (!isSkipped) {
+          if (isNaN(numValue) || numValue < 0) {
+            setError("Spouse income must be a positive number.");
+            return;
+          }
+          if (numValue > 500000) {
+            setError("Spouse income cannot exceed $500,000.");
+            return;
+          }
+        }
+        setFormData((prev) => ({
+          ...prev,
+          spouse_income: isSkipped ? "" : numValue.toString(),
+        }));
         addMessage(
           "user",
-          `My spouse's annual income is $${(
-            numValue as number
-          ).toLocaleString()}`
+          isSkipped
+            ? "I'll skip this question"
+            : `My spouse's annual income is $${numValue.toLocaleString()}`
         );
         moveToNextQuestion();
         break;
 
       case "pay_frequency":
-        setFormData((prev) => ({ ...prev, pay_frequency: value as string }));
-        addMessage("user", `I get paid ${(value as string).toLowerCase()}`);
+        if (isSkipped) {
+          addMessage("user", "I'll skip this question");
+        } else {
+          setFormData((prev) => ({ ...prev, pay_frequency: value }));
+          addMessage("user", `I get paid ${value.toLowerCase()}`);
+        }
         moveToNextQuestion();
         break;
 
       case "current_withholding":
+        if (!isSkipped) {
+          if (isNaN(numValue) || numValue < 0) {
+            setError("Withholding must be a positive number.");
+            return;
+          }
+          if (
+            formData.annual_salary &&
+            numValue > Number(formData.annual_salary)
+          ) {
+            setError("Withholding cannot exceed your annual salary.");
+            return;
+          }
+        }
         setFormData((prev) => ({
           ...prev,
-          current_withholding_per_paycheck: numValue as string,
+          current_withholding_per_paycheck: isSkipped
+            ? ""
+            : numValue.toString(),
         }));
         addMessage(
           "user",
-          `My current withholding is $${numValue} per paycheck`
+          isSkipped
+            ? "I'll skip this question"
+            : `My current withholding is $${numValue} per paycheck`
         );
         moveToNextQuestion();
         break;
 
       case "additional_income":
-        if (isSkipped) {
-          addMessage("user", "I'll skip this question");
-        } else {
-          setFormData((prev) => ({
-            ...prev,
-            additional_income: numValue as string,
-          }));
-          addMessage(
-            "user",
-            `My additional annual income is $${(
-              numValue as number
-            ).toLocaleString()}`
-          );
+        if (!isSkipped) {
+          if (isNaN(numValue) || numValue < 0) {
+            setError("Additional income must be a positive number.");
+            return;
+          }
+          if (numValue > 500000) {
+            setError("Additional income cannot exceed $500,000.");
+            return;
+          }
         }
+        setFormData((prev) => ({
+          ...prev,
+          additional_income: isSkipped ? "" : numValue.toString(),
+        }));
+        addMessage(
+          "user",
+          isSkipped
+            ? "I'll skip this question"
+            : `My additional annual income is $${numValue.toLocaleString()}`
+        );
         moveToNextQuestion();
         break;
 
       case "deductions":
-        if (isSkipped) {
-          addMessage("user", "I'll skip this question");
-        } else {
-          setFormData((prev) => ({ ...prev, deductions: numValue as string }));
-          addMessage(
-            "user",
-            `My annual deductions are $${(numValue as number).toLocaleString()}`
-          );
+        if (!isSkipped) {
+          if (isNaN(numValue) || numValue < 0) {
+            setError("Deductions must be a positive number.");
+            return;
+          }
+          if (
+            formData.annual_salary &&
+            numValue > Number(formData.annual_salary)
+          ) {
+            setError("Deductions cannot exceed your annual salary.");
+            return;
+          }
         }
+        setFormData((prev) => ({
+          ...prev,
+          deductions: isSkipped ? "" : numValue.toString(),
+        }));
+        addMessage(
+          "user",
+          isSkipped
+            ? "I'll skip this question"
+            : `My annual deductions are $${numValue.toLocaleString()}`
+        );
         moveToNextQuestion();
         break;
 
       case "dependents":
-        if (isSkipped) {
-          addMessage("user", "I'll skip this question");
-        } else {
-          setFormData((prev) => ({ ...prev, dependents: numValue as string }));
-          addMessage("user", `I have ${numValue} dependent(s)`);
+        if (!isSkipped) {
+          if (isNaN(numValue) || numValue < 0) {
+            setError("Dependents must be a positive number.");
+            return;
+          }
+          if (numValue > 5) {
+            setError("Dependents cannot exceed 5.");
+            return;
+          }
         }
+        setFormData((prev) => ({
+          ...prev,
+          dependents: isSkipped ? "" : numValue.toString(),
+        }));
+        addMessage(
+          "user",
+          isSkipped
+            ? "I'll skip this question"
+            : `I have ${numValue} dependent(s)`
+        );
         moveToNextQuestion();
         break;
 
-      case "start_pay_date":
-        if (isSkipped) {
-          addMessage("user", "I'll skip this question");
-        } else {
-          setFormData((prev) => ({ ...prev, start_pay_date: value as string }));
-          addMessage("user", `My job start date is ${value}`);
-        }
-        moveToNextQuestion();
-        break;
+      case "current_date":
+        if (!isSkipped) {
+          const dateValue = new Date(value);
+          if (isNaN(dateValue.getTime())) {
+            setError("Please enter a valid date.");
+            return;
+          }
+          if (dateValue > today) {
+            setError("Start date cannot be in the future.");
+            return;
+          }
 
-      case "most_recent_pay_date":
-        if (isSkipped) {
-          addMessage("user", "I'll skip this question");
-        } else {
+          // Format as yyyy-mm-dd
+          const formattedDate = dateValue.toISOString().split("T")[0];
           setFormData((prev) => ({
             ...prev,
-            most_recent_pay_date: value as string,
+            current_date: formattedDate,
           }));
-          addMessage("user", `My most recent pay date was ${value}`);
+          addMessage("user", `My job start date is ${formattedDate}`);
+        } else {
+          setFormData((prev) => ({ ...prev, current_date: "" }));
+          addMessage("user", "I'll skip this question");
         }
+
         moveToNextQuestion();
+        break;
+
+      case "work_address":
+        setFormData((prev) => ({
+          ...prev,
+          work_address: isSkipped ? "" : value.trim(),
+        }));
+        addMessage(
+          "user",
+          isSkipped
+            ? "I'll skip this question"
+            : `My work address is: ${value.trim()}`
+        );
+        moveToNextQuestion();
+        break;
+
+      case "home_address":
+        setFormData((prev) => ({
+          ...prev,
+          home_address: isSkipped ? "" : value.trim(),
+        }));
+        addMessage(
+          "user",
+          isSkipped
+            ? "I'll skip this question"
+            : `My home address is: ${value.trim()}`
+        );
+        moveToNextQuestion();
+        break;
+
+      // case "most_recent_pay_date":
+      //   if (!isSkipped) {
+      //     const dateValue = new Date(value);
+      //     if (isNaN(dateValue.getTime())) {
+      //       setError("Please enter a valid date.");
+      //       return;
+      //     }
+      //     if (dateValue > today) {
+      //       setError("Pay date cannot be in the future.");
+      //       return;
+      //     }
+      //   }
+      //   setFormData((prev) => ({ ...prev, most_recent_pay_date: isSkipped ? "" : value }));
+      //   addMessage("user", isSkipped ? "I'll skip this question" : `My most recent pay date was ${value}`);
+      //   moveToNextQuestion();
+      //   break;
+
+      default:
         break;
     }
   };
@@ -1056,8 +1246,10 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
       additional_income: null,
       deductions: null,
       dependents: null,
-      start_pay_date: null,
-      most_recent_pay_date: null,
+      current_date: null,
+      work_address: prefilledData.work_address || null,
+      home_address: prefilledData.home_address || null,
+      // most_recent_pay_date: null,
     });
     setIsSaving(false);
     setSaveError(null);
@@ -1082,8 +1274,8 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         additional_income: formData.additional_income || undefined,
         deductions: formData.deductions || undefined,
         dependents: formData.dependents || undefined,
-        start_pay_date: formData.start_pay_date || undefined,
-        most_recent_pay_date: formData.most_recent_pay_date || undefined,
+        current_date: formData.current_date || undefined,
+        // most_recent_pay_date: formData.most_recent_pay_date || undefined
       };
 
       if (onComplete) {
@@ -1139,6 +1331,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
               onInputSubmit={handleInputSubmit}
               currentStep={currentStep}
               isTyping={isTyping}
+              error={error}
             />
           )
         )}
@@ -1263,22 +1456,38 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
                   color="bg-gradient-to-r from-rose-600 to-rose-400"
                 />
               )}
-              {formData.start_pay_date && (
+              {formData.current_date && (
                 <SummaryCard
                   icon={Calendar}
                   title="Job Start Date"
-                  value={formData.start_pay_date}
+                  value={formData.current_date}
                   color="bg-gradient-to-r from-cyan-600 to-cyan-400"
                 />
               )}
-              {formData.most_recent_pay_date && (
+              {formData.work_address && (
+                <SummaryCard
+                  icon={Home} // You can use any relevant icon
+                  title="Work Address"
+                  value={formData.work_address}
+                  color="bg-gradient-to-r from-lime-600 to-lime-400"
+                />
+              )}
+              {formData.home_address && (
+                <SummaryCard
+                  icon={Home} // You can use any relevant icon
+                  title="Home Address"
+                  value={formData.home_address}
+                  color="bg-gradient-to-r from-yellow-600 to-yellow-400"
+                />
+              )}
+              {/* {formData.most_recent_pay_date && (
                 <SummaryCard
                   icon={Calendar}
                   title="Recent Pay Date"
                   value={formData.most_recent_pay_date}
                   color="bg-gradient-to-r from-amber-600 to-amber-400"
                 />
-              )}
+              )} */}
             </div>
 
             <div
