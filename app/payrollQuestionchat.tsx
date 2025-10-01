@@ -787,7 +787,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
           content: {
             content: `${greeting}\n\nIf you have any additional income (e.g., freelance, investments, or rental), please enter the total amount. If not, you can skip this question.`,
             inputType: "number",
-            placeholder: "Enter additional income.. or skip",
+            placeholder: "Enter additional income.. ",
           },
           createdAt: new Date(),
         };
@@ -797,7 +797,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
           content: {
             content: `${greeting}\n\nIf you have any deductions (such as mortgage interest, charitable contributions, or medical expenses), please enter the total amount. If not, you can skip this question.`,
             inputType: "number",
-            placeholder: "Enter number of dependents or skip",
+            placeholder: "Enter number of dependents ",
           },
           createdAt: new Date(),
         };
@@ -807,7 +807,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
           content: {
             content: `${greeting}\n\nHow many dependents do you have?`,
             inputType: "number",
-            placeholder: "Enter number of dependents or skip",
+            placeholder: "Enter number of dependents ",
           },
           createdAt: new Date(),
         };
@@ -817,7 +817,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
           content: {
             content: `${greeting}\n\nWhen did you start your current job? `,
             inputType: "date",
-            placeholder: "Select start date or skip",
+            placeholder: "Select start date ",
           },
           createdAt: new Date(),
         };
@@ -827,7 +827,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
           content: {
             content: `${greeting}\n\nPlease enter your work address :`,
             inputType: "text",
-            placeholder: "Enter work address or skip",
+            placeholder: "Enter work address ",
           },
           createdAt: new Date(),
         };
@@ -837,7 +837,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
           content: {
             content: `${greeting}\n\nPlease enter your home address :`,
             inputType: "text",
-            placeholder: "Enter home address or skip",
+            placeholder: "Enter home address ",
           },
           createdAt: new Date(),
         };
@@ -847,7 +847,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
       //     content: {
       //       content: `${greeting}\n\nWhat was your most recent pay date? `,
       //       inputType: "date",
-      //       placeholder: "Select most recent pay date or skip",
+      //       placeholder: "Select most recent pay date ",
 
       //     },
       //     createdAt: new Date(),
@@ -962,7 +962,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
             content:
               "If you have any additional income (e.g., freelance, investments, or rental), please enter the total amount. If not, you can skip this question.",
             inputType: "number",
-            placeholder: "Enter additional annual income or skip",
+            placeholder: "Enter additional annual income ",
           });
           break;
 
@@ -971,7 +971,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
             content:
               "If you have any deductions (such as mortgage interest, charitable contributions, or medical expenses), please enter the total amount. If not, you can skip this question.",
             inputType: "number",
-            placeholder: "Enter annual deductions or skip",
+            placeholder: "Enter annual deductions ",
           });
           break;
 
@@ -979,7 +979,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
           addMessage("bot", {
             content: "How many dependents do you have? ",
             inputType: "number",
-            placeholder: "Enter number of dependents or skip",
+            placeholder: "Enter number of dependents ",
           });
           break;
 
@@ -987,7 +987,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
           addMessage("bot", {
             content: "When did you start your current job? ",
             inputType: "date",
-            placeholder: "Select start date or skip",
+            placeholder: "Select start date ",
           });
           break;
 
@@ -995,7 +995,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
           addMessage("bot", {
             content: `Please enter your work address :`,
             inputType: "text",
-            placeholder: "Enter work address or skip",
+            placeholder: "Enter work address ",
           });
           break;
 
@@ -1003,7 +1003,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
           addMessage("bot", {
             content: `Please enter your home address :`,
             inputType: "text",
-            placeholder: "Enter home address or skip",
+            placeholder: "Enter home address ",
           });
           break;
 
@@ -1011,7 +1011,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         //   addMessage("bot", {
         //     content: "What was your most recent pay date? ",
         //     inputType: "date",
-        //     placeholder: "Select most recent pay date or skip",
+        //     placeholder: "Select most recent pay date ",
         //   });
         //   break;
       }
