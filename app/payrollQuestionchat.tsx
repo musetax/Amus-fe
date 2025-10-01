@@ -63,7 +63,10 @@ const TooltipIconButton: React.FC<{
     {children}
   </button>
 );
-
+interface payload{
+  payroll:TaxData
+  paycheck:paycheck
+}
 // Type definitions
 interface TaxData {
   income_type: string;
@@ -81,9 +84,23 @@ interface TaxData {
   work_address?: string;
   // most_recent_pay_date?: string;
 }
+interface paycheck{
+  income_type: string;
+  salary: string;
+  filing_status: string;
+  pay_frequency: string;
+  // current_withholding_per_paycheck: string;
+  spouse_income?: string;
+  dependents?: string;
+  home_address?: string;
+  work_address?: string
+  age?:number
+  pre_tax_deductions?:string
+  post_tax_deduction?:string
+}
 
 interface TaxChatbotProps {
-  onComplete?: (taxData: TaxData) => void;
+  onComplete?: (taxData: payload) => void;
   onContinueToChat?: () => void;
   image?: string;
   prefilledData?: Partial<TaxData>;
@@ -1296,7 +1313,8 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
     try {
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      const taxDataToSave: TaxData = {
+      const taxDataToSave: payload = {
+        payroll:{
         income_type: "salary",
         annual_salary: formData.annual_salary!,
         filing_status: formData.filing_status!,
@@ -1309,6 +1327,23 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         deductions: formData.deductions || undefined,
         dependents: formData.dependents || undefined,
         current_date: formData.current_date || undefined,
+        },
+        paycheck:{
+        income_type: "salary",
+        salary: formData.annual_salary!,
+        filing_status: formData.filing_status!,
+        pay_frequency: formData.pay_frequency!,
+        // current_withholding_per_paycheck: formData.current_withholding_per_paycheck!,
+        spouse_income: formData.spouse_income || undefined,
+        // NEW: Include optional fields ↓
+        // additional_income: formData.additional_income || undefined,
+        // deductions: formData.deductions || undefined,
+        dependents: formData.dependents || undefined,
+        // current_date: formData.current_date || undefined,
+        home_address:formData.home_address || undefined,
+        work_address:formData.work_address || undefined,
+        age:undefined
+        }
         // most_recent_pay_date: formData.most_recent_pay_date || undefined
       };
 
