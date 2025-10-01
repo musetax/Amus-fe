@@ -640,7 +640,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
   const getQuestionsToAsk = (): StepType[] => {
     const questions: StepType[] = [];
 
-    if (prefilledData.filing_status) {
+    if (!prefilledData.filing_status) {
       questions.push("filing_status");
     }
 
