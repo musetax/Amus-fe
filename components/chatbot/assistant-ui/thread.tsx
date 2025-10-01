@@ -337,45 +337,67 @@ const ThreadWelcome: FC = () => {
     <ThreadPrimitive.Empty>
       <div className="flex w-full max-w-[var(--thread-max-width)] flex-grow flex-col px-4">
         <div className="flex w-full flex-grow flex-col items-center justify-center">
-          <p className="mt-4 font-medium text-sm">
+          <div
+            className="mt-4 font-medium text-sm"
+            style={{
+              maxWidth: "500px",
+              marginLeft: "auto",
+              marginRight: "auto",
+            }}
+          >
             {/* Stuck with Taxes. No Worries Uncle Sam is Here */}
-            "Hi, I’m Uncle Sam—your personal tax helper! 🧾 Have questions about
-            your taxes, want to check your refund, or need to update your
-            profile after a life event? Don’t worry—Uncle Sam is here to help!"
-          </p>
+            <h4
+              style={{
+                fontSize: "16px",
+                fontWeight: 400,
+                textAlign: "center",
+                marginBottom: "8px",
+              }}
+            >
+              Hi, I’m Uncle Sam your personal tax helper!
+            </h4>
+            <p
+              style={{ fontSize: "14px", fontWeight: 400, textAlign: "center" }}
+              className="mt-2 text-center text-sm text-muted-foreground max-w-md"
+            >
+              Have questions about your taxes, want to check your refund, or
+              need to update your profile after a life event? Don’t worry Uncle
+              Sam is here to help!
+            </p>
+          </div>
         </div>
-        <ThreadWelcomeSuggestions />
+        {/* <ThreadWelcomeSuggestions /> */}
       </div>
     </ThreadPrimitive.Empty>
   );
 };
 
-const ThreadWelcomeSuggestions: FC = () => {
-  return (
-    <div className="mt-3 flex w-full items-stretch justify-center gap-4">
-      <ThreadPrimitive.Suggestion
-        className="hover:bg-muted/80 flex  max-w-sm grow basis-0 flex-col items-center justify-center rounded-lg border p-3 transition-colors ease-in"
-        prompt="How can I claim my tax refund?"
-        method="replace"
-        autoSend
-      >
-        <span className="line-clamp-2 text-ellipsis text-sm font-medium">
-          How can I claim my tax refund?
-        </span>
-      </ThreadPrimitive.Suggestion>
-      <ThreadPrimitive.Suggestion
-        className="hover:bg-muted/80 flex max-w-sm grow basis-0 flex-col items-center justify-center rounded-lg border p-3 transition-colors ease-in"
-        prompt="What is a W-4 Form?"
-        method="replace"
-        autoSend
-      >
-        <span className="line-clamp-2 text-ellipsis text-sm font-medium">
-          What is a W-4 Form?
-        </span>
-      </ThreadPrimitive.Suggestion>
-    </div>
-  );
-};
+// const ThreadWelcomeSuggestions: FC = () => {
+//   return (
+//     <div className="mt-3 flex w-full items-stretch justify-center gap-4">
+//       <ThreadPrimitive.Suggestion
+//         className="hover:bg-muted/80 flex  max-w-sm grow basis-0 flex-col items-center justify-center rounded-lg border p-3 transition-colors ease-in"
+//         prompt="How can I claim my tax refund?"
+//         method="replace"
+//         autoSend
+//       >
+//         <span className="line-clamp-2 text-ellipsis text-sm font-medium">
+//           How can I claim my tax refund?
+//         </span>
+//       </ThreadPrimitive.Suggestion>
+//       <ThreadPrimitive.Suggestion
+//         className="hover:bg-muted/80 flex max-w-sm grow basis-0 flex-col items-center justify-center rounded-lg border p-3 transition-colors ease-in"
+//         prompt="What is a W-4 Form?"
+//         method="replace"
+//         autoSend
+//       >
+//         <span className="line-clamp-2 text-ellipsis text-sm font-medium">
+//           What is a W-4 Form?
+//         </span>
+//       </ThreadPrimitive.Suggestion>
+//     </div>
+//   );
+// };
 
 const formatTime = (date: Date | string | number) => {
   const d = new Date(date);
@@ -412,7 +434,7 @@ const Composer: FC = () => {
         ref={composerRef}
         rows={1}
         autoFocus
-        placeholder="Write Your Message..."
+        placeholder="Ask Your Query..."
         className="placeholder:text-muted-foreground custom_input flex-grow resize-none border-none bg-transparent px-2 py-4 text-sm outline-none focus:ring-0 disabled:cursor-not-allowed"
       />
       <ComposerAction composerRef={composerRef} />

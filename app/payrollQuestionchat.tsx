@@ -805,7 +805,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         return {
           type: "bot",
           content: {
-            content: `${greeting}\n\nHow many dependents do you have? (Optional)`,
+            content: `${greeting}\n\nHow many dependents do you have?`,
             inputType: "number",
             placeholder: "Enter number of dependents or skip",
           },
@@ -815,7 +815,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         return {
           type: "bot",
           content: {
-            content: `${greeting}\n\nWhen did you start your current job? (Optional)`,
+            content: `${greeting}\n\nWhen did you start your current job? `,
             inputType: "date",
             placeholder: "Select start date or skip",
           },
@@ -825,7 +825,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         return {
           type: "bot",
           content: {
-            content: `${greeting}\n\nPlease enter your work address (Optional):`,
+            content: `${greeting}\n\nPlease enter your work address :`,
             inputType: "text",
             placeholder: "Enter work address or skip",
           },
@@ -835,7 +835,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         return {
           type: "bot",
           content: {
-            content: `${greeting}\n\nPlease enter your home address (Optional):`,
+            content: `${greeting}\n\nPlease enter your home address :`,
             inputType: "text",
             placeholder: "Enter home address or skip",
           },
@@ -845,7 +845,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
       //   return {
       //     type: 'bot',
       //     content: {
-      //       content: `${greeting}\n\nWhat was your most recent pay date? (Optional)`,
+      //       content: `${greeting}\n\nWhat was your most recent pay date? `,
       //       inputType: "date",
       //       placeholder: "Select most recent pay date or skip",
 
@@ -977,7 +977,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
 
         case "dependents":
           addMessage("bot", {
-            content: "How many dependents do you have? (Optional)",
+            content: "How many dependents do you have? ",
             inputType: "number",
             placeholder: "Enter number of dependents or skip",
           });
@@ -985,7 +985,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
 
         case "current_date":
           addMessage("bot", {
-            content: "When did you start your current job? (Optional)",
+            content: "When did you start your current job? ",
             inputType: "date",
             placeholder: "Select start date or skip",
           });
@@ -993,7 +993,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
 
         case "work_address":
           addMessage("bot", {
-            content: `Please enter your work address (Optional):`,
+            content: `Please enter your work address :`,
             inputType: "text",
             placeholder: "Enter work address or skip",
           });
@@ -1001,7 +1001,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
 
         case "home_address":
           addMessage("bot", {
-            content: `Please enter your home address (Optional):`,
+            content: `Please enter your home address :`,
             inputType: "text",
             placeholder: "Enter home address or skip",
           });
@@ -1009,7 +1009,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
 
         // case "most_recent_pay_date":
         //   addMessage("bot", {
-        //     content: "What was your most recent pay date? (Optional)",
+        //     content: "What was your most recent pay date? ",
         //     inputType: "date",
         //     placeholder: "Select most recent pay date or skip",
         //   });
@@ -1474,10 +1474,14 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
                   value={
                     formData.filing_status === "married_joint"
                       ? "Married"
-                      : formData.filing_status || ""
+                      : formData.filing_status
+                      ? formData.filing_status.charAt(0).toUpperCase() +
+                        formData.filing_status.slice(1)
+                      : ""
                   }
                   color="bg-gradient-to-r from-purple-600 to-purple-400"
                 />
+
                 <SummaryCard
                   icon={DollarSign}
                   title="Annual Salary"
@@ -1495,9 +1499,15 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
                 <SummaryCard
                   icon={Calendar}
                   title="Pay Frequency"
-                  value={formData.pay_frequency || ""}
+                  value={
+                    formData.pay_frequency
+                      ? formData.pay_frequency.charAt(0).toUpperCase() +
+                        formData.pay_frequency.slice(1)
+                      : ""
+                  }
                   color="bg-gradient-to-r from-green-600 to-green-400"
                 />
+
                 <SummaryCard
                   icon={DollarSign}
                   title="Current Withholding"
