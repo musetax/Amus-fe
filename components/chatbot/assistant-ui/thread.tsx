@@ -33,7 +33,7 @@ import { URLDisplay } from "./url-display";
 import { Tooltip, TooltipTrigger } from "../ui/tooltip";
 import TaxChatbot from "../../../app/payrollQuestionchat";
 import { ErrorBanner } from "./error-ui";
-import Image from "next/image";
+// import Image from "next/image";
 
 export const CHAT_HISTORY_KEY = "chat_history";
 
@@ -338,7 +338,10 @@ const ThreadWelcome: FC = () => {
       <div className="flex w-full max-w-[var(--thread-max-width)] flex-grow flex-col px-4">
         <div className="flex w-full flex-grow flex-col items-center justify-center">
           <p className="mt-4 font-medium text-sm">
-            Stuck with Taxes. No Worries Uncle Sam is Here
+            {/* Stuck with Taxes. No Worries Uncle Sam is Here */}
+            "Hi, I’m Uncle Sam—your personal tax helper! 🧾 Have questions about
+            your taxes, want to check your refund, or need to update your
+            profile after a life event? Don’t worry—Uncle Sam is here to help!"
           </p>
         </div>
         <ThreadWelcomeSuggestions />

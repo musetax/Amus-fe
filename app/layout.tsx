@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 // import "./fonts/css/general-sans.css";
 import "./chatbot.css";
 import "./globals.css";
-import localFont from "next/font/local";
+
 import { ToastContainer } from "react-toastify";
 
 // const generalSans = localFont({

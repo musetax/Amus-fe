@@ -7,19 +7,19 @@ import React, { useState, useEffect, useRef } from "react";
 //   </svg>
 // );
 
-const CopyIcon: React.FC<{ size?: number }> = ({ size = 16 }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-  >
-    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-  </svg>
-);
+// const CopyIcon: React.FC<{ size?: number }> = ({ size = 16 }) => (
+//   <svg
+//     width={size}
+//     height={size}
+//     viewBox="0 0 24 24"
+//     fill="none"
+//     stroke="currentColor"
+//     strokeWidth="2"
+//   >
+//     <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+//     <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+//   </svg>
+// );
 
 const SendHorizontalIcon: React.FC = () => (
   <svg
@@ -504,6 +504,9 @@ const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
                       }
                       onSubmit={onInputSubmit}
                     />
+                    {error && (
+                      <div className="mt-2 text-red-600 text-sm">{error}</div>
+                    )}
                     <div className="flex items-center justify-center mt-1">
                       {/* NEW: Skip button for optional fields ↓ */}
                       {(currentStep === "additional_income" ||
@@ -606,8 +609,6 @@ const CheckCircle: React.FC<{ className?: string }> = ({ className }) => (
   <div className={`text-xl ${className}`}>✅</div>
 );
 const Home: React.FC = () => <div className="text-white text-lg">🏠</div>;
-
-const RotateCcw: React.FC = () => <div className="text-base">🔄</div>;
 
 const SummaryCard: React.FC<SummaryCardProps> = ({
   icon: Icon,
@@ -1281,32 +1282,32 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
     }
   };
 
-  const resetChat = (): void => {
-    const newQuestionsToAsk = getQuestionsToAsk();
-    setMessages([generateInitialMessage()]);
-    setCurrentStep(
-      newQuestionsToAsk.length > 0 ? newQuestionsToAsk[0] : "complete"
-    );
-    setCurrentQuestionIndex(0);
-    setFormData({
-      filing_status: prefilledData.filing_status || null,
-      annual_salary: prefilledData.annual_salary || null,
-      spouse_income: prefilledData.spouse_income || null,
-      pay_frequency: prefilledData.pay_frequency || null,
-      current_withholding_per_paycheck:
-        prefilledData.current_withholding_per_paycheck || null,
-      // NEW: Reset optional fields ↓
-      additional_income: null,
-      deductions: null,
-      dependents: null,
-      current_date: null,
-      work_address: prefilledData.work_address || null,
-      home_address: prefilledData.home_address || null,
-      // most_recent_pay_date: null,
-    });
-    setIsSaving(false);
-    setSaveError(null);
-  };
+  // const resetChat = (): void => {
+  //   const newQuestionsToAsk = getQuestionsToAsk();
+  //   setMessages([generateInitialMessage()]);
+  //   setCurrentStep(
+  //     newQuestionsToAsk.length > 0 ? newQuestionsToAsk[0] : "complete"
+  //   );
+  //   setCurrentQuestionIndex(0);
+  //   setFormData({
+  //     filing_status: prefilledData.filing_status || null,
+  //     annual_salary: prefilledData.annual_salary || null,
+  //     spouse_income: prefilledData.spouse_income || null,
+  //     pay_frequency: prefilledData.pay_frequency || null,
+  //     current_withholding_per_paycheck:
+  //       prefilledData.current_withholding_per_paycheck || null,
+  //     // NEW: Reset optional fields ↓
+  //     additional_income: null,
+  //     deductions: null,
+  //     dependents: null,
+  //     current_date: null,
+  //     work_address: prefilledData.work_address || null,
+  //     home_address: prefilledData.home_address || null,
+  //     // most_recent_pay_date: null,
+  //   });
+  //   setIsSaving(false);
+  //   setSaveError(null);
+  // };
 
   const handleSaveTaxes = async (): Promise<void> => {
     setIsSaving(true);
