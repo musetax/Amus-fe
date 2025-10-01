@@ -60,6 +60,8 @@ interface TaxData {
   deductions?: string;
   dependents?: string;
   current_date?: string;
+  home_address?: string;
+  work_address?: string
   // most_recent_pay_date?: string;
 }
 
@@ -98,6 +100,8 @@ interface FormData {
   deductions: string | null;
   dependents: string | null;
   current_date: string | null;
+  home_address: string | null;
+  work_address: string | null
   // most_recent_pay_date: string | null;
 }
 
@@ -130,7 +134,7 @@ interface SummaryCardProps {
 }
 
 // type StepType = "filing_status" | "annual_salary" | "spouse_income" | "pay_frequency" | "current_withholding" | "complete" | "saved";
-type StepType = "filing_status" | "annual_salary" | "spouse_income" | "pay_frequency" | "current_withholding" | "additional_income" | "deductions" | "dependents" | "current_date" | "complete" | "saved";
+type StepType = "filing_status" | "annual_salary" | "spouse_income" | "pay_frequency" | "current_withholding" | "additional_income" | "deductions" | "dependents" | "current_date" | "work_address" | "home_address" | "complete" | "saved";
 
 // Helper function to format time
 const formatTime = (date: Date | number): string => {
@@ -329,7 +333,9 @@ const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
                 {(currentStep === "additional_income" ||
                   currentStep === "deductions" ||
                   currentStep === "dependents" ||
-                  currentStep === "current_date"
+                  currentStep === "current_date" ||
+                  currentStep === "work_address" ||
+                  currentStep === "home_address"
                   // ||
                   // currentStep === "most_recent_pay_date"
                 )
@@ -418,6 +424,8 @@ const User: React.FC = () => <div className="text-white text-lg">👤</div>;
 const Heart: React.FC = () => <div className="text-white text-lg">💕</div>;
 const Calendar: React.FC = () => <div className="text-white text-lg">📅</div>;
 const CheckCircle: React.FC<{ className?: string }> = ({ className }) => <div className={`text-xl ${className}`}>✅</div>;
+const Home: React.FC = () => <div className="text-white text-lg">🏠</div>;
+
 const RotateCcw: React.FC = () => <div className="text-base">🔄</div>;
 
 const SummaryCard: React.FC<SummaryCardProps> = ({ icon: Icon, title, value, color }) => (
@@ -469,6 +477,8 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
     questions.push("deductions");
     questions.push("dependents");
     questions.push("current_date");
+    questions.push("work_address");
+    questions.push("home_address")
     // questions.push("most_recent_pay_date");
 
     return questions;
@@ -488,6 +498,8 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
     deductions: null,
     dependents: null,
     current_date: null,
+    home_address: null,
+    work_address: null
     // most_recent_pay_date: null,
   });
 
@@ -610,6 +622,26 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
           createdAt: new Date(),
 
         }
+      case "work_address":
+        return {
+          type: 'bot',
+          content: {
+            content: `${greeting}\n\nPlease enter your work address (Optional):`,
+            inputType: "text",
+            placeholder: "Enter work address or skip",
+          },
+          createdAt: new Date(),
+        };
+      case "home_address":
+        return {
+          type: 'bot',
+          content: {
+            content: `${greeting}\n\nPlease enter your home address (Optional):`,
+            inputType: "text",
+            placeholder: "Enter home address or skip",
+          },
+          createdAt: new Date(),
+        };
       // case "most_recent_pay_date":
       //   return {
       //     type: 'bot',
@@ -738,6 +770,24 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
             placeholder: "Select start date or skip",
           });
           break;
+
+        case "work_address":
+          addMessage("bot", {
+            content: `Please enter your work address (Optional):`,
+            inputType: "text",
+            placeholder: "Enter work address or skip",
+          })
+          break;
+
+        case "home_address":
+          addMessage("bot", {
+
+            content: `Please enter your home address (Optional):`,
+            inputType: "text",
+            placeholder: "Enter home address or skip",
+          })
+          break;
+
 
         // case "most_recent_pay_date":
         //   addMessage("bot", {
@@ -900,6 +950,24 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         moveToNextQuestion();
         break;
 
+      case "work_address":
+        setFormData((prev) => ({
+          ...prev,
+          work_address: isSkipped ? "" : value.trim(),
+        }));
+        addMessage("user", isSkipped ? "I'll skip this question" : `My work address is: ${value.trim()}`);
+        moveToNextQuestion();
+        break;
+
+      case "home_address":
+        setFormData((prev) => ({
+          ...prev,
+          home_address: isSkipped ? "" : value.trim(),
+        }));
+        addMessage("user", isSkipped ? "I'll skip this question" : `My home address is: ${value.trim()}`);
+        moveToNextQuestion();
+        break;
+
       // case "most_recent_pay_date":
       //   if (!isSkipped) {
       //     const dateValue = new Date(value);
@@ -940,6 +1008,8 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
       deductions: null,
       dependents: null,
       current_date: null,
+      work_address: prefilledData.work_address || null,
+      home_address: prefilledData.home_address || null
       // most_recent_pay_date: null,
     });
     setIsSaving(false);
@@ -1135,6 +1205,22 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
                   title="Job Start Date"
                   value={formData.current_date}
                   color="bg-gradient-to-r from-cyan-600 to-cyan-400"
+                />
+              )}
+              {formData.work_address && (
+                <SummaryCard
+                  icon={Home} // You can use any relevant icon
+                  title="Work Address"
+                  value={formData.work_address}
+                  color="bg-gradient-to-r from-lime-600 to-lime-400"
+                />
+              )}
+              {formData.home_address && (
+                <SummaryCard
+                  icon={Home} // You can use any relevant icon
+                  title="Home Address"
+                  value={formData.home_address}
+                  color="bg-gradient-to-r from-yellow-600 to-yellow-400"
                 />
               )}
               {/* {formData.most_recent_pay_date && (
