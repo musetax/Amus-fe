@@ -88,19 +88,22 @@ interface TaxChatbotProps {
   image?: string;
   prefilledData?: Partial<TaxData>;
 }
-
+type Option = {
+  label: string; // what the user sees
+  value: string; // what is sent to the backend
+};
 interface MessageContent {
   content?: string;
   inputType?: string;
   placeholder?: string;
   selectType?: string;
-  options?: string[];
+  options?: Option[];
 }
 
 interface Message {
   type: "bot" | "user";
   content: string | MessageContent;
-  options?: string[];
+  options?: Option[];
   inputType?: string;
   placeholder?: string;
   createdAt: Date;
@@ -184,7 +187,7 @@ const TaxUserMessage: React.FC<TaxUserMessageProps> = ({ message, image }) => {
   const time = formatTime(message.createdAt || Date.now());
 
   return (
-    <div className="grid auto-rows-auto grid-cols-[minmax(72px,1fr)_auto] gap-y-2 [&:where(>*)]:col-start-2 w-full max-w-[var(--thread-max-width)] py-4">
+    <div className="grid auto-rows-auto grid-cols-[minmax(72px,1fr)_auto] gap-y-2 [&:where(>*)]:col-start-2 w-full max-w-[var(--thread-max-width)] py-2">
       <div style={{ minWidth: "70px" }}>
         <div className="flex flex-col items-end col-start-1 row-start-2 mr-3 mt-2.5">
           {/* <TooltipIconButton tooltip="Edit" variant="ghost" size="sm">
@@ -404,14 +407,17 @@ const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
               </pre>
 
               {message.options && isLast && !isTyping && (
-                <div className="mt-4 space-y-2">
+                <div
+                  className="mt-4 space-y-2"
+                  style={{ display: "flex", alignItems: "center", gap: "10px" }}
+                >
                   {message.options.map((option) => (
                     <button
-                      key={option}
-                      onClick={() => onOptionSelect(option)}
-                      className="block w-full p-3 text-left text-sm bg-white text-gray-900 rounded-2xl hover:bg-gray-50 transition-colors font-medium border border-gray-200"
+                      key={option.value}
+                      onClick={() => onOptionSelect(option.value)}
+                      className="block py-2  px-4 text-left text-sm bg-white text-gray-900 rounded-2xl hover:bg-gray-50 transition-colors font-medium border border-gray-200"
                     >
-                      {option}
+                      {option.label}
                     </button>
                   ))}
                 </div>
@@ -446,8 +452,8 @@ const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
                       </option>
                       {(message.content as MessageContent).options?.map(
                         (option) => (
-                          <option key={option} value={option}>
-                            {option}
+                          <option key={option.value} value={option.value}>
+                            {option.label}
                           </option>
                         )
                       )}
@@ -460,6 +466,50 @@ const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
               >
                 {time}
               </span>
+              {typeof message.content === "object" &&
+                (message.content as MessageContent).inputType &&
+                isLast &&
+                currentStep !== "filing_status" &&
+                currentStep !== "complete" &&
+                !isTyping && (
+                  <div
+                    className=" space-y-2"
+                    style={{
+                      marginTop: "10px",
+                      width: "100%",
+                      padding: "0 0px",
+                    }}
+                  >
+                    <TaxInputField
+                      type={(message.content as MessageContent).inputType!}
+                      placeholder={
+                        (message.content as MessageContent).placeholder!
+                      }
+                      onSubmit={onInputSubmit}
+                    />
+                    <div className="flex items-center justify-center mt-1">
+                      {/* NEW: Skip button for optional fields ↓ */}
+                      {(currentStep === "additional_income" ||
+                        currentStep === "deductions" ||
+                        currentStep === "dependents" ||
+                        currentStep === "start_pay_date" ||
+                        currentStep === "most_recent_pay_date") && (
+                        <button
+                          onClick={() => onInputSubmit("skip")}
+                          className=" p-0 font-medium"
+                          style={{
+                            background: "transparent",
+                            color: "#518DE7",
+                            textDecoration: "underline",
+                            fontSize: "14px",
+                          }}
+                        >
+                          Skip this question
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
             </div>
             {/* 
         <div className="text-muted-foreground flex gap-1 col-start-3 row-start-2 -ml-1">
@@ -471,44 +521,6 @@ const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
           </div>
         </div>
       </div>
-      {typeof message.content === "object" &&
-        (message.content as MessageContent).inputType &&
-        isLast &&
-        currentStep !== "filing_status" &&
-        currentStep !== "complete" &&
-        !isTyping && (
-          <div
-            className=" space-y-2"
-            style={{ marginTop: "10px", width: "100%", padding: "0 16px" }}
-          >
-            <TaxInputField
-              type={(message.content as MessageContent).inputType!}
-              placeholder={(message.content as MessageContent).placeholder!}
-              onSubmit={onInputSubmit}
-            />
-            <div className="flex items-center justify-center mt-1">
-              {/* NEW: Skip button for optional fields ↓ */}
-              {(currentStep === "additional_income" ||
-                currentStep === "deductions" ||
-                currentStep === "dependents" ||
-                currentStep === "start_pay_date" ||
-                currentStep === "most_recent_pay_date") && (
-                <button
-                  onClick={() => onInputSubmit("skip")}
-                  className=" p-0 font-medium"
-                  style={{
-                    background: "transparent",
-                    color: "#518DE7",
-                    textDecoration: "underline",
-                    fontSize: "14px",
-                  }}
-                >
-                  Skip this question
-                </button>
-              )}
-            </div>
-          </div>
-        )}
     </>
   );
 };
@@ -609,7 +621,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
   const getQuestionsToAsk = (): StepType[] => {
     const questions: StepType[] = [];
 
-    if (!prefilledData.filing_status) {
+    if (prefilledData.filing_status) {
       questions.push("filing_status");
     }
 
@@ -619,7 +631,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
 
     if (
       (prefilledData.filing_status === "Married" ||
-        prefilledData.filing_status === "married") &&
+        prefilledData.filing_status === "married_joint") &&
       !prefilledData.spouse_income
     ) {
       questions.push("spouse_income");
@@ -696,7 +708,10 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         return {
           type: "bot",
           content: `${greeting}\n\nLet's start with your filing status:`,
-          options: ["Single", "Married"],
+          options: [
+            { label: "Single", value: "single" },
+            { label: "Married", value: "married_joint" },
+          ],
           createdAt: new Date(),
         };
       case "annual_salary":
@@ -725,11 +740,17 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
           content: {
             content: `${greeting}\n\nI need to know how often you get paid:`,
             selectType: "dropdown",
-            options: ["Weekly", "Bi-weekly", "Semi-monthly", "Monthly"],
+            options: [
+              { label: "Weekly", value: "weekly" },
+              { label: "Bi-weekly", value: "bi-weekly" },
+              { label: "Semi-monthly", value: "semi-monthly" },
+              { label: "Monthly", value: "monthly" },
+            ],
             placeholder: "Select your pay frequency...",
           },
           createdAt: new Date(),
         };
+
       case "current_withholding":
         return {
           type: "bot",
@@ -898,7 +919,12 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
           addMessage("bot", {
             content: "Great! Now I need to know how often you get paid.",
             selectType: "dropdown",
-            options: ["Weekly", "Bi-weekly", "Semi-monthly", "Monthly"],
+            options: [
+              { label: "Weekly", value: "weekly" },
+              { label: "Bi-weekly", value: "bi-weekly" },
+              { label: "Semi-monthly", value: "semi-monthly" },
+              { label: "Monthly", value: "monthly" },
+            ],
             placeholder: "Select your pay frequency...",
           });
           break;
@@ -974,7 +1000,15 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
 
   const handleFilingStatusSelect = (status: string): void => {
     setFormData((prev) => ({ ...prev, filing_status: status }));
-    addMessage("user", `I am ${status.toLowerCase()}`);
+
+    addMessage(
+      "user",
+      `I am ${
+        status.toLowerCase() === "married_joint"
+          ? "Married"
+          : status.toLowerCase()
+      }`
+    );
     moveToNextQuestion();
   };
   const [error, setError] = useState<string>("");
@@ -1401,7 +1435,11 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
               <SummaryCard
                 icon={User}
                 title="Filing Status"
-                value={formData.filing_status || ""}
+                value={
+                  formData.filing_status === "married_joint"
+                    ? "Married"
+                    : formData.filing_status || ""
+                }
                 color="bg-gradient-to-r from-purple-600 to-purple-400"
               />
               <SummaryCard
