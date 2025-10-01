@@ -63,9 +63,9 @@ const TooltipIconButton: React.FC<{
     {children}
   </button>
 );
-interface payload{
-  payroll:TaxData
-  paycheck:paycheck
+interface payload {
+  payroll: TaxData;
+  paycheck: paycheck;
 }
 // Type definitions
 interface TaxData {
@@ -84,7 +84,7 @@ interface TaxData {
   work_address?: string;
   // most_recent_pay_date?: string;
 }
-interface paycheck{
+interface paycheck {
   income_type: string;
   salary: string;
   filing_status: string;
@@ -93,10 +93,10 @@ interface paycheck{
   spouse_income?: string;
   dependents?: string;
   home_address?: string;
-  work_address?: string
-  age?:number
-  pre_tax_deductions?:string
-  post_tax_deduction?:string
+  work_address?: string;
+  age?: number;
+  pre_tax_deductions?: string;
+  post_tax_deduction?: string;
 }
 
 interface TaxChatbotProps {
@@ -510,7 +510,9 @@ const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
                         currentStep === "deductions" ||
                         currentStep === "dependents" ||
                         currentStep === "start_pay_date" ||
-                        currentStep === "most_recent_pay_date") && (
+                        currentStep === "work_address" ||
+                        currentStep === "home_address" ||
+                        currentStep === "current_date") && (
                         <button
                           onClick={() => onInputSubmit("skip")}
                           className=" p-0 font-medium"
@@ -613,8 +615,8 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
   value,
   color,
 }) => (
-  <div className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm">
-    <div className="flex items-center gap-3">
+  <div className="bg-white border border-gray-200 rounded-2xl px-4 py-2 shadow-sm">
+    <div className="flex items-center gap-2">
       <div
         className={`w-10 h-10 rounded-2xl flex items-center justify-center ${color}`}
       >
@@ -622,7 +624,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
       </div>
       <div>
         <p className="text-xs text-gray-600 uppercase tracking-wide">{title}</p>
-        <p className="text-lg font-bold text-gray-900">{value}</p>
+        <p className="text-sm font-semibold text-gray-900">{value}</p>
       </div>
     </div>
   </div>
@@ -1314,36 +1316,36 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       const taxDataToSave: payload = {
-        payroll:{
-        income_type: "salary",
-        annual_salary: formData.annual_salary!,
-        filing_status: formData.filing_status!,
-        pay_frequency: formData.pay_frequency!,
-        current_withholding_per_paycheck:
-          formData.current_withholding_per_paycheck!,
-        spouse_income: formData.spouse_income || undefined,
-        // NEW: Include optional fields ↓
-        additional_income: formData.additional_income || undefined,
-        deductions: formData.deductions || undefined,
-        dependents: formData.dependents || undefined,
-        current_date: formData.current_date || undefined,
+        payroll: {
+          income_type: "salary",
+          annual_salary: formData.annual_salary!,
+          filing_status: formData.filing_status!,
+          pay_frequency: formData.pay_frequency!,
+          current_withholding_per_paycheck:
+            formData.current_withholding_per_paycheck!,
+          spouse_income: formData.spouse_income || undefined,
+          // NEW: Include optional fields ↓
+          additional_income: formData.additional_income || undefined,
+          deductions: formData.deductions || undefined,
+          dependents: formData.dependents || undefined,
+          current_date: formData.current_date || undefined,
         },
-        paycheck:{
-        income_type: "salary",
-        salary: formData.annual_salary!,
-        filing_status: formData.filing_status!,
-        pay_frequency: formData.pay_frequency!,
-        // current_withholding_per_paycheck: formData.current_withholding_per_paycheck!,
-        spouse_income: formData.spouse_income || undefined,
-        // NEW: Include optional fields ↓
-        // additional_income: formData.additional_income || undefined,
-        // deductions: formData.deductions || undefined,
-        dependents: formData.dependents || undefined,
-        // current_date: formData.current_date || undefined,
-        home_address:formData.home_address || undefined,
-        work_address:formData.work_address || undefined,
-        age:undefined
-        }
+        paycheck: {
+          income_type: "salary",
+          salary: formData.annual_salary!,
+          filing_status: formData.filing_status!,
+          pay_frequency: formData.pay_frequency!,
+          // current_withholding_per_paycheck: formData.current_withholding_per_paycheck!,
+          spouse_income: formData.spouse_income || undefined,
+          // NEW: Include optional fields ↓
+          // additional_income: formData.additional_income || undefined,
+          // deductions: formData.deductions || undefined,
+          dependents: formData.dependents || undefined,
+          // current_date: formData.current_date || undefined,
+          home_address: formData.home_address || undefined,
+          work_address: formData.work_address || undefined,
+          age: undefined,
+        },
         // most_recent_pay_date: formData.most_recent_pay_date || undefined
       };
 
@@ -1448,112 +1450,110 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         )}
 
         <div ref={messagesEndRef} />
-        <div className="min-h-8 flex-grow" />
-      </div>
 
-      {currentStep === "complete" && (
-        <div className=" bg-[#255be305] bottom-0 px-3 pt-3 flex w-full max-w-[var(--thread-max-width)] flex-col items-center justify-end rounded-t-lg pb-2">
-          <div className="w-full bg-white border border-gray-200 rounded-2xl p-6 mb-4">
-            <div
-              className="flex items-center gap-3 mb-6"
-              style={{ marginBottom: "20px" }}
-            >
-              <CheckCircle className="text-green-600" />
-              <h3 className="text-lg font-bold text-gray-900">
-                {questionsToAsk.length === 0
-                  ? "Tax Information Already Complete!"
-                  : "Information Collection Complete!"}
-              </h3>
-            </div>
+        {currentStep === "complete" && (
+          <div className="  bottom-0 px-3 pt-3 flex w-full max-w-[var(--thread-max-width)] flex-col items-center justify-end rounded-t-lg pb-2">
+            <div className="w-full bg-white border border-gray-200 rounded-2xl p-3 mb-4">
+              <div
+                className="flex items-center gap-3 mb-6"
+                style={{ marginBottom: "20px" }}
+              >
+                <CheckCircle className="text-green-600 text-base" />
+                <h3 className="text-base font-semibold text-gray-900">
+                  {questionsToAsk.length === 0
+                    ? "Tax Information Already Complete!"
+                    : "Information Collection Complete!"}
+                </h3>
+              </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              <SummaryCard
-                icon={User}
-                title="Filing Status"
-                value={
-                  formData.filing_status === "married_joint"
-                    ? "Married"
-                    : formData.filing_status || ""
-                }
-                color="bg-gradient-to-r from-purple-600 to-purple-400"
-              />
-              <SummaryCard
-                icon={DollarSign}
-                title="Annual Salary"
-                value={`$${formData.annual_salary?.toLocaleString()}`}
-                color="bg-gradient-to-r from-orange-600 to-orange-400"
-              />
-              {formData.spouse_income && (
-                <SummaryCard
-                  icon={Heart}
-                  title="Spouse Income"
-                  value={`$${formData.spouse_income?.toLocaleString()}`}
-                  color="bg-gradient-to-r from-pink-600 to-pink-400"
-                />
-              )}
-              <SummaryCard
-                icon={Calendar}
-                title="Pay Frequency"
-                value={formData.pay_frequency || ""}
-                color="bg-gradient-to-r from-green-600 to-green-400"
-              />
-              <SummaryCard
-                icon={DollarSign}
-                title="Current Withholding"
-                value={`$${formData.current_withholding_per_paycheck} per paycheck`}
-                color="bg-gradient-to-r from-blue-600 to-blue-400"
-              />
-
-              {/* NEW: Optional fields only show if they have values ↓ */}
-              {formData.additional_income && (
-                <SummaryCard
-                  icon={DollarSign}
-                  title="Additional Income"
-                  value={`$${formData.additional_income?.toLocaleString()}`}
-                  color="bg-gradient-to-r from-teal-600 to-teal-400"
-                />
-              )}
-              {formData.deductions && (
-                <SummaryCard
-                  icon={DollarSign}
-                  title="Deductions"
-                  value={`$${formData.deductions?.toLocaleString()}`}
-                  color="bg-gradient-to-r from-indigo-600 to-indigo-400"
-                />
-              )}
-              {formData.dependents && (
+              <div className="flex items-center flex-wrap gap-2 mb-6">
                 <SummaryCard
                   icon={User}
-                  title="Dependents"
-                  value={formData.dependents}
-                  color="bg-gradient-to-r from-rose-600 to-rose-400"
+                  title="Filing Status"
+                  value={
+                    formData.filing_status === "married_joint"
+                      ? "Married"
+                      : formData.filing_status || ""
+                  }
+                  color="bg-gradient-to-r from-purple-600 to-purple-400"
                 />
-              )}
-              {formData.current_date && (
+                <SummaryCard
+                  icon={DollarSign}
+                  title="Annual Salary"
+                  value={`$${formData.annual_salary?.toLocaleString()}`}
+                  color="bg-gradient-to-r from-orange-600 to-orange-400"
+                />
+                {formData.spouse_income && (
+                  <SummaryCard
+                    icon={Heart}
+                    title="Spouse Income"
+                    value={`$${formData.spouse_income?.toLocaleString()}`}
+                    color="bg-gradient-to-r from-pink-600 to-pink-400"
+                  />
+                )}
                 <SummaryCard
                   icon={Calendar}
-                  title="Job Start Date"
-                  value={formData.current_date}
-                  color="bg-gradient-to-r from-cyan-600 to-cyan-400"
+                  title="Pay Frequency"
+                  value={formData.pay_frequency || ""}
+                  color="bg-gradient-to-r from-green-600 to-green-400"
                 />
-              )}
-              {formData.work_address && (
                 <SummaryCard
-                  icon={Home} // You can use any relevant icon
-                  title="Work Address"
-                  value={formData.work_address}
-                  color="bg-gradient-to-r from-lime-600 to-lime-400"
+                  icon={DollarSign}
+                  title="Current Withholding"
+                  value={`$${formData.current_withholding_per_paycheck} per paycheck`}
+                  color="bg-gradient-to-r from-blue-600 to-blue-400"
                 />
-              )}
-              {formData.home_address && (
-                <SummaryCard
-                  icon={Home} // You can use any relevant icon
-                  title="Home Address"
-                  value={formData.home_address}
-                  color="bg-gradient-to-r from-yellow-600 to-yellow-400"
-                />
-              )}
-              {/* {formData.most_recent_pay_date && (
+
+                {/* NEW: Optional fields only show if they have values ↓ */}
+                {formData.additional_income && (
+                  <SummaryCard
+                    icon={DollarSign}
+                    title="Additional Income"
+                    value={`$${formData.additional_income?.toLocaleString()}`}
+                    color="bg-gradient-to-r from-teal-600 to-teal-400"
+                  />
+                )}
+                {formData.deductions && (
+                  <SummaryCard
+                    icon={DollarSign}
+                    title="Deductions"
+                    value={`$${formData.deductions?.toLocaleString()}`}
+                    color="bg-gradient-to-r from-indigo-600 to-indigo-400"
+                  />
+                )}
+                {formData.dependents && (
+                  <SummaryCard
+                    icon={User}
+                    title="Dependents"
+                    value={formData.dependents}
+                    color="bg-gradient-to-r from-rose-600 to-rose-400"
+                  />
+                )}
+                {formData.current_date && (
+                  <SummaryCard
+                    icon={Calendar}
+                    title="Job Start Date"
+                    value={formData.current_date}
+                    color="bg-gradient-to-r from-cyan-600 to-cyan-400"
+                  />
+                )}
+                {formData.work_address && (
+                  <SummaryCard
+                    icon={Home} // You can use any relevant icon
+                    title="Work Address"
+                    value={formData.work_address}
+                    color="bg-gradient-to-r from-lime-600 to-lime-400"
+                  />
+                )}
+                {formData.home_address && (
+                  <SummaryCard
+                    icon={Home} // You can use any relevant icon
+                    title="Home Address"
+                    value={formData.home_address}
+                    color="bg-gradient-to-r from-yellow-600 to-yellow-400"
+                  />
+                )}
+                {/* {formData.most_recent_pay_date && (
                 <SummaryCard
                   icon={Calendar}
                   title="Recent Pay Date"
@@ -1561,45 +1561,51 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
                   color="bg-gradient-to-r from-amber-600 to-amber-400"
                 />
               )} */}
-            </div>
+              </div>
 
-            <div
-              className="flex flex-col sm:flex-row gap-3 items-center justify-center"
-              style={{ marginTop: "10px" }}
-            >
-              <button
-                onClick={resetChat}
-                disabled={isSaving}
-                style={{ paddingTop: "12px", paddingBottom: "12px" }}
-                className="flex items-center justify-center gap-2 px-6 py-3 bg-white border border-gray-300 text-gray-900 rounded-2xl hover:bg-gray-50 transition-colors font-medium disabled:opacity-50"
+              <div
+                className="flex flex-col sm:flex-row gap-3 items-center justify-center"
+                style={{ marginTop: "40px" }}
               >
-                <RotateCcw />
-                Start Over
-              </button>
-              <button
-                onClick={handleSaveTaxes}
+                {/* <button
+                onClick={resetChat}
                 disabled={isSaving}
                 style={{
                   paddingTop: "12px",
                   paddingBottom: "12px",
-                  backgroundColor: "#1595ea",
-                  color: "#ffffff",
-                  border: "1px solid #1595ea",
+                  fontSize: "14px",
                 }}
                 className="flex items-center justify-center gap-2 px-6 py-3 bg-white border border-gray-300 text-gray-900 rounded-2xl hover:bg-gray-50 transition-colors font-medium disabled:opacity-50"
               >
-                {isSaving ? "Saving..." : "Save My Information"}
-              </button>
-            </div>
-
-            {saveError && (
-              <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-2xl">
-                <p className="text-red-600 text-sm">{saveError}</p>
+                <RotateCcw />
+                Start Over
+              </button> */}
+                <button
+                  onClick={handleSaveTaxes}
+                  disabled={isSaving}
+                  style={{
+                    paddingTop: "12px",
+                    paddingBottom: "12px",
+                    backgroundColor: "#1595ea",
+                    color: "#ffffff",
+                    border: "1px solid #1595ea",
+                    fontSize: "14px",
+                  }}
+                  className="flex items-center  justify-center gap-2 px-6 py-3 bg-white border border-gray-300 text-gray-900 rounded-2xl hover:bg-gray-50 transition-colors font-medium disabled:opacity-50"
+                >
+                  {isSaving ? "Saving..." : "Save My Information"}
+                </button>
               </div>
-            )}
+
+              {saveError && (
+                <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-2xl">
+                  <p className="text-red-600 text-sm">{saveError}</p>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {currentStep === "saved" && (
         <div className="sticky bg-[#255be305] bottom-0 px-3 pt-3 flex w-full max-w-[var(--thread-max-width)] flex-col items-center justify-end rounded-t-lg pb-2">
