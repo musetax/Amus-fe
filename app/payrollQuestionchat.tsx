@@ -71,19 +71,22 @@ interface TaxChatbotProps {
   image?: string;
   prefilledData?: Partial<TaxData>;
 }
-
+type Option = {
+  label: string; // what the user sees
+  value: string; // what is sent to the backend
+};
 interface MessageContent {
   content?: string;
   inputType?: string;
   placeholder?: string;
   selectType?: string;
-  options?: string[];
+  options?: Option[];
 }
 
 interface Message {
   type: "bot" | "user";
   content: string | MessageContent;
-  options?: string[];
+  options?: Option[];
   inputType?: string;
   placeholder?: string;
   createdAt: Date;
@@ -265,13 +268,13 @@ const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
 
           {message.options && isLast && !isTyping && (
             <div className="mt-4 space-y-2">
-              {message.options.map((option) => (
+              {message.options.map((option:any) => (
                 <button
-                  key={option}
-                  onClick={() => onOptionSelect(option)}
+                  key={option.value}
+                  onClick={() => onOptionSelect(option.value)}
                   className="block w-full p-3 text-left text-sm bg-white text-gray-900 rounded-2xl hover:bg-gray-50 transition-colors font-medium border border-gray-200"
                 >
-                  {option}
+                  {option.label}
                 </button>
               ))}
             </div>
@@ -303,8 +306,8 @@ const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
                     {(message.content as MessageContent).placeholder}
                   </option>
                   {(message.content as MessageContent).options?.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
+                    <option key={option.value} value={option.value}>
+                      {option.label}
                     </option>
                   ))}
                 </select>
@@ -452,7 +455,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
   const getQuestionsToAsk = (): StepType[] => {
     const questions: StepType[] = [];
 
-    if (!prefilledData.filing_status) {
+    if (prefilledData.filing_status) {
       questions.push("filing_status");
     }
 
@@ -460,7 +463,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
       questions.push("annual_salary");
     }
 
-    if ((prefilledData.filing_status === "Married" || prefilledData.filing_status === "married") && !prefilledData.spouse_income) {
+    if ((prefilledData.filing_status === "Married" || prefilledData.filing_status === "married_joint") && !prefilledData.spouse_income) {
       questions.push("spouse_income");
     }
 
@@ -530,7 +533,10 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         return {
           type: "bot",
           content: `${greeting}\n\nLet's start with your filing status:`,
-          options: ["Single", "Married"],
+          options: [
+      { label: "Single", value: "single" },
+      { label: "Married", value: "married_joint" },
+    ],
           createdAt: new Date(),
         };
       case "annual_salary":
@@ -553,17 +559,23 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
           },
           createdAt: new Date(),
         };
-      case "pay_frequency":
-        return {
-          type: "bot",
-          content: {
-            content: `${greeting}\n\nI need to know how often you get paid:`,
-            selectType: "dropdown",
-            options: ["Weekly", "Bi-weekly", "Semi-monthly", "Monthly"],
-            placeholder: "Select your pay frequency...",
-          },
-          createdAt: new Date(),
-        };
+    case "pay_frequency":
+  return {
+    type: "bot",
+    content: {
+      content: `${greeting}\n\nI need to know how often you get paid:`,
+      selectType: "dropdown",
+      options: [
+        { label: "Weekly", value: "weekly" },
+        { label: "Bi-weekly", value: "bi-weekly" },
+        { label: "Semi-monthly", value: "semi-monthly" },
+        { label: "Monthly", value: "monthly" },
+      ],
+      placeholder: "Select your pay frequency...",
+    },
+    createdAt: new Date(),
+  };
+
       case "current_withholding":
         return {
           type: "bot",
@@ -727,7 +739,12 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
           addMessage("bot", {
             content: "Great! Now I need to know how often you get paid.",
             selectType: "dropdown",
-            options: ["Weekly", "Bi-weekly", "Semi-monthly", "Monthly"],
+             options: [
+        { label: "Weekly", value: "weekly" },
+        { label: "Bi-weekly", value: "bi-weekly" },
+        { label: "Semi-monthly", value: "semi-monthly" },
+        { label: "Monthly", value: "monthly" },
+      ],
             placeholder: "Select your pay frequency...",
           });
           break;
@@ -802,7 +819,8 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
 
   const handleFilingStatusSelect = (status: string): void => {
     setFormData((prev) => ({ ...prev, filing_status: status }));
-    addMessage("user", `I am ${status.toLowerCase()}`);
+    
+    addMessage("user", `I am ${status.toLowerCase()==="married_joint"?"Married":status.toLowerCase()}`);
     moveToNextQuestion();
   };
   const [error, setError] = useState<string>("");
@@ -1144,7 +1162,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
               <SummaryCard
                 icon={User}
                 title="Filing Status"
-                value={formData.filing_status || ""}
+                value={formData.filing_status==="married_joint"?"Married":formData.filing_status || ""}
                 color="bg-gradient-to-r from-purple-600 to-purple-400"
               />
               <SummaryCard
