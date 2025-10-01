@@ -505,7 +505,16 @@ const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
                       onSubmit={onInputSubmit}
                     />
                     {error && (
-                      <div className="mt-2 text-red-600 text-sm">{error}</div>
+                      <div
+                        className="mt-2 text-red-600 text-sm"
+                        style={{
+                          color: "#dc2626",
+                          fontSize: "12px",
+                          marginTop: "4px",
+                        }}
+                      >
+                        {error}
+                      </div>
                     )}
                     <div className="flex items-center justify-center mt-1">
                       {/* NEW: Skip button for optional fields ↓ */}
