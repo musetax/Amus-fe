@@ -47,6 +47,7 @@ export const Thread: any = ({
   // setActiveTab,
   // typing,
   image,
+  companyLogo,
   // userId,
   loadingHistory,
   // sessionId,
@@ -146,76 +147,82 @@ export const Thread: any = ({
                     justifyContent: "center",
                   }}
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
+                  {companyLogo ? <img
+                    src={companyLogo}
                     width="60"
                     height="41"
-                    viewBox="0 0 60 41"
-                    fill="none"
-                  >
-                    <path
-                      d="M12.7905 7.42385L1.20752 31.1693C-0.502414 34.6745 1.17634 38.2925 4.9571 39.2503C8.73794 40.2081 13.189 38.1427 14.899 34.6375L26.482 10.892C28.192 7.38677 26.5131 3.76859 22.7323 2.81097C18.9515 1.85316 14.5005 3.91858 12.7905 7.42385Z"
-                      fill="url(#paint0_linear_7768_1391)"
-                    />
-                    <path
-                      d="M27.7745 7.0597L34.9048 21.6752C36.5827 25.1143 34.9357 28.6641 31.2263 29.6037C27.5169 30.5435 23.1499 28.5174 21.4722 25.0783L14.3417 10.4628C12.6637 7.02373 14.3107 3.47396 18.0201 2.53433C21.7295 1.59451 26.0967 3.62062 27.7745 7.0597Z"
-                      fill="url(#paint1_linear_7768_1391)"
-                    />
-                    <path
-                      d="M30.0391 7.08014L22.9286 21.6547C21.2453 25.1051 22.8975 28.6665 26.6189 29.6095C30.3406 30.5523 34.7221 28.5195 36.4055 25.0691L43.5158 10.4946C45.1993 7.04417 43.547 3.48272 39.8253 2.53993C36.1039 1.59696 31.7224 3.62975 30.0391 7.08014Z"
-                      fill="url(#paint2_linear_7768_1391)"
-                    />
-                    <path
-                      d="M45.5962 7.19045L57.2931 31.1693C59.0031 34.6746 57.3244 38.2927 53.5436 39.2504C49.7629 40.2082 45.3116 38.1427 43.6017 34.6375L31.9048 10.6586C30.1948 7.15337 31.8737 3.53519 35.6544 2.57757C39.435 1.61976 43.8864 3.68518 45.5962 7.19045Z"
-                      fill="url(#paint3_linear_7768_1391)"
-                    />
-                    <defs>
-                      <linearGradient
-                        id="paint0_linear_7768_1391"
-                        x1="4.04851"
-                        y1="38.9984"
-                        x2="28.5694"
-                        y2="6.83259"
-                        gradientUnits="userSpaceOnUse"
-                      >
-                        <stop stop-color="#69DEC6" />
-                        <stop offset="1" stop-color="#49C2D4" />
-                      </linearGradient>
-                      <linearGradient
-                        id="paint1_linear_7768_1391"
-                        x1="16.9186"
-                        y1="3.08128"
-                        x2="44.3829"
-                        y2="35.4655"
-                        gradientUnits="userSpaceOnUse"
-                      >
-                        <stop stop-color="#48C2D4" />
-                        <stop offset="1" stop-color="#1595EA" />
-                      </linearGradient>
-                      <linearGradient
-                        id="paint2_linear_7768_1391"
-                        x1="25.1579"
-                        y1="29.422"
-                        x2="62.1925"
-                        y2="-12.9475"
-                        gradientUnits="userSpaceOnUse"
-                      >
-                        <stop stop-color="#1695EA" />
-                        <stop offset="1" stop-color="#548CE7" />
-                      </linearGradient>
-                      <linearGradient
-                        id="paint3_linear_7768_1391"
-                        x1="36.5681"
-                        y1="2.06437"
-                        x2="61.2194"
-                        y2="35.6826"
-                        gradientUnits="userSpaceOnUse"
-                      >
-                        <stop stop-color="#518DE7" />
-                        <stop offset="1" stop-color="#7687E5" />
-                      </linearGradient>
-                    </defs>
-                  </svg>
+                  /> :
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="60"
+                      height="41"
+                      viewBox="0 0 60 41"
+                      fill="none"
+                    >
+                      <path
+                        d="M12.7905 7.42385L1.20752 31.1693C-0.502414 34.6745 1.17634 38.2925 4.9571 39.2503C8.73794 40.2081 13.189 38.1427 14.899 34.6375L26.482 10.892C28.192 7.38677 26.5131 3.76859 22.7323 2.81097C18.9515 1.85316 14.5005 3.91858 12.7905 7.42385Z"
+                        fill="url(#paint0_linear_7768_1391)"
+                      />
+                      <path
+                        d="M27.7745 7.0597L34.9048 21.6752C36.5827 25.1143 34.9357 28.6641 31.2263 29.6037C27.5169 30.5435 23.1499 28.5174 21.4722 25.0783L14.3417 10.4628C12.6637 7.02373 14.3107 3.47396 18.0201 2.53433C21.7295 1.59451 26.0967 3.62062 27.7745 7.0597Z"
+                        fill="url(#paint1_linear_7768_1391)"
+                      />
+                      <path
+                        d="M30.0391 7.08014L22.9286 21.6547C21.2453 25.1051 22.8975 28.6665 26.6189 29.6095C30.3406 30.5523 34.7221 28.5195 36.4055 25.0691L43.5158 10.4946C45.1993 7.04417 43.547 3.48272 39.8253 2.53993C36.1039 1.59696 31.7224 3.62975 30.0391 7.08014Z"
+                        fill="url(#paint2_linear_7768_1391)"
+                      />
+                      <path
+                        d="M45.5962 7.19045L57.2931 31.1693C59.0031 34.6746 57.3244 38.2927 53.5436 39.2504C49.7629 40.2082 45.3116 38.1427 43.6017 34.6375L31.9048 10.6586C30.1948 7.15337 31.8737 3.53519 35.6544 2.57757C39.435 1.61976 43.8864 3.68518 45.5962 7.19045Z"
+                        fill="url(#paint3_linear_7768_1391)"
+                      />
+                      <defs>
+                        <linearGradient
+                          id="paint0_linear_7768_1391"
+                          x1="4.04851"
+                          y1="38.9984"
+                          x2="28.5694"
+                          y2="6.83259"
+                          gradientUnits="userSpaceOnUse"
+                        >
+                          <stop stop-color="#69DEC6" />
+                          <stop offset="1" stop-color="#49C2D4" />
+                        </linearGradient>
+                        <linearGradient
+                          id="paint1_linear_7768_1391"
+                          x1="16.9186"
+                          y1="3.08128"
+                          x2="44.3829"
+                          y2="35.4655"
+                          gradientUnits="userSpaceOnUse"
+                        >
+                          <stop stop-color="#48C2D4" />
+                          <stop offset="1" stop-color="#1595EA" />
+                        </linearGradient>
+                        <linearGradient
+                          id="paint2_linear_7768_1391"
+                          x1="25.1579"
+                          y1="29.422"
+                          x2="62.1925"
+                          y2="-12.9475"
+                          gradientUnits="userSpaceOnUse"
+                        >
+                          <stop stop-color="#1695EA" />
+                          <stop offset="1" stop-color="#548CE7" />
+                        </linearGradient>
+                        <linearGradient
+                          id="paint3_linear_7768_1391"
+                          x1="36.5681"
+                          y1="2.06437"
+                          x2="61.2194"
+                          y2="35.6826"
+                          gradientUnits="userSpaceOnUse"
+                        >
+                          <stop stop-color="#518DE7" />
+                          <stop offset="1" stop-color="#7687E5" />
+                        </linearGradient>
+                      </defs>
+                    </svg>}
+
                 </span>
                 <div style={{ display: "flex", flexDirection: "column" }}>
                   <h3
@@ -285,6 +292,8 @@ export const Thread: any = ({
                       onComplete={handleTaxChatbotComplete}
                       onContinueToChat={handleContinueToChat}
                       prefilledData={payrollData.payroll}
+                      image={image}
+                      companyLogo={companyLogo}
                     />
                   </div>
                 ) : (
@@ -306,7 +315,7 @@ export const Thread: any = ({
                           ),
                           EditComposer: EditComposer,
                           AssistantMessage: (props) => (
-                            <AssistantMessage {...props} />
+                            <AssistantMessage {...props} companyLogo={companyLogo} />
                           ),
                         }}
                       />
@@ -618,10 +627,11 @@ const EditComposer: FC = () => {
   );
 };
 
-const AssistantMessage: React.FC<any> = () => {
+const AssistantMessage: React.FC<any> = ({ companyLogo }) => {
   const message = useMessage();
   const messageId = message?.id;
   const time = formatTime(message?.createdAt || Date.now());
+
 
   const urls: any = message?.metadata?.custom?.urls;
   const isMessageLoading = message?.metadata?.custom?.loading;
@@ -640,7 +650,17 @@ const AssistantMessage: React.FC<any> = () => {
       }}
     >
       <span style={{ position: "relative", top: "10px" }}>
-        <img
+        {companyLogo ? <img
+          src={companyLogo}
+          style={{
+            width: "25px",
+            height: "25px",
+            minWidth: "25px",
+            minHeight: "25px",
+            objectFit: "cover",
+            borderRadius: "50%",
+          }}
+        /> : <img
           style={{
             width: "25px",
             height: "25px",
@@ -651,7 +671,7 @@ const AssistantMessage: React.FC<any> = () => {
           }}
           src="https://appweb-bucket.s3.us-east-1.amazonaws.com/muse-logo.png"
           alt="useIcon"
-        />
+        />}
       </span>
       <MessagePrimitive.Root className="grid grid-cols-[auto_auto_1fr] grid-rows-[auto_1fr] relative w-full max-w-[var(--thread-max-width)] py-4 pr-2">
         <div className="text-foreground max-w-[calc(var(--thread-max-width)*0.8)] break-words leading-7 col-span-2 col-start-2 row-start-1 my-1.5">

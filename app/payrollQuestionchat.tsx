@@ -103,6 +103,7 @@ interface TaxChatbotProps {
   onComplete?: (taxData: payload) => void;
   onContinueToChat?: () => void;
   image?: string;
+  companyLogo?:string
   prefilledData?: Partial<TaxData>;
 }
 type Option = {
@@ -155,6 +156,7 @@ interface TaxBotMessageProps {
   currentStep: string;
   isTyping: boolean;
   error: string;
+  companyLogo?:string
 }
 
 interface TaxInputFieldProps {
@@ -283,6 +285,7 @@ const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
   currentStep,
   isTyping,
   error,
+  companyLogo
 }) => {
   const time = formatTime(message.createdAt || Date.now());
 
@@ -314,6 +317,11 @@ const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
               top: "14px",
             }}
           >
+             {companyLogo ? <img
+                    src={companyLogo}
+                    width="60"
+                    height="41"
+                  /> :
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="60"
@@ -383,7 +391,7 @@ const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
                   <stop offset="1" stop-color="#7687E5" />
                 </linearGradient>
               </defs>
-            </svg>
+            </svg>}
           </span>
           {/* <span
         style={{
@@ -645,6 +653,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
   onContinueToChat,
   prefilledData = {},
   image = "",
+  companyLogo
 }) => {
   // Helper function to determine what needs to be asked
   const getQuestionsToAsk = (): StepType[] => {
@@ -1413,6 +1422,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
               currentStep={currentStep}
               isTyping={isTyping}
               error={error}
+              companyLogo={companyLogo}
             />
           )
         )}

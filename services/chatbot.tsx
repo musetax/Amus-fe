@@ -1,46 +1,124 @@
-import { default as axios } from "axios";
+import { ExportedMessageRepository, MessageStatus, ThreadAssistantMessagePart, ThreadHistoryAdapter, ThreadMessage,ChatModelRunOptions,ChatModelRunResult } from "@assistant-ui/react";
+import {axiosInstanceAuth} from '../utilities/auth'
+function makeThreadMessage(
+  role: "user" | "assistant",
+  text: string,
+  urls?: string[]
+): ThreadMessage {
+  const status: MessageStatus = { type: "complete", reason: "stop" };
 
-const BASE_URL = "https://amus-devapi.musetax.com";
+  const base = {
+    id: crypto.randomUUID(),
+    createdAt: new Date(),
+    status,
+  };
 
-export const sendQuery = async (query: string) => {
-  try {
-    const response = await axios.post(`${BASE_URL}/query`, { query });
-    return response.data;
-  } catch (error: any) {
-    console.log(error, 'error1');
-    throw error.response?.data || { message: error.message };
+  if (role === "user") {
+    return {
+      ...base,
+      role: "user",
+      content: [{ type: "text", text }],
+      attachments: [],
+      metadata: { custom: {} }, // ✅ only needs `custom`
+    };
+  } else {
+    return {
+      ...base,
+      role: "assistant",
+      content: [{ type: "text", text }],
+      metadata: {
+        unstable_state: null,
+        unstable_annotations: [],
+        unstable_data: [],
+        steps: [],
+        custom: {
+          urls: urls && urls.length > 0 ? urls : undefined,
+        },
+      },
+    };
   }
-};
+}
 
-export const sendMessagetax = async (data: any, session_id: string) => {
-  try {
-    const response = await axios.post(`${BASE_URL}/api/chat/${session_id}/message`, {
-      message: data,
-    });
-    return response.data;
-  } catch (error: any) {
-    console.log(error, 'error2');
-    throw error.response?.data || { message: error.message };
-  }
-};
+function mapApiChatsToRepository(
+  chats: { user?: string; assistant?: string; search_urls?: string[] }[],
+  // setLoadingHistory?: (loading: boolean) => void
+): ExportedMessageRepository {
+  const messages: { id: string; message: ThreadMessage; parentId: string | null }[] = [];
 
-export const authenticate = async (data: any) => {
-  try {
-    const response = await axios.post(`${BASE_URL}/api/chat/checkboost/start`, data);
-    return response.data;
-  } catch (error: any) {
-    console.log(error, 'error3');
-    throw error.response?.data || { message: error.message };
-  }
-};
+  let lastMessageId: string | null = null;
 
-export const taxProfile = async (taxdata: any, session_id: string) => {
-  try {
-    const response = await axios.post(`${BASE_URL}/api/tax-profile/checkboost/${session_id}`, taxdata);
-    return response.data;
-  } catch (error: any) {
-    console.log(error, 'error4');
-    throw error.response?.data || { message: error.message };
-  }
-};
+  chats.forEach((chat) => {
+    if (chat.user) {
+      const msg = makeThreadMessage("user", chat.user);
+      messages.push({
+        id: msg.id,               // ✅ use message's own id
+        message: msg,
+        parentId: lastMessageId,  // ✅ chain to previous message
+      });
+      lastMessageId = msg.id;
+    }
+
+    if (chat.assistant) {
+      const msg = makeThreadMessage("assistant", chat.assistant, chat.search_urls);
+      messages.push({
+        id: msg.id,
+        message: msg,
+        parentId: lastMessageId,
+      });
+      lastMessageId = msg.id;
+    }
+  });
+  return {
+    messages,
+    headId: messages.length > 0 ? messages[messages.length - 1].id : null, // ✅ head is last msg
+  };
+}
+
+function makeHistoryAdapter(
+  userId: string,
+  sessionId?: string,
+  setLoadingHistory?: (loading: boolean) => void
+): ThreadHistoryAdapter {
+  return {
+
+    async load(): Promise<ExportedMessageRepository> {
+      try {
+        setLoadingHistory?.(true);
+        const res = await axiosInstanceAuth.post(
+          "/v1/api/amus/get-user-chats",
+          {
+            user_id: userId,
+            session_id: sessionId,
+          }
+        );
+
+        const finalData = mapApiChatsToRepository(res.data.chats || []);
+        setLoadingHistory?.(false)
+        return finalData
+
+      } catch (err) {
+        console.error("Error fetching chats:", err);
+        setLoadingHistory?.(false)
+        return { messages: [] };
+      }
+    },
+
+    async append({ message }) {
+      console.log("append new message", message);
+    },
+
+    async *resume({ messages }: ChatModelRunOptions): AsyncGenerator<ChatModelRunResult> {
+      console.log("resume thread with messages", messages);
+
+      // yield a "no-op" completion just to satisfy the interface
+      const status: MessageStatus = { type: "complete", reason: "stop" };
+
+      yield {
+        content: [] as ThreadAssistantMessagePart[], // nothing new from assistant
+        status,
+      };
+    },
+  };
+}
+export default makeHistoryAdapter
  
