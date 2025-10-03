@@ -56,9 +56,8 @@ const TooltipIconButton: React.FC<{
   <button
     onClick={onClick}
     disabled={disabled}
-    className={`p-1 rounded hover:bg-gray-100 transition-colors ${
-      disabled ? "opacity-50 cursor-not-allowed" : ""
-    } ${className}`}
+    className={`p-1 rounded hover:bg-gray-100 transition-colors ${disabled ? "opacity-50 cursor-not-allowed" : ""
+      } ${className}`}
   >
     {children}
   </button>
@@ -103,7 +102,7 @@ interface TaxChatbotProps {
   onComplete?: (taxData: payload) => void;
   onContinueToChat?: () => void;
   image?: string;
-  companyLogo?:string
+  companyLogo?: string
   prefilledData?: Partial<TaxData>;
 }
 type Option = {
@@ -156,7 +155,7 @@ interface TaxBotMessageProps {
   currentStep: string;
   isTyping: boolean;
   error: string;
-  companyLogo?:string
+  companyLogo?: string
 }
 
 interface TaxInputFieldProps {
@@ -317,81 +316,81 @@ const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
               top: "14px",
             }}
           >
-             {companyLogo ? <img
-                    src={companyLogo}
-                    width="60"
-                    height="41"
-                  /> :
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
+            {companyLogo ? <img
+              src={companyLogo}
               width="60"
               height="41"
-              viewBox="0 0 60 41"
-              fill="none"
-            >
-              <path
-                d="M12.7905 7.42385L1.20752 31.1693C-0.502414 34.6745 1.17634 38.2925 4.9571 39.2503C8.73794 40.2081 13.189 38.1427 14.899 34.6375L26.482 10.892C28.192 7.38677 26.5131 3.76859 22.7323 2.81097C18.9515 1.85316 14.5005 3.91858 12.7905 7.42385Z"
-                fill="url(#paint0_linear_7768_1391)"
-              />
-              <path
-                d="M27.7745 7.0597L34.9048 21.6752C36.5827 25.1143 34.9357 28.6641 31.2263 29.6037C27.5169 30.5435 23.1499 28.5174 21.4722 25.0783L14.3417 10.4628C12.6637 7.02373 14.3107 3.47396 18.0201 2.53433C21.7295 1.59451 26.0967 3.62062 27.7745 7.0597Z"
-                fill="url(#paint1_linear_7768_1391)"
-              />
-              <path
-                d="M30.0391 7.08014L22.9286 21.6547C21.2453 25.1051 22.8975 28.6665 26.6189 29.6095C30.3406 30.5523 34.7221 28.5195 36.4055 25.0691L43.5158 10.4946C45.1993 7.04417 43.547 3.48272 39.8253 2.53993C36.1039 1.59696 31.7224 3.62975 30.0391 7.08014Z"
-                fill="url(#paint2_linear_7768_1391)"
-              />
-              <path
-                d="M45.5962 7.19045L57.2931 31.1693C59.0031 34.6746 57.3244 38.2927 53.5436 39.2504C49.7629 40.2082 45.3116 38.1427 43.6017 34.6375L31.9048 10.6586C30.1948 7.15337 31.8737 3.53519 35.6544 2.57757C39.435 1.61976 43.8864 3.68518 45.5962 7.19045Z"
-                fill="url(#paint3_linear_7768_1391)"
-              />
-              <defs>
-                <linearGradient
-                  id="paint0_linear_7768_1391"
-                  x1="4.04851"
-                  y1="38.9984"
-                  x2="28.5694"
-                  y2="6.83259"
-                  gradientUnits="userSpaceOnUse"
-                >
-                  <stop stop-color="#69DEC6" />
-                  <stop offset="1" stop-color="#49C2D4" />
-                </linearGradient>
-                <linearGradient
-                  id="paint1_linear_7768_1391"
-                  x1="16.9186"
-                  y1="3.08128"
-                  x2="44.3829"
-                  y2="35.4655"
-                  gradientUnits="userSpaceOnUse"
-                >
-                  <stop stop-color="#48C2D4" />
-                  <stop offset="1" stop-color="#1595EA" />
-                </linearGradient>
-                <linearGradient
-                  id="paint2_linear_7768_1391"
-                  x1="25.1579"
-                  y1="29.422"
-                  x2="62.1925"
-                  y2="-12.9475"
-                  gradientUnits="userSpaceOnUse"
-                >
-                  <stop stop-color="#1695EA" />
-                  <stop offset="1" stop-color="#548CE7" />
-                </linearGradient>
-                <linearGradient
-                  id="paint3_linear_7768_1391"
-                  x1="36.5681"
-                  y1="2.06437"
-                  x2="61.2194"
-                  y2="35.6826"
-                  gradientUnits="userSpaceOnUse"
-                >
-                  <stop stop-color="#518DE7" />
-                  <stop offset="1" stop-color="#7687E5" />
-                </linearGradient>
-              </defs>
-            </svg>}
+            /> :
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="60"
+                height="41"
+                viewBox="0 0 60 41"
+                fill="none"
+              >
+                <path
+                  d="M12.7905 7.42385L1.20752 31.1693C-0.502414 34.6745 1.17634 38.2925 4.9571 39.2503C8.73794 40.2081 13.189 38.1427 14.899 34.6375L26.482 10.892C28.192 7.38677 26.5131 3.76859 22.7323 2.81097C18.9515 1.85316 14.5005 3.91858 12.7905 7.42385Z"
+                  fill="url(#paint0_linear_7768_1391)"
+                />
+                <path
+                  d="M27.7745 7.0597L34.9048 21.6752C36.5827 25.1143 34.9357 28.6641 31.2263 29.6037C27.5169 30.5435 23.1499 28.5174 21.4722 25.0783L14.3417 10.4628C12.6637 7.02373 14.3107 3.47396 18.0201 2.53433C21.7295 1.59451 26.0967 3.62062 27.7745 7.0597Z"
+                  fill="url(#paint1_linear_7768_1391)"
+                />
+                <path
+                  d="M30.0391 7.08014L22.9286 21.6547C21.2453 25.1051 22.8975 28.6665 26.6189 29.6095C30.3406 30.5523 34.7221 28.5195 36.4055 25.0691L43.5158 10.4946C45.1993 7.04417 43.547 3.48272 39.8253 2.53993C36.1039 1.59696 31.7224 3.62975 30.0391 7.08014Z"
+                  fill="url(#paint2_linear_7768_1391)"
+                />
+                <path
+                  d="M45.5962 7.19045L57.2931 31.1693C59.0031 34.6746 57.3244 38.2927 53.5436 39.2504C49.7629 40.2082 45.3116 38.1427 43.6017 34.6375L31.9048 10.6586C30.1948 7.15337 31.8737 3.53519 35.6544 2.57757C39.435 1.61976 43.8864 3.68518 45.5962 7.19045Z"
+                  fill="url(#paint3_linear_7768_1391)"
+                />
+                <defs>
+                  <linearGradient
+                    id="paint0_linear_7768_1391"
+                    x1="4.04851"
+                    y1="38.9984"
+                    x2="28.5694"
+                    y2="6.83259"
+                    gradientUnits="userSpaceOnUse"
+                  >
+                    <stop stop-color="#69DEC6" />
+                    <stop offset="1" stop-color="#49C2D4" />
+                  </linearGradient>
+                  <linearGradient
+                    id="paint1_linear_7768_1391"
+                    x1="16.9186"
+                    y1="3.08128"
+                    x2="44.3829"
+                    y2="35.4655"
+                    gradientUnits="userSpaceOnUse"
+                  >
+                    <stop stop-color="#48C2D4" />
+                    <stop offset="1" stop-color="#1595EA" />
+                  </linearGradient>
+                  <linearGradient
+                    id="paint2_linear_7768_1391"
+                    x1="25.1579"
+                    y1="29.422"
+                    x2="62.1925"
+                    y2="-12.9475"
+                    gradientUnits="userSpaceOnUse"
+                  >
+                    <stop stop-color="#1695EA" />
+                    <stop offset="1" stop-color="#548CE7" />
+                  </linearGradient>
+                  <linearGradient
+                    id="paint3_linear_7768_1391"
+                    x1="36.5681"
+                    y1="2.06437"
+                    x2="61.2194"
+                    y2="35.6826"
+                    gradientUnits="userSpaceOnUse"
+                  >
+                    <stop stop-color="#518DE7" />
+                    <stop offset="1" stop-color="#7687E5" />
+                  </linearGradient>
+                </defs>
+              </svg>}
           </span>
           {/* <span
         style={{
@@ -533,19 +532,19 @@ const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
                         currentStep === "work_address" ||
                         currentStep === "home_address" ||
                         currentStep === "current_date") && (
-                        <button
-                          onClick={() => onInputSubmit("skip")}
-                          className=" p-0 font-medium"
-                          style={{
-                            background: "transparent",
-                            color: "#518DE7",
-                            textDecoration: "underline",
-                            fontSize: "14px",
-                          }}
-                        >
-                          Skip this question
-                        </button>
-                      )}
+                          <button
+                            onClick={() => onInputSubmit("skip")}
+                            className=" p-0 font-medium"
+                            style={{
+                              background: "transparent",
+                              color: "#518DE7",
+                              textDecoration: "underline",
+                              fontSize: "14px",
+                            }}
+                          >
+                            Skip this question
+                          </button>
+                        )}
                     </div>
                   </div>
                 )}
@@ -598,7 +597,19 @@ const TaxInputField: React.FC<TaxInputFieldProps> = ({
           ref={inputRef}
           type={type}
           value={value}
-          onChange={(e) => setValue(e.target.value)}
+          onKeyDown={(e) => {
+            if (type === "number" && (e.key === "-" || e.key === "e" || e.key === "E" || e.key === "+")) {
+              e.preventDefault(); // ⬅️ block minus, exponent, and plus
+            }
+          }}
+          min={type === "number" ? 0 : undefined} // ⬅️ HTML-level restriction
+          onChange={(e) => {
+            // prevent negative values
+            if (type === "number" && Number(e.target.value) < 0) {
+              return;
+            }
+            setValue(e.target.value);
+          }}
           onKeyPress={handleKeyPress}
           placeholder={placeholder}
           className="placeholder:text-muted-foreground custom_input flex-grow resize-none border-none bg-transparent px-2 py-4 text-sm outline-none focus:ring-0 disabled:cursor-not-allowed"
@@ -1041,10 +1052,9 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
 
     addMessage(
       "user",
-      `I am ${
-        status.toLowerCase() === "married_joint"
-          ? "Married"
-          : status.toLowerCase()
+      `I am ${status.toLowerCase() === "married_joint"
+        ? "Married"
+        : status.toLowerCase()
       }`
     );
     moveToNextQuestion();
@@ -1494,9 +1504,9 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
                     formData.filing_status === "married_joint"
                       ? "Married"
                       : formData.filing_status
-                      ? formData.filing_status.charAt(0).toUpperCase() +
+                        ? formData.filing_status.charAt(0).toUpperCase() +
                         formData.filing_status.slice(1)
-                      : ""
+                        : ""
                   }
                   color="bg-gradient-to-r from-purple-600 to-purple-400"
                 />
@@ -1521,7 +1531,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
                   value={
                     formData.pay_frequency
                       ? formData.pay_frequency.charAt(0).toUpperCase() +
-                        formData.pay_frequency.slice(1)
+                      formData.pay_frequency.slice(1)
                       : ""
                   }
                   color="bg-gradient-to-r from-green-600 to-green-400"
