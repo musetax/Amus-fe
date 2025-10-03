@@ -1006,7 +1006,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
 
         case "current_date":
           addMessage("bot", {
-            content: "When did you start your current job? ",
+            content: "When was your last paycheck date? ",
             inputType: "date",
             placeholder: "Select start date ",
           });
