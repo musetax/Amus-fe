@@ -589,8 +589,20 @@ const TaxInputField: React.FC<TaxInputFieldProps> = ({
         <input
           ref={inputRef}
           type={type}
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
+           value={value}
+               onKeyDown={(e) => {
+            if (type === "number" && (e.key === "-" || e.key === "e" || e.key === "E" || e.key === "+")) {
+              e.preventDefault(); // ⬅️ block minus, exponent, and plus
+            }
+          }}
+          min={type === "number" ? 0 : undefined} // ⬅️ HTML-level restriction
+          onChange={(e) => {
+            // prevent negative values
+            if (type === "number" && Number(e.target.value) < 0) {
+              return;
+            }
+            setValue(e.target.value);
+          }}
           onKeyPress={handleKeyPress}
           placeholder={placeholder}
           className="placeholder:text-muted-foreground custom_input flex-grow resize-none border-none bg-transparent px-2 py-4 text-sm outline-none focus:ring-0 disabled:cursor-not-allowed"
