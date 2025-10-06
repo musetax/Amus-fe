@@ -56,9 +56,8 @@ const TooltipIconButton: React.FC<{
   <button
     onClick={onClick}
     disabled={disabled}
-    className={`p-1 rounded hover:bg-gray-100 transition-colors ${
-      disabled ? "opacity-50 cursor-not-allowed" : ""
-    } ${className}`}
+    className={`p-1 rounded hover:bg-gray-100 transition-colors ${disabled ? "opacity-50 cursor-not-allowed" : ""
+      } ${className}`}
   >
     {children}
   </button>
@@ -525,19 +524,19 @@ const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
                         currentStep === "work_address" ||
                         currentStep === "home_address" ||
                         currentStep === "current_date") && (
-                        <button
-                          onClick={() => onInputSubmit("skip")}
-                          className=" p-0 font-medium"
-                          style={{
-                            background: "transparent",
-                            color: "#518DE7",
-                            textDecoration: "underline",
-                            fontSize: "14px",
-                          }}
-                        >
-                          Skip this question
-                        </button>
-                      )}
+                          <button
+                            onClick={() => onInputSubmit("skip")}
+                            className=" p-0 font-medium"
+                            style={{
+                              background: "transparent",
+                              color: "#518DE7",
+                              textDecoration: "underline",
+                              fontSize: "14px",
+                            }}
+                          >
+                            Skip this question
+                          </button>
+                        )}
                     </div>
                   </div>
                 )}
@@ -589,8 +588,13 @@ const TaxInputField: React.FC<TaxInputFieldProps> = ({
         <input
           ref={inputRef}
           type={type}
-           value={value}
-               onKeyDown={(e) => {
+          value={value}
+          onWheel={(e) => {
+            if (type === "number") {
+              (e.target as HTMLInputElement).blur(); // ✅ Type cast to fix TS error
+            }
+          }}
+          onKeyDown={(e) => {
             if (type === "number" && (e.key === "-" || e.key === "e" || e.key === "E" || e.key === "+")) {
               e.preventDefault(); // ⬅️ block minus, exponent, and plus
             }
@@ -827,8 +831,16 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
           type: "bot",
           content: {
             content: `${greeting}\n\nHow many dependents do you have?`,
-            inputType: "number",
-            placeholder: "Enter number of dependents ",
+            selectType: "dropdown",
+            options: [
+              { label: "one", value: "1" },
+              { label: "Two", value: "2" },
+              { label: "Three", value: "3" },
+              { label: "Four", value: "4" },
+              { label: "Five", value: "5" },
+
+            ],
+            placeholder: "select the  number of dependents ",
           },
           createdAt: new Date(),
         };
@@ -836,19 +848,20 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         return {
           type: "bot",
           content: {
-            content: `${greeting}\n\nWhen did you start your current job? `,
+            content: `${greeting}\n\nWhat was the date of your last paycheck?`,
             inputType: "date",
-            placeholder: "Select start date ",
+            placeholder: "Select the date of your last paycheck",
           },
           createdAt: new Date(),
         };
+
       case "work_address":
         return {
           type: "bot",
           content: {
-            content: `${greeting}\n\nPlease enter your work address :`,
+            content: `${greeting}\n\nPlease enter your work ZIP code:`,
             inputType: "text",
-            placeholder: "Enter work address ",
+            placeholder: "Enter work ZIP code",
           },
           createdAt: new Date(),
         };
@@ -856,9 +869,9 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         return {
           type: "bot",
           content: {
-            content: `${greeting}\n\nPlease enter your home address :`,
+            content: `${greeting}\n\nPlease enter your home ZIP code:`,
             inputType: "text",
-            placeholder: "Enter home address ",
+            placeholder: "Enter home ZIP code",
           },
           createdAt: new Date(),
         };
@@ -999,32 +1012,40 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         case "dependents":
           addMessage("bot", {
             content: "How many dependents do you have? ",
-            inputType: "number",
-            placeholder: "Enter number of dependents ",
+            selectType: "dropdown",
+            options: [
+              { label: "one", value: "1" },
+              { label: "Two", value: "2" },
+              { label: "Three", value: "3" },
+              { label: "Four", value: "4" },
+              { label: "Five", value: "5" },
+
+            ],
+            placeholder: "select the  number of dependents ",
           });
           break;
 
         case "current_date":
           addMessage("bot", {
-            content: "When was your last paycheck date? ",
+            content: "What was the date of your last paycheck? ",
             inputType: "date",
-            placeholder: "Select start date ",
+            placeholder: "Select the date of your last paycheck ",
           });
           break;
 
         case "work_address":
           addMessage("bot", {
-            content: `Please enter your work address :`,
+            content: `Please enter your work ZIP code:`,
             inputType: "text",
-            placeholder: "Enter work address ",
+            placeholder: "Enter work ZIP code",
           });
           break;
 
         case "home_address":
           addMessage("bot", {
-            content: `Please enter your home address :`,
+            content: `Please enter your home ZIP code:`,
             inputType: "text",
-            placeholder: "Enter home address ",
+            placeholder: "Enter home ZIP code",
           });
           break;
 
@@ -1044,10 +1065,9 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
 
     addMessage(
       "user",
-      `I am ${
-        status.toLowerCase() === "married_joint"
-          ? "Married"
-          : status.toLowerCase()
+      `I am ${status.toLowerCase() === "married_joint"
+        ? "Married"
+        : status.toLowerCase()
       }`
     );
     moveToNextQuestion();
@@ -1234,7 +1254,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
             return;
           }
           if (dateValue > today) {
-            setError("Start date cannot be in the future.");
+            setError("The date cannot be in the future.");
             return;
           }
 
@@ -1244,40 +1264,54 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
             ...prev,
             current_date: formattedDate,
           }));
-          addMessage("user", `My job start date is ${formattedDate}`);
+          addMessage("user", `The date of my last paycheck was ${formattedDate}.`);
         } else {
           setFormData((prev) => ({ ...prev, current_date: "" }));
-          addMessage("user", "I'll skip this question");
+          addMessage("user", "I'll skip this question.");
         }
 
         moveToNextQuestion();
         break;
 
       case "work_address":
-        setFormData((prev) => ({
-          ...prev,
-          work_address: isSkipped ? "" : value.trim(),
-        }));
-        addMessage(
-          "user",
-          isSkipped
-            ? "I'll skip this question"
-            : `My work address is: ${value.trim()}`
-        );
+        if (!isSkipped) {
+          const zipRegex = /^\d{5}(-\d{4})?$/;
+
+          if (!zipRegex.test(value)) {
+            setError("Please enter a valid U.S. ZIP code (e.g., 12345 or 12345-6789).");
+            return;
+          }
+
+          setFormData((prev) => ({ ...prev, work_address: value }));
+          addMessage("user", `My work ZIP code is ${value}.`);
+        } else {
+          setFormData((prev) => ({ ...prev, work_address: "" }));
+          addMessage("user", "I'll skip this question.");
+        }
+
         moveToNextQuestion();
         break;
 
       case "home_address":
-        setFormData((prev) => ({
-          ...prev,
-          home_address: isSkipped ? "" : value.trim(),
-        }));
-        addMessage(
-          "user",
-          isSkipped
-            ? "I'll skip this question"
-            : `My home address is: ${value.trim()}`
-        );
+        if (!isSkipped) {
+          const zip = value.trim();
+          const zipRegex = /^\d{5}(-\d{4})?$/; // Matches 12345 or 12345-6789
+
+          if (!zipRegex.test(zip)) {
+            setError("Please enter a valid U.S. ZIP code (e.g., 12345 or 12345-6789).");
+            return;
+          }
+
+          setFormData((prev) => ({
+            ...prev,
+            home_address: zip,
+          }));
+
+          addMessage("user", `My home ZIP code is ${zip}.`);
+        } else {
+          setFormData((prev) => ({ ...prev, home_address: "" }));
+          addMessage("user", "I'll skip this question.");
+        }
         moveToNextQuestion();
         break;
 
@@ -1329,6 +1363,26 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
   //   setIsSaving(false);
   //   setSaveError(null);
   // };
+  const formatCurrency = (amount: any) => {
+    if (amount == null || amount === "") return "";
+
+    // Convert to number if it's a string
+    const num = Number(amount);
+    // If still invalid, return empty string
+    if (isNaN(num)) return "";
+
+    if (num >= 1_000_000_000) {
+      // Format as billions
+      return `$${(num / 1_000_000_000).toFixed(1)}B`;
+    } else if (num >= 1_000_000) {
+      // Format as millions
+      return `$${(num / 1_000_000).toFixed(1)}M`;
+    }
+
+    // Format normally for smaller amounts
+    return `$${num.toLocaleString()}`;
+  };
+
 
   const handleSaveTaxes = async (): Promise<void> => {
     setIsSaving(true);
@@ -1496,9 +1550,9 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
                     formData.filing_status === "married_joint"
                       ? "Married"
                       : formData.filing_status
-                      ? formData.filing_status.charAt(0).toUpperCase() +
+                        ? formData.filing_status.charAt(0).toUpperCase() +
                         formData.filing_status.slice(1)
-                      : ""
+                        : ""
                   }
                   color="bg-gradient-to-r from-purple-600 to-purple-400"
                 />
@@ -1523,7 +1577,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
                   value={
                     formData.pay_frequency
                       ? formData.pay_frequency.charAt(0).toUpperCase() +
-                        formData.pay_frequency.slice(1)
+                      formData.pay_frequency.slice(1)
                       : ""
                   }
                   color="bg-gradient-to-r from-green-600 to-green-400"
@@ -1532,7 +1586,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
                 <SummaryCard
                   icon={DollarSign}
                   title="Current Withholding"
-                  value={`$${formData.current_withholding_per_paycheck} per paycheck`}
+                  value={`${formatCurrency(formData.current_withholding_per_paycheck)} per paycheck`}
                   color="bg-gradient-to-r from-blue-600 to-blue-400"
                 />
 
@@ -1541,7 +1595,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
                   <SummaryCard
                     icon={DollarSign}
                     title="Additional Income"
-                    value={`$${formData.additional_income?.toLocaleString()}`}
+                    value={formatCurrency(formData.additional_income)}
                     color="bg-gradient-to-r from-teal-600 to-teal-400"
                   />
                 )}
@@ -1549,7 +1603,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
                   <SummaryCard
                     icon={DollarSign}
                     title="Deductions"
-                    value={`$${formData.deductions?.toLocaleString()}`}
+                    value={formatCurrency(formData.deductions)}
                     color="bg-gradient-to-r from-indigo-600 to-indigo-400"
                   />
                 )}
