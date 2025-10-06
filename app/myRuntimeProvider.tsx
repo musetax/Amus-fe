@@ -1,5 +1,5 @@
 import { saveMessagesToLocalStorage } from "../components/chatbot/assistant-ui/thread";
-import { getAccessToken } from "../utilities/auth";
+import { getTokens } from "../utilities/auth";
 
 export const MyModelAdapter = (
   userId: string,
@@ -13,16 +13,17 @@ export const MyModelAdapter = (
     // Start immediately - no loading placeholder!
 
     try {
-      const token: string | null = getAccessToken();
+      const {accessToken}= getTokens();
 
       const lastUserText = messages[messages.length - 1].content[0]?.text || "";
+      const AUTH_API_URL = process.env.NEXT_PUBLIC_BACKEND_API;
 
       const makeRequest = async () =>
-        fetch(`https://amus-devapi.musetax.com/v1/api/amus/chat/${userId}/${sessionId}`, {
+        fetch(`${AUTH_API_URL}/v1/api/amus/chat/${userId}/${sessionId}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${accessToken}`,
             "Cache-Control": "no-cache",
             "Connection": "keep-alive",
           },

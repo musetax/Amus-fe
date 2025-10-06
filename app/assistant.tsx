@@ -4,13 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Thread } from "../components/chatbot/assistant-ui/thread";
 import "../utilities/auth"; // Import to activate axios interceptors
-import axios from "axios";
+import makeHistoryAdapter from '../services/chatbot'
 
-import {
-  type ChatModelRunOptions,
-  type ChatModelRunResult,
-  type ThreadAssistantMessagePart,
-} from "@assistant-ui/react";
 import {
   AssistantRuntimeProvider,
   useLocalThreadRuntime,
@@ -26,138 +21,7 @@ export const CHAT_HISTORY_KEY = "chat_history";
 
 // type ApiChat = { user?: string; assistant?: string; search_urls?: string[] };
 
-import {
-  type ThreadHistoryAdapter,
-  type ExportedMessageRepository,
-} from "@assistant-ui/react";
-
-// Convert your API chats → ExportedMessageRepository
-import {
-  type ThreadMessage,
-  type MessageStatus,
-} from "@assistant-ui/react";
 import { getPayrollDetails, payrollDetailsUpdate } from "./taxModelAdapter";
-
-function makeThreadMessage(
-  role: "user" | "assistant",
-  text: string,
-  urls?: string[]
-): ThreadMessage {
-  const status: MessageStatus = { type: "complete", reason: "stop" };
-
-  const base = {
-    id: crypto.randomUUID(),
-    createdAt: new Date(),
-    status,
-  };
-
-  if (role === "user") {
-    return {
-      ...base,
-      role: "user",
-      content: [{ type: "text", text }],
-      attachments: [],
-      metadata: { custom: {} }, // ✅ only needs `custom`
-    };
-  } else {
-    return {
-      ...base,
-      role: "assistant",
-      content: [{ type: "text", text }],
-      metadata: {
-        unstable_state: null,
-        unstable_annotations: [],
-        unstable_data: [],
-        steps: [],
-        custom: {
-          urls: urls && urls.length > 0 ? urls : undefined,
-        },
-      },
-    };
-  }
-}
-
-function mapApiChatsToRepository(
-  chats: { user?: string; assistant?: string; search_urls?: string[] }[],
-  // setLoadingHistory?: (loading: boolean) => void
-): ExportedMessageRepository {
-  const messages: { id: string; message: ThreadMessage; parentId: string | null }[] = [];
-
-  let lastMessageId: string | null = null;
-
-  chats.forEach((chat) => {
-    if (chat.user) {
-      const msg = makeThreadMessage("user", chat.user);
-      messages.push({
-        id: msg.id,               // ✅ use message's own id
-        message: msg,
-        parentId: lastMessageId,  // ✅ chain to previous message
-      });
-      lastMessageId = msg.id;
-    }
-
-    if (chat.assistant) {
-      const msg = makeThreadMessage("assistant", chat.assistant, chat.search_urls);
-      messages.push({
-        id: msg.id,
-        message: msg,
-        parentId: lastMessageId,
-      });
-      lastMessageId = msg.id;
-    }
-  });
-  return {
-    messages,
-    headId: messages.length > 0 ? messages[messages.length - 1].id : null, // ✅ head is last msg
-  };
-}
-
-function makeHistoryAdapter(
-  userId: string,
-  sessionId?: string,
-  setLoadingHistory?: (loading: boolean) => void
-): ThreadHistoryAdapter {
-  return {
-
-    async load(): Promise<ExportedMessageRepository> {
-      try {
-        setLoadingHistory?.(true);
-        const res = await axios.post(
-          "https://amus-devapi.musetax.com/v1/api/amus/get-user-chats",
-          {
-            user_id: userId,
-            session_id: sessionId,
-          }
-        );
-
-        const finalData = mapApiChatsToRepository(res.data.chats || []);
-        setLoadingHistory?.(false)
-        return finalData
-
-      } catch (err) {
-        console.error("Error fetching chats:", err);
-        setLoadingHistory?.(false)
-        return { messages: [] };
-      }
-    },
-
-    async append({ message }) {
-      console.log("append new message", message);
-    },
-
-    async *resume({ messages }: ChatModelRunOptions): AsyncGenerator<ChatModelRunResult> {
-      console.log("resume thread with messages", messages);
-
-      // yield a "no-op" completion just to satisfy the interface
-      const status: MessageStatus = { type: "complete", reason: "stop" };
-
-      yield {
-        content: [] as ThreadAssistantMessagePart[], // nothing new from assistant
-        status,
-      };
-    },
-  };
-}
 
 function Assistant() {
   const [activeTab, setActiveTab] = useState<"tax" | "learn">("learn");
@@ -174,10 +38,18 @@ function Assistant() {
   const sessionId: any = searchParams.get("session_id");
   const userId: any = searchParams.get("user_id")
   const access_token: any = searchParams.get("access_token");
+  const user_image: any = searchParams.get("user_image")
+  const companyLogo: any = searchParams.get("company_logo")
   // const refresh_access_token: any = params.get("refresh_token");
   const [globalError, setGlobalError] = useState<string | null>(null);
 
   console.log(userId, sessionId, access_token)
+  if (companyLogo) {
+    localStorage.setItem("companyLogo", companyLogo)
+  }
+  if (user_image) {
+    localStorage.setItem("image", user_image)
+  }
 
   console.log(currentUserId)
   useEffect(() => {
@@ -221,8 +93,8 @@ function Assistant() {
       data.additional_income !== 0 &&
       data.deductions !== 0 &&
       data.dependents !== 0 &&
-      data.home_address !==null &&
-      data.work_address!==null
+      data.home_address !== null &&
+      data.work_address !== null
     );
   };
 
@@ -337,7 +209,8 @@ function Assistant() {
               activeTab={activeTab}
               setActiveTab={setActiveTab}
               typing={typing}
-              image={''}
+              image={user_image}
+              companyLogo={companyLogo}
               loadingHistory={loadingHistory}
               sessionId={sessionId}
               userId={userId}

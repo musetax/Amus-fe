@@ -2,6 +2,7 @@
 
 import { default as axios } from "axios";
 import "../utilities/auth"; // Import to activate axios interceptors
+import { axiosInstanceAuth } from "../utilities/auth";
 export const downloadPdf = async (email: string, sessionId: any, url_type: any) => {
   try {
     const response = await axios.post('https://amus-devapi.musetax.com/v1/api/export/chats', {
@@ -45,7 +46,7 @@ export const createUserInfo = async (taxPayload: any, email: string, url_type: a
 
 export const getPayrollDetails=async(userId:string)=>{
    try {
-    const response = await axios.get(`https://amus-devapi.musetax.com/user?user_id=${userId}`,
+    const response = await axiosInstanceAuth.get(`/user?user_id=${userId}`,
     //  { headers:{
     //     "ngrok-skip-browser-warning": "69420",
     //   }}
@@ -59,13 +60,14 @@ export const getPayrollDetails=async(userId:string)=>{
 }
 export const payrollDetailsUpdate=async(userId:string,payload:any)=>{
    try {
-    const response = await axios.patch(`https://amus-devapi.musetax.com/user/${userId}`,payload);
+    const response = await axiosInstanceAuth.patch(`/user/${userId}`,payload);
 
     return response.data;
   } catch(error:any) {
     throw error;
   }
 }
+
 interface TokenPayload {
   client_id: string,
   client_secret: string
