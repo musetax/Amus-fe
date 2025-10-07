@@ -33,6 +33,7 @@ import { URLDisplay } from "./url-display";
 import { Tooltip, TooltipTrigger } from "../ui/tooltip";
 import TaxChatbot from "../../../app/payrollQuestionchat";
 import { ErrorBanner } from "./error-ui";
+import Image from "next/image";
 // import Image from "next/image";
 
 export const CHAT_HISTORY_KEY = "chat_history";
@@ -148,7 +149,7 @@ export const Thread: any = ({
                   }}
                 >
                   {companyLogo ? (
-                    <img src={companyLogo} width="60" height="41" />
+                    <Image src={companyLogo} width="60" height="41" alt="Company Logo" />
                   ) : (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -566,7 +567,7 @@ const UserMessage: React.FC<UserMessageProps> = ({ image }) => {
         </div>
         <BranchPicker className="col-span-full col-start-1 row-start-3 -mr-1 justify-end" />
         {image ? (
-          <img
+          <Image
             style={{
               width: "25px",
               height: "25px",
@@ -578,7 +579,7 @@ const UserMessage: React.FC<UserMessageProps> = ({ image }) => {
             alt="useIcon"
           />
         ) : (
-          <img
+          <Image
             style={{
               width: "25px",
               height: "25px",
@@ -651,7 +652,7 @@ const AssistantMessage: React.FC<any> = ({ companyLogo }) => {
     >
       <span style={{ position: "relative", top: "10px" }}>
         {companyLogo ? (
-          <img
+          <Image
             src={companyLogo}
             style={{
               width: "25px",
@@ -661,9 +662,10 @@ const AssistantMessage: React.FC<any> = ({ companyLogo }) => {
               objectFit: "cover",
               borderRadius: "50%",
             }}
+            alt="Company Logo"
           />
         ) : (
-          <img
+          <Image
             style={{
               width: "25px",
               height: "25px",

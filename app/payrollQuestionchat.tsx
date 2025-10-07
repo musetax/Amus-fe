@@ -28,6 +28,7 @@ import {
 
 // Import input handlers
 import * as InputHandlers from "./payrollQuestion/inputHandlers";
+import Image from "next/image";
 
 const TaxChatbot: React.FC<TaxChatbotProps> = ({
   onComplete,
@@ -471,7 +472,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
             }}
           >
             <span style={{ position: "relative", top: "10px" }}>
-              <img
+              <Image
                 style={{
                   width: "25px",
                   height: "25px",

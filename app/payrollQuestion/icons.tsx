@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 
 export const SendHorizontalIcon: React.FC = () => (
@@ -61,7 +62,7 @@ export const Home: React.FC = () => (
 
 export const CompanyLogo: React.FC<{ src?: string }> = ({ src }) => {
   if (src) {
-    return <img src={src} width="60" height="41" alt="Company Logo" />;
+    return <Image src={src} width="60" height="41" alt="Company Logo" />;
   }
 
   return (
