@@ -1,0 +1,115 @@
+import { StepType, FormData, TaxData } from "./types";
+
+/**
+ * Determines which questions to ask based on prefilled data
+ */
+export const getQuestionsToAsk = (prefilledData: Partial<TaxData>): StepType[] => {
+  const questions: StepType[] = [];
+
+  if (!prefilledData.filing_status) questions.push("filing_status");
+  if (!prefilledData.age) questions.push("age");
+
+  // Add income_type question if not prefilled
+  if (!prefilledData.income_type) {
+    questions.push("income_type");
+  }
+
+  // Add both salary and hourly questions - skip logic will handle which to show
+  if (!prefilledData.annual_salary) questions.push("annual_salary");
+  if (!prefilledData.hourly_rate) questions.push("hourly_rate");
+  if (!prefilledData.average_hours_per_week) questions.push("average_hours_per_week");
+  if (!prefilledData.seasonal_variation) questions.push("seasonal_variation");
+
+  if (
+    prefilledData.filing_status === "married_joint" &&
+    !prefilledData.spouse_income
+  )
+    questions.push("spouse_income");
+
+  if (!prefilledData.pay_frequency) questions.push("pay_frequency");
+
+  if (!prefilledData.current_withholding_per_paycheck)
+    questions.push("current_withholding");
+
+  // Only ask additional_yesorno if additional_income is not prefilled
+  if (!prefilledData.additional_income) {
+    questions.push("additional_yesorno");
+    questions.push("additional_income");
+  }
+
+  // Only ask standard_deduction if deductions is not prefilled
+  if (!prefilledData.deductions) {
+    questions.push("standard_deduction");
+    questions.push("deductions");
+  }
+
+  // Only ask dependents_yesno if dependents is not prefilled
+  if (!prefilledData.dependents) {
+    questions.push("dependents_yesno");
+    questions.push("dependents");
+  }
+
+  questions.push("current_date");
+  questions.push("work_address");
+  questions.push("home_address");
+
+  return questions;
+};
+
+/**
+ * Determines if a question should be skipped based on form data
+ */
+export const shouldSkipQuestion = (
+  step: StepType,
+  data: FormData
+): boolean => {
+  // Skip additional income if user said no
+  if (step === "additional_income" && data.additional_yesorno === "no") {
+    return true;
+  }
+
+  // Skip dependents if user said no
+  if (step === "dependents" && data.dependents_yesno === "no") {
+    return true;
+  }
+
+  // Skip salary questions for hourly users
+  if (step === "annual_salary" && data.income_type === "hourly") {
+    return true;
+  }
+
+  // Skip hourly-specific questions for salary users
+  if (
+    ["hourly_rate", "average_hours_per_week", "seasonal_variation"].includes(step) &&
+    data.income_type === "salary"
+  ) {
+    return true;
+  }
+
+  return false;
+};
+
+/**
+ * Gets the next valid question index
+ */
+export const getNextQuestionIndex = (
+  currentIndex: number,
+  questionsToAsk: StepType[],
+  formData: FormData
+): number => {
+  let nextIndex = currentIndex + 1;
+
+  // Skip questions conditionally
+  while (nextIndex < questionsToAsk.length) {
+    const nextStep = questionsToAsk[nextIndex];
+
+    if (shouldSkipQuestion(nextStep, formData)) {
+      nextIndex++;
+      continue;
+    }
+
+    break;
+  }
+
+  return nextIndex;
+};
