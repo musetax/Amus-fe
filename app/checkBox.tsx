@@ -72,7 +72,7 @@ const CheckboxDeductions: React.FC<CheckboxDeductionsProps> = ({
                 placeholder="Enter amount"
                 value={deductionValues[deduction] || ""}
                 onChange={(e) => handleValueChange(deduction, e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-0 outline-none h-10"
                 style={{ backgroundColor: "white", color: "#31333f" }}
               />
             </div>

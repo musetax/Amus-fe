@@ -160,7 +160,7 @@ export const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
                 isLast &&
                 !isTyping && (
                   <div className="mt-4">
-                    <select
+                    {/* <select
                       onChange={(e) => {
                         if (e.target.value) {
                           if (e.target.value === "Other") {
@@ -189,7 +189,7 @@ export const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
                           </option>
                         )
                       )}
-                    </select>
+                    </select> */}
                     <div
                       className="mt-0 space-y-2"
                       style={{
@@ -201,7 +201,10 @@ export const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
                     >
                       {(message.content as MessageContent).options?.map(
                         (option) => (
-                          <button className="block py-2 px-4 text-left text-sm bg-white text-gray-900 rounded-2xl hover:bg-gray-50 transition-colors font-medium border border-gray-200 whitespace-nowrap">
+                          <button
+                            onClick={() => onOptionSelect(option.value)}
+                            className="block py-2 px-4 text-left text-sm bg-white text-gray-900 rounded-2xl hover:bg-gray-50 transition-colors font-medium border border-gray-200 whitespace-nowrap"
+                          >
                             {option.label}
                           </button>
                         )
