@@ -5,17 +5,24 @@ interface CheckboxDeductionsProps {
   onSubmit: (selectedDeductions: any[]) => void;
 }
 
-const CheckboxDeductions: React.FC<CheckboxDeductionsProps> = ({ options, onSubmit }) => {
-    console.log(options,"==============================")
-  const [selectedDeductions, setSelectedDeductions] = React.useState<string[]>([]);
-  const [deductionValues, setDeductionValues] = React.useState<Record<string, string>>({});
+const CheckboxDeductions: React.FC<CheckboxDeductionsProps> = ({
+  options,
+  onSubmit,
+}) => {
+  console.log(options, "==============================");
+  const [selectedDeductions, setSelectedDeductions] = React.useState<string[]>(
+    []
+  );
+  const [deductionValues, setDeductionValues] = React.useState<
+    Record<string, string>
+  >({});
   const [showInputs, setShowInputs] = React.useState(false);
 
   const handleCheckboxChange = (value: string) => {
     setSelectedDeductions((prev) => {
       if (prev.includes(value)) {
         const updated = prev.filter((v) => v !== value);
-        const {  ...rest } = deductionValues;
+        const { ...rest } = deductionValues;
         setDeductionValues(rest);
         return updated;
       } else {
@@ -83,33 +90,36 @@ const CheckboxDeductions: React.FC<CheckboxDeductionsProps> = ({ options, onSubm
   }
 
   return (
-    <div className="space-y-3 mt-4">
-      {options.map((option) => (
-        <label
-          key={option.value}
-          className="flex items-center space-x-3 cursor-pointer p-3 rounded-lg hover:bg-gray-50 transition-colors"
-          style={{ border: "1px solid #e5e7eb" }}
-        >
-          <input
-            type="checkbox"
-            value={option.value}
-            checked={selectedDeductions.includes(option.value)}
-            onChange={() => handleCheckboxChange(option.value)}
-            className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-            style={{ accentColor: "#518DE7" }}
-          />
-          <span className="text-sm" style={{ color: "#31333f" }}>
-            {option.label}
-          </span>
-        </label>
-      ))}
+    <div className="space-y-3 mt-4 ">
+      <div className="flex flex-wrap gap-3">
+        {options.map((option) => (
+          <label
+            key={option.value}
+            className="flex items-center space-x-3 gap-1 cursor-pointer p-3 rounded-lg hover:bg-gray-50 transition-colors"
+            style={{ border: "1px solid #e5e7eb" }}
+          >
+            <input
+              type="checkbox"
+              value={option.value}
+              checked={selectedDeductions.includes(option.value)}
+              onChange={() => handleCheckboxChange(option.value)}
+              className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              style={{ accentColor: "#518DE7" }}
+            />
+            <span className="text-sm" style={{ color: "#31333f" }}>
+              {option.label}
+            </span>
+          </label>
+        ))}
+      </div>
       <div className="flex gap-2 mt-4">
         <button
           onClick={handleContinue}
           className="flex-1 py-3 px-4 text-white rounded-2xl transition-colors font-medium"
-          style={{ 
-            backgroundColor: selectedDeductions.length === 0 ? "#9ca3af" : "#518DE7",
-            cursor: selectedDeductions.length === 0 ? "not-allowed" : "pointer"
+          style={{
+            backgroundColor:
+              selectedDeductions.length === 0 ? "#9ca3af" : "#518DE7",
+            cursor: selectedDeductions.length === 0 ? "not-allowed" : "pointer",
           }}
           disabled={selectedDeductions.length === 0}
         >
@@ -118,10 +128,10 @@ const CheckboxDeductions: React.FC<CheckboxDeductionsProps> = ({ options, onSubm
         <button
           onClick={() => onSubmit([])}
           className="py-3 px-4 rounded-2xl transition-colors font-medium"
-          style={{ 
-            backgroundColor: "#f3f4f6", 
+          style={{
+            backgroundColor: "#f3f4f6",
             color: "#374151",
-            border: "1px solid #e5e7eb"
+            border: "1px solid #e5e7eb",
           }}
         >
           Skip
@@ -130,4 +140,4 @@ const CheckboxDeductions: React.FC<CheckboxDeductionsProps> = ({ options, onSubm
     </div>
   );
 };
-export default CheckboxDeductions
+export default CheckboxDeductions;

@@ -147,11 +147,9 @@ export const Thread: any = ({
                     justifyContent: "center",
                   }}
                 >
-                  {companyLogo ? <img
-                    src={companyLogo}
-                    width="60"
-                    height="41"
-                  /> :
+                  {companyLogo ? (
+                    <img src={companyLogo} width="60" height="41" />
+                  ) : (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="60"
@@ -221,8 +219,8 @@ export const Thread: any = ({
                           <stop offset="1" stop-color="#7687E5" />
                         </linearGradient>
                       </defs>
-                    </svg>}
-
+                    </svg>
+                  )}
                 </span>
                 <div style={{ display: "flex", flexDirection: "column" }}>
                   <h3
@@ -291,13 +289,12 @@ export const Thread: any = ({
                     <TaxChatbot
                       onComplete={handleTaxChatbotComplete}
                       onContinueToChat={handleContinueToChat}
-                      prefilledData={payrollData.payroll}
+                      // prefilledData={payrollData.payroll}
                       image={image}
                       companyLogo={companyLogo}
                     />
                   </div>
-                ) 
-                : (
+                ) : (
                   <>
                     <ThreadPrimitive.Viewport
                       style={{
@@ -316,7 +313,10 @@ export const Thread: any = ({
                           ),
                           EditComposer: EditComposer,
                           AssistantMessage: (props) => (
-                            <AssistantMessage {...props} companyLogo={companyLogo} />
+                            <AssistantMessage
+                              {...props}
+                              companyLogo={companyLogo}
+                            />
                           ),
                         }}
                       />
@@ -633,7 +633,6 @@ const AssistantMessage: React.FC<any> = ({ companyLogo }) => {
   const messageId = message?.id;
   const time = formatTime(message?.createdAt || Date.now());
 
-
   const urls: any = message?.metadata?.custom?.urls;
   const isMessageLoading = message?.metadata?.custom?.loading;
   const isStreaming = message?.metadata?.custom?.streaming;
@@ -651,28 +650,32 @@ const AssistantMessage: React.FC<any> = ({ companyLogo }) => {
       }}
     >
       <span style={{ position: "relative", top: "10px" }}>
-        {companyLogo ? <img
-          src={companyLogo}
-          style={{
-            width: "25px",
-            height: "25px",
-            minWidth: "25px",
-            minHeight: "25px",
-            objectFit: "cover",
-            borderRadius: "50%",
-          }}
-        /> : <img
-          style={{
-            width: "25px",
-            height: "25px",
-            minWidth: "25px",
-            minHeight: "25px",
-            objectFit: "cover",
-            borderRadius: "50%",
-          }}
-          src="https://appweb-bucket.s3.us-east-1.amazonaws.com/muse-logo.png"
-          alt="useIcon"
-        />}
+        {companyLogo ? (
+          <img
+            src={companyLogo}
+            style={{
+              width: "25px",
+              height: "25px",
+              minWidth: "25px",
+              minHeight: "25px",
+              objectFit: "cover",
+              borderRadius: "50%",
+            }}
+          />
+        ) : (
+          <img
+            style={{
+              width: "25px",
+              height: "25px",
+              minWidth: "25px",
+              minHeight: "25px",
+              objectFit: "cover",
+              borderRadius: "50%",
+            }}
+            src="https://appweb-bucket.s3.us-east-1.amazonaws.com/muse-logo.png"
+            alt="useIcon"
+          />
+        )}
       </span>
       <MessagePrimitive.Root className="grid grid-cols-[auto_auto_1fr] grid-rows-[auto_1fr] relative w-full max-w-[var(--thread-max-width)] py-4 pr-2">
         <div className="text-foreground max-w-[calc(var(--thread-max-width)*0.8)] break-words leading-7 col-span-2 col-start-2 row-start-1 my-1.5">

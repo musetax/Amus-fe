@@ -51,11 +51,15 @@ export const generateMessageForStep = (
     case "income_type":
       return {
         type: "bot",
-        content: `${greetingPrefix}Let's start with your income type:`,
-        options: [
-          { label: "hourly", value: "hourly" },
-          { label: "salary", value: "salary" },
-        ],
+        content: {
+          content: `${greetingPrefix}Let's start with your income type:`,
+          selectType: "dropdown",
+          options: [
+            { label: "hourly", value: "hourly" },
+            { label: "salary", value: "salary" },
+          ],
+          placeholder: "Select income type",
+        },
         createdAt: new Date(),
       };
 
@@ -222,7 +226,10 @@ export const generateMessageForStep = (
             selectType: "checkbox",
             options: [
               { label: "IRA Contribution", value: "ira_contribution" },
-              { label: "Student Loan Interest", value: "student_loan_interest" },
+              {
+                label: "Student Loan Interest",
+                value: "student_loan_interest",
+              },
             ],
             placeholder: "Select any that apply (optional)",
           },
@@ -236,12 +243,18 @@ export const generateMessageForStep = (
             selectType: "checkbox",
             options: [
               { label: "IRA Contribution", value: "ira_contribution" },
-              { label: "Student Loan Interest", value: "student_loan_interest" },
+              {
+                label: "Student Loan Interest",
+                value: "student_loan_interest",
+              },
               { label: "State or Local Tax", value: "state_local_tax" },
               { label: "Medical Expenses", value: "medical_expenses" },
               { label: "Other Deductions", value: "other_deduction" },
               { label: "Charitable Donations", value: "charitable_donation" },
-              { label: "Home Mortgage Interest", value: "home_mortgage_interest" },
+              {
+                label: "Home Mortgage Interest",
+                value: "home_mortgage_interest",
+              },
             ],
             placeholder: "Select all that apply",
           },
