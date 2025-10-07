@@ -191,15 +191,15 @@ export const SummarySection: React.FC<SummarySectionProps> = ({
 
           {/* Deductions - show selected deductions */}
           {formData.deductions && Array.isArray(formData.deductions) && formData.deductions.length > 0 && (() => {
-            const labels: { [key: string]: string } = {
-              ira_contribution: "IRA Contribution",
-              student_loan_interest: "Student Loan Interest",
-              state_local_tax: "State/Local Tax",
-              medical_expenses: "Medical Expenses",
-              other_deduction: "Other Deductions",
-              charitable_donation: "Charitable Donations",
-              home_mortgage_interest: "Home Mortgage Interest"
-            };
+            // const labels: { [key: string]: string } = {
+            //   ira_contribution: "IRA Contribution",
+            //   student_loan_interest: "Student Loan Interest",
+            //   state_local_tax: "State/Local Tax",
+            //   medical_expenses: "Medical Expenses",
+            //   other_deduction: "Other Deductions",
+            //   charitable_donation: "Charitable Donations",
+            //   home_mortgage_interest: "Home Mortgage Interest"
+            // };
             const deductionsList = formData.deductions.reduce(
               (sum, item) => sum + Number(item.amount),
               0

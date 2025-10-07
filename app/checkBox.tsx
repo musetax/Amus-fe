@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 
 interface CheckboxDeductionsProps {
   options: Array<{ label: string; value: string }>;
@@ -15,7 +15,7 @@ const CheckboxDeductions: React.FC<CheckboxDeductionsProps> = ({ options, onSubm
     setSelectedDeductions((prev) => {
       if (prev.includes(value)) {
         const updated = prev.filter((v) => v !== value);
-        const { [value]: removed, ...rest } = deductionValues;
+        const {  ...rest } = deductionValues;
         setDeductionValues(rest);
         return updated;
       } else {
