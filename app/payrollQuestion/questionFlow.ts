@@ -52,7 +52,8 @@ export const getQuestionsToAsk = (prefilledData: Partial<TaxData>): StepType[] =
   questions.push("current_date");
   questions.push("work_address");
   questions.push("home_address");
-
+  questions.push("pre_tax_deductions")
+  questions.push("post_tax_deductions")
   return questions;
 };
 
