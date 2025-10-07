@@ -76,9 +76,9 @@ export const MyModelAdapter = (
             try {
               const json = JSON.parse(jsonStr);
 
-              if (json.response || json.llm_message) {
+              if (json.response || json.message) {
                 // You might be using `response` or `llm_message` depending on your API
-                accumulated += json.response || json.llm_message;
+                accumulated += json.response || json.message;
                 hasNewContent = true;
               }
 
