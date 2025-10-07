@@ -9,6 +9,7 @@ import {
 } from "./types";
 import { SendHorizontalIcon, TooltipIconButton, CompanyLogo } from "./icons";
 import { formatTime } from "./utils";
+import Image from "next/image";
 
 // Tax User Message Component
 export const TaxUserMessage: React.FC<TaxUserMessageProps> = ({
@@ -55,7 +56,7 @@ export const TaxUserMessage: React.FC<TaxUserMessageProps> = ({
           </span>
         </div>
         {image ? (
-          <img
+          <Image
             style={{
               width: "25px",
               height: "25px",
@@ -67,7 +68,7 @@ export const TaxUserMessage: React.FC<TaxUserMessageProps> = ({
             alt="useIcon"
           />
         ) : (
-          <img
+          <Image
             style={{
               width: "25px",
               height: "25px",
@@ -202,6 +203,7 @@ export const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
                       {(message.content as MessageContent).options?.map(
                         (option) => (
                           <button
+                            key={option.value}
                             onClick={() => onOptionSelect(option.value)}
                             className="block py-2 px-4 text-left text-sm bg-white text-gray-900 rounded-2xl hover:bg-gray-50 transition-colors font-medium border border-gray-200 whitespace-nowrap"
                           >
