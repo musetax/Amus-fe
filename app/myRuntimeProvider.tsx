@@ -19,7 +19,7 @@ export const MyModelAdapter = (
       const AUTH_API_URL = process.env.NEXT_PUBLIC_BACKEND_API;
 
       const makeRequest = async () =>
-        fetch(`${AUTH_API_URL}/v1/api/amus/chat/${userId}/${sessionId}`, {
+        fetch(`${AUTH_API_URL}chat`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

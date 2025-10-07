@@ -41,22 +41,30 @@ interface payload {
 }
 
 interface TaxData {
-  age?: string;
-  income_type: string;
-  annual_salary: string;
-  filing_status: string;
-  pay_frequency: string;
-  current_withholding_per_paycheck: string;
-  spouse_income?: string;
-  additional_yesorno?: string;
-  additional_income?: string;
-  standard_deduction?: string;
-  deductions?: string;
-  dependents_yesorno?: string;
-  dependents?: string;
+  first_name?: string;
+  middle_name?: string;
+  last_name?: string;
+  income_type?: "salary" | "hourly";
+  annual_salary?: number;
+  hourly_rate?: number;
+  average_hours_per_week?: number;
+  seasonal_variation?: "none" | "low" | "medium" | "high";
+  estimated_annual_income?: number;
+  filing_status?: "single" | "married_joint" | "head_of_household";
+  pay_frequency?: "weekly" | "bi-weekly" | "semi-monthly" | "monthly";
+  current_withholding_per_paycheck?: number;
+  desired_boost_per_paycheck?: number;
+  additional_income?: number;
+  deductions?: number;
+  dependents?: number;
+  spouse_income?: number;
   current_date?: string;
+  paychecks_already_received?: number;
   home_address?: string;
   work_address?: string;
+  pre_tax_deductions?: number;
+  post_tax_deductions?: number;
+  age?: number;
 }
 
 interface paycheck {
@@ -104,12 +112,21 @@ interface Message {
 }
 
 interface FormData {
+  first_name: string | null;
+  middle_name: string | null;
+  last_name: string | null;
   filing_status: string | null;
+  income_type: string | null;
   age: string | null;
   annual_salary: string | null;
-  spouse_income: string | null;
+  hourly_rate: string | null;
+  average_hours_per_week: string | null;
+  seasonal_variation: string | null;
+  estimated_annual_income: string | null;
   pay_frequency: string | null;
   current_withholding_per_paycheck: string | null;
+  desired_boost_per_paycheck: string | null;
+  spouse_income: string | null;
   additional_yesorno: string | null;
   additional_income: string | null;
   standard_deduction: string | null;
@@ -117,8 +134,11 @@ interface FormData {
   dependents_yesno: string | null;
   dependents: string | null;
   current_date: string | null;
+  paychecks_already_received: string | null;
   home_address: string | null;
   work_address: string | null;
+  pre_tax_deductions: string | null;
+  post_tax_deductions: string | null;
 }
 
 interface TaxUserMessageProps {
@@ -152,8 +172,12 @@ interface SummaryCardProps {
 
 type StepType =
   | "filing_status"
+  | "income_type"
   | "head_of_household"
   | "age"
+  | "hourly_rate"
+  | "average_hours_per_week"
+  | "seasonal_variation"
   | "dependents_yesno"
   | "standard_deduction"
   | "annual_salary"
@@ -167,6 +191,8 @@ type StepType =
   | "current_date"
   | "work_address"
   | "home_address"
+  | "pre_tax_deductions"
+  | "post_tax_deductions"
   | "complete"
   | "saved";
 
@@ -503,7 +529,9 @@ const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
                         currentStep === "start_pay_date" ||
                         currentStep === "work_address" ||
                         currentStep === "home_address" ||
-                        currentStep === "current_date") && (
+                        currentStep === "current_date" ||
+                        currentStep === "pre_tax_deductions" ||
+                        currentStep === "post_tax_deductions") && (
                           <button
                             onClick={() => onInputSubmit("skip")}
                             className="p-0 font-medium"
@@ -653,8 +681,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
     }
 
     if (
-      (prefilledData.filing_status === "Married" ||
-        prefilledData.filing_status === "married_joint") &&
+      ( prefilledData.filing_status === "married_joint") &&
       !prefilledData.spouse_income
     ) {
       questions.push("spouse_income");
@@ -684,24 +711,36 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
   const [questionsToAsk] = useState<StepType[]>(getQuestionsToAsk());
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
 
-  const [formData, setFormData] = useState<FormData>({
-    filing_status: prefilledData.filing_status || null,
-    age: prefilledData.age || null,
-    annual_salary: prefilledData.annual_salary || null,
-    spouse_income: prefilledData.spouse_income || null,
-    pay_frequency: prefilledData.pay_frequency || null,
-    current_withholding_per_paycheck:
-      prefilledData.current_withholding_per_paycheck || null,
-    additional_yesorno: prefilledData.additional_yesorno || null,
-    additional_income: null,
-    standard_deduction: prefilledData.standard_deduction || null,
-    deductions: prefilledData.deductions || null,
-    dependents_yesno: null,
-    dependents: null,
-    current_date: null,
-    home_address: null,
-    work_address: null,
-  });
+const [formData, setFormData] = useState<FormData>({
+  first_name: prefilledData.first_name || null,
+  middle_name: prefilledData.middle_name || null,
+  last_name: prefilledData.last_name || null,
+  age: prefilledData.age?.toString() || null,
+  income_type: prefilledData.income_type || null,
+  annual_salary: prefilledData.annual_salary?.toString() || null,
+  hourly_rate: prefilledData.hourly_rate?.toString() || null,
+  average_hours_per_week: prefilledData.average_hours_per_week?.toString() || null,
+  seasonal_variation: prefilledData.seasonal_variation || null,
+  estimated_annual_income: prefilledData.estimated_annual_income?.toString() || null,
+  filing_status: prefilledData.filing_status || null,
+  pay_frequency: prefilledData.pay_frequency || null,
+  current_withholding_per_paycheck: prefilledData.current_withholding_per_paycheck?.toString() || null,
+  desired_boost_per_paycheck: prefilledData.desired_boost_per_paycheck?.toString() || null,
+  spouse_income: prefilledData.spouse_income?.toString() || null,
+  // additional_yesorno: prefilledData.additional_yesorno || null,
+  additional_income: prefilledData.additional_income?.toString() || null,
+  // standard_deduction: prefilledData.standard_deduction || null,
+  deductions: prefilledData.deductions || null,
+  // dependents_yesorno: prefilledData.dependents_yesorno || null,
+  dependents: prefilledData.dependents?.toString() || null,
+  current_date: prefilledData.current_date || null,
+  paychecks_already_received: prefilledData.paychecks_already_received?.toString() || null,
+  home_address: prefilledData.home_address || null,
+  work_address: prefilledData.work_address || null,
+  pre_tax_deductions: prefilledData.pre_tax_deductions?.toString() || null,
+  post_tax_deductions: prefilledData.post_tax_deductions?.toString() || null,
+});
+
 
   const [currentStep, setCurrentStep] = useState<StepType>(
     questionsToAsk.length > 0 ? questionsToAsk[0] : "complete"
@@ -740,6 +779,16 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
           ],
           createdAt: new Date(),
         };
+      case 'income_type':
+        return {
+          type: "bot",
+          content: `${greeting}\n\nLet's start with your income type:`,
+          options: [
+            { label: "hourly", value: "hourly" },
+            { label: "salary", value: "salary" },
+          ],
+          createdAt: new Date()
+        };
 
       case "head_of_household":
         return {
@@ -763,6 +812,35 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
             content: `${greeting}\n\nPlease enter your age (must be between 13 and 100):`,
             inputType: "number",
             placeholder: "Enter your age",
+          },
+          createdAt: new Date(),
+        };
+
+      case "hourly_rate":
+        return {
+          type: "bot",
+          content: "What is your hourly rate?",
+          placeholder: "e.g. 25",
+          createdAt: new Date(),
+        };
+
+      case "average_hours_per_week":
+        return {
+          type: "bot",
+          content: "How many hours do you work per week on average?",
+          placeholder: "e.g. 40",
+          createdAt: new Date(),
+        };
+      case "seasonal_variation":
+        return {
+          type: "bot",
+          content: {
+            content: "Does your income vary seasonally (for example, higher in some months)?",
+            options: seasonalVariationOptions.map((opt) => ({
+              label: opt.label,
+              value: opt.value,
+            })),
+            placeholder: "select the seasonal_variations"
           },
           createdAt: new Date(),
         };
@@ -959,6 +1037,22 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
           },
           createdAt: new Date(),
         };
+      case "pre_tax_deductions":
+        return {
+          type: "bot",
+          content: "Enter your total pre-tax deductions for the year:",
+          placeholder: "e.g., 2000",
+          createdAt: new Date(),
+        };
+
+      case "post_tax_deductions":
+        return {
+          type: "bot",
+          content: "Enter your total post-tax deductions for the year:",
+          placeholder: "e.g., 1500",
+          createdAt: new Date(),
+        };
+
 
       default:
         return {
@@ -1012,42 +1106,70 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
       type === "bot" ? 800 : 0
     );
   };
-
+  const seasonalVariationOptions = [
+    { id: 1, value: 'none', label: 'Consistent year-round', multiplier: 1.0 },
+    { id: 2, value: 'low', label: 'Low seasonal variation (±10%)', multiplier: 0.9 },
+    { id: 3, value: 'moderate', label: 'Moderate seasonal variation (±25%)', multiplier: 0.75 },
+    { id: 4, value: 'high', label: 'High seasonal variation (±40%)', multiplier: 0.6 }
+  ]
+  const calculateAnnualIncomeFromHourly = (
+    hourlyRate: number,
+    hoursPerWeek: number,
+    variation: string
+  ): number => {
+    const variationFactor =
+      seasonalVariationOptions.find((v) => v.value === variation)?.multiplier || 1.0;
+    return hourlyRate * hoursPerWeek * 52 * variationFactor;
+  };
   const moveToNextQuestion = (data: typeof formData): void => {
+
+
     let nextIndex = currentQuestionIndex + 1;
 
     // Keep looping until you find a valid next question
+
+    // Skip questions conditionally
     while (nextIndex < questionsToAsk.length) {
       const nextStep = questionsToAsk[nextIndex];
-      console.log(nextStep, "]]]]]]]]]]]", data);
 
-      // Skip "additional_income" if user said no
+      // Skip additional income if user said no
       if (nextStep === "additional_income" && data.additional_yesorno === "no") {
         nextIndex++;
         continue;
       }
 
-      // Skip "dependents" if user said no
+      // Skip dependents if user said no
       if (nextStep === "dependents" && data.dependents_yesno === "no") {
         nextIndex++;
         continue;
       }
 
-      // Found a valid next question
+      // Skip salary questions for hourly users
+      if (nextStep === "annual_salary" && data.income_type === "hourly") {
+        nextIndex++;
+        continue;
+      }
+
+      // Skip hourly-specific questions for salary users
+      if (
+        ["hourly_rate", "average_hours_per_week", "seasonal_variation"].includes(nextStep) &&
+        data.income_type === "salary"
+      ) {
+        nextIndex++;
+        continue;
+      }
+
       break;
     }
 
-    // If no more questions left, show completion message
+    // End of questions
     if (nextIndex >= questionsToAsk.length) {
-      addMessage(
-        "bot",
-        "Perfect! I have all the information I need. Let me summarize everything for you:"
-      );
+      addMessage("bot", "Perfect! I have all the information I need. Let me summarize everything for you:");
       setCurrentStep("complete");
       return;
     }
 
-    // Move to the valid next question
+    // Move to next valid step
     setCurrentQuestionIndex(nextIndex);
     const nextStep = questionsToAsk[nextIndex];
     setCurrentStep(nextStep);
@@ -1066,6 +1188,60 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
           placeholder: "Select Yes or No",
         });
         break;
+      case "age":
+        addMessage("bot", {
+          content: "Please enter your age (must be between 13 and 100):",
+          inputType: "number",
+          placeholder: "Enter your age",
+        });
+        break;
+      case "income_type":
+        addMessage("bot", {
+          content: "Please select your income type:",
+          selectType: "dropdown",
+          options: [
+            { label: "Hourly", value: "hourly" },
+            { label: "Salary", value: "salary" },
+          ],
+          placeholder: "Select your income type",
+        });
+        break;
+
+      case "annual_salary":
+        addMessage("bot", {
+          content: "What is your annual salary?",
+          inputType: "number",
+          placeholder: "Enter annual salary (e.g., 75000)",
+        });
+        break;
+
+      case "hourly_rate":
+        addMessage("bot", {
+          content: "What is your hourly rate?",
+          inputType: "number",
+          placeholder: "Enter hourly rate (e.g., 25)",
+        });
+        break;
+
+      case "average_hours_per_week":
+        addMessage("bot", {
+          content: "How many hours do you work on average per week?",
+          inputType: "number",
+          placeholder: "Enter hours (e.g., 40)",
+        });
+        break;
+
+      case "seasonal_variation":
+        addMessage("bot", {
+          content: "How consistent are your work hours throughout the year?",
+          selectType: "dropdown",
+          options: seasonalVariationOptions.map((opt) => ({
+            label: opt.label,
+            value: opt.value,
+          })),
+          placeholder: "Select seasonal variation",
+        });
+        break;
 
       case "age":
         addMessage("bot", {
@@ -1075,14 +1251,6 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         });
         break;
 
-      case "annual_salary":
-        addMessage("bot", {
-          content:
-            "Perfect! Now I need to know your annual salary to calculate your tax information accurately.",
-          inputType: "number",
-          placeholder: "Enter your annual salary (e.g., 75000)",
-        });
-        break;
 
       case "spouse_income":
         addMessage("bot", {
@@ -1229,6 +1397,22 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
           placeholder: "Enter home ZIP code",
         });
         break;
+      case "pre_tax_deductions":
+        addMessage("bot", {
+          content: "Enter your total pre-tax deductions (if any):",
+          inputType: "number",
+          placeholder: "e.g., 2000",
+        });
+        break;
+
+      case "post_tax_deductions":
+        addMessage("bot", {
+          content: "Enter your total post-tax deductions (if any):",
+          inputType: "number",
+          placeholder: "e.g., 500",
+        });
+        break;
+
     }
   };
 
@@ -1292,6 +1476,110 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         setFormData(ageData);
         moveToNextQuestion(ageData);
         break;
+      case "income_type":
+        let incomeType = "";
+
+        if (!isSkipped) {
+          const lowerValue = value.toLowerCase().trim();
+
+          if (lowerValue !== "salary" && lowerValue !== "hourly") {
+            setError("Please enter either 'salary' or 'hourly'.");
+            return;
+          }
+
+          incomeType = lowerValue;
+
+          // ✅ Add a nice user-friendly confirmation message
+          if (incomeType === "salary") {
+            addMessage("user", "I earn a fixed annual salary.");
+          } else {
+            addMessage("user", "I am paid hourly for my work.");
+          }
+        } else {
+          addMessage("user", "I'll skip this question");
+        }
+
+        const incomeTypeData = {
+          ...formData,
+          income_type: incomeType,
+        };
+
+        setFormData(incomeTypeData);
+        moveToNextQuestion(incomeTypeData);
+        break;
+      case "hourly_rate":
+        if (!isSkipped) {
+          const rate = parseFloat(value);
+          if (isNaN(rate) || rate <= 0) {
+            setError("Please enter a valid hourly rate (greater than 0).");
+            return;
+          }
+          addMessage("user", `My hourly rate is $${rate}`);
+          const rateData = { ...formData, hourly_rate: rate };
+          setFormData(rateData);
+          moveToNextQuestion(rateData);
+        } else {
+          addMessage("user", "I'll skip this question");
+          moveToNextQuestion(formData);
+        }
+        break;
+
+      /* 🕒 AVERAGE HOURS PER WEEK */
+      case "average_hours_per_week":
+        if (!isSkipped) {
+          const hours = parseFloat(value);
+          if (isNaN(hours) || hours <= 0 || hours > 100) {
+            setError("Please enter a valid number of hours (1–100).");
+            return;
+          }
+          addMessage("user", `I work about ${hours} hours per week.`);
+          const hoursData = { ...formData, average_hours_per_week: hours };
+          setFormData(hoursData);
+          moveToNextQuestion(hoursData);
+        } else {
+          addMessage("user", "I'll skip this question");
+          moveToNextQuestion(formData);
+        }
+        break;
+
+      case "seasonal_variation":
+        if (!isSkipped) {
+          const validValues = ["none", "low", "moderate", "high"];
+          const val = value.toLowerCase();
+          if (!validValues.includes(val)) {
+            setError("Please select a valid seasonal variation option.");
+            return;
+          }
+          const selectedOption = seasonalVariationOptions.find(
+            (opt) => opt.value === val
+          );
+          addMessage("user", `My work has ${selectedOption?.label.toLowerCase()}.`);
+
+          const seasonalData: any = { ...formData, seasonal_variation: val };
+
+          // 🧮 Auto-calculate estimated annual income if hourly data is available
+          if (
+            seasonalData.income_type === "hourly" &&
+            seasonalData.hourly_rate &&
+            seasonalData.average_hours_per_week
+          ) {
+            const annual = calculateAnnualIncomeFromHourly(
+              seasonalData.hourly_rate,
+              seasonalData.average_hours_per_week,
+              val
+            );
+            seasonalData.estimated_annual_income = parseFloat(annual.toFixed(2));
+            addMessage("bot", `Got it! Your estimated annual income is around $${annual.toFixed(2)}.`);
+          }
+
+          setFormData(seasonalData);
+          moveToNextQuestion(seasonalData);
+        } else {
+          addMessage("user", "I'll skip this question");
+          moveToNextQuestion(formData);
+        }
+        break;
+
       case "annual_salary":
         if (!isSkipped) {
           if (isNaN(numValue) || numValue < 0) {
@@ -1624,6 +1912,51 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
           moveToNextQuestion(homeAddressSkippedData);
         }
         break;
+      case "pre_tax_deductions":
+        if (!isSkipped) {
+          if (isNaN(numValue) || numValue < 0) {
+            setError("Pre-tax deductions must be a positive number.");
+            return;
+          }
+        }
+
+        const preTaxData:any = {
+          ...formData,
+          pre_tax_deductions: isSkipped ? 0 : numValue,
+        };
+
+        setFormData(preTaxData);
+        addMessage(
+          "user",
+          isSkipped
+            ? "I'll skip this question"
+            : `My pre-tax deductions are ${formatCurrency(numValue)}`
+        );
+        moveToNextQuestion(preTaxData);
+        break;
+
+      case "post_tax_deductions":
+        if (!isSkipped) {
+          if (isNaN(numValue) || numValue < 0) {
+            setError("Post-tax deductions must be a positive number.");
+            return;
+          }
+        }
+
+        const postTaxData:any = {
+          ...formData,
+          post_tax_deductions: isSkipped ? 0 : numValue,
+        };
+
+        setFormData(postTaxData);
+        addMessage(
+          "user",
+          isSkipped
+            ? "I'll skip this question"
+            : `My post-tax deductions are ${formatCurrency(numValue)}`
+        );
+        moveToNextQuestion(postTaxData);
+        break;
 
       default:
         break;
@@ -1685,39 +2018,63 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
     try {
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      const taxDataToSave: payload = {
-        payroll: {
-          income_type: "salary",
-          annual_salary: formData.annual_salary!,
-          filing_status: formData.filing_status!,
-          pay_frequency: formData.pay_frequency!,
-          current_withholding_per_paycheck:
-            formData.current_withholding_per_paycheck!,
-          spouse_income: formData.spouse_income || undefined,
-          // NEW: Include optional fields ↓
-          additional_income: formData.additional_income || undefined,
-          deductions: formData.deductions || undefined,
-          dependents: formData.dependents || undefined,
-          current_date: formData.current_date || undefined,
-        },
-        // paycheck: {
-        //   income_type: "salary",
-        //   salary: formData.annual_salary!,
-        //   filing_status: formData.filing_status!,
-        //   pay_frequency: formData.pay_frequency!,
-        //   // current_withholding_per_paycheck: formData.current_withholding_per_paycheck!,
-        //   spouse_income: formData.spouse_income || undefined,
-        //   // NEW: Include optional fields ↓
-        //   // additional_income: formData.additional_income || undefined,
-        //   // deductions: formData.deductions || undefined,
-        //   dependents: formData.dependents || undefined,
-        //   // current_date: formData.current_date || undefined,
-        //   home_address: formData.home_address || undefined,
-        //   work_address: formData.work_address || undefined,
-        //   age: undefined,
-        // },
-        // most_recent_pay_date: formData.most_recent_pay_date || undefined
-      };
+   interface Payload {
+  payroll: Partial<TaxData>;
+}
+
+const taxDataToSave: Payload = {
+  payroll: {
+    first_name: formData.first_name || undefined,
+    middle_name: formData.middle_name || undefined,
+    last_name: formData.last_name || undefined,
+    age: formData.age !== undefined ? Number(formData.age) : undefined,
+    income_type: formData.income_type || undefined,
+    annual_salary:
+      formData.income_type === "salary"
+        ? Number(formData.annual_salary)
+        : undefined,
+    hourly_rate:
+      formData.income_type === "hourly" ? Number(formData.hourly_rate) : undefined,
+    average_hours_per_week:
+      formData.income_type === "hourly"
+        ? Number(formData.average_hours_per_week)
+        : undefined,
+    seasonal_variation: formData.seasonal_variation || undefined,
+    estimated_annual_income: formData.estimated_annual_income || undefined,
+    filing_status: formData.filing_status || undefined,
+    pay_frequency: formData.pay_frequency || undefined,
+    current_withholding_per_paycheck:
+      formData.current_withholding_per_paycheck !== undefined
+        ? Number(formData.current_withholding_per_paycheck)
+        : undefined,
+ 
+    spouse_income:
+      formData.spouse_income !== undefined ? Number(formData.spouse_income) : undefined,
+    additional_income:
+      formData.additional_income !== undefined
+        ? Number(formData.additional_income)
+        : undefined,
+    deductions: formData.deductions || undefined,
+    dependents:
+      formData.dependents !== undefined ? Number(formData.dependents) : undefined,
+    current_date: formData.current_date || undefined,
+    paychecks_already_received:
+      formData.paychecks_already_received !== undefined
+        ? Number(formData.paychecks_already_received)
+        : undefined,
+    home_address: formData.home_address || undefined,
+    work_address: formData.work_address || undefined,
+    pre_tax_deductions:
+      formData.pre_tax_deductions !== undefined
+        ? Number(formData.pre_tax_deductions)
+        : undefined,
+    post_tax_deductions:
+      formData.post_tax_deductions !== undefined
+        ? Number(formData.post_tax_deductions)
+        : undefined,
+  },
+};
+
 
       if (onComplete) {
         onComplete(taxDataToSave);
