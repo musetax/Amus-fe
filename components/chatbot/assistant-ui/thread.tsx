@@ -290,7 +290,7 @@ export const Thread: any = ({
                     <TaxChatbot
                       onComplete={handleTaxChatbotComplete}
                       onContinueToChat={handleContinueToChat}
-                      // prefilledData={payrollData.payroll}
+                      prefilledData={payrollData.payroll}
                       image={image}
                       companyLogo={companyLogo}
                     />
