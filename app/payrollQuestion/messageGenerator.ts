@@ -195,9 +195,9 @@ export const generateMessageForStep = (
       return {
         type: "bot",
         content: {
-          content: `${greetingPrefix}If you have any additional income (e.g., freelance, investments, or rental), please enter the total amount. If not, you can skip this question.`,
+          content: `${greetingPrefix}Please enter your additional annual income (e.g., freelance, investments, or rental):`,
           inputType: "number",
-          placeholder: "Enter additional annual income or type 'skip'",
+          placeholder: "Enter additional annual income",
         },
         createdAt: new Date(),
       };

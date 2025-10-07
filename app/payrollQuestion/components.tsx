@@ -57,6 +57,8 @@ export const TaxUserMessage: React.FC<TaxUserMessageProps> = ({
         </div>
         {image ? (
           <Image
+            width={25}
+            height={25}
             style={{
               width: "25px",
               height: "25px",
@@ -69,6 +71,8 @@ export const TaxUserMessage: React.FC<TaxUserMessageProps> = ({
           />
         ) : (
           <Image
+            width={25}
+            height={25}
             style={{
               width: "25px",
               height: "25px",

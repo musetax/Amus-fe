@@ -52,7 +52,8 @@ export const getQuestionsToAsk = (prefilledData: Partial<TaxData>): StepType[] =
   questions.push("current_date");
   questions.push("work_address");
   questions.push("home_address");
-
+  questions.push("pre_tax_deductions")
+  questions.push("post_tax_deductions")
   return questions;
 };
 
@@ -63,6 +64,7 @@ export const shouldSkipQuestion = (
   step: StepType,
   data: FormData
 ): boolean => {
+  console.log(data,"======")
   // Skip additional income if user said no
   if (step === "additional_income" && data.additional_yesorno === "no") {
     return true;

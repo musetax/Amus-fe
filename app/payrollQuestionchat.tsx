@@ -149,21 +149,80 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
     addMessage("bot", nextMessage.content);
   };
 
-  const handleFilingStatusSelect = (status: string): void => {
-    const updatedData = {
-      ...formData,
-      filing_status: status,
-    };
+  const handleFilingStatusSelect = (value: string): void => {
+    setError("");
+    let result: any;
 
-    setFormData(updatedData);
-    addMessage(
-      "user",
-      `I am ${status.toLowerCase() === "married_joint"
-        ? "Married"
-        : status.toLowerCase()
-      }`
-    );
-    moveToNextQuestion(updatedData);
+    // Route to appropriate handler based on current step
+    switch (currentStep) {
+      case "filing_status":
+        result = {
+          formData: { ...formData, filing_status: value },
+          userMessage: value === "married_joint" ? "I am Married" : `I am ${value}`,
+        };
+        break;
+
+      case "income_type":
+        result = InputHandlers.handleIncomeTypeInput(value, formData, false);
+        break;
+
+      case "head_of_household":
+        result = {
+          formData: { ...formData, head_of_household: value },
+          userMessage: value === "yes" ? "Yes, I am head of household" : "No, I am not head of household",
+        };
+        break;
+
+      case "pay_frequency":
+        result = InputHandlers.handlePayFrequencyInput(value, formData, false);
+        break;
+
+      case "seasonal_variation":
+        result = InputHandlers.handleSeasonalVariationInput(value, formData, false);
+        break;
+
+      case "additional_yesorno":
+        result = InputHandlers.handleAdditionalYesNoInput(value, formData);
+        break;
+
+      case "standard_deduction":
+        result = InputHandlers.handleStandardDeductionInput(value, formData);
+        break;
+
+      case "dependents_yesno":
+        result = InputHandlers.handleDependentsYesNoInput(value, formData);
+        break;
+
+      case "dependents":
+        result = InputHandlers.handleDependentsInput(value, formData, false);
+        break;
+
+      default:
+        // Default handler for unhandled dropdowns
+        result = {
+          formData: { ...formData, [currentStep]: value },
+          userMessage: value,
+        };
+        break;
+    }
+
+    // Handle error
+    if ("error" in result) {
+      setError(result.error);
+      return;
+    }
+
+    // Update form data and add messages
+    setFormData(result.formData);
+    addMessage("user", result.userMessage);
+
+    // Add bot message if exists
+    if (result.botMessage) {
+      addMessage("bot", result.botMessage);
+    }
+
+    // Move to next question
+    moveToNextQuestion(result.formData);
   };
 
   const handleInputSubmit = (value: string): void => {
@@ -473,6 +532,8 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
           >
             <span style={{ position: "relative", top: "10px" }}>
               <Image
+                width={25}
+                height={25}
                 style={{
                   width: "25px",
                   height: "25px",

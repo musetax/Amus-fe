@@ -149,7 +149,7 @@ export const Thread: any = ({
                   }}
                 >
                   {companyLogo ? (
-                    <Image src={companyLogo} width="60" height="41" alt="Company Logo" />
+                    <Image src={companyLogo} width={60} height={41} alt="Company Logo" />
                   ) : (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -183,19 +183,19 @@ export const Thread: any = ({
                           y2="6.83259"
                           gradientUnits="userSpaceOnUse"
                         >
-                          <stop stop-color="#69DEC6" />
-                          <stop offset="1" stop-color="#49C2D4" />
+                          <stop offset="0" stopColor="#69DEC6" />
+                          <stop offset="1" stopColor="#49C2D4" />
                         </linearGradient>
                         <linearGradient
                           id="paint1_linear_7768_1391"
-                          x1="payrollData.payroll16.9186"
+                          x1="16.9186"
                           y1="3.08128"
                           x2="44.3829"
                           y2="35.4655"
                           gradientUnits="userSpaceOnUse"
                         >
-                          <stop stop-color="#48C2D4" />
-                          <stop offset="1" stop-color="#1595EA" />
+                          <stop offset="0" stopColor="#48C2D4" />
+                          <stop offset="1" stopColor="#1595EA" />
                         </linearGradient>
                         <linearGradient
                           id="paint2_linear_7768_1391"
@@ -205,8 +205,8 @@ export const Thread: any = ({
                           y2="-12.9475"
                           gradientUnits="userSpaceOnUse"
                         >
-                          <stop stop-color="#1695EA" />
-                          <stop offset="1" stop-color="#548CE7" />
+                          <stop offset="0" stopColor="#1695EA" />
+                          <stop offset="1" stopColor="#548CE7" />
                         </linearGradient>
                         <linearGradient
                           id="paint3_linear_7768_1391"
@@ -216,8 +216,8 @@ export const Thread: any = ({
                           y2="35.6826"
                           gradientUnits="userSpaceOnUse"
                         >
-                          <stop stop-color="#518DE7" />
-                          <stop offset="1" stop-color="#7687E5" />
+                          <stop offset="0" stopColor="#518DE7" />
+                          <stop offset="1" stopColor="#7687E5" />
                         </linearGradient>
                       </defs>
                     </svg>
@@ -568,6 +568,8 @@ const UserMessage: React.FC<UserMessageProps> = ({ image }) => {
         <BranchPicker className="col-span-full col-start-1 row-start-3 -mr-1 justify-end" />
         {image ? (
           <Image
+            width={25}
+            height={25}
             style={{
               width: "25px",
               height: "25px",
@@ -580,6 +582,8 @@ const UserMessage: React.FC<UserMessageProps> = ({ image }) => {
           />
         ) : (
           <Image
+            width={25}
+            height={25}
             style={{
               width: "25px",
               height: "25px",
@@ -653,6 +657,8 @@ const AssistantMessage: React.FC<any> = ({ companyLogo }) => {
       <span style={{ position: "relative", top: "10px" }}>
         {companyLogo ? (
           <Image
+            width={25}
+            height={25}
             src={companyLogo}
             style={{
               width: "25px",
@@ -666,6 +672,8 @@ const AssistantMessage: React.FC<any> = ({ companyLogo }) => {
           />
         ) : (
           <Image
+            width={25}
+            height={25}
             style={{
               width: "25px",
               height: "25px",

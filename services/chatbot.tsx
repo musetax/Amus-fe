@@ -84,6 +84,13 @@ function makeHistoryAdapter(
     async load(): Promise<ExportedMessageRepository> {
       try {
         setLoadingHistory?.(true);
+
+        if (!userId) {
+          console.warn("No userId provided, skipping chat history load");
+          setLoadingHistory?.(false);
+          return { messages: [], headId: null };
+        }
+
         const res = await axiosInstanceAuth.post(
           "/v1/api/amus/get-user-chats",
           {
@@ -93,13 +100,20 @@ function makeHistoryAdapter(
         );
 
         const finalData = mapApiChatsToRepository(res.data.chats || []);
-        setLoadingHistory?.(false)
-        return finalData
+        setLoadingHistory?.(false);
+        return finalData;
 
-      } catch (err) {
-        console.error("Error fetching chats:", err);
-        setLoadingHistory?.(false)
-        return { messages: [] };
+      } catch (err: any) {
+        // Use console.warn instead of console.error to avoid Next.js error overlay
+        console.warn("Failed to load chat history:", {
+          message: err?.message,
+          response: err?.response?.data,
+          status: err?.response?.status,
+          url: err?.config?.url,
+        });
+        setLoadingHistory?.(false);
+        // Return empty state - this is expected behavior when no history exists
+        return { messages: [], headId: null };
       }
     },
 
