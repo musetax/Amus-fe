@@ -79,24 +79,41 @@ function Assistant() {
   }, [sessionId, access_token, userId])
 
   // Check if payroll data is complete
-  const isPayrollDataComplete = (data: any) => {
-    if (!data) return false;
+ const isPayrollDataComplete = (data: any): boolean => {
+  if (!data || !data.income_type) return false;
 
-    return !!(
-      data.income_type &&
-      data.annual_salary !== null &&
-      data.annual_salary !== undefined &&
-      data.filing_status &&
-      data.pay_frequency &&
-      data.current_withholding_per_paycheck !== null &&
-      data.current_withholding_per_paycheck !== undefined &&
-      data.additional_income !== 0 &&
-      data.deductions !== 0 &&
-      data.dependents !== 0 &&
-      data.home_address !== null &&
-      data.work_address !== null
+  const commonFieldsPresent =
+    data.filing_status &&
+    data.pay_frequency &&
+    data.current_withholding_per_paycheck != null &&
+    data.additional_income != null &&
+    data.deductions != null &&
+    data.dependents != null &&
+    data.home_address &&
+    data.work_address &&
+    data.age != null &&
+    data.pre_tax_deductions != null &&
+    data.post_tax_deductions != null;
+
+  if (data.income_type === "salary") {
+    return (
+      data.annual_salary != null &&
+      commonFieldsPresent
     );
-  };
+  }
+
+  if (data.income_type === "hourly") {
+    return (
+      data.hourly_rate != null &&
+      data.average_hours_per_week != null &&
+      data.seasonal_variation &&
+      commonFieldsPresent
+    );
+  }
+
+  return false; // invalid income_type
+};
+
 
   useEffect(() => {
     const userInfo = async () => {

@@ -110,7 +110,7 @@ export interface Message {
 }
 
 export interface TaxChatbotProps {
-  onComplete?: (taxData: Payload) => void;
+  onComplete?: (taxData: TaxData) => void;
   onContinueToChat?: () => void;
   image?: string;
   companyLogo?: string;

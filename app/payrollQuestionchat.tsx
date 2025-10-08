@@ -6,7 +6,8 @@ import {
   FormData,
   Message,
   StepType,
-  Payload,
+  // Payload,
+  TaxData,
 } from "./payrollQuestion/types";
 
 // Import components
@@ -413,8 +414,8 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
     try {
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      const taxDataToSave: Payload = {
-        payroll: {
+      const taxDataToSave: TaxData = {
+        // payroll: {
           first_name: formData.first_name || undefined,
           middle_name: formData.middle_name || undefined,
           last_name: formData.last_name || undefined,
@@ -468,7 +469,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
           post_tax_deductions: formData.post_tax_deductions
             ? Number(formData.post_tax_deductions)
             : undefined,
-        },
+        // },
       };
 
       if (onComplete) {
