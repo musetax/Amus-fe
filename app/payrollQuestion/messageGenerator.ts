@@ -82,9 +82,9 @@ export const generateMessageForStep = (
       return {
         type: "bot",
         content: {
-          content: `${greetingPrefix}Please enter your age (must be between 13 and 100):`,
+          content: `${greetingPrefix}Please enter your age :`,
           inputType: "number",
-          placeholder: "Enter your age",
+          placeholder: "Enter your age (must be between 13 and 100)",
         },
         createdAt: new Date(),
       };
@@ -169,7 +169,7 @@ export const generateMessageForStep = (
       return {
         type: "bot",
         content: {
-          content: `${greetingPrefix}Finally, what is your current withholding amount per paycheck?`,
+          content: `${greetingPrefix} What is your current withholding amount per paycheck?`,
           inputType: "number",
           placeholder: "Enter withholding amount per paycheck",
         },
@@ -299,7 +299,7 @@ export const generateMessageForStep = (
       return {
         type: "bot",
         content: {
-          content: `${greetingPrefix}What was the date of your last paycheck?`,
+          content: `${greetingPrefix}When did you receive your last paycheck?`,
           inputType: "date",
           placeholder: "Select the date of your last paycheck",
         },
@@ -332,7 +332,7 @@ export const generateMessageForStep = (
       return {
         type: "bot",
         content: {
-          content: "Enter your total pre-tax deductions (if any):",
+          content: "Please enter your total pre-tax deductions :",
           inputType: "number",
           placeholder: "e.g., 2000",
         },
@@ -343,7 +343,7 @@ export const generateMessageForStep = (
       return {
         type: "bot",
         content: {
-          content: "Enter your total post-tax deductions (if any):",
+          content: "Please enter your total post-tax deductions :",
           inputType: "number",
           placeholder: "e.g., 500",
         },

@@ -54,7 +54,7 @@ export const handleIncomeTypeInput = (
 
   const lowerValue = value.toLowerCase().trim();
   if (lowerValue !== "salary" && lowerValue !== "hourly") {
-    return { error: "Please enter either 'salary' or 'hourly'." };
+    return { error: "Please select either 'salary' or 'hourly'." };
   }
 
   const message =
@@ -423,10 +423,10 @@ export const handleCurrentDateInput = (
   const today = new Date();
 
   if (isNaN(dateValue.getTime())) {
-    return { error: "Please enter a valid date." };
+    return { error: "Please select a valid date" };
   }
   if (dateValue > today) {
-    return { error: "The date cannot be in the future." };
+    return { error: "Please select a valid date." };
   }
 
   const formattedDate = dateValue.toISOString().split("T")[0];
@@ -484,7 +484,7 @@ export const handleHomeAddressInput = (
   const zipRegex = /^\d{5}(-\d{4})?$/;
   if (!zipRegex.test(zip)) {
     return {
-      error: "Please enter a valid U.S. ZIP code (e.g., 12345 or 12345-6789).",
+      error: "Please enter a valid U.S ZIP code (e.g., 12345 or 12345-6789).",
     };
   }
 

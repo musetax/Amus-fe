@@ -89,6 +89,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [error, setError] = useState<string>("");
+  const [inputKey, setInputKey] = useState<number>(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = (): void => {
@@ -221,6 +222,9 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
     if (result.botMessage) {
       addMessage("bot", result.botMessage);
     }
+
+    // Clear input field by changing key
+    setInputKey(prev => prev + 1);
 
     // Move to next question
     moveToNextQuestion(result.formData);
@@ -403,6 +407,9 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
       addMessage("bot", result.botMessage);
     }
 
+    // Clear input field by changing key
+    setInputKey(prev => prev + 1);
+
     // Move to next question
     moveToNextQuestion(result.formData);
   };
@@ -516,6 +523,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
               isTyping={isTyping}
               error={error}
               companyLogo={companyLogo}
+              inputKey={inputKey}
             />
           )
         )}

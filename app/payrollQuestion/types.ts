@@ -131,6 +131,7 @@ export interface TaxBotMessageProps {
   isTyping: boolean;
   error: string;
   companyLogo?: string;
+  inputKey?: number;
 }
 
 export interface TaxInputFieldProps {

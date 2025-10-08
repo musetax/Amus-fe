@@ -99,6 +99,7 @@ export const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
   isTyping,
   error,
   companyLogo,
+  inputKey,
 }) => {
   const time = formatTime(message.createdAt || Date.now());
 
@@ -293,6 +294,7 @@ export const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
                     }}
                   >
                     <TaxInputField
+                      key={inputKey}
                       type={(message.content as MessageContent).inputType!}
                       placeholder={
                         (message.content as MessageContent).placeholder!
@@ -363,7 +365,7 @@ export const TaxInputField: React.FC<TaxInputFieldProps> = ({
   const handleSubmit = (): void => {
     if (!value.trim()) return;
     onSubmit(value);
-    setValue("");
+    // Value will be cleared by key change on success, preserved on error
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>): void => {
