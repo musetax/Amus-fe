@@ -55,8 +55,8 @@ export const generateMessageForStep = (
           content: `${greetingPrefix}Let's start with your income type:`,
           selectType: "dropdown",
           options: [
-            { label: "hourly", value: "hourly" },
-            { label: "salary", value: "salary" },
+            { label: "Hourly", value: "hourly" },
+            { label: "Salary", value: "salary" },
           ],
           placeholder: "Select income type",
         },
