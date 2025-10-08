@@ -54,13 +54,13 @@ export const handleIncomeTypeInput = (
 
   const lowerValue = value.toLowerCase().trim();
   if (lowerValue !== "salary" && lowerValue !== "hourly") {
-    return { error: "Please select either 'salary' or 'hourly'." };
+    return { error: "Please select either 'Salary' or 'Hourly'." };
   }
 
   const message =
     lowerValue === "salary"
-      ? "I earn a fixed annual salary."
-      : "I am paid hourly for my work.";
+      ? "I earn a fixed annual Salary."
+      : "I am paid Hourly for my work.";
 
   return {
     formData: { ...formData, income_type: lowerValue },
@@ -85,15 +85,15 @@ export const handleAnnualSalaryInput = (
 
   const numValue = parseFloat(value);
   if (isNaN(numValue) || numValue < 0) {
-    return { error: "Annual salary must be a positive number." };
+    return { error: "Annual Salary must be a positive number." };
   }
   if (numValue > 500000) {
-    return { error: "Annual salary cannot exceed $500,000." };
+    return { error: "Annual Salary cannot exceed $500,000." };
   }
 
   return {
     formData: { ...formData, annual_salary: numValue.toString() },
-    userMessage: `My annual salary is ${formatCurrency(numValue)}`,
+    userMessage: `My annual Salary is ${formatCurrency(numValue)}`,
   };
 };
 
@@ -114,12 +114,12 @@ export const handleHourlyRateInput = (
 
   const rate = parseFloat(value);
   if (isNaN(rate) || rate <= 0) {
-    return { error: "Please enter a valid hourly rate (greater than 0)." };
+    return { error: "Please enter a valid Hourly rate (greater than 0)." };
   }
 
   return {
     formData: { ...formData, hourly_rate: rate.toString() },
-    userMessage: `My hourly rate is $${rate}`,
+    userMessage: `My Hourlyly rate is $${rate}`,
   };
 };
 
@@ -260,7 +260,7 @@ export const handleCurrentWithholdingInput = (
     return { error: "Withholding must be a positive number." };
   }
   if (formData.annual_salary && numValue > Number(formData.annual_salary)) {
-    return { error: "Withholding cannot exceed your annual salary." };
+    return { error: "Withholding cannot exceed your annual Salary." };
   }
 
   return {

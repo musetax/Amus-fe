@@ -93,9 +93,9 @@ export const generateMessageForStep = (
       return {
         type: "bot",
         content: {
-          content: "What is your hourly rate?",
+          content: "What is your Hourly rate?",
           inputType: "number",
-          placeholder: "Enter hourly rate (e.g., 25)",
+          placeholder: "Enter Hourly rate (e.g., 25)",
         },
         createdAt: new Date(),
       };
@@ -130,9 +130,9 @@ export const generateMessageForStep = (
       return {
         type: "bot",
         content: {
-          content: `${greetingPrefix}What is your annual salary?`,
+          content: `${greetingPrefix}What is your annual Salary?`,
           inputType: "number",
-          placeholder: "Enter annual salary (e.g., 75000)",
+          placeholder: "Enter annual Salary (e.g., 75000)",
         },
         createdAt: new Date(),
       };
