@@ -92,7 +92,7 @@ function makeHistoryAdapter(
         }
 
         const res = await axiosInstanceAuth.post(
-          "/v1/api/amus/get-user-chats",
+          "/get-user-chats",
           {
             user_id: userId,
             session_id: sessionId,
