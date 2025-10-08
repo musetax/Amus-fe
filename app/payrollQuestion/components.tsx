@@ -159,7 +159,44 @@ export const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
                   ))}
                 </div>
               )}
-
+                 {typeof message.content === "object" &&
+                (message.content as MessageContent).selectType === "drop-down" &&
+                isLast &&
+                !isTyping && (
+                  <div className="mt-4">
+                    <select
+                      onChange={(e) => {
+                        if (e.target.value) {
+                          if (e.target.value === "Other") {
+                            const customValue = prompt(
+                              "Please enter your custom pay frequency:"
+                            );
+                            if (customValue && customValue.trim()) {
+                              onInputSubmit(customValue);
+                            }
+                          } else {
+                            onInputSubmit(e.target.value);
+                          }
+                          e.target.value = "";
+                        }
+                      }}
+                      className="w-full px-4 py-3 bg-white border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-900"
+                      defaultValue=""
+                    >
+                      <option value="" disabled>
+                        {(message.content as MessageContent).placeholder}
+                      </option>
+                      {(message.content as MessageContent).options?.map(
+                        (option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        )
+                      )}
+                    </select>
+                  
+                  </div>
+                )}
               {typeof message.content === "object" &&
                 (message.content as MessageContent).selectType === "dropdown" &&
                 isLast &&

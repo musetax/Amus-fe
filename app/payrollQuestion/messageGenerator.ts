@@ -282,7 +282,7 @@ export const generateMessageForStep = (
         type: "bot",
         content: {
           content: `${greetingPrefix}How many dependents do you have?`,
-          selectType: "dropdown",
+          selectType: "drop-down",
           options: [
             { label: "One", value: "1" },
             { label: "Two", value: "2" },
@@ -311,7 +311,7 @@ export const generateMessageForStep = (
         type: "bot",
         content: {
           content: `${greetingPrefix}Please enter your work ZIP code:`,
-          inputType: "text",
+          inputType: "number",
           placeholder: "Enter work ZIP code",
         },
         createdAt: new Date(),
@@ -322,7 +322,7 @@ export const generateMessageForStep = (
         type: "bot",
         content: {
           content: `${greetingPrefix}Please enter your home ZIP code:`,
-          inputType: "text",
+          inputType: "number",
           placeholder: "Enter home ZIP code",
         },
         createdAt: new Date(),
