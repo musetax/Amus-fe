@@ -67,7 +67,7 @@ export const generateMessageForStep = (
       return {
         type: "bot",
         content: {
-          content: `${greetingPrefix}Are you the head of household?\nHead of Household is a filing status for unmarried persons with a qualified person.`,
+          content: `${greetingPrefix}Are you  head of household?`,
           selectType: "dropdown",
           options: [
             { label: "Yes", value: "yes" },

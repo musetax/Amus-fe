@@ -19,6 +19,7 @@ export const getQuestionsToAsk = (prefilledData: Partial<TaxData>): StepType[] =
   if (!prefilledData.hourly_rate) questions.push("hourly_rate");
   if (!prefilledData.average_hours_per_week) questions.push("average_hours_per_week");
   if (!prefilledData.seasonal_variation) questions.push("seasonal_variation");
+  if(prefilledData.filing_status==="single")questions.push('head_of_household')
 
   if (
     prefilledData.filing_status === "married_joint" &&

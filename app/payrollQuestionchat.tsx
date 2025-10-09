@@ -170,7 +170,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
 
       case "head_of_household":
         result = {
-          formData: { ...formData, head_of_household: value },
+          formData: { ...formData, filing_status: value==="yes"?'head_of_household':formData.filing_status},
           userMessage: value === "yes" ? "Yes, I am head of household" : "No, I am not head of household",
         };
         break;
