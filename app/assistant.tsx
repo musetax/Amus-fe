@@ -40,6 +40,9 @@ function Assistant() {
   const access_token: any = searchParams.get("access_token");
   const user_image: any = searchParams.get("user_image")
   const companyLogo: any = searchParams.get("company_logo")
+  const clientId:any=searchParams.get("client_id")
+  const clientSecret:any=searchParams.get("client_secret")
+
   // const refresh_access_token: any = params.get("refresh_token");
   const [globalError, setGlobalError] = useState<string | null>(null);
 
@@ -50,6 +53,8 @@ function Assistant() {
   if (user_image) {
     localStorage.setItem("image", user_image)
   }
+  if(clientId) localStorage.setItem("clientId",clientId)
+  if(clientSecret)localStorage.setItem("clientSecret",clientSecret)  
 
   console.log(currentUserId)
   useEffect(() => {

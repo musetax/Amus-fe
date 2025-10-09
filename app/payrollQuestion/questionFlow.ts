@@ -7,6 +7,8 @@ export const getQuestionsToAsk = (prefilledData: Partial<TaxData>): StepType[] =
   const questions: StepType[] = [];
 
   if (!prefilledData.filing_status) questions.push("filing_status");
+  questions.push('head_of_household')
+
   if (!prefilledData.age) questions.push("age");
 
   // Add income_type question if not prefilled
@@ -19,7 +21,6 @@ export const getQuestionsToAsk = (prefilledData: Partial<TaxData>): StepType[] =
   if (!prefilledData.hourly_rate) questions.push("hourly_rate");
   if (!prefilledData.average_hours_per_week) questions.push("average_hours_per_week");
   if (!prefilledData.seasonal_variation) questions.push("seasonal_variation");
-  if(prefilledData.filing_status==="single")questions.push('head_of_household')
 
   if (
     prefilledData.filing_status === "married_joint" &&
@@ -70,7 +71,7 @@ export const shouldSkipQuestion = (
   if (step === "additional_income" && data.additional_yesorno === "no") {
     return true;
   }
-
+  if(step==="head_of_household" &&data.filing_status ==='married_joint') return true;
   // Skip dependents if user said no
   if (step === "dependents" && data.dependents_yesno === "no") {
     return true;

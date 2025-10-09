@@ -19,6 +19,8 @@ export const AUTH_API_URL = process.env.NEXT_PUBLIC_BACKEND_API;
 export const getTokens = () => ({
   accessToken: localStorage.getItem("authTokenMuse"),
   refreshToken: localStorage.getItem("refreshTokenMuse"),
+  clientId:localStorage.getItem('clientId'),
+  clientSecret:localStorage.getItem('clientSecret')
 });
 export const axiosInstanceAuth: AxiosInstance = axios.create({
   baseURL: AUTH_API_URL ,
@@ -48,57 +50,59 @@ axiosInstanceAuth.interceptors.request.use(
 axiosInstanceAuth.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error) => {
-    // const originalRequest = error.config;
+    const originalRequest = error.config;
 
     // if (error?.response?.status === 500) {
     //   toast.error(error?.response?.data?.message, { toastId: "block-auth" });
     // }
 
-    // if (error.response?.status === 401 && !originalRequest._retry) {
-    //   originalRequest._retry = true;
-    //   const newAccessToken = await refreshToken();
-    //   if (newAccessToken) {
-    //     originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-    //     return axiosInstanceAuth(originalRequest);
-    //   }
-    // }
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      const newAccessToken = await refreshToken();
+      if (newAccessToken) {
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        return axiosInstanceAuth(originalRequest);
+      }
+    }
 
     return Promise.reject(error);
   }
 );
 
-// const setTokens = (accessToken: string, refreshToken?: string) => {
-//   localStorage.setItem("authTokenMuse", accessToken);
-//   if (refreshToken) {
-//     localStorage.setItem("refreshTokenMuse", refreshToken);
-//   }
-// };
+const setTokens = (accessToken: string, refreshToken?: string) => {
+  localStorage.setItem("authTokenMuse", accessToken);
+  if (refreshToken) {
+    localStorage.setItem("refreshTokenMuse", refreshToken);
+  }
+};
 
-// const refreshToken = async (): Promise<string | null> => {
-//   try {
-//     const { refreshToken } = getTokens();
-//     if (!refreshToken) throw new Error("No refresh token available");
+const refreshToken = async (): Promise<string | null> => {
+  try {
+    const { clientId,clientSecret } = getTokens();
+    // if (!refreshToken) throw new Error("No refresh token available");
+    
+    let payload={
+       client_id:clientId,
+        client_secret: clientSecret,
+    }
+    const response = await axios.post('https://api-be.musetax.com/auth/token',payload)
 
-//     const response = await axios.post(`${AUTH_API_URL}/v1/login/refresh`, {
-//       refresh_token: refreshToken,
-//     });
+    const newAccessToken = response.data.access_token;
+    const newRefreshToken = '';
 
-//     const newAccessToken = response.data?.tokens?.AccessToken;
-//     const newRefreshToken = response.data?.tokens?.RefreshToken;
-
-//     if (newAccessToken) {
-//       setTokens(newAccessToken, newRefreshToken);
-//       return newAccessToken;
-//     } else {
-//       throw new Error("Failed to refresh token");
-//     }
-//   } catch (error) {
-//     console.error("Error refreshing token:", error);
-//     localStorage.clear();
-//     window.location.href = "/signin";
-//     return null;
-//   }
-// };
+    if (newAccessToken) {
+      setTokens(newAccessToken, newRefreshToken);
+      return newAccessToken;
+    } else {
+      throw new Error("Failed to refresh token");
+    }
+  } catch (error) {
+    console.error("Error refreshing token:", error);
+    localStorage.clear();
+    // window.location.href = "/signin";
+    return null;
+  }
+};
 
 // ========== Main App Axios Instance ==========
 // const axiosInstance: AxiosInstance = axios.create({
