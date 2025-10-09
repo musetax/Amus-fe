@@ -181,7 +181,7 @@ export const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
                           e.target.value = "";
                         }
                       }}
-                      className="w-full px-4 py-3 bg-white border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-900"
+                      className="w-full px-4 py-3 bg-white border border-gray-300 h-10 rounded-2xl focus:outline-none focus:ring-0 outline-none text-gray-900"
                       defaultValue=""
                     >
                       <option value="" disabled>
@@ -395,6 +395,7 @@ export const TaxInputField: React.FC<TaxInputFieldProps> = ({
             }
           }}
           min={type === "number" ? 0 : undefined}
+           max={type === "date" ? new Date().toISOString().split("T")[0] : undefined} // 👈 Prevent future dates
           onChange={(e) => {
             if (type === "number" && Number(e.target.value) < 0) {
               return;
