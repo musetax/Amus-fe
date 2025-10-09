@@ -76,7 +76,7 @@ const setTokens = (accessToken: string, refreshToken?: string) => {
   }
 };
 
-const refreshToken = async (): Promise<string | null> => {
+export const refreshToken = async (): Promise<string | null> => {
   try {
     const { clientId,clientSecret } = getTokens();
     // if (!refreshToken) throw new Error("No refresh token available");

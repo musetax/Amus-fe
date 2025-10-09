@@ -1,5 +1,5 @@
 import { saveMessagesToLocalStorage } from "../components/chatbot/assistant-ui/thread";
-import { getTokens } from "../utilities/auth";
+import { getTokens, refreshToken } from "../utilities/auth";
 
 export const MyModelAdapter = (
   userId: string,
@@ -13,19 +13,28 @@ export const MyModelAdapter = (
     // Start immediately - no loading placeholder!
 
     try {
-      const {accessToken}= getTokens();
+      let {accessToken}= getTokens();
+        if (!accessToken) {
+        const newToken = await refreshToken();
+        if (!newToken) {
+          setTyping(false);
+          setGlobalError?.("Your session has timed out for security. Please sign in again.");
+          throw new Error("No valid access token found");
+        }
+        accessToken = newToken;
+      }
 
       const lastUserText = messages[messages.length - 1].content[0]?.text || "";
       const AUTH_API_URL = process.env.NEXT_PUBLIC_BACKEND_API;
 
-      const makeRequest = async () =>
+        const makeRequest = async (token: string) =>
         fetch(`${AUTH_API_URL}chat`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${token}`,
             "Cache-Control": "no-cache",
-            "Connection": "keep-alive",
+            Connection: "keep-alive",
           },
           keepalive: true,
           body: JSON.stringify({
@@ -35,15 +44,22 @@ export const MyModelAdapter = (
           }),
         });
 
-      const response = await makeRequest();
+      // First attempt
+      let response = await makeRequest(accessToken);
 
-      if (response.status !== 200) {
-        setGlobalError?.("Your session has timed out for security. Please sign in again.")
-        // const newToken = await refreshAccessToken();
-        // if (!newToken) throw new Error("Token refresh failed");
-        // response = await makeRequest();
+      // Handle expired access token (401)
+      if (response.status === 401) {
+        const newToken = await refreshToken();
+
+        if (!newToken) {
+          setGlobalError?.("Your session has timed out for security. Please sign in again.");
+          throw new Error("Token refresh failed");
+        }
+
+        // Retry with the new token
+        accessToken = newToken;
+        response = await makeRequest(accessToken);
       }
-
       if (!response.ok || !response.body) throw new Error("Bad response");
 
       const reader = response.body.getReader();
