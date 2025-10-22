@@ -105,7 +105,8 @@ export const Thread: any = ({
   }, []);
 
   // Check if we should show the tax chatbot based on props
-  const shouldShowTaxChatbot = messages.length === 0 && showTaxChatbot;
+  // const shouldShowTaxChatbot = messages.length === 0 && showTaxChatbot;
+  const shouldShowTaxChatbot =  showTaxChatbot;
 
   return (
     <>
