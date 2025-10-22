@@ -22,11 +22,7 @@ export const getQuestionsToAsk = (prefilledData: Partial<TaxData>): StepType[] =
   if (!prefilledData.average_hours_per_week) questions.push("average_hours_per_week");
   if (!prefilledData.seasonal_variation) questions.push("seasonal_variation");
 
-  if (
-    prefilledData.filing_status === "married_joint" &&
-    !prefilledData.spouse_income
-  )
-    questions.push("spouse_income");
+  if (!prefilledData.spouse_income)  questions.push("spouse_income");
 
   if (!prefilledData.pay_frequency) questions.push("pay_frequency");
 
@@ -66,12 +62,12 @@ export const shouldSkipQuestion = (
   step: StepType,
   data: FormData
 ): boolean => {
-  console.log(data,"======")
+  console.log(data, "======")
   // Skip additional income if user said no
   if (step === "additional_income" && data.additional_yesorno === "no") {
     return true;
   }
-  if(step==="head_of_household" &&data.filing_status ==='married_joint') return true;
+  if (step === "head_of_household" && data.filing_status === 'married_joint') return true;
   // Skip dependents if user said no
   if (step === "dependents" && data.dependents_yesno === "no") {
     return true;
@@ -81,7 +77,7 @@ export const shouldSkipQuestion = (
   if (step === "annual_salary" && data.income_type === "hourly") {
     return true;
   }
-
+  if (step === 'spouse_income' && data.filing_status === "single") return true
   // Skip hourly-specific questions for salary users
   if (
     ["hourly_rate", "average_hours_per_week", "seasonal_variation"].includes(step) &&

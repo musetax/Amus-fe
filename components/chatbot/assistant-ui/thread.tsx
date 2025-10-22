@@ -34,6 +34,7 @@ import { Tooltip, TooltipTrigger } from "../ui/tooltip";
 import TaxChatbot from "../../../app/payrollQuestionchat";
 import { ErrorBanner } from "./error-ui";
 import Image from "next/image";
+import { HomeScreen } from "./home-screen";
 // import Image from "next/image";
 
 export const CHAT_HISTORY_KEY = "chat_history";
@@ -57,7 +58,11 @@ export const Thread: any = ({
   onTaxChatbotComplete,
   onContinueToChat,
   globalError,
+  showHomeScreen,
+  onSelectIntent,
+  onReturnToHome,
 }: any) => {
+  console.log(showHomeScreen,"jknjkdw")
   const { messages } = useThread();
   // const [isLoading, setIsLoading] = useState(false);
   // const [pdfData, setPdfData] = useState<any[]>([]);
@@ -279,6 +284,11 @@ export const Thread: any = ({
 
                 {globalError ? (
                   <ErrorBanner message={globalError} />
+                ) : showHomeScreen ? (
+                  <HomeScreen
+                    onSelectIntent={onSelectIntent}
+                    companyLogo={companyLogo}
+                  />
                 ) : shouldShowTaxChatbot ? (
                   <div
                     style={{
@@ -317,6 +327,7 @@ export const Thread: any = ({
                             <AssistantMessage
                               {...props}
                               companyLogo={companyLogo}
+                              onReturnToHome={onReturnToHome}
                             />
                           ),
                         }}
@@ -633,8 +644,9 @@ const UserActionBar: FC = () => {
 //   );
 // };
 
-const AssistantMessage: React.FC<any> = ({ companyLogo }) => {
+const AssistantMessage: React.FC<any> = ({ companyLogo, onReturnToHome }) => {
   const message = useMessage();
+  const { messages } = useThread();
   const messageId = message?.id;
   const time = formatTime(message?.createdAt || Date.now());
 
@@ -643,17 +655,33 @@ const AssistantMessage: React.FC<any> = ({ companyLogo }) => {
   const isStreaming = message?.metadata?.custom?.streaming;
   const [showUrls, setShowUrls] = useState(false);
 
+  // Check if this is the last assistant message
+  const assistantMessages = messages.filter((msg: any) => msg.role === "assistant");
+  const isLastMessage = assistantMessages[assistantMessages.length - 1]?.id === messageId;
+
+  // Check if any message is currently streaming
+  const isAnyMessageStreaming = messages.some(
+    (msg: any) => msg.role === "assistant" && msg.metadata?.custom?.streaming
+  );
+
   return (
     <div
       style={{
         display: "flex",
-        alignItems: "baseline",
-        gap: "8px",
+        flexDirection: "column",
         width: "100%",
         paddingLeft: "16px",
         paddingRight: "10px",
       }}
     >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "baseline",
+          gap: "8px",
+          width: "100%",
+        }}
+      >
       <span style={{ position: "relative", top: "10px" }}>
         {companyLogo ? (
           <Image
@@ -736,6 +764,55 @@ const AssistantMessage: React.FC<any> = ({ companyLogo }) => {
         />
         <BranchPicker className="col-start-2 row-start-2 -ml-2 mr-2" />
       </MessagePrimitive.Root>
+      </div>
+
+      {/* Return to Home Screen Button - Only show on last message when not streaming */}
+      {!isAnyMessageStreaming && !isMessageLoading && onReturnToHome && isLastMessage && (
+        <div style={{ marginTop: "12px", marginLeft: "32px" }}>
+          <button
+            onClick={onReturnToHome}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
+              padding: "10px 20px",
+              fontSize: "14px",
+              fontWeight: "500",
+              color: "#ffffff",
+              background: "linear-gradient(90deg, #69DEC6 0%, #49C2D4 50%, #1595EA 100%)",
+              border: "none",
+              borderRadius: "24px",
+              cursor: "pointer",
+              transition: "all 0.2s ease-in-out",
+              boxShadow: "0 2px 8px rgba(21, 149, 234, 0.2)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "scale(1.02)";
+              e.currentTarget.style.boxShadow = "0 4px 12px rgba(21, 149, 234, 0.3)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "scale(1)";
+              e.currentTarget.style.boxShadow = "0 2px 8px rgba(21, 149, 234, 0.2)";
+            }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+              <polyline points="9 22 9 12 15 12 15 22" />
+            </svg>
+            Return to Home Screen
+          </button>
+        </div>
+      )}
     </div>
   );
 };

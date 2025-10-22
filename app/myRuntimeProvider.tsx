@@ -1,11 +1,14 @@
 import { saveMessagesToLocalStorage } from "../components/chatbot/assistant-ui/thread";
 import { getTokens, refreshToken } from "../utilities/auth";
 
+type AgentIntent = "ask_uncle_sam" | "refund_paycheck" | "paycheck_calculator" | null;
+
 export const MyModelAdapter = (
   userId: string,
   setTyping: (typing: boolean) => void,
   sessionId?: string,
-  setGlobalError?:(message:string|null)=>void
+  setGlobalError?:(message:string|null)=>void,
+  agentIntent?: AgentIntent
 ): any => ({
   async *run({ messages }: any) {
     setTyping(true);
@@ -41,6 +44,7 @@ export const MyModelAdapter = (
             user_id: userId,
             message: lastUserText,
             session_id: sessionId,
+            agent_intent: agentIntent,
           }),
         });
 

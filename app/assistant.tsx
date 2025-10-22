@@ -16,6 +16,7 @@ import {
 
 import { MyModelAdapter } from "../app/myRuntimeProvider";
 import { CustomAttachmentAdapter } from "../app/attachmentAdapter";
+import { AgentIntent } from "../components/chatbot/assistant-ui/home-screen";
 
 export const CHAT_HISTORY_KEY = "chat_history";
 
@@ -34,6 +35,10 @@ function Assistant() {
   const [showTaxChatbot, setShowTaxChatbot] = useState(false);
   const [isLoadingPayroll, setIsLoadingPayroll] = useState(false);
 
+  // Agent intent state management
+  const [agentIntent, setAgentIntent] = useState<AgentIntent>(null);
+  const [showHomeScreen, setShowHomeScreen] = useState(true);
+console.log("agentintent",agentIntent)
   const searchParams = useSearchParams();
   const sessionId: any = searchParams.get("session_id");
   const userId: any = searchParams.get("user_id")
@@ -83,43 +88,6 @@ function Assistant() {
     }
   }, [sessionId, access_token, userId])
 
-  // Check if payroll data is complete
- const isPayrollDataComplete = (data: any): boolean => {
-  if (!data || !data.income_type) return false;
-
-  const commonFieldsPresent =
-    data.filing_status &&
-    data.pay_frequency &&
-    data.current_withholding_per_paycheck != null &&
-    data.additional_income != null &&
-    data.deductions != null &&
-    data.dependents != null &&
-    data.home_address &&
-    data.work_address &&
-    data.age != null &&
-    data.pre_tax_deductions != null &&
-    data.post_tax_deductions != null;
-
-  if (data.income_type === "salary") {
-    return (
-      data.annual_salary != null &&
-      commonFieldsPresent
-    );
-  }
-
-  if (data.income_type === "hourly") {
-    return (
-      data.hourly_rate != null &&
-      data.average_hours_per_week != null &&
-      data.seasonal_variation &&
-      commonFieldsPresent
-    );
-  }
-
-  return false; // invalid income_type
-};
-
-
   useEffect(() => {
     const userInfo = async () => {
       try {
@@ -129,10 +97,10 @@ function Assistant() {
 
         setPayrollData(response);
 
-        // Check if any required field is missing
-        const isComplete = isPayrollDataComplete(response.payroll);
-        // console.log(isComplete,"iscomplete")
-        setShowTaxChatbot(!isComplete);
+        // Always show home screen initially when agentIntent is null
+        // User must select an intent from home screen to proceed
+        setShowHomeScreen(true);
+        setShowTaxChatbot(false);
 
         setIsLoadingPayroll(false);
         // loadHistory()
@@ -140,6 +108,7 @@ function Assistant() {
         setGlobalError(error.response.data.detail || "User ID not found")
         console.error("Error fetching payroll:", error);
         setShowTaxChatbot(true);
+        setShowHomeScreen(false);
       } finally {
         setIsLoadingPayroll(false);
       }
@@ -156,6 +125,15 @@ function Assistant() {
       console.log(response, "response")
       setShowTaxChatbot(false);
       setPayrollData(taxData);
+
+      // After form completion, decide what to do based on agent intent
+      if (agentIntent === "refund_paycheck" || agentIntent === "paycheck_calculator") {
+        // Start chat directly after form completion for these intents
+        setShowHomeScreen(false);
+      } else {
+        // Otherwise show home screen
+        setShowHomeScreen(true);
+      }
     } catch (error: any) {
       setGlobalError(error.response.data.details || "Failed to update payroll data.");
     }
@@ -165,6 +143,28 @@ function Assistant() {
   // Handle continue to chat action
   const handleContinueToChat = () => {
     setShowTaxChatbot(false);
+  };
+
+  // Handle agent intent selection from home screen
+  const handleIntentSelection = (intent: AgentIntent) => {
+    setAgentIntent(intent);
+
+    if (intent === "ask_uncle_sam") {
+      // Direct to chat - no questions needed
+      setShowHomeScreen(false);
+      setShowTaxChatbot(false);
+    } else if (intent === "refund_paycheck" || intent === "paycheck_calculator") {
+      // Show question flow first
+      setShowHomeScreen(false);
+      setShowTaxChatbot(true);
+    }
+  };
+
+  // Handle return to home screen
+  const handleReturnToHome = () => {
+    setShowHomeScreen(true);
+    setShowTaxChatbot(false);
+    setAgentIntent(null);
   };
 
   // Load history when page renders
@@ -187,7 +187,7 @@ function Assistant() {
     [userId, sessionId]
   );
 
-  const learnRuntime = useLocalThreadRuntime(MyModelAdapter(userId, setTyping, currentSessionId, setGlobalError), {
+  const learnRuntime = useLocalThreadRuntime(MyModelAdapter(userId, setTyping, currentSessionId, setGlobalError, agentIntent), {
     adapters: {
       // your existing adapters
       attachments: new CompositeAttachmentAdapter([
@@ -241,6 +241,9 @@ function Assistant() {
               onTaxChatbotComplete={handleTaxChatbotComplete}
               onContinueToChat={handleContinueToChat}
               globalError={globalError}
+              showHomeScreen={showHomeScreen}
+              onSelectIntent={handleIntentSelection}
+              onReturnToHome={handleReturnToHome}
             />
           </div>
         </div>
