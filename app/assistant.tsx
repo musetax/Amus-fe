@@ -127,7 +127,7 @@ console.log("agentintent",agentIntent)
       setPayrollData(taxData);
 
       // After form completion, decide what to do based on agent intent
-      if (agentIntent === "refund_paycheck" || agentIntent === "paycheck_calculator") {
+      if (agentIntent === "tax_refund_calculation" || agentIntent === "tax_paycheck_calculation") {
         // Start chat directly after form completion for these intents
         setShowHomeScreen(false);
       } else {
@@ -149,11 +149,11 @@ console.log("agentintent",agentIntent)
   const handleIntentSelection = (intent: AgentIntent) => {
     setAgentIntent(intent);
 
-    if (intent === "ask_uncle_sam") {
+    if (intent === "tax_education") {
       // Direct to chat - no questions needed
       setShowHomeScreen(false);
       setShowTaxChatbot(false);
-    } else if (intent === "refund_paycheck" || intent === "paycheck_calculator") {
+    } else if (intent === "tax_refund_calculation" || intent === "tax_paycheck_calculation") {
       // Show question flow first
       setShowHomeScreen(false);
       setShowTaxChatbot(true);

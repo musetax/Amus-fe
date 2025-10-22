@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 
-export type AgentIntent = "ask_uncle_sam" | "refund_paycheck" | "paycheck_calculator" | null;
+export type AgentIntent = "tax_education" | "tax_refund_calculation" | "tax_paycheck_calculation" | null;
 
 interface HomeScreenProps {
   onSelectIntent: (intent: AgentIntent) => void;
@@ -146,7 +146,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       <div className="flex flex-col gap-4 w-full max-w-md">
         {/* Ask My Uncle Sam Button */}
         <button
-          onClick={() => onSelectIntent("ask_uncle_sam")}
+          onClick={() => onSelectIntent("tax_education")}
           className="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#69DEC6] via-[#49C2D4] to-[#1595EA] p-[2px] transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
         >
           <div className="bg-white rounded-2xl px-6 py-4 transition-all duration-300 group-hover:bg-opacity-95">
@@ -209,7 +209,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
         {/* Refund My Paycheck Button */}
         <button
-          onClick={() => onSelectIntent("refund_paycheck")}
+          onClick={() => onSelectIntent("tax_refund_calculation")}
           className="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#518DE7] via-[#7687E5] to-[#9B8FE3] p-[2px] transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
         >
           <div className="bg-white rounded-2xl px-6 py-4 transition-all duration-300 group-hover:bg-opacity-95">
@@ -272,7 +272,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
         {/* Paycheck Calculator Button */}
         <button
-          onClick={() => onSelectIntent("paycheck_calculator")}
+          onClick={() => onSelectIntent("tax_paycheck_calculation")}
           className="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#48C2D4] via-[#1595EA] to-[#548CE7] p-[2px] transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
         >
           <div className="bg-white rounded-2xl px-6 py-4 transition-all duration-300 group-hover:bg-opacity-95">
