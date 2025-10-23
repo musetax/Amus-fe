@@ -6,8 +6,10 @@ import { StepType, FormData, TaxData } from "./types";
 export const getQuestionsToAsk = (prefilledData: Partial<TaxData>): StepType[] => {
   const questions: StepType[] = [];
 
-  if (!prefilledData.filing_status) questions.push("filing_status");
-  questions.push('head_of_household')
+  if (!prefilledData.filing_status) {
+    questions.push("filing_status");
+    questions.push('head_of_household')
+  }
 
   if (!prefilledData.age) questions.push("age");
 
@@ -18,11 +20,11 @@ export const getQuestionsToAsk = (prefilledData: Partial<TaxData>): StepType[] =
 
   // Add both salary and hourly questions - skip logic will handle which to show
   if (!prefilledData.annual_salary) questions.push("annual_salary");
-  if (!prefilledData.hourly_rate) questions.push("hourly_rate");
-  if (!prefilledData.average_hours_per_week) questions.push("average_hours_per_week");
-  if (!prefilledData.seasonal_variation) questions.push("seasonal_variation");
+  if (!prefilledData.hourly_rate && prefilledData.income_type==="hourly") questions.push("hourly_rate");
+  if (!prefilledData.average_hours_per_week&& prefilledData.income_type==="hourly") questions.push("average_hours_per_week");
+  if (!prefilledData.seasonal_variation&& prefilledData.income_type==="hourly") questions.push("seasonal_variation");
 
-  if (!prefilledData.spouse_income)  questions.push("spouse_income");
+  if (!prefilledData.spouse_income &&prefilledData.filing_status==='married_joint') questions.push("spouse_income");
 
   if (!prefilledData.pay_frequency) questions.push("pay_frequency");
 
@@ -47,11 +49,11 @@ export const getQuestionsToAsk = (prefilledData: Partial<TaxData>): StepType[] =
     questions.push("dependents");
   }
 
-  questions.push("current_date");
-  questions.push("work_address");
-  questions.push("home_address");
-  questions.push("pre_tax_deductions")
-  questions.push("post_tax_deductions")
+  if (!prefilledData.current_date) questions.push("current_date");
+  if (!prefilledData.work_address) questions.push("work_address");
+  if (!prefilledData.home_address) questions.push("home_address");
+  if (!prefilledData.pre_tax_deductions) questions.push("pre_tax_deductions")
+  if (!prefilledData.post_tax_deductions) questions.push("post_tax_deductions")
   return questions;
 };
 
