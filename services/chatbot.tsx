@@ -74,10 +74,13 @@ function mapApiChatsToRepository(
   };
 }
 
+type AgentIntent = "tax_education" | "tax_refund_calculation" | "tax_paycheck_calculation" | null;
+
 function makeHistoryAdapter(
   userId: string,
   sessionId?: string,
-  setLoadingHistory?: (loading: boolean) => void
+  setLoadingHistory?: (loading: boolean) => void,
+  agentIntent?: AgentIntent
 ): ThreadHistoryAdapter {
   return {
 
@@ -96,6 +99,7 @@ function makeHistoryAdapter(
           {
             user_id: userId,
             session_id: sessionId,
+            user_intent: agentIntent,
           }
         );
 

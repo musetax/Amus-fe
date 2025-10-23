@@ -111,6 +111,7 @@ console.log("agentintent",agentIntent)
         setShowHomeScreen(false);
       } finally {
         setIsLoadingPayroll(false);
+      
       }
     }
     if (!globalError && userId) {
@@ -146,8 +147,20 @@ console.log("agentintent",agentIntent)
   };
 
   // Handle agent intent selection from home screen
-  const handleIntentSelection = (intent: AgentIntent) => {
+  const handleIntentSelection = async (intent: AgentIntent) => {
     setAgentIntent(intent);
+
+    // Fetch payroll details when intent changes
+    try {
+      setIsLoadingPayroll(true);
+      const response = await getPayrollDetails(userId);
+      setPayrollData(response);
+    } catch (error: any) {
+      console.error("Error fetching payroll on intent change:", error);
+      setGlobalError(error.response?.data?.detail || "Failed to fetch payroll details");
+    } finally {
+      setIsLoadingPayroll(false);
+    }
 
     if (intent === "tax_education") {
       // Direct to chat - no questions needed
@@ -182,11 +195,17 @@ console.log("agentintent",agentIntent)
   // };
 
   // IMPORTANT: history adapter is created with the current userId so it can load the right messages
+  // Re-create history adapter when agentIntent changes to reload chat history with new context
   const history = useMemo(
-    () => (sessionId ? makeHistoryAdapter(userId, sessionId, setloadingHistory) : undefined),
-    [userId, sessionId]
+    () => (sessionId ? makeHistoryAdapter(userId, sessionId, setloadingHistory, agentIntent) : undefined),
+    [userId, sessionId, agentIntent]
   );
-
+  useEffect(() => {
+    if (history) {
+      setloadingHistory(true);
+      history.load().finally(() => setloadingHistory(false));
+    }
+  }, [agentIntent, history]);
   const learnRuntime = useLocalThreadRuntime(MyModelAdapter(userId, setTyping, currentSessionId, setGlobalError, agentIntent), {
     adapters: {
       // your existing adapters
@@ -223,8 +242,8 @@ console.log("agentintent",agentIntent)
 
   return (
     <div className="myUniquechatbot">
-      {/* key includes userId so switching users re-initializes the runtime + history load */}
-      <AssistantRuntimeProvider key={`${activeTab}-${userId}`} runtime={learnRuntime}>
+      {/* key includes userId and agentIntent so switching users or intent re-initializes the runtime + history load */}
+      <AssistantRuntimeProvider key={`${activeTab}-${userId}-${agentIntent}`} runtime={learnRuntime}>
         <div className="flex justify-between px-0 py-0 w-full">
           <div className="grid grid-cols-1 gap-x-2 px-0 py-0 w-full">
             <Thread

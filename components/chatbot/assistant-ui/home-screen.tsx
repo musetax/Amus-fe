@@ -176,7 +176,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                       marginBottom: "2px",
                     }}
                   >
-                    Ask My Uncle Sam
+                    Get instant answers to your tax questions
+
                   </h3>
                   <p
                     style={{
@@ -185,7 +186,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                       fontWeight: "400",
                     }}
                   >
-                    Get instant answers to your tax questions
+                    Ask My Uncle Sam
                   </p>
                 </div>
               </div>
@@ -239,7 +240,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                       marginBottom: "2px",
                     }}
                   >
-                    Refund My Paycheck
+                    Optimize withholdings for maximum refund
                   </h3>
                   <p
                     style={{
@@ -248,7 +249,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                       fontWeight: "400",
                     }}
                   >
-                    Optimize withholdings for maximum refund
+                    Refund My Paycheck
                   </p>
                 </div>
               </div>
@@ -303,7 +304,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                       marginBottom: "2px",
                     }}
                   >
-                    Paycheck Calculator
+                    Calculate your take-home pay instantly
                   </h3>
                   <p
                     style={{
@@ -312,7 +313,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                       fontWeight: "400",
                     }}
                   >
-                    Calculate your take-home pay instantly
+                    Paycheck Calculator
                   </p>
                 </div>
               </div>
