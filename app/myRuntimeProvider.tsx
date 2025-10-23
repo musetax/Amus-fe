@@ -44,7 +44,7 @@ export const MyModelAdapter = (
             user_id: userId,
             message: lastUserText,
             session_id: sessionId,
-            agent_intent: agentIntent,
+            intent: agentIntent,
           }),
         });
 
