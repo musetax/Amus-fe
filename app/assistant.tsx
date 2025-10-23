@@ -17,6 +17,7 @@ import {
 import { MyModelAdapter } from "../app/myRuntimeProvider";
 import { CustomAttachmentAdapter } from "../app/attachmentAdapter";
 import { AgentIntent } from "../components/chatbot/assistant-ui/home-screen";
+import { LifeEventCategory } from "../components/chatbot/assistant-ui/life-events-screen";
 
 export const CHAT_HISTORY_KEY = "chat_history";
 
@@ -38,6 +39,11 @@ function Assistant() {
   // Agent intent state management
   const [agentIntent, setAgentIntent] = useState<AgentIntent>(null);
   const [showHomeScreen, setShowHomeScreen] = useState(true);
+
+  // Life events state management
+  const [showLifeEventsScreen, setShowLifeEventsScreen] = useState(false);
+  const [showLifeEventsForm, setShowLifeEventsForm] = useState(false);
+  const [selectedLifeEventCategory, setSelectedLifeEventCategory] = useState<LifeEventCategory>(null);
 console.log("agentintent",agentIntent)
   const searchParams = useSearchParams();
   const sessionId: any = searchParams.get("session_id");
@@ -153,10 +159,20 @@ console.log("agentintent",agentIntent)
       // Direct to chat - no questions needed
       setShowHomeScreen(false);
       setShowTaxChatbot(false);
+      setShowLifeEventsScreen(false);
+      setShowLifeEventsForm(false);
     } else if (intent === "tax_refund_calculation" || intent === "tax_paycheck_calculation") {
       // Show question flow first
       setShowHomeScreen(false);
       setShowTaxChatbot(true);
+      setShowLifeEventsScreen(false);
+      setShowLifeEventsForm(false);
+    } else if (intent === "life_events_update") {
+      // Show life events category selection
+      setShowHomeScreen(false);
+      setShowTaxChatbot(false);
+      setShowLifeEventsScreen(true);
+      setShowLifeEventsForm(false);
     }
   };
 
@@ -164,7 +180,42 @@ console.log("agentintent",agentIntent)
   const handleReturnToHome = () => {
     setShowHomeScreen(true);
     setShowTaxChatbot(false);
+    setShowLifeEventsScreen(false);
+    setShowLifeEventsForm(false);
     setAgentIntent(null);
+    setSelectedLifeEventCategory(null);
+  };
+
+  // Handle life event category selection
+  const handleLifeEventCategorySelection = (category: LifeEventCategory) => {
+    setSelectedLifeEventCategory(category);
+    setShowLifeEventsScreen(false);
+    setShowLifeEventsForm(true);
+  };
+
+  // Handle back from life events form to category selection
+  const handleBackToLifeEventsCategories = () => {
+    setShowLifeEventsForm(false);
+    setShowLifeEventsScreen(true);
+    setSelectedLifeEventCategory(null);
+  };
+
+  // Handle save life events data
+  const handleSaveLifeEvents = async (data: any) => {
+    try {
+      // TODO: Implement API call to save life events data
+      console.log("Saving life events data:", data);
+
+      // For now, just log the data
+      // In production, you would make an API call here
+      // await saveLifeEventsData(data);
+
+      // Don't navigate away - let the form show the saved state
+      // User will click "Continue" to go back to main menu
+    } catch (error) {
+      console.error("Error saving life events data:", error);
+      throw error; // Re-throw to let the form handle the error
+    }
   };
 
   // Load history when page renders
@@ -244,6 +295,12 @@ console.log("agentintent",agentIntent)
               showHomeScreen={showHomeScreen}
               onSelectIntent={handleIntentSelection}
               onReturnToHome={handleReturnToHome}
+              showLifeEventsScreen={showLifeEventsScreen}
+              showLifeEventsForm={showLifeEventsForm}
+              selectedLifeEventCategory={selectedLifeEventCategory}
+              onSelectLifeEventCategory={handleLifeEventCategorySelection}
+              onBackToLifeEventsCategories={handleBackToLifeEventsCategories}
+              onSaveLifeEvents={handleSaveLifeEvents}
             />
           </div>
         </div>

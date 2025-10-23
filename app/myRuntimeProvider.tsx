@@ -1,7 +1,7 @@
 import { saveMessagesToLocalStorage } from "../components/chatbot/assistant-ui/thread";
 import { getTokens, refreshToken } from "../utilities/auth";
 
-type AgentIntent = "tax_education" | "tax_refund_calculation" | "tax_paycheck_calculation" | null;
+type AgentIntent = "tax_education" | "tax_refund_calculation" | "tax_paycheck_calculation" | "life_events_update" | null;
 
 export const MyModelAdapter = (
   userId: string,

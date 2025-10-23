@@ -4,102 +4,154 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a reusable Assistant UI component package (`@muse-prod/muse-node-chatbot`) built with Next.js, React, and TypeScript. It's based on the assistant-ui library and provides a customizable chatbot widget with features like PDF generation, email functionality, and speech synthesis.
+This is a Next.js-based AI chatbot application for tax assistance called "Muse Node Chatbot". It provides tax education, refund calculations, paycheck calculations, and life events updates through a conversational interface built on the `@assistant-ui/react` framework.
 
-## Key Commands
+## Development Commands
 
-### Development
-- `npm run dev` - Start development server with Turbo (opens on http://localhost:3000)
-- `npm run build` - Build Next.js application for production
-- `npm run start` - Start production server
-- `npm run lint` - Run ESLint for code quality
+```bash
+# Development
+npm run dev          # Start development server with Turbo (localhost:3000)
 
-### Package Distribution
-- `npx tsup` - Build package for distribution using tsup configuration (outputs to dist/)
+# Build & Deploy
+npm run build        # Build for production
+npm start            # Start production server
 
-### Environment Setup
-Requires `.env.local` file with:
-```
-OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+# Code Quality
+npm run lint         # Run ESLint
 ```
 
-## Architecture Overview
+## Environment Setup
 
-### Core Structure
-- **Package Entry Point**: `src/index.tsx` - Exports the main Assistant component and styles
-- **Main Component**: `app/assistant.tsx` - Primary chatbot component with runtime management
-- **Development**: Next.js application for development and testing
-- **Package Build Output**: tsup builds to `dist/` directory with both ESM and CJS formats
+Required environment variables in `.env`:
+- `NEXT_PUBLIC_BACKEND_API` - Backend API URL for chat and user data
+- `NEXT_PUBLIC_FINANCIAL_API` - Financial suite URL
 
-### Key Directories
-- `app/` - Main application components and runtime providers
-- `src/` - Package entry point and bundled styles
-- `components/` - Reusable UI components organized by feature
-  - `chatbot/` - Core chatbot components
-  - `assistant-ui/` - Assistant UI framework integration
-  - `ui/` - Shared UI components
-- `services/` - Business logic and API integrations
-- `utilities/` - Helper functions and authentication
-- `lib/` - Shared utilities (utils.ts)
+The app expects URL parameters on load:
+- `session_id` - Chat session identifier
+- `user_id` - User identifier
+- `access_token` - Authentication token
+- `client_id` - OAuth client ID
+- `client_secret` - OAuth client secret
+- `user_image` (optional) - User profile image URL
+- `company_logo` (optional) - Company branding logo URL
 
-### Technology Stack
-- **Framework**: Next.js 15.4+ with React 18/19
-- **Build Tool**: tsup for package building
-- **Styling**: Tailwind CSS with custom configurations
-- **Assistant Framework**: @assistant-ui/react ecosystem
-- **AI Integration**: @ai-sdk/openai for AI functionality
-- **Additional Features**: 
-  - PDF generation (@react-pdf/renderer)
-  - Speech synthesis (WebSpeechSynthesisAdapter)
-  - File attachments (CustomAttachmentAdapter)
-  - Form handling (Formik + Yup)
-  - State management (Zustand)
+## Architecture
 
-### Dual Build System
-- **Development**: Next.js application (`npm run build`) for local development and testing
-- **Package Distribution**: tsup configuration builds library to `dist/` for npm publishing
-  - Entry: `src/index.tsx`
-  - Outputs: ESM and CommonJS modules with TypeScript declarations
-  - Bundles CSS styles from `src/styles.css`
-  - Externals: React, Next.js, and major UI libraries (not bundled)
-- Configured as peer dependency package requiring Next.js and React
+### Core Flow
 
-### Key Integrations
-- OpenAI API integration through @ai-sdk/openai
-- ElevenLabs for voice synthesis
-- Material-UI and Radix UI for components
-- Custom attachment handling for file uploads
-- Email and PDF export capabilities
+The application follows a stateful wizard-like flow:
 
-## Development Notes
+1. **Home Screen** ([home-screen.tsx](components/chatbot/assistant-ui/home-screen.tsx)) - User selects an agent intent:
+   - `tax_education` - Direct to chat for tax questions
+   - `tax_refund_calculation` - Collect tax data, then chat
+   - `tax_paycheck_calculation` - Collect tax data, then chat
+   - `life_events_update` - Update life event information
 
-- Package uses TypeScript with strict mode enabled
-- ESLint configuration with Next.js rules
-- Tailwind CSS for styling with custom configurations
-- Hot reloading enabled in development mode
-- Build process generates both declaration files and bundled output
+2. **Form Collection** (if needed):
+   - Tax forms: [payrollQuestionchat.tsx](app/payrollQuestionchat.tsx) - Multi-step questionnaire
+   - Life events: [life-events-form.tsx](components/chatbot/assistant-ui/life-events-form.tsx)
 
-## Testing and Quality
+3. **Chat Interface** ([thread.tsx](components/chatbot/assistant-ui/thread.tsx)) - Main conversation UI
 
-After making code changes, run:
-- `npm run lint` - Check code quality and style
-- `npm run build` - Verify Next.js application builds successfully
-- `npx tsup` - Verify package distribution builds successfully
+### State Management
 
-## Package Build Process
+The main state orchestration happens in [assistant.tsx](app/assistant.tsx):
+- `agentIntent` - Determines which flow to activate
+- `showHomeScreen` - Controls home screen visibility
+- `showTaxChatbot` - Controls tax form visibility
+- `showLifeEventsScreen` / `showLifeEventsForm` - Controls life events flow
+- `payrollData` - Pre-filled user tax information
 
-The package uses tsup for building:
-- Entry point: `src/index.tsx`
-- Output: `dist/` directory with both ESM and CJS formats
-- Includes TypeScript declaration files
-- Bundles CSS styles from `src/styles.css`
-- External dependencies (React, Next.js, etc.) are not bundled
+Navigation between screens is controlled via callback props (`onSelectIntent`, `onReturnToHome`, etc.)
 
-## API Integration
+### Authentication & API
 
-The chatbot integrates with external APIs:
-- User chat history via `/v1/api/export/get-user-chats`  
-- Tax profile services via `/api/tax-profile/checkboost/`
-- Health check endpoint at `/api/health` (returns service status)
-- Session-based chat management
-- Requires proper authentication and session handling
+Authentication is handled via token-based auth in [utilities/auth.ts](utilities/auth.ts):
+- Access tokens stored in `localStorage` as `authTokenMuse`
+- Automatic token refresh using `client_id` and `client_secret`
+- `axiosInstanceAuth` - Pre-configured axios instance with auth interceptors
+- All API requests automatically retry once with refreshed token on 401
+
+### Chat System
+
+The chat implementation uses `@assistant-ui/react`:
+- **Runtime Provider**: [myRuntimeProvider.tsx](app/myRuntimeProvider.tsx) - Streaming chat adapter that calls backend `/chat` endpoint with `intent` parameter
+- **History Adapter**: [services/chatbot.tsx](services/chatbot.tsx) - Loads previous conversations from `/get-user-chats`
+- **Messages**: Streamed from backend as Server-Sent Events (SSE) with format `data: {response, urls}`
+- **Metadata**: Messages can include `urls` for citation display
+
+### Form System
+
+Multi-step tax form in [app/payrollQuestion/](app/payrollQuestion/):
+- `questionFlow.ts` - Determines which questions to ask based on missing data
+- `messageGenerator.ts` - Generates chat-like messages for each step
+- `inputHandlers.ts` - Validation and handlers for each field type
+- `types.ts` - TypeScript definitions for form data
+
+## Key Patterns
+
+### Component Communication
+Heavily relies on callback props for inter-component communication. When modifying flows, ensure callbacks are threaded through the component tree properly.
+
+### Conditional Rendering
+The main UI switches between screens using conditional rendering in [thread.tsx](components/chatbot/assistant-ui/thread.tsx):
+```tsx
+{globalError ? <ErrorBanner /> :
+ showHomeScreen ? <HomeScreen /> :
+ showLifeEventsScreen ? <LifeEventsScreen /> :
+ showLifeEventsForm ? <LifeEventsForm /> :
+ shouldShowTaxChatbot ? <TaxChatbot /> :
+ <ChatInterface />}
+```
+
+### Prefilled Data
+Forms are pre-populated from `payrollData` fetched via `getPayrollDetails(userId)` in [taxModelAdapter.tsx](app/taxModelAdapter.tsx). The question flow skips fields that already have values.
+
+## Styling
+
+- **Tailwind CSS** with custom configuration in [tailwind.config.js](tailwind.config.js)
+- **Custom gradients** defined for brand consistency (e.g., `ChatBtnGradient`, `authGradientBg`)
+- **HeroUI** components library integrated
+- Custom CSS classes prefixed with `myUniquechatbot` to avoid conflicts when embedded
+
+## File Organization
+
+```
+app/
+  ├── assistant.tsx              # Main orchestrator component
+  ├── myRuntimeProvider.tsx      # Chat streaming adapter
+  ├── payrollQuestionchat.tsx    # Tax form chatbot
+  ├── payrollQuestion/           # Tax form utilities
+  ├── taxModelAdapter.tsx        # API calls for tax data
+  └── api/                       # API routes (health, chat proxy)
+
+components/
+  └── chatbot/
+      ├── assistant-ui/          # Main UI components
+      │   ├── thread.tsx         # Chat thread & composer
+      │   ├── home-screen.tsx    # Intent selection
+      │   ├── life-events-*.tsx  # Life events flow
+      │   └── markdown-text.tsx  # Markdown renderer
+      └── ui/                    # Reusable UI primitives
+
+services/
+  └── chatbot.tsx                # History adapter
+
+utilities/
+  └── auth.ts                    # Auth & axios setup
+```
+
+## Testing Locally
+
+1. Create `.env` file with required variables
+2. Start dev server: `npm run dev`
+3. Navigate to `http://localhost:3000?session_id=test&user_id=test_user&access_token=token&client_id=id&client_secret=secret`
+4. The app will attempt to load user data and show appropriate screen
+
+## Important Notes
+
+- The application is designed to be embedded as an iframe in a parent application
+- Session management relies on URL parameters, not cookies
+- All API calls go through the backend proxy to avoid CORS
+- TypeScript strict mode is enabled; ensure type safety when making changes
+- The chatbot supports streaming responses with visual feedback

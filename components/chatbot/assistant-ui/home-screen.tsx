@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 
-export type AgentIntent = "tax_education" | "tax_refund_calculation" | "tax_paycheck_calculation" | null;
+export type AgentIntent = "tax_education" | "tax_refund_calculation" | "tax_paycheck_calculation" | "life_events_update" | null;
 
 interface HomeScreenProps {
   onSelectIntent: (intent: AgentIntent) => void;
@@ -248,7 +248,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                       fontWeight: "400",
                     }}
                   >
-                    Optimize withholdings for maximum refund
+                    Calculate your potential tax refund
                   </p>
                 </div>
               </div>
@@ -313,6 +313,71 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                     }}
                   >
                     Calculate your take-home pay instantly
+                  </p>
+                </div>
+              </div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#718096"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="transition-transform duration-300 group-hover:translate-x-1"
+              >
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </div>
+          </div>
+        </button>
+
+        {/* Update My Life Changing Events Button */}
+        <button
+          onClick={() => onSelectIntent("life_events_update")}
+          className="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#9B8FE3] via-[#B08BE5] to-[#C687E7] p-[2px] transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
+        >
+          <div className="bg-white rounded-2xl px-6 py-4 transition-all duration-300 group-hover:bg-opacity-95">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#9B8FE3] to-[#C687E7] flex items-center justify-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="white"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+                  </svg>
+                </div>
+                <div className="text-left">
+                  <h3
+                    style={{
+                      fontSize: "16px",
+                      fontWeight: "600",
+                      color: "#1a202c",
+                      marginBottom: "2px",
+                    }}
+                  >
+                    Update My Life Changing Events
+                  </h3>
+                  <p
+                    style={{
+                      fontSize: "13px",
+                      color: "#718096",
+                      fontWeight: "400",
+                    }}
+                  >
+                    Update your tax profile with life changes
                   </p>
                 </div>
               </div>

@@ -35,6 +35,8 @@ import TaxChatbot from "../../../app/payrollQuestionchat";
 import { ErrorBanner } from "./error-ui";
 import Image from "next/image";
 import { HomeScreen } from "./home-screen";
+import { LifeEventsScreen } from "./life-events-screen";
+import { LifeEventsForm } from "./life-events-form";
 // import Image from "next/image";
 
 export const CHAT_HISTORY_KEY = "chat_history";
@@ -50,7 +52,7 @@ export const Thread: any = ({
   // typing,
   image,
   companyLogo,
-  // userId,
+  userId,
   loadingHistory,
   // sessionId,
   showTaxChatbot,
@@ -61,9 +63,15 @@ export const Thread: any = ({
   showHomeScreen,
   onSelectIntent,
   onReturnToHome,
+  showLifeEventsScreen,
+  showLifeEventsForm,
+  selectedLifeEventCategory,
+  onSelectLifeEventCategory,
+  onBackToLifeEventsCategories,
+  onSaveLifeEvents,
 }: any) => {
   console.log(showHomeScreen,"jknjkdw")
-  const { messages } = useThread();
+  // const { messages } = useThread();
   // const [isLoading, setIsLoading] = useState(false);
   // const [pdfData, setPdfData] = useState<any[]>([]);
   // const [showDownloadLink, setShowDownloadLink] = useState(false);
@@ -289,6 +297,18 @@ export const Thread: any = ({
                   <HomeScreen
                     onSelectIntent={onSelectIntent}
                     companyLogo={companyLogo}
+                  />
+                ) : showLifeEventsScreen ? (
+                  <LifeEventsScreen
+                    onSelectCategory={onSelectLifeEventCategory}
+                    onBack={onReturnToHome}
+                  />
+                ) : showLifeEventsForm ? (
+                  <LifeEventsForm
+                    category={selectedLifeEventCategory}
+                    onBack={onBackToLifeEventsCategories}
+                    onSave={onSaveLifeEvents}
+                     userId={userId}
                   />
                 ) : shouldShowTaxChatbot ? (
                   <div
