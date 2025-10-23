@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { LifeEventCategory } from "./life-events-screen";
+import { axiosInstanceAuth } from "../../../utilities/auth";
 
 interface LifeEventsFormProps {
   category: LifeEventCategory;
@@ -19,6 +20,7 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
   const [isSaved, setIsSaved] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [errors, setErrors] = useState<any>({});
+  const [apiError, setApiError] = useState<string>("");
 
   const handleInputChange = (field: string, value: any) => {
     setFormData((prev: any) => ({
@@ -45,8 +47,8 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
     config.fields.forEach((field) => {
       const value = formData[field.name];
 
-      // Skip validation for optional fields (notes/textarea)
-      if (field.type === "textarea") {
+      // Skip validation for optional fields
+      if (field.label.includes("optional") || field.type === "textarea" || field.type === "file") {
         return;
       }
 
@@ -59,6 +61,12 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
       // Additional validation for number fields
       if (field.type === "number" && value && parseFloat(value) < 0) {
         newErrors[field.name] = `${field.label} must be a positive number`;
+        hasError = true;
+      }
+
+      // Validate percentage fields
+      if (field.name.includes("percentage") && value && (parseFloat(value) < 0 || parseFloat(value) > 100)) {
+        newErrors[field.name] = `${field.label} must be between 0 and 100`;
         hasError = true;
       }
     });
@@ -74,14 +82,33 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
     }
 
     setIsSaving(true);
+    setApiError("");
+
     try {
-      // Here you would make an API call to save the data
-      await onSave({ category, ...formData, userId });
-      setIsSaved(true);
-      setShowModal(true);
-      setIsSaving(false);
-    } catch (error) {
+      // Prepare form data for API submission
+      const payload = {
+        user_id: userId,
+        category: category,
+        event_data: formData,
+        timestamp: new Date().toISOString()
+      };
+
+      // Make API call to save the life event data
+      const response = await axiosInstanceAuth.post('/v1/life-events', payload);
+
+      if (response.data && response.status === 200) {
+        // Call the parent onSave callback
+        await onSave({ category, ...formData, userId });
+        setIsSaved(true);
+        setShowModal(true);
+      } else {
+        throw new Error(response.data?.message || "Failed to save life event");
+      }
+    } catch (error: any) {
       console.error("Error saving life event data:", error);
+      const errorMessage = error?.response?.data?.message || error?.message || "Failed to save life event. Please try again.";
+      setApiError(errorMessage);
+    } finally {
       setIsSaving(false);
     }
   };
@@ -114,12 +141,11 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
           ),
           gradient: "from-[#69DEC6] to-[#49C2D4]",
           fields: [
-            { name: "disability_status", label: "Disability Status", type: "select", options: ["None", "Temporary", "Permanent", "Partial"] },
-            { name: "disability_date", label: "Date of Disability", type: "date" },
-            { name: "disability_benefits", label: "Receiving Disability Benefits?", type: "select", options: ["No", "Yes"] },
-            { name: "benefit_amount", label: "Monthly Benefit Amount ($)", type: "number" },
-            { name: "medical_expenses", label: "Annual Medical Expenses ($)", type: "number" },
-            { name: "disability_notes", label: "Additional Notes", type: "textarea" },
+            { name: "disability_type", label: "Type of Disability", type: "select", options: ["Select", "Physical", "Mental", "Sensory", "Cognitive", "Chronic Illness", "Other"] },
+            { name: "disability_percentage", label: "Percentage (if applicable)", type: "number" },
+            { name: "onset_date", label: "Date of Onset", type: "date" },
+            { name: "certifying_authority", label: "Certifying Authority", type: "text" },
+            { name: "document_upload", label: "Document Upload (optional)", type: "file" },
           ],
         };
       case "financial_investment":
@@ -143,12 +169,11 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
           ),
           gradient: "from-[#1595EA] to-[#548CE7]",
           fields: [
-            { name: "investment_type", label: "Investment Type", type: "select", options: ["Select", "Stocks", "Bonds", "Real Estate", "Crypto", "Retirement Account", "Other"] },
-            { name: "investment_date", label: "Investment Date", type: "date" },
-            { name: "investment_amount", label: "Investment Amount ($)", type: "number" },
-            { name: "capital_gains", label: "Capital Gains/Losses ($)", type: "number" },
-            { name: "dividend_income", label: "Dividend Income ($)", type: "number" },
-            { name: "investment_notes", label: "Additional Notes", type: "textarea" },
+            { name: "event_type", label: "Type of Event", type: "select", options: ["Select", "Investment", "Loan", "Asset Purchase", "Sale"] },
+            { name: "event_date", label: "Event Date", type: "date" },
+            { name: "amount", label: "Amount ($)", type: "number" },
+            { name: "institution_name", label: "Institution / Platform Name", type: "text" },
+            { name: "notes", label: "Notes (optional)", type: "textarea" },
           ],
         };
       case "career_income":
@@ -172,12 +197,11 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
           ),
           gradient: "from-[#518DE7] to-[#7687E5]",
           fields: [
-            { name: "change_type", label: "Change Type", type: "select", options: ["Select", "New Job", "Promotion", "Salary Increase", "Salary Decrease", "Job Loss", "Retirement"] },
-            { name: "change_date", label: "Effective Date", type: "date" },
+            { name: "change_type", label: "Type of Change", type: "select", options: ["Select", "Promotion", "Job Change", "Salary Revision", "Layoff"] },
+            { name: "effective_date", label: "Effective Date", type: "date" },
             { name: "new_annual_income", label: "New Annual Income ($)", type: "number" },
-            { name: "previous_income", label: "Previous Annual Income ($)", type: "number" },
-            { name: "severance_package", label: "Severance Package ($)", type: "number" },
-            { name: "career_notes", label: "Additional Notes", type: "textarea" },
+            { name: "percentage_change", label: "% Change (optional / auto-calculated)", type: "number" },
+            { name: "employer_name", label: "Employer / Organization Name", type: "text" },
           ],
         };
       case "family_marital":
@@ -203,12 +227,11 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
           ),
           gradient: "from-[#9B8FE3] to-[#C687E7]",
           fields: [
-            { name: "status_change", label: "Status Change", type: "select", options: ["Select", "Marriage", "Divorce", "Birth of Child", "Adoption", "Death of Spouse", "Dependent Added", "Dependent Removed"] },
+            { name: "event_type", label: "Type of Event", type: "select", options: ["Select", "Marriage", "Divorce", "Birth", "Adoption", "Dependent Added", "Dependent Removed"] },
             { name: "event_date", label: "Event Date", type: "date" },
-            { name: "dependents_count", label: "Total Number of Dependents", type: "number" },
-            { name: "spouse_income", label: "Spouse Annual Income ($)", type: "number" },
-            { name: "child_care_expenses", label: "Annual Child Care Expenses ($)", type: "number" },
-            { name: "family_notes", label: "Additional Notes", type: "textarea" },
+            { name: "relationship_type", label: "Relationship Type", type: "select", options: ["Select", "Spouse", "Child", "Parent", "Dependent"] },
+            { name: "full_name", label: "Full Name (if new dependent)", type: "text" },
+            { name: "marital_status", label: "Updated Marital Status", type: "select", options: ["Select", "Single", "Married", "Divorced", "Widowed", "Separated"] },
           ],
         };
       default:
@@ -285,6 +308,85 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
           </p>
         </div>
 
+        {/* API Error Banner */}
+        {apiError && (
+          <div className="w-full max-w-2xl mx-auto mb-4">
+            <div
+              style={{
+                backgroundColor: "#FEE2E2",
+                border: "1px solid #EF4444",
+                borderRadius: "8px",
+                padding: "12px 16px",
+                display: "flex",
+                alignItems: "start",
+                gap: "12px",
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#DC2626"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                style={{ flexShrink: 0, marginTop: "2px" }}
+              >
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+              <div style={{ flex: 1 }}>
+                <p
+                  style={{
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    color: "#991B1B",
+                    marginBottom: "4px",
+                  }}
+                >
+                  Error Saving Data
+                </p>
+                <p
+                  style={{
+                    fontSize: "13px",
+                    color: "#991B1B",
+                  }}
+                >
+                  {apiError}
+                </p>
+              </div>
+              <button
+                onClick={() => setApiError("")}
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  padding: "0",
+                  color: "#DC2626",
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Form Fields */}
         <div className="w-full max-w-2xl mx-auto space-y-4 pb-6">
           {config.fields.map((field) => (
@@ -300,7 +402,7 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
                 }}
               >
                 {field.label}
-                {field.type !== "textarea" && <span style={{ color: "#ef4444" }}>*</span>}
+                {!field.label.includes("optional") && field.type !== "textarea" && field.type !== "file" && <span style={{ color: "#ef4444" }}>*</span>}
               </label>
               {field.type === "select" && field.options ? (
                 <select
@@ -344,6 +446,25 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
                     resize: "vertical",
                     backgroundColor: "#f9fafb",
                     cursor: "text",
+                  }}
+                  className="focus:border-blue-400 focus:bg-white"
+                />
+              ) : field.type === "file" ? (
+                <input
+                  id={field.name}
+                  type="file"
+                  onChange={(e) => handleInputChange(field.name, e.target.files?.[0])}
+                  accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                  style={{
+                    width: "100%",
+                    padding: "10px 12px",
+                    fontSize: "14px",
+                    border: errors[field.name] ? "2px solid #ef4444" : "2px solid #e5e7eb",
+                    borderRadius: "10px",
+                    outline: "none",
+                    transition: "all 0.2s",
+                    backgroundColor: "#f9fafb",
+                    cursor: "pointer",
                   }}
                   className="focus:border-blue-400 focus:bg-white"
                 />
@@ -594,13 +715,17 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
                           }}
                         >
                           {field.type === "number" && formData[field.name]
-                            ? `$${parseFloat(formData[field.name]).toLocaleString()}`
+                            ? field.name.includes("percentage")
+                              ? `${formData[field.name]}%`
+                              : `$${parseFloat(formData[field.name]).toLocaleString()}`
                             : field.type === "date" && formData[field.name]
                             ? new Date(formData[field.name]).toLocaleDateString("en-US", {
                                 year: "numeric",
                                 month: "long",
                                 day: "numeric",
                               })
+                            : field.type === "file" && formData[field.name]
+                            ? formData[field.name].name || "File uploaded"
                             : formData[field.name]}
                         </span>
                       </div>
