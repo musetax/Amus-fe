@@ -63,7 +63,7 @@ export const Thread: any = ({
   onReturnToHome,
 }: any) => {
   console.log(showHomeScreen,"jknjkdw")
-  const { messages } = useThread();
+  // const { messages } = useThread();
   // const [isLoading, setIsLoading] = useState(false);
   // const [pdfData, setPdfData] = useState<any[]>([]);
   // const [showDownloadLink, setShowDownloadLink] = useState(false);
