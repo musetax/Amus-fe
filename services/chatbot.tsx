@@ -74,7 +74,7 @@ function mapApiChatsToRepository(
   };
 }
 
-type AgentIntent = "tax_education" | "tax_refund_calculation" | "tax_paycheck_calculation" | null;
+type AgentIntent = "tax_education" | "tax_refund_calculation" | "tax_paycheck_calculation" |"life_events_update" |null;
 
 function makeHistoryAdapter(
   userId: string,

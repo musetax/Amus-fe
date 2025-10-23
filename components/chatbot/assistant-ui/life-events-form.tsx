@@ -141,11 +141,11 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
           ),
           gradient: "from-[#69DEC6] to-[#49C2D4]",
           fields: [
-            { name: "disability_type", label: "Type of Disability", type: "select", options: ["Select", "Physical", "Mental", "Sensory", "Cognitive", "Chronic Illness", "Other"] },
+            { name: "disability_type", label: "Type of Disability", type: "select", options: ["Select", "Blind"] },
             { name: "disability_percentage", label: "Percentage (if applicable)", type: "number" },
             { name: "onset_date", label: "Date of Onset", type: "date" },
             { name: "certifying_authority", label: "Certifying Authority", type: "text" },
-            { name: "document_upload", label: "Document Upload (optional)", type: "file" },
+            // { name: "document_upload", label: "Document Upload (optional)", type: "file" },
           ],
         };
       case "financial_investment":
