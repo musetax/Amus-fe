@@ -2213,6 +2213,17 @@ video {
   padding-left: 1rem /* 16px */;
   padding-right: 1rem /* 16px */;
 }
+.myUniquechatbot .grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+@media (min-width: 640px) {
+  .myUniquechatbot .sm\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.myUniquechatbot .grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
 .myUniquechatbot .min-h-300 {
   height: 100vh;
   max-height: 512px;
