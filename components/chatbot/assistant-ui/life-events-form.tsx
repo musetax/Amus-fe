@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { LifeEventCategory } from "./life-events-screen";
-import { axiosInstanceAuth } from "../../../utilities/auth";
 import CustomMultiSelect from "./customMultiSelect";
+import { getPayrollDetails, payrollDetailsUpdate } from "../../../app/taxModelAdapter";
 interface LifeEventsFormProps {
   category: LifeEventCategory;
   onBack: () => void;
@@ -21,6 +21,29 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
   const [showModal, setShowModal] = useState(false);
   const [errors, setErrors] = useState<any>({});
   const [apiError, setApiError] = useState<string>("");
+  const [payrollData, setPayrollData] = useState<any>(null);
+  const [isLoadingPayroll, setIsLoadingPayroll] = useState(true);
+
+  // Fetch payroll data on mount
+  useEffect(() => {
+    const fetchPayrollData = async () => {
+      if (userId) {
+        try {
+          setIsLoadingPayroll(true);
+          const data = await getPayrollDetails(userId);
+          setPayrollData(data);
+        } catch (error) {
+          console.error("Error fetching payroll data:", error);
+        } finally {
+          setIsLoadingPayroll(false);
+        }
+      } else {
+        setIsLoadingPayroll(false);
+      }
+    };
+
+    fetchPayrollData();
+  }, [userId]);
 
   const handleInputChange = (field: string, value: any) => {
     setFormData((prev: any) => ({
@@ -47,11 +70,12 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
     config.fields.forEach((field) => {
       const value = formData[field.name];
 
-      // Skip validation for optional fields
+      // Skip validation for optional fields and message fields
       if (
         field.label.includes("optional") ||
         field.type === "textarea" ||
-        field.type === "file"
+        field.type === "file" ||
+        field.type === "message"
       ) {
         return;
       }
@@ -93,24 +117,79 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
     setApiError("");
 
     try {
-      // Prepare form data for API submission
-      const payload = {
-        user_id: userId,
-        category: category,
-        event_data: formData,
-        timestamp: new Date().toISOString(),
-      };
+      // Prepare payroll update payload
+      const payrollUpdatePayload: any = {};
 
-      // Make API call to save the life event data
-      const response = await axiosInstanceAuth.post("/v1/life-events", payload);
+      // Handle family_marital category
+      if (category === "family_marital" && formData.event_type) {
+        const eventType = formData.event_type;
 
-      if (response.data && response.status === 200) {
+        if (eventType === "Marriage") {
+          payrollUpdatePayload.filing_status = "married_joint";
+        } else if (eventType === "Divorce") {
+          payrollUpdatePayload.filing_status = "head_of_household";
+        } else if (eventType === "Child" || eventType === "Dependent") {
+          // Update dependents count
+          const dependentCount = parseInt(formData.dependent_count || "0");
+          payrollUpdatePayload.dependents = dependentCount;
+        }
+      }
+
+      // Handle financial_investment category - aggregate deductions
+      if (category === "financial_investment" && formData.event_type) {
+        const eventTypeData = formData.event_type;
+
+        if (eventTypeData?.selected && eventTypeData?.amounts) {
+          let totalDeductions = 0;
+
+          // Sum all the amounts from selected options
+          eventTypeData.selected.forEach((option: string) => {
+            const amount = parseFloat(eventTypeData.amounts[option] || "0");
+            totalDeductions += amount;
+          });
+
+          // Add to existing deductions if any
+          const currentDeductions = payrollData?.payroll_details?.deductions || 0;
+          payrollUpdatePayload.deductions = currentDeductions + totalDeductions;
+        }
+      }
+
+      // Handle career_income category
+      if (category === "career_income" && formData.change_type) {
+        const changeType = formData.change_type;
+
+        if (changeType === "Promotion" || changeType === "Job Change") {
+          // Update salary and withholding
+          if (formData.annual_salary) {
+            payrollUpdatePayload.annual_salary = parseFloat(formData.annual_salary);
+          }
+          if (formData.current_withholding) {
+            payrollUpdatePayload.current_withholding = parseFloat(formData.current_withholding);
+          }
+        } else if (changeType === "Other Income") {
+          // Add to additional income
+          if (formData.other_income_amount) {
+            const currentAdditionalIncome = payrollData?.payroll_details?.additional_income || 0;
+            payrollUpdatePayload.additional_income = currentAdditionalIncome + parseFloat(formData.other_income_amount);
+          }
+        } else if (changeType === "Spouse Income") {
+          // Update spouse income
+          if (formData.spouse_income) {
+            payrollUpdatePayload.spouse_income = parseFloat(formData.spouse_income);
+          }
+        }
+      }
+
+      // Update payroll data if there are changes
+      if (Object.keys(payrollUpdatePayload).length > 0 && userId) {
+        await payrollDetailsUpdate(userId, payrollUpdatePayload);
+
         // Call the parent onSave callback
         await onSave({ category, ...formData, userId });
         setIsSaved(true);
         setShowModal(true);
       } else {
-        throw new Error(response.data?.message || "Failed to save life event");
+        throw new Error("No changes to save");
       }
     } catch (error: any) {
       console.error("Error saving life event data:", error);
@@ -222,6 +301,82 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
           ],
         };
       case "career_income":
+        // Determine available options based on filing status
+        const careerFilingStatus = payrollData?.payroll_details?.filing_status;
+        const careerOptions = ["Select", "Promotion", "Job Change", "Other Income"];
+
+        // Show Spouse Income option only if user is married
+        if (careerFilingStatus === "married_joint") {
+          careerOptions.push("Spouse Income");
+        }
+
+        const careerFields: any[] = [
+          {
+            name: "change_type",
+            label: "Type of Change",
+            type: "select",
+            options: careerOptions,
+          },
+        ];
+
+        // Add fields based on selected change type
+        const changeType = formData.change_type;
+
+        if (changeType === "Promotion" || changeType === "Job Change") {
+          // Add message field to show context
+          careerFields.push({
+            name: "message_promotion_job",
+            label: "",
+            type: "message",
+            message:
+              changeType === "Promotion"
+                ? "Congratulations on your promotion! Please update your new salary and withholding information."
+                : "You've changed jobs! Please provide your new salary and withholding information.",
+          });
+
+          careerFields.push({
+            name: "annual_salary",
+            label: "New Annual Salary ($)",
+            type: "number",
+            placeholder: "Enter your new annual salary",
+          });
+
+          careerFields.push({
+            name: "current_withholding",
+            label: "Current Withholding ($)",
+            type: "number",
+            placeholder: "Enter your current withholding",
+          });
+        } else if (changeType === "Other Income") {
+          careerFields.push({
+            name: "message_other_income",
+            label: "",
+            type: "message",
+            message: "Please enter your additional income amount.",
+          });
+
+          careerFields.push({
+            name: "other_income_amount",
+            label: "Other Income Amount ($)",
+            type: "number",
+            placeholder: "Enter additional income amount",
+          });
+        } else if (changeType === "Spouse Income") {
+          careerFields.push({
+            name: "message_spouse_income",
+            label: "",
+            type: "message",
+            message: "Please enter your spouse's income information.",
+          });
+
+          careerFields.push({
+            name: "spouse_income",
+            label: "Spouse Annual Income ($)",
+            type: "number",
+            placeholder: "Enter spouse's annual income",
+          });
+        }
+
         return {
           title: "Career & Income Updates",
           icon: (
@@ -241,37 +396,48 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
             </svg>
           ),
           gradient: "from-[#518DE7] to-[#7687E5]",
-          fields: [
-            {
-              name: "change_type",
-              label: "Type of Change",
-              type: "select",
-              options: [
-                "Promotion",
-                "Job Change",
-                "Other Income",
-                "if(Spouse income)",
-              ],
-            },
-            // { name: "effective_date", label: "Effective Date", type: "date" },
-            // {
-            //   name: "new_annual_income",
-            //   label: "New Annual Income ($)",
-            //   type: "number",
-            // },
-            // {
-            //   name: "percentage_change",
-            //   label: "% Change (optional / auto-calculated)",
-            //   type: "number",
-            // },
-            // {
-            //   name: "employer_name",
-            //   label: "Employer / Organization Name",
-            //   type: "text",
-            // },
-          ],
+          fields: careerFields,
         };
       case "family_marital":
+        // Determine available options based on filing status
+        const filingStatus = payrollData?.payroll_details?.filing_status;
+        const eventOptions = ["Select"];
+
+        // Show Marriage option only if user is single
+        if (filingStatus === "single") {
+          eventOptions.push("Marriage");
+        }
+
+        // Show Divorce option only if user is married
+        // if (filingStatus === "married_joint") {
+        // }
+        eventOptions.push("Divorce");
+
+        // Always show Child and Dependent options
+        eventOptions.push("Child", "Dependent");
+
+        const fields: any[] = [
+          {
+            name: "event_type",
+            label: "Type of Event",
+            type: "select",
+            options: eventOptions,
+          },
+        ];
+
+        // Add dependent count dropdown if Child or Dependent is selected
+        if (
+          formData.event_type === "Child" ||
+          formData.event_type === "Dependent"
+        ) {
+          fields.push({
+            name: "dependent_count",
+            label: `Number of ${formData.event_type}s`,
+            type: "select",
+            options: ["Select", "1", "2", "3", "4", "5"],
+          });
+        }
+
         return {
           title: "Family & Marital Status Updates",
           icon: (
@@ -293,46 +459,7 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
             </svg>
           ),
           gradient: "from-[#9B8FE3] to-[#C687E7]",
-          fields: [
-            {
-              name: "event_type",
-              label: "Type of Event",
-              type: "select",
-              options: [
-                "Select",
-                "Marriage",
-                "Divorce",
-                "Child",
-                "Dependent ",
-               
-              ],
-            },
-            // { name: "event_date", label: "Event Date", type: "date" },
-            // {
-            //   name: "relationship_type",
-            //   label: "Relationship Type",
-            //   type: "select",
-            //   options: ["Select", "Spouse", "Child", "Parent", "Dependent"],
-            // },
-            // {
-            //   name: "full_name",
-            //   label: "Full Name (if new dependent)",
-            //   type: "text",
-            // },
-            // {
-            //   name: "marital_status",
-            //   label: "Updated Marital Status",
-            //   type: "select",
-            //   options: [
-            //     "Select",
-            //     "Single",
-            //     "Married",
-            //     "Divorced",
-            //     "Widowed",
-            //     "Separated",
-            //   ],
-            // },
-          ],
+          fields,
         };
       default:
         return null;
@@ -343,6 +470,25 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
   if (!config) return null;
 
   console.log("LifeEventsForm - isSaved:", isSaved, "isSaving:", isSaving);
+
+  // Show loading state while fetching payroll data for family_marital and career_income categories
+  if (isLoadingPayroll && (category === "family_marital" || category === "career_income")) {
+    return (
+      <div
+        className="flex flex-col h-full items-center justify-center"
+        style={{
+          height: "calc(100vh - 210px)",
+          minHeight: "440px",
+          maxHeight: "740px",
+        }}
+      >
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+          <p className="text-gray-600 text-sm">Loading your information...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -519,42 +665,105 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
                       <span style={{ color: "#ef4444", marginLeft: 4 }}>*</span>
                     )}
                 </label> */}
-                {field.type === "select" && field.options ? (
-                  <>
-                    <CustomMultiSelect
-                      field={field}
-                      label={field.label}
-                      formData={formData}
-                      handleInputChange={handleInputChange}
-                      errors={errors}
-                    />
-                    {/* <select
-                      id={field.name}
-                      value={formData[field.name] || ""}
-                      onChange={(e) =>
-                        handleInputChange(field.name, e.target.value)
-                      }
-                      style={{
-                        width: "100%",
-                        padding: "10px 12px",
-                        fontSize: "14px",
-                        border: errors[field.name]
-                          ? "1px solid #ef4444"
-                          : "1px solid #d1d5db",
-                        borderRadius: "10px",
-                        outline: "none",
-                        transition: "all 0.2s",
-                        cursor: "pointer",
-                        background: "#ffffff",
-                      }}
-                      className="w-full  bg-white border h-10 rounded-2xl focus:outline-none focus:ring-0 outline-none text-gray-900"
+                {field.type === "message" ? (
+                  <div
+                    style={{
+                      backgroundColor: "#EEF2FF",
+                      border: "1px solid #C7D2FE",
+                      borderRadius: "10px",
+                      padding: "12px 16px",
+                      marginBottom: "16px",
+                      display: "flex",
+                      alignItems: "start",
+                      gap: "12px",
+                    }}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#4F46E5"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      style={{ flexShrink: 0, marginTop: "2px" }}
                     >
-                      {field.options.map((option) => (
-                        <option key={option} value={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </select> */}
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="12" y1="16" x2="12" y2="12" />
+                      <line x1="12" y1="8" x2="12.01" y2="8" />
+                    </svg>
+                    <p
+                      style={{
+                        fontSize: "14px",
+                        color: "#4338CA",
+                        lineHeight: "1.5",
+                        margin: 0,
+                      }}
+                    >
+                      {field.message}
+                    </p>
+                  </div>
+                ) : field.type === "select" && field.options ? (
+                  <>
+                    {/* Use CustomMultiSelect only for financial_investment category */}
+                    {category === "financial_investment" ? (
+                      <CustomMultiSelect
+                        field={field}
+                        label={field.label}
+                        formData={formData}
+                        handleInputChange={handleInputChange}
+                        errors={errors}
+                      />
+                    ) : (
+                      <>
+                        <label
+                          htmlFor={field.name}
+                          style={{
+                            display: "block",
+                            fontSize: "13px",
+                            fontWeight: "500",
+                            color: "#374151",
+                            marginBottom: "6px",
+                          }}
+                        >
+                          {field.label}
+                          {!field.label.includes("optional") &&
+                            field.type !== "textarea" &&
+                            field.type !== "file" && (
+                              <span style={{ color: "#ef4444", marginLeft: 4 }}>*</span>
+                            )}
+                        </label>
+                        <select
+                          id={field.name}
+                          value={formData[field.name] || ""}
+                          onChange={(e) =>
+                            handleInputChange(field.name, e.target.value)
+                          }
+                          style={{
+                            width: "100%",
+                            padding: "10px 12px",
+                            fontSize: "14px",
+                            border: errors[field.name]
+                              ? "1px solid #ef4444"
+                              : "1px solid #d1d5db",
+                            borderRadius: "10px",
+                            outline: "none",
+                            transition: "all 0.2s",
+                            cursor: "pointer",
+                            background: "#ffffff",
+                          }}
+                          className="w-full  bg-white border h-10 rounded-2xl focus:outline-none focus:ring-0 outline-none text-gray-900"
+                        >
+                          {field.options.map((option: string) => (
+                            <option key={option} value={option}>
+                              {option}
+                            </option>
+                          ))}
+                        </select>
+                      </>
+                    )}
                   </>
                 ) : field.type === "textarea" ? (
                   <textarea
@@ -645,35 +854,55 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
                     </div>
                   </>
                 ) : (
-                  <input
-                    id={field.name}
-                    type={field.type}
-                    value={formData[field.name] || ""}
-                    onChange={(e) =>
-                      handleInputChange(field.name, e.target.value)
-                    }
-                    placeholder={
-                      field.type === "number"
-                        ? "0"
-                        : field.type === "date"
-                        ? ""
-                        : "Enter " + field.label.toLowerCase()
-                    }
-                    style={{
-                      width: "100%",
-                      padding: "10px 12px",
-                      fontSize: "14px",
-                      border: errors[field.name]
-                        ? "1px solid #ef4444"
-                        : "1px solid #d1d5db",
-                      borderRadius: "10px",
-                      outline: "none",
-                      transition: "all 0.2s",
-                      backgroundColor: "#ffffff",
-                      cursor: "text",
-                    }}
-                    className="w-full  bg-white border h-10 rounded-2xl focus:outline-none focus:ring-0 outline-none text-gray-900"
-                  />
+                  <>
+                    <label
+                      htmlFor={field.name}
+                      style={{
+                        display: "block",
+                        fontSize: "13px",
+                        fontWeight: "500",
+                        color: "#374151",
+                        marginBottom: "6px",
+                      }}
+                    >
+                      {field.label}
+                      {!field.label.includes("optional") &&
+                        field.type !== "textarea" &&
+                        field.type !== "file" && (
+                          <span style={{ color: "#ef4444", marginLeft: 4 }}>*</span>
+                        )}
+                    </label>
+                    <input
+                      id={field.name}
+                      type={field.type}
+                      value={formData[field.name] || ""}
+                      onChange={(e) =>
+                        handleInputChange(field.name, e.target.value)
+                      }
+                      placeholder={
+                        field.placeholder ||
+                        (field.type === "number"
+                          ? "0"
+                          : field.type === "date"
+                          ? ""
+                          : "Enter " + field.label.toLowerCase())
+                      }
+                      style={{
+                        width: "100%",
+                        padding: "10px 12px",
+                        fontSize: "14px",
+                        border: errors[field.name]
+                          ? "1px solid #ef4444"
+                          : "1px solid #d1d5db",
+                        borderRadius: "10px",
+                        outline: "none",
+                        transition: "all 0.2s",
+                        backgroundColor: "#ffffff",
+                        cursor: "text",
+                      }}
+                      className="w-full  bg-white border h-10 rounded-2xl focus:outline-none focus:ring-0 outline-none text-gray-900"
+                    />
+                  </>
                 )}
                 {errors[field.name] && (
                   <p
@@ -903,52 +1132,87 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
                     .filter(
                       (field) =>
                         formData[field.name] &&
-                        formData[field.name] !== "Select"
+                        formData[field.name] !== "Select" &&
+                        field.type !== "message"
                     )
-                    .map((field) => (
-                      <div
-                        key={field.name}
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          fontSize: "13px",
-                          paddingBottom: "8px",
-                          borderBottom: "1px solid #e5e7eb",
-                        }}
-                      >
-                        <span style={{ color: "#6b7280", fontWeight: "500" }}>
-                          {field.label}:
-                        </span>
-                        <span
+                    .map((field) => {
+                      const fieldValue = formData[field.name];
+
+                      // Handle financial investment multi-select with amounts
+                      if (category === "financial_investment" && field.name === "event_type" && fieldValue?.selected) {
+                        return fieldValue.selected.map((option: string) => (
+                          <div
+                            key={option}
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              fontSize: "13px",
+                              paddingBottom: "8px",
+                              borderBottom: "1px solid #e5e7eb",
+                            }}
+                          >
+                            <span style={{ color: "#6b7280", fontWeight: "500" }}>
+                              {option}:
+                            </span>
+                            <span
+                              style={{
+                                color: "#1f2937",
+                                fontWeight: "600",
+                                textAlign: "right",
+                                maxWidth: "60%",
+                                wordBreak: "break-word",
+                              }}
+                            >
+                              ${parseFloat(fieldValue.amounts[option] || "0").toLocaleString()}
+                            </span>
+                          </div>
+                        ));
+                      }
+
+                      // Handle regular fields
+                      return (
+                        <div
+                          key={field.name}
                           style={{
-                            color: "#1f2937",
-                            fontWeight: "600",
-                            textAlign: "right",
-                            maxWidth: "60%",
-                            wordBreak: "break-word",
+                            display: "flex",
+                            justifyContent: "space-between",
+                            fontSize: "13px",
+                            paddingBottom: "8px",
+                            borderBottom: "1px solid #e5e7eb",
                           }}
                         >
-                          {field.type === "number" && formData[field.name]
-                            ? field.name.includes("percentage")
-                              ? `${formData[field.name]}%`
-                              : `$${parseFloat(
-                                  formData[field.name]
-                                ).toLocaleString()}`
-                            : field.type === "date" && formData[field.name]
-                            ? new Date(formData[field.name]).toLocaleDateString(
-                                "en-US",
-                                {
-                                  year: "numeric",
-                                  month: "long",
-                                  day: "numeric",
-                                }
-                              )
-                            : field.type === "file" && formData[field.name]
-                            ? formData[field.name].name || "File uploaded"
-                            : formData[field.name]}
-                        </span>
-                      </div>
-                    ))}
+                          <span style={{ color: "#6b7280", fontWeight: "500" }}>
+                            {field.label}:
+                          </span>
+                          <span
+                            style={{
+                              color: "#1f2937",
+                              fontWeight: "600",
+                              textAlign: "right",
+                              maxWidth: "60%",
+                              wordBreak: "break-word",
+                            }}
+                          >
+                            {field.type === "number" && fieldValue
+                              ? field.name.includes("percentage")
+                                ? `${fieldValue}%`
+                                : `$${parseFloat(fieldValue).toLocaleString()}`
+                              : field.type === "date" && fieldValue
+                              ? new Date(fieldValue).toLocaleDateString(
+                                  "en-US",
+                                  {
+                                    year: "numeric",
+                                    month: "long",
+                                    day: "numeric",
+                                  }
+                                )
+                              : field.type === "file" && fieldValue
+                              ? fieldValue.name || "File uploaded"
+                              : fieldValue}
+                          </span>
+                        </div>
+                      );
+                    })}
                 </div>
               </div>
 
