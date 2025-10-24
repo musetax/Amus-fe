@@ -2213,6 +2213,9 @@ video {
   padding-left: 1rem /* 16px */;
   padding-right: 1rem /* 16px */;
 }
+.myUniquechatbot .items-start {
+  align-items: flex-start;
+}
 .myUniquechatbot .grid-cols-1 {
   grid-template-columns: repeat(1, minmax(0, 1fr));
 }
@@ -2310,7 +2313,16 @@ input[type="number"] {
 .custom-scrollbar::-webkit-scrollbar {
   width: 4px;
 }
-
+.custom-hover:hover {
+  background: #518de7 !important;
+}
+.custom-hover:hover svg {
+  stroke: #ffffff !important;
+}
+.custom-hover:hover h3,
+.custom-hover:hover p {
+  color: #ffffff !important;
+}
 .custom-scrollbar::-webkit-scrollbar-track {
   background: #f1f5f9; /* light gray */
   border-radius: 10px;

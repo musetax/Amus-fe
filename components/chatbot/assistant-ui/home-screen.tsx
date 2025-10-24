@@ -19,11 +19,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 }) => {
   return (
     <div
-      className="flex flex-col items-center justify-center px-6 py-8"
+      className="flex flex-col items-center  px-6 py-8"
       style={{
         height: "calc(100vh - 210px)",
         minHeight: "440px",
         maxHeight: "740px",
+        overflowY: "auto",
+        justifyContent: "start",
       }}
     >
       {/* Logo and Welcome Section */}
@@ -155,7 +157,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           onClick={() => onSelectIntent("tax_education")}
           className="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#69DEC6] via-[#49C2D4] to-[#1595EA] p-[2px] transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
         >
-          <div className="bg-white rounded-2xl px-6 py-4 transition-all duration-300 group-hover:bg-opacity-95">
+          <div className="bg-white rounded-2xl px-4 py-4 transition-all duration-300 group-hover:bg-opacity-95 custom-hover">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#69DEC6] to-[#1595EA] flex items-center justify-center">
@@ -165,7 +167,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                     height="24"
                     viewBox="0 0 24 24"
                     fill="none"
-                    stroke="white"
+                    stroke="#518de7"
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -218,7 +220,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           onClick={() => onSelectIntent("tax_refund_calculation")}
           className="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#518DE7] via-[#7687E5] to-[#9B8FE3] p-[2px] transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
         >
-          <div className="bg-white rounded-2xl px-6 py-4 transition-all duration-300 group-hover:bg-opacity-95">
+          <div className="bg-white rounded-2xl px-4 py-4 transition-all duration-300 group-hover:bg-opacity-95 custom-hover">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#518DE7] to-[#7687E5] flex items-center justify-center">
@@ -228,7 +230,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                     height="24"
                     viewBox="0 0 24 24"
                     fill="none"
-                    stroke="white"
+                    stroke="#518de7"
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -281,7 +283,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           onClick={() => onSelectIntent("tax_paycheck_calculation")}
           className="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#48C2D4] via-[#1595EA] to-[#548CE7] p-[2px] transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
         >
-          <div className="bg-white rounded-2xl px-6 py-4 transition-all duration-300 group-hover:bg-opacity-95">
+          <div className="bg-white rounded-2xl px-4 py-4 transition-all duration-300 group-hover:bg-opacity-95 custom-hover">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#1595EA] to-[#548CE7] flex items-center justify-center">
@@ -291,7 +293,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                     height="24"
                     viewBox="0 0 24 24"
                     fill="none"
-                    stroke="white"
+                    stroke="#518de7"
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -345,17 +347,20 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           onClick={() => onSelectIntent("life_events_update")}
           className="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#9B8FE3] via-[#B08BE5] to-[#C687E7] p-[2px] transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
         >
-          <div className="bg-white rounded-2xl px-6 py-4 transition-all duration-300 group-hover:bg-opacity-95">
+          <div className="bg-white rounded-2xl px-4 py-4 transition-all duration-300 group-hover:bg-opacity-95 custom-hover">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#9B8FE3] to-[#C687E7] flex items-center justify-center">
+                <div
+                  className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#9B8FE3] to-[#C687E7] flex items-center justify-center"
+                  style={{ minWidth: "25px" }}
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
                     height="24"
                     viewBox="0 0 24 24"
                     fill="none"
-                    stroke="white"
+                    stroke="#518de7"
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"

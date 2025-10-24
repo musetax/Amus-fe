@@ -70,7 +70,7 @@ export const Thread: any = ({
   onBackToLifeEventsCategories,
   onSaveLifeEvents,
 }: any) => {
-  console.log(showHomeScreen,"jknjkdw")
+  console.log(showHomeScreen, "jknjkdw");
   const { messages } = useThread();
   // const [isLoading, setIsLoading] = useState(false);
   // const [pdfData, setPdfData] = useState<any[]>([]);
@@ -114,7 +114,7 @@ export const Thread: any = ({
 
   // Check if we should show the tax chatbot based on props
   // const shouldShowTaxChatbot = messages.length === 0 && showTaxChatbot;
-  const shouldShowTaxChatbot =  showTaxChatbot;
+  const shouldShowTaxChatbot = showTaxChatbot;
 
   return (
     <>
@@ -127,7 +127,7 @@ export const Thread: any = ({
         >
           <div
             className="bg-[#255be305] overflow-hidden rounded-xl as"
-            style={{ maxHeight: "935px" }}
+            style={{ maxHeight: "935px", position: "sticky", top: "0" }}
           >
             <div
               style={{
@@ -163,7 +163,12 @@ export const Thread: any = ({
                   }}
                 >
                   {companyLogo ? (
-                    <Image src={companyLogo} width={60} height={41} alt="Company Logo" />
+                    <Image
+                      src={companyLogo}
+                      width={60}
+                      height={41}
+                      alt="Company Logo"
+                    />
                   ) : (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -308,7 +313,7 @@ export const Thread: any = ({
                     category={selectedLifeEventCategory}
                     onBack={onBackToLifeEventsCategories}
                     onSave={onSaveLifeEvents}
-                     userId={userId}
+                    userId={userId}
                   />
                 ) : shouldShowTaxChatbot ? (
                   <div
@@ -357,23 +362,23 @@ export const Thread: any = ({
                       <ThreadPrimitive.If empty={false}>
                         <div className="min-h-8 flex-grow" />
                       </ThreadPrimitive.If>
-                          <div className="mt-3 p-4 flex w-full items-stretch justify-center gap-4">
-                  {suggestions.map((s, i) => (
-                    <ThreadPrimitive.Suggestion
-                      key={i}
-                      prompt={s}
-                      autoSend
-                      method="replace"
-                      className="hover:bg-muted/80 flex max-w-sm grow basis-0 flex-col items-center justify-center rounded-lg border p-3 transition-colors ease-in"
-                    >
-                      <span className="line-clamp-2 text-ellipsis text-sm font-semibold">
-                        {s}
-                      </span>
-                    </ThreadPrimitive.Suggestion>
-                  ))}
-                </div>
+                      <div className="mt-3 p-4 flex w-full items-stretch justify-center gap-4">
+                        {suggestions.map((s, i) => (
+                          <ThreadPrimitive.Suggestion
+                            key={i}
+                            prompt={s}
+                            autoSend
+                            method="replace"
+                            className="hover:bg-muted/80 flex max-w-sm grow basis-0 flex-col items-center justify-center rounded-lg border p-3 transition-colors ease-in"
+                          >
+                            <span className="line-clamp-2 text-ellipsis text-sm font-semibold">
+                              {s}
+                            </span>
+                          </ThreadPrimitive.Suggestion>
+                        ))}
+                      </div>
                     </ThreadPrimitive.Viewport>
-                      
+
                     <div className="sticky bg-[#255be305] bottom-0 px-3 pt-3 flex w-full max-w-[var(--thread-max-width)] flex-col items-center justify-end rounded-t-lg pb-2">
                       <Composer />
                       <ThreadScrollToBottom />
@@ -692,8 +697,11 @@ const AssistantMessage: React.FC<any> = ({ companyLogo, onReturnToHome }) => {
   const [showUrls, setShowUrls] = useState(false);
 
   // Check if this is the last assistant message
-  const assistantMessages = messages.filter((msg: any) => msg.role === "assistant");
-  const isLastMessage = assistantMessages[assistantMessages.length - 1]?.id === messageId;
+  const assistantMessages = messages.filter(
+    (msg: any) => msg.role === "assistant"
+  );
+  const isLastMessage =
+    assistantMessages[assistantMessages.length - 1]?.id === messageId;
 
   // Check if any message is currently streaming
   const isAnyMessageStreaming = messages.some(
@@ -718,137 +726,147 @@ const AssistantMessage: React.FC<any> = ({ companyLogo, onReturnToHome }) => {
           width: "100%",
         }}
       >
-      <span style={{ position: "relative", top: "10px" }}>
-        {companyLogo ? (
-          <Image
-            width={25}
-            height={25}
-            src={companyLogo}
-            style={{
-              width: "25px",
-              height: "25px",
-              minWidth: "25px",
-              minHeight: "25px",
-              objectFit: "cover",
-              borderRadius: "50%",
-            }}
-            alt="Company Logo"
-          />
-        ) : (
-          <Image
-            width={25}
-            height={25}
-            style={{
-              width: "25px",
-              height: "25px",
-              minWidth: "25px",
-              minHeight: "25px",
-              objectFit: "cover",
-              borderRadius: "50%",
-            }}
-            src="https://appweb-bucket.s3.us-east-1.amazonaws.com/muse-logo.png"
-            alt="useIcon"
-          />
-        )}
-      </span>
-      <MessagePrimitive.Root className="grid grid-cols-[auto_auto_1fr] grid-rows-[auto_1fr] relative w-full max-w-[var(--thread-max-width)] py-4 pr-2">
-        <div className="text-foreground max-w-[calc(var(--thread-max-width)*0.8)] break-words leading-7 col-span-2 col-start-2 row-start-1 my-1.5">
-          {isMessageLoading ? (
-            <div className="flex flex-col  py-4">
-              <div className="flex items-center gap-1">
-                <span
-                  className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"
-                  style={{ animationDelay: "0s" }}
-                ></span>
-                <span
-                  className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"
-                  style={{ animationDelay: "0.2s" }}
-                ></span>
-                <span
-                  className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"
-                  style={{ animationDelay: "0.4s" }}
-                ></span>
-              </div>
-
-              <span className="block text-sm text-gray-600 animate-pulse mt-2">
-                Searching for information....
-              </span>
-            </div>
+        <span style={{ position: "relative", top: "10px" }}>
+          {companyLogo ? (
+            <Image
+              width={25}
+              height={25}
+              src={companyLogo}
+              style={{
+                width: "25px",
+                height: "25px",
+                minWidth: "25px",
+                minHeight: "25px",
+                objectFit: "cover",
+                borderRadius: "50%",
+              }}
+              alt="Company Logo"
+            />
           ) : (
-            <>
-              <MessagePrimitive.Content components={{ Text: MarkdownText }} />
-
-              {isStreaming && (
-                <span className="inline-block w-2 h-0.5 bg-blue-500 animate-pulse ml-1"></span>
-              )}
-
-              {urls && !isStreaming && showUrls && (
-                <URLDisplay urls={urls} messageId={messageId} />
-              )}
-
-              <span
-                style={{ color: "#45556c", fontSize: "12px", marginTop: "4px" }}
-              >
-                {time}
-              </span>
-            </>
+            <Image
+              width={25}
+              height={25}
+              style={{
+                width: "25px",
+                height: "25px",
+                minWidth: "25px",
+                minHeight: "25px",
+                objectFit: "cover",
+                borderRadius: "50%",
+              }}
+              src="https://appweb-bucket.s3.us-east-1.amazonaws.com/muse-logo.png"
+              alt="useIcon"
+            />
           )}
-        </div>
-        <AssistantActionBar
-          urls={urls}
-          onToggleUrls={() => setShowUrls((p) => !p)}
-        />
-        <BranchPicker className="col-start-2 row-start-2 -ml-2 mr-2" />
-      </MessagePrimitive.Root>
+        </span>
+        <MessagePrimitive.Root className="grid grid-cols-[auto_auto_1fr] grid-rows-[auto_1fr] relative w-full max-w-[var(--thread-max-width)] py-4 pr-2">
+          <div className="text-foreground max-w-[calc(var(--thread-max-width)*0.8)] break-words leading-7 col-span-2 col-start-2 row-start-1 my-1.5">
+            {isMessageLoading ? (
+              <div className="flex flex-col  py-4">
+                <div className="flex items-center gap-1">
+                  <span
+                    className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"
+                    style={{ animationDelay: "0s" }}
+                  ></span>
+                  <span
+                    className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"
+                    style={{ animationDelay: "0.2s" }}
+                  ></span>
+                  <span
+                    className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"
+                    style={{ animationDelay: "0.4s" }}
+                  ></span>
+                </div>
+
+                <span className="block text-sm text-gray-600 animate-pulse mt-2">
+                  Searching for information....
+                </span>
+              </div>
+            ) : (
+              <>
+                <MessagePrimitive.Content components={{ Text: MarkdownText }} />
+
+                {isStreaming && (
+                  <span className="inline-block w-2 h-0.5 bg-blue-500 animate-pulse ml-1"></span>
+                )}
+
+                {urls && !isStreaming && showUrls && (
+                  <URLDisplay urls={urls} messageId={messageId} />
+                )}
+
+                <span
+                  style={{
+                    color: "#45556c",
+                    fontSize: "12px",
+                    marginTop: "4px",
+                  }}
+                >
+                  {time}
+                </span>
+              </>
+            )}
+          </div>
+          <AssistantActionBar
+            urls={urls}
+            onToggleUrls={() => setShowUrls((p) => !p)}
+          />
+          <BranchPicker className="col-start-2 row-start-2 -ml-2 mr-2" />
+        </MessagePrimitive.Root>
       </div>
 
       {/* Return to Home Screen Button - Only show on last message when not streaming */}
-      {!isAnyMessageStreaming && !isMessageLoading && onReturnToHome && isLastMessage && (
-        <div style={{ marginTop: "12px", marginLeft: "32px" }}>
-          <button
-            onClick={onReturnToHome}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "8px",
-              padding: "10px 20px",
-              fontSize: "14px",
-              fontWeight: "500",
-              color: "#ffffff",
-              background: "linear-gradient(90deg, #69DEC6 0%, #49C2D4 50%, #1595EA 100%)",
-              border: "none",
-              borderRadius: "24px",
-              cursor: "pointer",
-              transition: "all 0.2s ease-in-out",
-              boxShadow: "0 2px 8px rgba(21, 149, 234, 0.2)",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "scale(1.02)";
-              e.currentTarget.style.boxShadow = "0 4px 12px rgba(21, 149, 234, 0.3)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "scale(1)";
-              e.currentTarget.style.boxShadow = "0 2px 8px rgba(21, 149, 234, 0.2)";
-            }}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+      {!isAnyMessageStreaming &&
+        !isMessageLoading &&
+        onReturnToHome &&
+        isLastMessage && (
+          <div style={{ marginTop: "12px", marginLeft: "32px" }}>
+            <button
+              onClick={onReturnToHome}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "10px 20px",
+                fontSize: "14px",
+                fontWeight: "500",
+                color: "#ffffff",
+                background:
+                  "linear-gradient(90deg, #69DEC6 0%, #49C2D4 50%, #1595EA 100%)",
+                border: "none",
+                borderRadius: "24px",
+                cursor: "pointer",
+                transition: "all 0.2s ease-in-out",
+                boxShadow: "0 2px 8px rgba(21, 149, 234, 0.2)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "scale(1.02)";
+                e.currentTarget.style.boxShadow =
+                  "0 4px 12px rgba(21, 149, 234, 0.3)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "scale(1)";
+                e.currentTarget.style.boxShadow =
+                  "0 2px 8px rgba(21, 149, 234, 0.2)";
+              }}
             >
-              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-              <polyline points="9 22 9 12 15 12 15 22" />
-            </svg>
-            Return to Home Screen
-          </button>
-        </div>
-      )}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                <polyline points="9 22 9 12 15 12 15 22" />
+              </svg>
+              Return to Home Screen
+            </button>
+          </div>
+        )}
     </div>
   );
 };
