@@ -75,7 +75,7 @@ export const Thread: any = ({
   // const [isLoading, setIsLoading] = useState(false);
   // const [pdfData, setPdfData] = useState<any[]>([]);
   // const [showDownloadLink, setShowDownloadLink] = useState(false);
-  console.log(globalError, "messages", "----------------");
+  console.log(globalError, "messages", "----------------",messages);
   // const isStreaming = messages.some(
   //   (msg: any) => msg.role === "assistant" && msg.status?.type === "running"
   // );
