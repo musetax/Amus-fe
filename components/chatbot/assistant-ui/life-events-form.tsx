@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { LifeEventCategory } from "./life-events-screen";
 import CustomMultiSelect from "./customMultiSelect";
-import { getPayrollDetails, payrollDetailsUpdate } from "../../../app/taxModelAdapter";
+import {
+  getPayrollDetails,
+  payrollDetailsUpdate,
+} from "../../../app/taxModelAdapter";
 interface LifeEventsFormProps {
   category: LifeEventCategory;
   onBack: () => void;
@@ -149,7 +152,8 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
           });
 
           // Add to existing deductions if any
-          const currentDeductions = payrollData?.payroll_details?.deductions || 0;
+          const currentDeductions =
+            payrollData?.payroll_details?.deductions || 0;
           payrollUpdatePayload.deductions = currentDeductions + totalDeductions;
         }
       }
@@ -161,21 +165,30 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
         if (changeType === "Promotion" || changeType === "Job Change") {
           // Update salary and withholding
           if (formData.annual_salary) {
-            payrollUpdatePayload.annual_salary = parseFloat(formData.annual_salary);
+            payrollUpdatePayload.annual_salary = parseFloat(
+              formData.annual_salary
+            );
           }
           if (formData.current_withholding) {
-            payrollUpdatePayload.current_withholding = parseFloat(formData.current_withholding);
+            payrollUpdatePayload.current_withholding = parseFloat(
+              formData.current_withholding
+            );
           }
         } else if (changeType === "Other Income") {
           // Add to additional income
           if (formData.other_income_amount) {
-            const currentAdditionalIncome = payrollData?.payroll_details?.additional_income || 0;
-            payrollUpdatePayload.additional_income = currentAdditionalIncome + parseFloat(formData.other_income_amount);
+            const currentAdditionalIncome =
+              payrollData?.payroll_details?.additional_income || 0;
+            payrollUpdatePayload.additional_income =
+              currentAdditionalIncome +
+              parseFloat(formData.other_income_amount);
           }
         } else if (changeType === "Spouse Income") {
           // Update spouse income
           if (formData.spouse_income) {
-            payrollUpdatePayload.spouse_income = parseFloat(formData.spouse_income);
+            payrollUpdatePayload.spouse_income = parseFloat(
+              formData.spouse_income
+            );
           }
         }
       }
@@ -285,9 +298,10 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
                 "Student Loan Interest",
                 "State or Local Tax",
                 "Medical Expenses",
-                "Other Deductions",
+
                 "Charitable Donations",
                 "Home Mortgage Interest",
+                "Other Deductions",
               ],
             },
             // { name: "event_date", label: "Event Date", type: "date" },
@@ -303,7 +317,12 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
       case "career_income":
         // Determine available options based on filing status
         const careerFilingStatus = payrollData?.payroll_details?.filing_status;
-        const careerOptions = ["Select", "Promotion", "Job Change", "Other Income"];
+        const careerOptions = [
+          "Select",
+          "Promotion",
+          "Job Change",
+          "Other Income",
+        ];
 
         // Show Spouse Income option only if user is married
         if (careerFilingStatus === "married_joint") {
@@ -472,7 +491,10 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
   console.log("LifeEventsForm - isSaved:", isSaved, "isSaving:", isSaving);
 
   // Show loading state while fetching payroll data for family_marital and career_income categories
-  if (isLoadingPayroll && (category === "family_marital" || category === "career_income")) {
+  if (
+    isLoadingPayroll &&
+    (category === "family_marital" || category === "career_income")
+  ) {
     return (
       <div
         className="flex flex-col h-full items-center justify-center"
@@ -645,9 +667,13 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
           className="w-full max-w-2xl mx-auto space-y-4 pb-6"
           style={{ marginTop: 40, display: "inline-block" }}
         >
-          <div className="w-full max-w-md" style={{ minHeight: 220 }}>
+          <div className="w-full max-w-md " style={{ minHeight: 220 }}>
             {config.fields.map((field) => (
-              <div key={field.name} className="block">
+              <div
+                key={field.name}
+                className="block"
+                style={{ marginBottom: 10 }}
+              >
                 {/* <label
                   htmlFor={field.name}
                   style={{
@@ -732,7 +758,9 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
                           {!field.label.includes("optional") &&
                             field.type !== "textarea" &&
                             field.type !== "file" && (
-                              <span style={{ color: "#ef4444", marginLeft: 4 }}>*</span>
+                              <span style={{ color: "#ef4444", marginLeft: 4 }}>
+                                *
+                              </span>
                             )}
                         </label>
                         <select
@@ -869,7 +897,9 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
                       {!field.label.includes("optional") &&
                         field.type !== "textarea" &&
                         field.type !== "file" && (
-                          <span style={{ color: "#ef4444", marginLeft: 4 }}>*</span>
+                          <span style={{ color: "#ef4444", marginLeft: 4 }}>
+                            *
+                          </span>
                         )}
                     </label>
                     <input
@@ -982,16 +1012,14 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
             onClick={handleSubmit}
             disabled={isSaving}
             type="button"
-            className={`bg-gradient-to-r ${config.gradient} text-white font-semibold transition-all duration-300 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed`}
+            className={`bg_custom text-white font-semibold transition-all duration-300 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed`}
             style={{
               width: "90px",
               minWidth: "20px",
               padding: "10px 16px",
               fontSize: "14px",
               fontWeight: "500",
-              color: "#11181c",
-              backgroundColor: "#ffffff",
-              border: "1px solid #e5e7eb",
+              color: "#ffffff",
               borderRadius: "20px",
               transition: "all 0.2s",
               cursor: isSaving ? "not-allowed" : "pointer",
@@ -1139,7 +1167,11 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
                       const fieldValue = formData[field.name];
 
                       // Handle financial investment multi-select with amounts
-                      if (category === "financial_investment" && field.name === "event_type" && fieldValue?.selected) {
+                      if (
+                        category === "financial_investment" &&
+                        field.name === "event_type" &&
+                        fieldValue?.selected
+                      ) {
                         return fieldValue.selected.map((option: string) => (
                           <div
                             key={option}
@@ -1151,7 +1183,9 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
                               borderBottom: "1px solid #e5e7eb",
                             }}
                           >
-                            <span style={{ color: "#6b7280", fontWeight: "500" }}>
+                            <span
+                              style={{ color: "#6b7280", fontWeight: "500" }}
+                            >
                               {option}:
                             </span>
                             <span
@@ -1163,7 +1197,10 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
                                 wordBreak: "break-word",
                               }}
                             >
-                              ${parseFloat(fieldValue.amounts[option] || "0").toLocaleString()}
+                              $
+                              {parseFloat(
+                                fieldValue.amounts[option] || "0"
+                              ).toLocaleString()}
                             </span>
                           </div>
                         ));

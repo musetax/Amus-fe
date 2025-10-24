@@ -1,7 +1,12 @@
 import React from "react";
 import Image from "next/image";
 
-export type AgentIntent = "tax_education" | "tax_refund_calculation" | "tax_paycheck_calculation" | "life_events_update" | null;
+export type AgentIntent =
+  | "tax_education"
+  | "tax_refund_calculation"
+  | "tax_paycheck_calculation"
+  | "life_events_update"
+  | null;
 
 interface HomeScreenProps {
   onSelectIntent: (intent: AgentIntent) => void;
@@ -138,7 +143,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             maxWidth: "400px",
           }}
         >
-          Choose one of the options below to get started with your tax assistance
+          Choose one of the options below to get started with your tax
+          assistance
         </p>
       </div>
 
@@ -177,7 +183,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                     }}
                   >
                     Get instant answers to your tax questions
-
                   </h3>
                   <p
                     style={{
@@ -411,7 +416,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           maxWidth: "400px",
         }}
       >
-        Need help? Our AI-powered assistant is here to guide you through every step
+        Need help? Our AI-powered assistant is here to guide you through every
+        step
       </p>
     </div>
   );
