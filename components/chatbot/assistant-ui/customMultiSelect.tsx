@@ -27,7 +27,7 @@ const CustomMultiSelect: React.FC<CustomMultiSelectProps> = ({
 
   const toggleOption = (option: string) => {
     let updated: string[];
-    let updatedAmounts = { ...amounts };
+    const updatedAmounts = { ...amounts };
 
     if (selected.includes(option)) {
       updated = selected.filter((item) => item !== option);
