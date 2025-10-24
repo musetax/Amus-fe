@@ -7,7 +7,7 @@ export const MyModelAdapter = (
   userId: string,
   setTyping: (typing: boolean) => void,
   sessionId?: string,
-  setGlobalError?:(message:string|null)=>void,
+  setGlobalError?: (message: string | null) => void,
   agentIntent?: AgentIntent
 ): any => ({
   async *run({ messages }: any) {
@@ -16,8 +16,8 @@ export const MyModelAdapter = (
     // Start immediately - no loading placeholder!
 
     try {
-      let {accessToken}= getTokens();
-        if (!accessToken) {
+      let { accessToken } = getTokens();
+      if (!accessToken) {
         const newToken = await refreshToken();
         if (!newToken) {
           setTyping(false);
@@ -30,7 +30,7 @@ export const MyModelAdapter = (
       const lastUserText = messages[messages.length - 1].content[0]?.text || "";
       const AUTH_API_URL = process.env.NEXT_PUBLIC_BACKEND_API;
 
-        const makeRequest = async (token: string) =>
+      const makeRequest = async (token: string) =>
         fetch(`${AUTH_API_URL}chat`, {
           method: "POST",
           headers: {
@@ -71,6 +71,7 @@ export const MyModelAdapter = (
 
       let accumulated = "";
       let urls: string[] = [];
+      let suggestions: string[] = [];
       const accumulatedMessages = [...messages];
       let lastYield = 0;
       const MIN_YIELD_INTERVAL = 16; // ~60fps
@@ -105,6 +106,9 @@ export const MyModelAdapter = (
               if (json.urls && Array.isArray(json.urls)) {
                 urls = json.urls;
               }
+              if (json.followups && Array.isArray(json.followups)) {
+                suggestions = json.followups.slice(0, 2);
+              }
             } catch (err) {
               console.error("JSON parse error:", jsonStr, err);
             }
@@ -124,6 +128,7 @@ export const MyModelAdapter = (
                 loading: false,
                 streaming: true,
                 urls: urls.length > 0 ? urls : undefined,
+                suggestions:suggestions
               },
             },
           };
@@ -140,6 +145,7 @@ export const MyModelAdapter = (
             loading: false,
             streaming: false,
             urls: urls.length > 0 ? urls : undefined,
+            suggestions:suggestions
           },
         },
       };
