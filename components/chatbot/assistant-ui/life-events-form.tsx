@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { LifeEventCategory } from "./life-events-screen";
 import { axiosInstanceAuth } from "../../../utilities/auth";
-
+import CustomMultiSelect from "./customMultiSelect";
 interface LifeEventsFormProps {
   category: LifeEventCategory;
   onBack: () => void;
@@ -158,17 +158,17 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
               type: "select",
               options: ["Select", "Blind"],
             },
-            {
-              name: "disability_percentage",
-              label: "Percentage (if applicable)",
-              type: "number",
-            },
-            { name: "onset_date", label: "Date of Onset", type: "date" },
-            {
-              name: "certifying_authority",
-              label: "Certifying Authority",
-              type: "text",
-            },
+            // {
+            //   name: "disability_percentage",
+            //   label: "Percentage (if applicable)",
+            //   type: "number",
+            // },
+            // { name: "onset_date", label: "Date of Onset", type: "date" },
+            // {
+            //   name: "certifying_authority",
+            //   label: "Certifying Authority",
+            //   type: "text",
+            // },
             // {
             //   name: "document_upload",
             //   label: "Document Upload (optional)",
@@ -202,7 +202,6 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
               label: "Type of Event",
               type: "select",
               options: [
-                "Select",
                 "IRA Contribution",
                 "Student Loan Interest",
                 "State or Local Tax",
@@ -212,14 +211,14 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
                 "Home Mortgage Interest",
               ],
             },
-            { name: "event_date", label: "Event Date", type: "date" },
-            { name: "amount", label: "Amount ($)", type: "number" },
-            {
-              name: "institution_name",
-              label: "Institution / Platform Name",
-              type: "text",
-            },
-            { name: "notes", label: "Notes (optional)", type: "textarea" },
+            // { name: "event_date", label: "Event Date", type: "date" },
+            // { name: "amount", label: "Amount ($)", type: "number" },
+            // {
+            //   name: "institution_name",
+            //   label: "Institution / Platform Name",
+            //   type: "text",
+            // },
+            // { name: "notes", label: "Notes (optional)", type: "textarea" },
           ],
         };
       case "career_income":
@@ -248,29 +247,28 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
               label: "Type of Change",
               type: "select",
               options: [
-                "Select",
                 "Promotion",
                 "Job Change",
-                "Salary Revision",
-                "Layoff",
+                "Other Income",
+                "if(Spouse income)",
               ],
             },
-            { name: "effective_date", label: "Effective Date", type: "date" },
-            {
-              name: "new_annual_income",
-              label: "New Annual Income ($)",
-              type: "number",
-            },
-            {
-              name: "percentage_change",
-              label: "% Change (optional / auto-calculated)",
-              type: "number",
-            },
-            {
-              name: "employer_name",
-              label: "Employer / Organization Name",
-              type: "text",
-            },
+            // { name: "effective_date", label: "Effective Date", type: "date" },
+            // {
+            //   name: "new_annual_income",
+            //   label: "New Annual Income ($)",
+            //   type: "number",
+            // },
+            // {
+            //   name: "percentage_change",
+            //   label: "% Change (optional / auto-calculated)",
+            //   type: "number",
+            // },
+            // {
+            //   name: "employer_name",
+            //   label: "Employer / Organization Name",
+            //   type: "text",
+            // },
           ],
         };
       case "family_marital":
@@ -310,31 +308,31 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
                 "Dependent Removed",
               ],
             },
-            { name: "event_date", label: "Event Date", type: "date" },
-            {
-              name: "relationship_type",
-              label: "Relationship Type",
-              type: "select",
-              options: ["Select", "Spouse", "Child", "Parent", "Dependent"],
-            },
-            {
-              name: "full_name",
-              label: "Full Name (if new dependent)",
-              type: "text",
-            },
-            {
-              name: "marital_status",
-              label: "Updated Marital Status",
-              type: "select",
-              options: [
-                "Select",
-                "Single",
-                "Married",
-                "Divorced",
-                "Widowed",
-                "Separated",
-              ],
-            },
+            // { name: "event_date", label: "Event Date", type: "date" },
+            // {
+            //   name: "relationship_type",
+            //   label: "Relationship Type",
+            //   type: "select",
+            //   options: ["Select", "Spouse", "Child", "Parent", "Dependent"],
+            // },
+            // {
+            //   name: "full_name",
+            //   label: "Full Name (if new dependent)",
+            //   type: "text",
+            // },
+            // {
+            //   name: "marital_status",
+            //   label: "Updated Marital Status",
+            //   type: "select",
+            //   options: [
+            //     "Select",
+            //     "Single",
+            //     "Married",
+            //     "Divorced",
+            //     "Widowed",
+            //     "Separated",
+            //   ],
+            // },
           ],
         };
       default:
@@ -502,10 +500,10 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
           className="w-full max-w-2xl mx-auto space-y-4 pb-6"
           style={{ marginTop: 40, display: "inline-block" }}
         >
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-md">
+          <div className="w-full max-w-md" style={{ minHeight: 220 }}>
             {config.fields.map((field) => (
-              <div key={field.name} className="bg-white rounded-lg">
-                <label
+              <div key={field.name} className="block">
+                {/* <label
                   htmlFor={field.name}
                   style={{
                     display: "block",
@@ -521,35 +519,44 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
                     field.type !== "file" && (
                       <span style={{ color: "#ef4444", marginLeft: 4 }}>*</span>
                     )}
-                </label>
+                </label> */}
                 {field.type === "select" && field.options ? (
-                  <select
-                    id={field.name}
-                    value={formData[field.name] || ""}
-                    onChange={(e) =>
-                      handleInputChange(field.name, e.target.value)
-                    }
-                    style={{
-                      width: "100%",
-                      padding: "10px 12px",
-                      fontSize: "14px",
-                      border: errors[field.name]
-                        ? "1px solid #ef4444"
-                        : "1px solid #d1d5db",
-                      borderRadius: "10px",
-                      outline: "none",
-                      transition: "all 0.2s",
-                      cursor: "pointer",
-                      background: "#ffffff",
-                    }}
-                    className="w-full  bg-white border h-10 rounded-2xl focus:outline-none focus:ring-0 outline-none text-gray-900"
-                  >
-                    {field.options.map((option) => (
-                      <option key={option} value={option}>
-                        {option}
-                      </option>
-                    ))}
-                  </select>
+                  <>
+                    <CustomMultiSelect
+                      field={field}
+                      label={field.label}
+                      formData={formData}
+                      handleInputChange={handleInputChange}
+                      errors={errors}
+                    />
+                    {/* <select
+                      id={field.name}
+                      value={formData[field.name] || ""}
+                      onChange={(e) =>
+                        handleInputChange(field.name, e.target.value)
+                      }
+                      style={{
+                        width: "100%",
+                        padding: "10px 12px",
+                        fontSize: "14px",
+                        border: errors[field.name]
+                          ? "1px solid #ef4444"
+                          : "1px solid #d1d5db",
+                        borderRadius: "10px",
+                        outline: "none",
+                        transition: "all 0.2s",
+                        cursor: "pointer",
+                        background: "#ffffff",
+                      }}
+                      className="w-full  bg-white border h-10 rounded-2xl focus:outline-none focus:ring-0 outline-none text-gray-900"
+                    >
+                      {field.options.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select> */}
+                  </>
                 ) : field.type === "textarea" ? (
                   <textarea
                     id={field.name}
