@@ -153,7 +153,7 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
 
           // Add to existing deductions if any
           const currentDeductions =
-            payrollData?.payroll_details?.deductions || 0;
+            payrollData?.payroll?.deductions || 0;
           payrollUpdatePayload.deductions = currentDeductions + totalDeductions;
         }
       }
@@ -169,16 +169,16 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
               formData.annual_salary
             );
           }
-          if (formData.current_withholding) {
-            payrollUpdatePayload.current_withholding = parseFloat(
-              formData.current_withholding
+          if (formData.current_withholding_per_paycheck) {
+            payrollUpdatePayload.current_withholding_per_paycheck = parseFloat(
+              formData.current_withholding_per_paycheck
             );
           }
         } else if (changeType === "Other Income") {
           // Add to additional income
           if (formData.other_income_amount) {
             const currentAdditionalIncome =
-              payrollData?.payroll_details?.additional_income || 0;
+              payrollData?.payroll?.additional_income || 0;
             payrollUpdatePayload.additional_income =
               currentAdditionalIncome +
               parseFloat(formData.other_income_amount);
@@ -316,7 +316,7 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
         };
       case "career_income":
         // Determine available options based on filing status
-        const careerFilingStatus = payrollData?.payroll_details?.filing_status;
+        const careerFilingStatus = payrollData?.payroll?.filing_status;
         const careerOptions = [
           "Select",
           "Promotion",
@@ -361,7 +361,7 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
           });
 
           careerFields.push({
-            name: "current_withholding",
+            name: "current_withholding_per_paycheck",
             label: "Current Withholding ($)",
             type: "number",
             placeholder: "Enter your current withholding",
@@ -419,9 +419,9 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
         };
       case "family_marital":
         // Determine available options based on filing status
-        const filingStatus = payrollData?.payroll_details?.filing_status;
+        const filingStatus = payrollData?.payroll?.filing_status;
         const eventOptions = ["Select"];
-
+        console.log(payrollData)
         // Show Marriage option only if user is single
         if (filingStatus === "single") {
           eventOptions.push("Marriage");
@@ -906,9 +906,26 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
                       id={field.name}
                       type={field.type}
                       value={formData[field.name] || ""}
-                      onChange={(e) =>
-                        handleInputChange(field.name, e.target.value)
-                      }
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        // Prevent negative values for number inputs
+                        if (field.type === "number") {
+                          const numValue = parseFloat(value);
+                          if (value === "" || (!isNaN(numValue) && numValue >= 0)) {
+                            handleInputChange(field.name, value);
+                          }
+                        } else {
+                          handleInputChange(field.name, value);
+                        }
+                      }}
+                      onWheel={(e) => {
+                        // Prevent scroll changing number value
+                        if (field.type === "number") {
+                          e.currentTarget.blur();
+                        }
+                      }}
+                      min={field.type === "number" ? "0" : undefined}
+                      step={field.type === "number" ? "any" : undefined}
                       placeholder={
                         field.placeholder ||
                         (field.type === "number"

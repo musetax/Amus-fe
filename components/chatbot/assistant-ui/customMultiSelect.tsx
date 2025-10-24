@@ -98,8 +98,21 @@ const CustomMultiSelect: React.FC<CustomMultiSelectProps> = ({
             <input
               type="number"
               value={amounts[option] || ""}
-              onChange={(e) => handleAmountChange(option, e.target.value)}
-              placeholder={option}
+              onChange={(e) => {
+                const value = e.target.value;
+                const numValue = parseFloat(value);
+                // Prevent negative values
+                if (value === "" || (!isNaN(numValue) && numValue >= 0)) {
+                  handleAmountChange(option, value);
+                }
+              }}
+              onWheel={(e) => {
+                // Prevent scroll changing number value
+                e.currentTarget.blur();
+              }}
+              min="0"
+              step="any"
+              placeholder={`Enter amount for ${option}`}
               className={`w-full border ${
                 errors[field.name] ? "border-red-500" : "border-gray-300"
               } rounded-2xl px-3 py-2 text-gray-900 focus:outline-none`}
