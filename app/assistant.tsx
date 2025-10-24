@@ -247,53 +247,79 @@ console.log("agentintent",agentIntent)
 
   // IMPORTANT: history adapter is created with the current userId so it can load the right messages
   // Re-create history adapter when agentIntent changes to reload chat history with new context
+  // ONLY create history when agentIntent is available (not null)
   const history = useMemo(
-    () => (sessionId ? makeHistoryAdapter(userId, sessionId, setloadingHistory, agentIntent) : undefined),
+    () => {
+      if (!sessionId || !userId || !agentIntent) {
+        console.log("⏸️  History adapter NOT created:", { sessionId: !!sessionId, userId: !!userId, agentIntent });
+        return undefined;
+      }
+      console.log("✅ Creating history adapter for intent:", agentIntent);
+      return makeHistoryAdapter(userId, sessionId, setloadingHistory, agentIntent);
+    },
     [userId, sessionId, agentIntent]
   );
+
+  // Single unified runtime with history adapter
+  // The runtime will automatically call history.load() and import messages when initialized with a history adapter
+  const runtimeOptions = useMemo(() => ({
+    adapters: {
+      attachments: new CompositeAttachmentAdapter([
+        new CustomAttachmentAdapter(),
+        new SimpleTextAttachmentAdapter(),
+      ]),
+      speech: new WebSpeechSynthesisAdapter(),
+      // Include history adapter only when available
+      ...(history ? { history } : {}),
+    },
+  }), [history]);
+
+  const learnRuntime = useLocalThreadRuntime(
+    MyModelAdapter(userId, setTyping, currentSessionId, setGlobalError, agentIntent),
+    runtimeOptions
+  );
+
+  // Manually load and import history when agentIntent changes
+  // This is necessary because the automatic history loading might not trigger properly on intent change
   useEffect(() => {
-    if (history) {
-      setloadingHistory(true);
-      history.load().finally(() => setloadingHistory(false));
+    if (!agentIntent || !history || !learnRuntime) {
+      console.log("⏸️  Skipping manual history import:", {
+        hasIntent: !!agentIntent,
+        hasHistory: !!history,
+        hasRuntime: !!learnRuntime
+      });
+      return;
     }
-  }, [agentIntent, history]);
-  const learnRuntimeRefund= useLocalThreadRuntime(MyModelAdapter(userId, setTyping, currentSessionId, setGlobalError, agentIntent), {
-    adapters: {
-      // your existing adapters
-      attachments: new CompositeAttachmentAdapter([
-        new CustomAttachmentAdapter(),
-        new SimpleTextAttachmentAdapter(),
-      ]),
-      speech: new WebSpeechSynthesisAdapter(),
-      // NEW: hydrate the thread from your API
-      ...(history ? { history } : {})
-    },
-  });
- const learnRuntimeAMS = useLocalThreadRuntime(MyModelAdapter(userId, setTyping, currentSessionId, setGlobalError, agentIntent), {
-    adapters: {
-      // your existing adapters
-      attachments: new CompositeAttachmentAdapter([
-        new CustomAttachmentAdapter(),
-        new SimpleTextAttachmentAdapter(),
-      ]),
-      speech: new WebSpeechSynthesisAdapter(),
-      // NEW: hydrate the thread from your API
-      ...(history ? { history } : {})
-    },
-  });
-  const learnRuntimePaycheck = useLocalThreadRuntime(MyModelAdapter(userId, setTyping, currentSessionId, setGlobalError, agentIntent), {
-    adapters: {
-      // your existing adapters
-      attachments: new CompositeAttachmentAdapter([
-        new CustomAttachmentAdapter(),
-        new SimpleTextAttachmentAdapter(),
-      ]),
-      speech: new WebSpeechSynthesisAdapter(),
-      // NEW: hydrate the thread from your API
-      ...(history ? { history } : {})
-    },
-  });
-  const learnRuntime=agentIntent==='tax_education'?learnRuntimeAMS:agentIntent==="tax_paycheck_calculation"?learnRuntimePaycheck:learnRuntimeRefund
+
+    console.log("🔄 Manually loading and importing chat history for intent:", agentIntent);
+    setloadingHistory(true);
+
+    history.load()
+      .then((repository) => {
+        console.log("✅ Chat history loaded from API:", {
+          messagesCount: repository.messages.length,
+          headId: repository.headId,
+          firstMessage: repository.messages[0],
+        });
+
+        // Import the loaded messages into the runtime thread
+        if (repository.messages.length > 0) {
+          try {
+            learnRuntime.thread.import(repository);
+            console.log("✅ Chat history imported into runtime successfully");
+          } catch (importError) {
+            console.error("❌ Failed to import history into runtime:", importError);
+          }
+        } else {
+          console.log("ℹ️  No chat history messages to import");
+        }
+        setloadingHistory(false);
+      })
+      .catch((err) => {
+        console.error("❌ Failed to load chat history:", err);
+        setloadingHistory(false);
+      });
+  }, [agentIntent]);  // Only depend on agentIntent to avoid infinite loops
 
   // Show loading state while checking payroll data
   if (isLoadingPayroll) {
