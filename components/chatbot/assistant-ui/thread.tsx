@@ -71,7 +71,7 @@ export const Thread: any = ({
   onSaveLifeEvents,
 }: any) => {
   console.log(showHomeScreen,"jknjkdw")
-  // const { messages } = useThread();
+  const { messages } = useThread();
   // const [isLoading, setIsLoading] = useState(false);
   // const [pdfData, setPdfData] = useState<any[]>([]);
   // const [showDownloadLink, setShowDownloadLink] = useState(false);
@@ -80,12 +80,12 @@ export const Thread: any = ({
   //   (msg: any) => msg.role === "assistant" && msg.status?.type === "running"
   // );
   console.log(payrollData, "p--hjegsj");
-  // const assistantMessages = [...messages]
-  //   .reverse()
-  //   .filter((msg) => msg.role === "assistant");
+  const assistantMessages = [...messages]
+    .reverse()
+    .filter((msg) => msg.role === "assistant");
 
-  // const latest = assistantMessages[0];
-  // const suggestions = (latest?.metadata?.custom?.suggestions ?? []) as string[];
+  const latest = assistantMessages[0];
+  const suggestions = (latest?.metadata?.custom?.suggestions ?? []) as string[];
 
   // Handle tax chatbot completion - now using props
   const handleTaxChatbotComplete = (taxData: any) => {
@@ -357,8 +357,23 @@ export const Thread: any = ({
                       <ThreadPrimitive.If empty={false}>
                         <div className="min-h-8 flex-grow" />
                       </ThreadPrimitive.If>
+                          <div className="mt-3 p-4 flex w-full items-stretch justify-center gap-4">
+                  {suggestions.map((s, i) => (
+                    <ThreadPrimitive.Suggestion
+                      key={i}
+                      prompt={s}
+                      autoSend
+                      method="replace"
+                      className="hover:bg-muted/80 flex max-w-sm grow basis-0 flex-col items-center justify-center rounded-lg border p-3 transition-colors ease-in"
+                    >
+                      <span className="line-clamp-2 text-ellipsis text-sm font-semibold">
+                        {s}
+                      </span>
+                    </ThreadPrimitive.Suggestion>
+                  ))}
+                </div>
                     </ThreadPrimitive.Viewport>
-
+                      
                     <div className="sticky bg-[#255be305] bottom-0 px-3 pt-3 flex w-full max-w-[var(--thread-max-width)] flex-col items-center justify-end rounded-t-lg pb-2">
                       <Composer />
                       <ThreadScrollToBottom />
