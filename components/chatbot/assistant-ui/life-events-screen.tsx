@@ -1,6 +1,11 @@
 import React from "react";
 
-export type LifeEventCategory = "disability" | "financial_investment" | "career_income" | "family_marital" | null;
+export type LifeEventCategory =
+  | "disability"
+  | "financial_investment"
+  | "career_income"
+  | "family_marital"
+  | null;
 
 interface LifeEventsScreenProps {
   onSelectCategory: (category: LifeEventCategory) => void;
@@ -100,9 +105,9 @@ export const LifeEventsScreen: React.FC<LifeEventsScreenProps> = ({
       </div>
 
       {/* Four Category Buttons in Grid */}
-      <div className="grid grid-cols-2 gap-3 w-full max-w-md">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-md">
         {/* Disability */}
-        <button
+        {/* <button
           onClick={() => onSelectCategory("disability")}
           className="group relative overflow-hidden rounded-xl transition-all duration-300 hover:shadow-xl hover:scale-[1.03]"
           style={{
@@ -111,15 +116,23 @@ export const LifeEventsScreen: React.FC<LifeEventsScreenProps> = ({
           }}
         >
           <div className="bg-white/95 rounded-xl px-4 py-5 h-full transition-all duration-300 group-hover:bg-white">
-            <div className="flex flex-col items-center text-center">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[#69DEC6] to-[#49C2D4] flex items-center justify-center mb-2 shadow-md">
+            <div className="flex  items-center " style={{ padding: "8px 0px" }}>
+              <div
+                style={{
+                  minWidth: 32,
+                  background: "#ffffff",
+                  borderRadius: "100%",
+                  marginRight: "10px",
+                }}
+                className="w-8 h-8 min-w-8 bg-gradient-to-br from-[#69DEC6] to-[#49C2D4] flex items-center justify-center mb-0 shadow-md"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="20"
                   height="20"
                   viewBox="0 0 24 24"
                   fill="none"
-                  stroke="white"
+                  stroke="black"
                   strokeWidth="2.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -127,29 +140,37 @@ export const LifeEventsScreen: React.FC<LifeEventsScreenProps> = ({
                   <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
                 </svg>
               </div>
-              <h3
+              <div
                 style={{
-                  fontSize: "14px",
-                  fontWeight: "700",
-                  color: "#1a202c",
-                  marginBottom: "2px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "start",
                 }}
               >
-                Disability
-              </h3>
-              <p
-                style={{
-                  fontSize: "11px",
-                  color: "#718096",
-                  fontWeight: "500",
-                  lineHeight: "1.4",
-                }}
-              >
-                Health & disability
-              </p>
+                <h3
+                  style={{
+                    fontSize: "14px",
+                    fontWeight: "700",
+                    color: "#1a202c",
+                    marginBottom: "2px",
+                  }}
+                >
+                  Disability
+                </h3>
+                <p
+                  style={{
+                    fontSize: "11px",
+                    color: "rgb(68 69 70)",
+                    fontWeight: "500",
+                    lineHeight: "1.4",
+                  }}
+                >
+                  Health & disability
+                </p>
+              </div>
             </div>
           </div>
-        </button>
+        </button> */}
 
         {/* Financial and Investment Events */}
         <button
@@ -161,15 +182,23 @@ export const LifeEventsScreen: React.FC<LifeEventsScreenProps> = ({
           }}
         >
           <div className="bg-white/95 rounded-xl px-4 py-5 h-full transition-all duration-300 group-hover:bg-white">
-            <div className="flex flex-col items-center text-center">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[#1595EA] to-[#548CE7] flex items-center justify-center mb-2 shadow-md">
+            <div className="flex  items-center " style={{ padding: "8px 0px" }}>
+              <div
+                style={{
+                  minWidth: 32,
+                  background: "#ffffff",
+                  borderRadius: "100%",
+                  marginRight: "10px",
+                }}
+                className="w-8 h-8 min-w-8 bg-gradient-to-br from-[#69DEC6] to-[#49C2D4] flex items-center justify-center mb-0 shadow-md"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="20"
                   height="20"
                   viewBox="0 0 24 24"
                   fill="none"
-                  stroke="white"
+                  stroke="black"
                   strokeWidth="2.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -178,26 +207,34 @@ export const LifeEventsScreen: React.FC<LifeEventsScreenProps> = ({
                   <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
                 </svg>
               </div>
-              <h3
+              <div
                 style={{
-                  fontSize: "14px",
-                  fontWeight: "700",
-                  color: "#1a202c",
-                  marginBottom: "2px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "start",
                 }}
               >
-                Financial & Investment
-              </h3>
-              <p
-                style={{
-                  fontSize: "11px",
-                  color: "#718096",
-                  fontWeight: "500",
-                  lineHeight: "1.4",
-                }}
-              >
-                Assets & investments
-              </p>
+                <h3
+                  style={{
+                    fontSize: "14px",
+                    fontWeight: "700",
+                    color: "#1a202c",
+                    marginBottom: "2px",
+                  }}
+                >
+                  Financial & Investment
+                </h3>
+                <p
+                  style={{
+                    fontSize: "11px",
+                    color: "rgb(68 69 70)",
+                    fontWeight: "500",
+                    lineHeight: "1.4",
+                  }}
+                >
+                  Assets & investments
+                </p>
+              </div>
             </div>
           </div>
         </button>
@@ -212,15 +249,23 @@ export const LifeEventsScreen: React.FC<LifeEventsScreenProps> = ({
           }}
         >
           <div className="bg-white/95 rounded-xl px-4 py-5 h-full transition-all duration-300 group-hover:bg-white">
-            <div className="flex flex-col items-center text-center">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[#518DE7] to-[#7687E5] flex items-center justify-center mb-2 shadow-md">
+            <div className="flex  items-center " style={{ padding: "8px 0px" }}>
+              <div
+                style={{
+                  minWidth: 32,
+                  background: "#ffffff",
+                  borderRadius: "100%",
+                  marginRight: "10px",
+                }}
+                className="w-8 h-8 min-w-8 bg-gradient-to-br from-[#69DEC6] to-[#49C2D4] flex items-center justify-center mb-0 shadow-md"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="20"
                   height="20"
                   viewBox="0 0 24 24"
                   fill="none"
-                  stroke="white"
+                  stroke="black"
                   strokeWidth="2.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -229,26 +274,35 @@ export const LifeEventsScreen: React.FC<LifeEventsScreenProps> = ({
                   <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
                 </svg>
               </div>
-              <h3
+              <div
                 style={{
-                  fontSize: "14px",
-                  fontWeight: "700",
-                  color: "#1a202c",
-                  marginBottom: "2px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "start",
                 }}
               >
-                Career & Income
-              </h3>
-              <p
-                style={{
-                  fontSize: "11px",
-                  color: "#718096",
-                  fontWeight: "500",
-                  lineHeight: "1.4",
-                }}
-              >
-                Job & income changes
-              </p>
+                {" "}
+                <h3
+                  style={{
+                    fontSize: "14px",
+                    fontWeight: "700",
+                    color: "#1a202c",
+                    marginBottom: "2px",
+                  }}
+                >
+                  Career & Income
+                </h3>
+                <p
+                  style={{
+                    fontSize: "11px",
+                    color: "rgb(68 69 70)",
+                    fontWeight: "500",
+                    lineHeight: "1.4",
+                  }}
+                >
+                  Job & income changes
+                </p>
+              </div>
             </div>
           </div>
         </button>
@@ -263,15 +317,23 @@ export const LifeEventsScreen: React.FC<LifeEventsScreenProps> = ({
           }}
         >
           <div className="bg-white/95 rounded-xl px-4 py-5 h-full transition-all duration-300 group-hover:bg-white">
-            <div className="flex flex-col items-center text-center">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[#9B8FE3] to-[#C687E7] flex items-center justify-center mb-2 shadow-md">
+            <div className="flex  items-center " style={{ padding: "8px 0px" }}>
+              <div
+                style={{
+                  minWidth: 32,
+                  background: "#ffffff",
+                  borderRadius: "100%",
+                  marginRight: "10px",
+                }}
+                className="w-8 h-8 min-w-8 bg-gradient-to-br from-[#69DEC6] to-[#49C2D4] flex items-center justify-center mb-0 shadow-md"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="20"
                   height="20"
                   viewBox="0 0 24 24"
                   fill="none"
-                  stroke="white"
+                  stroke="black"
                   strokeWidth="2.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -282,26 +344,34 @@ export const LifeEventsScreen: React.FC<LifeEventsScreenProps> = ({
                   <line x1="20" y1="8" x2="20" y2="14" />
                 </svg>
               </div>
-              <h3
+              <div
                 style={{
-                  fontSize: "14px",
-                  fontWeight: "700",
-                  color: "#1a202c",
-                  marginBottom: "2px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "start",
                 }}
               >
-                Family & Marital Status
-              </h3>
-              <p
-                style={{
-                  fontSize: "11px",
-                  color: "#718096",
-                  fontWeight: "500",
-                  lineHeight: "1.4",
-                }}
-              >
-                Family status updates
-              </p>
+                <h3
+                  style={{
+                    fontSize: "14px",
+                    fontWeight: "700",
+                    color: "#1a202c",
+                    marginBottom: "2px",
+                  }}
+                >
+                  Family & Marital Status
+                </h3>
+                <p
+                  style={{
+                    fontSize: "11px",
+                    color: "rgb(68 69 70)",
+                    fontWeight: "500",
+                    lineHeight: "1.4",
+                  }}
+                >
+                  Family status updates
+                </p>
+              </div>
             </div>
           </div>
         </button>
@@ -311,13 +381,14 @@ export const LifeEventsScreen: React.FC<LifeEventsScreenProps> = ({
       <p
         style={{
           fontSize: "12px",
-          color: "#a0aec0",
+          color: "rgb(113 127 145)",
           textAlign: "center",
           marginTop: "24px",
           maxWidth: "400px",
         }}
       >
-        Select the category that best matches your life event to update your tax information
+        Select the category that best matches your life event to update your tax
+        information
       </p>
     </div>
   );

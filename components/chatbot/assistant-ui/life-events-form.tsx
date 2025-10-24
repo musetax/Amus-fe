@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { LifeEventCategory } from "./life-events-screen";
 import { axiosInstanceAuth } from "../../../utilities/auth";
-
+import CustomMultiSelect from "./customMultiSelect";
 interface LifeEventsFormProps {
   category: LifeEventCategory;
   onBack: () => void;
@@ -48,7 +48,11 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
       const value = formData[field.name];
 
       // Skip validation for optional fields
-      if (field.label.includes("optional") || field.type === "textarea" || field.type === "file") {
+      if (
+        field.label.includes("optional") ||
+        field.type === "textarea" ||
+        field.type === "file"
+      ) {
         return;
       }
 
@@ -65,7 +69,11 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
       }
 
       // Validate percentage fields
-      if (field.name.includes("percentage") && value && (parseFloat(value) < 0 || parseFloat(value) > 100)) {
+      if (
+        field.name.includes("percentage") &&
+        value &&
+        (parseFloat(value) < 0 || parseFloat(value) > 100)
+      ) {
         newErrors[field.name] = `${field.label} must be between 0 and 100`;
         hasError = true;
       }
@@ -90,11 +98,11 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
         user_id: userId,
         category: category,
         event_data: formData,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
       // Make API call to save the life event data
-      const response = await axiosInstanceAuth.post('/v1/life-events', payload);
+      const response = await axiosInstanceAuth.post("/v1/life-events", payload);
 
       if (response.data && response.status === 200) {
         // Call the parent onSave callback
@@ -106,7 +114,10 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
       }
     } catch (error: any) {
       console.error("Error saving life event data:", error);
-      const errorMessage = error?.response?.data?.message || error?.message || "Failed to save life event. Please try again.";
+      const errorMessage =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Failed to save life event. Please try again.";
       setApiError(errorMessage);
     } finally {
       setIsSaving(false);
@@ -127,8 +138,8 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
           icon: (
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="48"
-              height="48"
+              width="40"
+              height="40"
               viewBox="0 0 24 24"
               fill="none"
               stroke="white"
@@ -141,11 +152,28 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
           ),
           gradient: "from-[#69DEC6] to-[#49C2D4]",
           fields: [
-            { name: "disability_type", label: "Type of Disability", type: "select", options: ["Select", "Blind"] },
-            { name: "disability_percentage", label: "Percentage (if applicable)", type: "number" },
-            { name: "onset_date", label: "Date of Onset", type: "date" },
-            { name: "certifying_authority", label: "Certifying Authority", type: "text" },
-            // { name: "document_upload", label: "Document Upload (optional)", type: "file" },
+            {
+              name: "disability_type",
+              label: "Type of Disability",
+              type: "select",
+              options: ["Select", "Blind"],
+            },
+            // {
+            //   name: "disability_percentage",
+            //   label: "Percentage (if applicable)",
+            //   type: "number",
+            // },
+            // { name: "onset_date", label: "Date of Onset", type: "date" },
+            // {
+            //   name: "certifying_authority",
+            //   label: "Certifying Authority",
+            //   type: "text",
+            // },
+            // {
+            //   name: "document_upload",
+            //   label: "Document Upload (optional)",
+            //   type: "file",
+            // },
           ],
         };
       case "financial_investment":
@@ -154,8 +182,8 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
           icon: (
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="48"
-              height="48"
+              width="40"
+              height="40"
               viewBox="0 0 24 24"
               fill="none"
               stroke="white"
@@ -169,11 +197,28 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
           ),
           gradient: "from-[#1595EA] to-[#548CE7]",
           fields: [
-            { name: "event_type", label: "Type of Event", type: "select", options: ["Select", "Investment", "Loan", "Asset Purchase", "Sale"] },
-            { name: "event_date", label: "Event Date", type: "date" },
-            { name: "amount", label: "Amount ($)", type: "number" },
-            { name: "institution_name", label: "Institution / Platform Name", type: "text" },
-            { name: "notes", label: "Notes (optional)", type: "textarea" },
+            {
+              name: "event_type",
+              label: "Type of Event",
+              type: "select",
+              options: [
+                "IRA Contribution",
+                "Student Loan Interest",
+                "State or Local Tax",
+                "Medical Expenses",
+                "Other Deductions",
+                "Charitable Donations",
+                "Home Mortgage Interest",
+              ],
+            },
+            // { name: "event_date", label: "Event Date", type: "date" },
+            // { name: "amount", label: "Amount ($)", type: "number" },
+            // {
+            //   name: "institution_name",
+            //   label: "Institution / Platform Name",
+            //   type: "text",
+            // },
+            // { name: "notes", label: "Notes (optional)", type: "textarea" },
           ],
         };
       case "career_income":
@@ -182,8 +227,8 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
           icon: (
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="48"
-              height="48"
+              width="40"
+              height="40"
               viewBox="0 0 24 24"
               fill="none"
               stroke="white"
@@ -197,11 +242,33 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
           ),
           gradient: "from-[#518DE7] to-[#7687E5]",
           fields: [
-            { name: "change_type", label: "Type of Change", type: "select", options: ["Select", "Promotion", "Job Change", "Salary Revision", "Layoff"] },
-            { name: "effective_date", label: "Effective Date", type: "date" },
-            { name: "new_annual_income", label: "New Annual Income ($)", type: "number" },
-            { name: "percentage_change", label: "% Change (optional / auto-calculated)", type: "number" },
-            { name: "employer_name", label: "Employer / Organization Name", type: "text" },
+            {
+              name: "change_type",
+              label: "Type of Change",
+              type: "select",
+              options: [
+                "Promotion",
+                "Job Change",
+                "Other Income",
+                "if(Spouse income)",
+              ],
+            },
+            // { name: "effective_date", label: "Effective Date", type: "date" },
+            // {
+            //   name: "new_annual_income",
+            //   label: "New Annual Income ($)",
+            //   type: "number",
+            // },
+            // {
+            //   name: "percentage_change",
+            //   label: "% Change (optional / auto-calculated)",
+            //   type: "number",
+            // },
+            // {
+            //   name: "employer_name",
+            //   label: "Employer / Organization Name",
+            //   type: "text",
+            // },
           ],
         };
       case "family_marital":
@@ -210,8 +277,8 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
           icon: (
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="48"
-              height="48"
+              width="40"
+              height="40"
               viewBox="0 0 24 24"
               fill="none"
               stroke="white"
@@ -227,11 +294,44 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
           ),
           gradient: "from-[#9B8FE3] to-[#C687E7]",
           fields: [
-            { name: "event_type", label: "Type of Event", type: "select", options: ["Select", "Marriage", "Divorce", "Birth", "Adoption", "Dependent Added", "Dependent Removed"] },
-            { name: "event_date", label: "Event Date", type: "date" },
-            { name: "relationship_type", label: "Relationship Type", type: "select", options: ["Select", "Spouse", "Child", "Parent", "Dependent"] },
-            { name: "full_name", label: "Full Name (if new dependent)", type: "text" },
-            { name: "marital_status", label: "Updated Marital Status", type: "select", options: ["Select", "Single", "Married", "Divorced", "Widowed", "Separated"] },
+            {
+              name: "event_type",
+              label: "Type of Event",
+              type: "select",
+              options: [
+                "Select",
+                "Marriage",
+                "Divorce",
+                "Child",
+                "Dependent ",
+               
+              ],
+            },
+            // { name: "event_date", label: "Event Date", type: "date" },
+            // {
+            //   name: "relationship_type",
+            //   label: "Relationship Type",
+            //   type: "select",
+            //   options: ["Select", "Spouse", "Child", "Parent", "Dependent"],
+            // },
+            // {
+            //   name: "full_name",
+            //   label: "Full Name (if new dependent)",
+            //   type: "text",
+            // },
+            // {
+            //   name: "marital_status",
+            //   label: "Updated Marital Status",
+            //   type: "select",
+            //   options: [
+            //     "Select",
+            //     "Single",
+            //     "Married",
+            //     "Divorced",
+            //     "Widowed",
+            //     "Separated",
+            //   ],
+            // },
           ],
         };
       default:
@@ -254,9 +354,15 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
       }}
     >
       {/* Scrollable Content Area */}
-      <div className="flex-1 overflow-y-auto px-6 py-6">
+      <div
+        className="flex-1 overflow-y-auto px-6"
+        style={{ paddingBottom: 24 }}
+      >
         {/* Back Button */}
-        <div className="w-full max-w-2xl mx-auto mb-4">
+        <div
+          className="w-full max-w-2xl mx-auto"
+          style={{ marginTop: "20px", marginBottom: "30px" }}
+        >
           <button
             onClick={onBack}
             className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors"
@@ -281,9 +387,9 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
         {/* Header */}
         <div className="flex flex-col items-center mb-6 w-full max-w-2xl mx-auto">
           <div
-            className={`w-16 h-16 rounded-full bg-gradient-to-br ${config.gradient} flex items-center justify-center mb-3 shadow-lg`}
+            className={`w-10 h-10 rounded-full bg-gradient-to-br ${config.gradient} flex items-center justify-center mb-3 shadow-lg`}
           >
-            <div className="scale-75">{config.icon}</div>
+            <div className=" bg_custom rounded-full p-3 ">{config.icon}</div>
           </div>
           <h2
             style={{
@@ -292,6 +398,7 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
               color: "#1a202c",
               textAlign: "center",
               marginBottom: "4px",
+              marginTop: 10,
             }}
           >
             {config.title}
@@ -388,138 +495,218 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
         )}
 
         {/* Form Fields */}
-        <div className="w-full max-w-2xl mx-auto space-y-4 pb-6">
-          {config.fields.map((field) => (
-            <div key={field.name} className="bg-white rounded-lg">
-              <label
-                htmlFor={field.name}
-                style={{
-                  display: "block",
-                  fontSize: "13px",
-                  fontWeight: "600",
-                  color: "#374151",
-                  marginBottom: "6px",
-                }}
-              >
-                {field.label}
-                {!field.label.includes("optional") && field.type !== "textarea" && field.type !== "file" && <span style={{ color: "#ef4444" }}>*</span>}
-              </label>
-              {field.type === "select" && field.options ? (
-                <select
-                  id={field.name}
-                  value={formData[field.name] || ""}
-                  onChange={(e) => handleInputChange(field.name, e.target.value)}
+        <div
+          className="w-full max-w-2xl mx-auto space-y-4 pb-6"
+          style={{ marginTop: 40, display: "inline-block" }}
+        >
+          <div className="w-full max-w-md" style={{ minHeight: 220 }}>
+            {config.fields.map((field) => (
+              <div key={field.name} className="block">
+                {/* <label
+                  htmlFor={field.name}
                   style={{
-                    width: "100%",
-                    padding: "10px 12px",
-                    fontSize: "14px",
-                    border: errors[field.name] ? "2px solid #ef4444" : "2px solid #e5e7eb",
-                    borderRadius: "10px",
-                    outline: "none",
-                    transition: "all 0.2s",
-                    backgroundColor: "#f9fafb",
-                    cursor: "pointer",
-                  }}
-                  className="focus:border-blue-400 focus:bg-white"
-                >
-                  {field.options.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              ) : field.type === "textarea" ? (
-                <textarea
-                  id={field.name}
-                  value={formData[field.name] || ""}
-                  onChange={(e) => handleInputChange(field.name, e.target.value)}
-                  rows={3}
-                  placeholder="Enter details here... (optional)"
-                  style={{
-                    width: "100%",
-                    padding: "10px 12px",
-                    fontSize: "14px",
-                    border: "2px solid #e5e7eb",
-                    borderRadius: "10px",
-                    outline: "none",
-                    transition: "all 0.2s",
-                    resize: "vertical",
-                    backgroundColor: "#f9fafb",
-                    cursor: "text",
-                  }}
-                  className="focus:border-blue-400 focus:bg-white"
-                />
-              ) : field.type === "file" ? (
-                <input
-                  id={field.name}
-                  type="file"
-                  onChange={(e) => handleInputChange(field.name, e.target.files?.[0])}
-                  accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
-                  style={{
-                    width: "100%",
-                    padding: "10px 12px",
-                    fontSize: "14px",
-                    border: errors[field.name] ? "2px solid #ef4444" : "2px solid #e5e7eb",
-                    borderRadius: "10px",
-                    outline: "none",
-                    transition: "all 0.2s",
-                    backgroundColor: "#f9fafb",
-                    cursor: "pointer",
-                  }}
-                  className="focus:border-blue-400 focus:bg-white"
-                />
-              ) : (
-                <input
-                  id={field.name}
-                  type={field.type}
-                  value={formData[field.name] || ""}
-                  onChange={(e) => handleInputChange(field.name, e.target.value)}
-                  placeholder={field.type === "number" ? "0" : field.type === "date" ? "" : "Enter " + field.label.toLowerCase()}
-                  style={{
-                    width: "100%",
-                    padding: "10px 12px",
-                    fontSize: "14px",
-                    border: errors[field.name] ? "2px solid #ef4444" : "2px solid #e5e7eb",
-                    borderRadius: "10px",
-                    outline: "none",
-                    transition: "all 0.2s",
-                    backgroundColor: "#f9fafb",
-                    cursor: "text",
-                  }}
-                  className="focus:border-blue-400 focus:bg-white"
-                />
-              )}
-              {errors[field.name] && (
-                <p
-                  style={{
-                    fontSize: "12px",
-                    color: "#ef4444",
-                    marginTop: "4px",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "4px",
+                    display: "block",
+                    fontSize: "13px",
+                    fontWeight: "500",
+                    color: "#374151",
+                    marginBottom: "6px",
                   }}
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                  {field.label}
+                  {!field.label.includes("optional") &&
+                    field.type !== "textarea" &&
+                    field.type !== "file" && (
+                      <span style={{ color: "#ef4444", marginLeft: 4 }}>*</span>
+                    )}
+                </label> */}
+                {field.type === "select" && field.options ? (
+                  <>
+                    <CustomMultiSelect
+                      field={field}
+                      label={field.label}
+                      formData={formData}
+                      handleInputChange={handleInputChange}
+                      errors={errors}
+                    />
+                    {/* <select
+                      id={field.name}
+                      value={formData[field.name] || ""}
+                      onChange={(e) =>
+                        handleInputChange(field.name, e.target.value)
+                      }
+                      style={{
+                        width: "100%",
+                        padding: "10px 12px",
+                        fontSize: "14px",
+                        border: errors[field.name]
+                          ? "1px solid #ef4444"
+                          : "1px solid #d1d5db",
+                        borderRadius: "10px",
+                        outline: "none",
+                        transition: "all 0.2s",
+                        cursor: "pointer",
+                        background: "#ffffff",
+                      }}
+                      className="w-full  bg-white border h-10 rounded-2xl focus:outline-none focus:ring-0 outline-none text-gray-900"
+                    >
+                      {field.options.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select> */}
+                  </>
+                ) : field.type === "textarea" ? (
+                  <textarea
+                    id={field.name}
+                    value={formData[field.name] || ""}
+                    onChange={(e) =>
+                      handleInputChange(field.name, e.target.value)
+                    }
+                    rows={3}
+                    placeholder="Enter details here... (optional)"
+                    style={{
+                      width: "100%",
+                      padding: "10px 12px",
+                      fontSize: "14px",
+                      border: "1px solid #d1d5db",
+                      borderRadius: "10px",
+                      outline: "none",
+                      transition: "all 0.2s",
+                      resize: "vertical",
+                      backgroundColor: "#ffffff",
+                      cursor: "text",
+                      minHeight: "80px",
+                    }}
+                    className="w-full  bg-white border h-10 rounded-2xl focus:outline-none focus:ring-0 outline-none text-gray-900"
+                  />
+                ) : field.type === "file" ? (
+                  <>
+                    {/* <input
+                      id={field.name}
+                      type="file"
+                      onChange={(e) =>
+                        handleInputChange(field.name, e.target.files?.[0])
+                      }
+                      accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                      style={{
+                        width: "100%",
+                        padding: "10px 12px",
+                        fontSize: "14px",
+                        border: errors[field.name]
+                          ? "1px solid #ef4444"
+                          : "1px solid #d1d5db",
+                        borderRadius: "10px",
+                        outline: "none",
+                        transition: "all 0.2s",
+                        backgroundColor: "#ffffff",
+                        cursor: "pointer",
+                      }}
+                      className="w-full  bg-white border h-10 rounded-2xl focus:outline-none focus:ring-0 outline-none text-gray-900"
+                    /> */}
+                    <div className="w-full">
+                      <input
+                        id={field.name}
+                        type="file"
+                        accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                        onChange={(e) =>
+                          handleInputChange(field.name, e.target.files?.[0])
+                        }
+                        style={{ display: "none" }}
+                        className="hidden"
+                      />
+                      <label
+                        htmlFor={field.name}
+                        className={` w-full  cursor-pointer bg-white text-gray-700 text-sm hover:bg-gray-50 transition`}
+                        style={{
+                          width: "100%",
+                          padding: "10px 12px",
+                          fontSize: "14px",
+                          border: errors[field.name]
+                            ? "1px solid #ef4444"
+                            : "1px solid #d1d5db",
+                          borderRadius: "10px",
+                          outline: "none",
+                          transition: "all 0.2s",
+                          backgroundColor: "#ffffff",
+                          cursor: "pointer",
+                          display: "block",
+                        }}
+                      >
+                        <span>
+                          {formData[field.name]?.name
+                            ? formData[field.name].name
+                            : "Choose a file"}
+                        </span>
+                        <span className="px-3 py-1 bg-blue-600 text-white rounded-lg text-xs">
+                          Browse
+                        </span>
+                      </label>
+                    </div>
+                  </>
+                ) : (
+                  <input
+                    id={field.name}
+                    type={field.type}
+                    value={formData[field.name] || ""}
+                    onChange={(e) =>
+                      handleInputChange(field.name, e.target.value)
+                    }
+                    placeholder={
+                      field.type === "number"
+                        ? "0"
+                        : field.type === "date"
+                        ? ""
+                        : "Enter " + field.label.toLowerCase()
+                    }
+                    style={{
+                      width: "100%",
+                      padding: "10px 12px",
+                      fontSize: "14px",
+                      border: errors[field.name]
+                        ? "1px solid #ef4444"
+                        : "1px solid #d1d5db",
+                      borderRadius: "10px",
+                      outline: "none",
+                      transition: "all 0.2s",
+                      backgroundColor: "#ffffff",
+                      cursor: "text",
+                    }}
+                    className="w-full  bg-white border h-10 rounded-2xl focus:outline-none focus:ring-0 outline-none text-gray-900"
+                  />
+                )}
+                {errors[field.name] && (
+                  <p
+                    style={{
+                      fontSize: "12px",
+                      color: "#ef4444",
+                      marginTop: "4px",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "4px",
+                    }}
                   >
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="12" y1="8" x2="12" y2="12" />
-                    <line x1="12" y1="16" x2="12.01" y2="16" />
-                  </svg>
-                  {errors[field.name]}
-                </p>
-              )}
-            </div>
-          ))}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="12" y1="8" x2="12" y2="12" />
+                      <line x1="12" y1="16" x2="12.01" y2="16" />
+                    </svg>
+                    {errors[field.name]}
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -528,9 +715,19 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
         className="border-t border-gray-200 bg-white px-6 py-3"
         style={{
           boxShadow: "0 -2px 4px rgba(0, 0, 0, 0.05)",
+          paddingTop: 10,
+          paddingBottom: 10,
         }}
       >
-        <div className="w-full max-w-2xl mx-auto flex gap-3">
+        <div
+          className="w-full max-w-2xl mx-auto"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            justifyContent: "center",
+          }}
+        >
           <button
             onClick={onBack}
             type="button"
@@ -539,11 +736,11 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
               minWidth: "20px",
               padding: "10px 16px",
               fontSize: "14px",
-              fontWeight: "600",
-              color: "#6b7280",
-              backgroundColor: "#f3f4f6",
+              fontWeight: "500",
+              color: "#11181c",
+              backgroundColor: "#ffffff",
               border: "1px solid #e5e7eb",
-              borderRadius: "8px",
+              borderRadius: "20px",
               cursor: "pointer",
               transition: "all 0.2s",
             }}
@@ -558,14 +755,17 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
             type="button"
             className={`bg-gradient-to-r ${config.gradient} text-white font-semibold transition-all duration-300 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed`}
             style={{
-              flex: 1,
+              width: "90px",
+              minWidth: "20px",
               padding: "10px 16px",
               fontSize: "14px",
-              fontWeight: "600",
-              border: "none",
-              borderRadius: "8px",
+              fontWeight: "500",
+              color: "#11181c",
+              backgroundColor: "#ffffff",
+              border: "1px solid #e5e7eb",
+              borderRadius: "20px",
+              transition: "all 0.2s",
               cursor: isSaving ? "not-allowed" : "pointer",
-              color:'black'
             }}
           >
             {isSaving ? (
@@ -610,13 +810,17 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
               width: "100%",
               maxHeight: "80vh",
               overflowY: "auto",
-              boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+              boxShadow:
+                "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
             }}
           >
             {/* Modal Header */}
             <div
               className={`bg-gradient-to-r ${config.gradient} px-6 py-5 rounded-t-16`}
-              style={{ borderTopLeftRadius: "16px", borderTopRightRadius: "16px" }}
+              style={{
+                borderTopLeftRadius: "16px",
+                borderTopRightRadius: "16px",
+              }}
             >
               <div className="flex items-center justify-center mb-3">
                 <div
@@ -688,9 +892,19 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
                 >
                   Saved Information:
                 </h4>
-                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "8px",
+                  }}
+                >
                   {config.fields
-                    .filter((field) => formData[field.name] && formData[field.name] !== "Select")
+                    .filter(
+                      (field) =>
+                        formData[field.name] &&
+                        formData[field.name] !== "Select"
+                    )
                     .map((field) => (
                       <div
                         key={field.name}
@@ -717,13 +931,18 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
                           {field.type === "number" && formData[field.name]
                             ? field.name.includes("percentage")
                               ? `${formData[field.name]}%`
-                              : `$${parseFloat(formData[field.name]).toLocaleString()}`
+                              : `$${parseFloat(
+                                  formData[field.name]
+                                ).toLocaleString()}`
                             : field.type === "date" && formData[field.name]
-                            ? new Date(formData[field.name]).toLocaleDateString("en-US", {
-                                year: "numeric",
-                                month: "long",
-                                day: "numeric",
-                              })
+                            ? new Date(formData[field.name]).toLocaleDateString(
+                                "en-US",
+                                {
+                                  year: "numeric",
+                                  month: "long",
+                                  day: "numeric",
+                                }
+                              )
                             : field.type === "file" && formData[field.name]
                             ? formData[field.name].name || "File uploaded"
                             : formData[field.name]}
@@ -748,7 +967,7 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
                   alignItems: "center",
                   justifyContent: "center",
                   gap: "8px",
-                  color:'black'
+                  color: "black",
                 }}
               >
                 <span>Continue to Main Menu</span>
