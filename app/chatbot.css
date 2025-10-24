@@ -2320,8 +2320,13 @@ input[type="number"] {
   stroke: #ffffff !important;
 }
 .custom-hover:hover h3,
-.custom-hover:hover p {
+.custom-hover:hover p,
+.custom-hover:hover span {
   color: #ffffff !important;
+}
+.myUniquechatbot .py-3 {
+  padding-top: 0.75rem /* 12px */;
+  padding-bottom: 0.75rem /* 12px */;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
   background: #f1f5f9; /* light gray */

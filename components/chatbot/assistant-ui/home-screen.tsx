@@ -127,7 +127,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </div>
         <h2
           style={{
-            fontSize: "24px",
+            fontSize: "20px",
             fontWeight: "600",
             color: "#1a202c",
             textAlign: "center",

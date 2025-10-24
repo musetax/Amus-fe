@@ -152,8 +152,7 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
           });
 
           // Add to existing deductions if any
-          const currentDeductions =
-            payrollData?.payroll?.deductions || 0;
+          const currentDeductions = payrollData?.payroll?.deductions || 0;
           payrollUpdatePayload.deductions = currentDeductions + totalDeductions;
         }
       }
@@ -421,7 +420,7 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
         // Determine available options based on filing status
         const filingStatus = payrollData?.payroll?.filing_status;
         const eventOptions = ["Select"];
-        console.log(payrollData)
+        console.log(payrollData);
         // Show Marriage option only if user is single
         if (filingStatus === "single") {
           eventOptions.push("Marriage");
@@ -911,7 +910,10 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
                         // Prevent negative values for number inputs
                         if (field.type === "number") {
                           const numValue = parseFloat(value);
-                          if (value === "" || (!isNaN(numValue) && numValue >= 0)) {
+                          if (
+                            value === "" ||
+                            (!isNaN(numValue) && numValue >= 0)
+                          ) {
                             handleInputChange(field.name, value);
                           }
                         } else {
@@ -962,7 +964,7 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
                       gap: "4px",
                     }}
                   >
-                    <svg
+                    {/* <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="14"
                       height="14"
@@ -976,7 +978,7 @@ export const LifeEventsForm: React.FC<LifeEventsFormProps> = ({
                       <circle cx="12" cy="12" r="10" />
                       <line x1="12" y1="8" x2="12" y2="12" />
                       <line x1="12" y1="16" x2="12.01" y2="16" />
-                    </svg>
+                    </svg> */}
                     {errors[field.name]}
                   </p>
                 )}

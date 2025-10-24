@@ -75,7 +75,7 @@ export const Thread: any = ({
   // const [isLoading, setIsLoading] = useState(false);
   // const [pdfData, setPdfData] = useState<any[]>([]);
   // const [showDownloadLink, setShowDownloadLink] = useState(false);
-  console.log(globalError, "messages", "----------------",messages);
+  console.log(globalError, "messages", "----------------", messages);
   // const isStreaming = messages.some(
   //   (msg: any) => msg.role === "assistant" && msg.status?.type === "running"
   // );
@@ -362,16 +362,16 @@ export const Thread: any = ({
                       <ThreadPrimitive.If empty={false}>
                         <div className="min-h-8 flex-grow" />
                       </ThreadPrimitive.If>
-                      <div className="mt-3 p-4 flex w-full items-stretch justify-center gap-4">
+                      <div className="mt-3 p-4 flex w-full flex-col items-stretch justify-center gap-2">
                         {suggestions.map((s, i) => (
                           <ThreadPrimitive.Suggestion
                             key={i}
                             prompt={s}
                             autoSend
                             method="replace"
-                            className="hover:bg-muted/80 flex max-w-sm grow basis-0 flex-col items-center justify-center rounded-lg border p-3 transition-colors ease-in"
+                            className="hover:bg-muted/80 flex max-w-sm grow basis-0 flex-col items-center justify-center rounded-lg border px-2 py-3 transition-colors ease-in custom-hover"
                           >
-                            <span className="line-clamp-2 text-ellipsis text-sm font-semibold">
+                            <span className="line-clamp-2 text-ellipsis text-sm font-medium">
                               {s}
                             </span>
                           </ThreadPrimitive.Suggestion>
@@ -751,7 +751,7 @@ const AssistantMessage: React.FC<any> = ({ companyLogo, onReturnToHome }) => {
                 height: "25px",
                 minWidth: "25px",
                 minHeight: "25px",
-                objectFit: "cover",
+                objectFit: "contain",
                 borderRadius: "50%",
               }}
               src="https://appweb-bucket.s3.us-east-1.amazonaws.com/muse-logo.png"
