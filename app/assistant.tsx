@@ -257,7 +257,7 @@ console.log("agentintent",agentIntent)
       history.load().finally(() => setloadingHistory(false));
     }
   }, [agentIntent, history]);
-  const learnRuntime = useLocalThreadRuntime(MyModelAdapter(userId, setTyping, currentSessionId, setGlobalError, agentIntent), {
+  const learnRuntimeRefund= useLocalThreadRuntime(MyModelAdapter(userId, setTyping, currentSessionId, setGlobalError, agentIntent), {
     adapters: {
       // your existing adapters
       attachments: new CompositeAttachmentAdapter([
@@ -269,6 +269,31 @@ console.log("agentintent",agentIntent)
       ...(history ? { history } : {})
     },
   });
+ const learnRuntimeAMS = useLocalThreadRuntime(MyModelAdapter(userId, setTyping, currentSessionId, setGlobalError, agentIntent), {
+    adapters: {
+      // your existing adapters
+      attachments: new CompositeAttachmentAdapter([
+        new CustomAttachmentAdapter(),
+        new SimpleTextAttachmentAdapter(),
+      ]),
+      speech: new WebSpeechSynthesisAdapter(),
+      // NEW: hydrate the thread from your API
+      ...(history ? { history } : {})
+    },
+  });
+  const learnRuntimePaycheck = useLocalThreadRuntime(MyModelAdapter(userId, setTyping, currentSessionId, setGlobalError, agentIntent), {
+    adapters: {
+      // your existing adapters
+      attachments: new CompositeAttachmentAdapter([
+        new CustomAttachmentAdapter(),
+        new SimpleTextAttachmentAdapter(),
+      ]),
+      speech: new WebSpeechSynthesisAdapter(),
+      // NEW: hydrate the thread from your API
+      ...(history ? { history } : {})
+    },
+  });
+  const learnRuntime=agentIntent==='tax_education'?learnRuntimeAMS:agentIntent==="tax_paycheck_calculation"?learnRuntimePaycheck:learnRuntimeRefund
 
   // Show loading state while checking payroll data
   if (isLoadingPayroll) {
@@ -294,7 +319,7 @@ console.log("agentintent",agentIntent)
   return (
     <div className="myUniquechatbot">
       {/* key includes userId and agentIntent so switching users or intent re-initializes the runtime + history load */}
-      <AssistantRuntimeProvider key={`${activeTab}-${userId}-${agentIntent}`} runtime={learnRuntime}>
+      <AssistantRuntimeProvider key={`${agentIntent}-${userId}`} runtime={learnRuntime}>
         <div className="flex justify-between px-0 py-0 w-full">
           <div className="grid grid-cols-1 gap-x-2 px-0 py-0 w-full">
             <Thread
