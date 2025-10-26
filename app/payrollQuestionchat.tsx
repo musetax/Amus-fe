@@ -76,6 +76,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
     work_address: prefilledData.work_address || null,
     pre_tax_deductions: prefilledData.pre_tax_deductions?.toString() || null,
     post_tax_deductions: prefilledData.post_tax_deductions?.toString() || null,
+    is_all_data_fill:true
   });
 
   const [currentStep, setCurrentStep] = useState<StepType>(
@@ -479,6 +480,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         post_tax_deductions: formData.post_tax_deductions
           ? Number(formData.post_tax_deductions)
           : undefined,
+          is_all_data_fill:true
         // },
       };
 

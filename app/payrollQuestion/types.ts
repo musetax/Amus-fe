@@ -51,6 +51,7 @@ export interface TaxData {
   pre_tax_deductions?: number;
   post_tax_deductions?: number;
   age?: number;
+  is_all_data_fill?:boolean
 }
 
 export interface FormData {
@@ -81,6 +82,7 @@ export interface FormData {
   work_address: string | null;
   pre_tax_deductions: string | null;
   post_tax_deductions: string | null;
+  is_all_data_fill:boolean
 }
 
 export interface Payload {

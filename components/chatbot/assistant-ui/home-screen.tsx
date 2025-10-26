@@ -256,7 +256,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                       fontWeight: "400",
                     }}
                   >
-                    Refund My Paycheck
+                    CheckBoost
                   </p>
                 </div>
               </div>
@@ -343,7 +343,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </button>
 
         {/* Update My Life Changing Events Button */}
-        <button
+        {/* <button
           onClick={() => onSelectIntent("life_events_update")}
           className="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#9B8FE3] via-[#B08BE5] to-[#C687E7] p-[2px] transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
         >
@@ -408,7 +408,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               </svg>
             </div>
           </div>
-        </button>
+        </button> */}
       </div>
 
       {/* Footer Text */}

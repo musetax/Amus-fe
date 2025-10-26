@@ -32,7 +32,7 @@ function Assistant() {
   const [currentSessionId, setCurrentSessionId] = useState<string | undefined>();
   const [currentUserId, setCurrentUserId] = useState<string | undefined>();
 
-  const [payrollData, setPayrollData] = useState(null);
+  const [payrollData, setPayrollData] = useState<any|null>(null);
   const [showTaxChatbot, setShowTaxChatbot] = useState(false);
   const [isLoadingPayroll, setIsLoadingPayroll] = useState(false);
 
@@ -176,10 +176,19 @@ console.log("agentintent",agentIntent)
       setShowLifeEventsForm(false);
     } else if (intent === "tax_refund_calculation" || intent === "tax_paycheck_calculation") {
       // Show question flow first
+      if(payrollData?.is_all_data_fill)
+      {
+         setShowHomeScreen(false);
+      setShowTaxChatbot(false);
+      setShowLifeEventsScreen(false);
+      setShowLifeEventsForm(false);
+      }
+      else{
       setShowHomeScreen(false);
       setShowTaxChatbot(true);
       setShowLifeEventsScreen(false);
       setShowLifeEventsForm(false);
+      }
     } else if (intent === "life_events_update") {
       // Show life events category selection
       setShowHomeScreen(false);
