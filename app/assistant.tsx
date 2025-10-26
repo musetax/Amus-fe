@@ -284,7 +284,7 @@ console.log("agentintent",agentIntent)
   }), [history]);
 
   const learnRuntime = useLocalThreadRuntime(
-    MyModelAdapter(userId, setTyping, currentSessionId, setGlobalError, agentIntent),
+    MyModelAdapter(userId, setTyping, currentSessionId, setGlobalError, agentIntent, payrollData),
     runtimeOptions
   );
 
@@ -380,6 +380,7 @@ console.log("agentintent",agentIntent)
               onSelectLifeEventCategory={handleLifeEventCategorySelection}
               onBackToLifeEventsCategories={handleBackToLifeEventsCategories}
               onSaveLifeEvents={handleSaveLifeEvents}
+              agentIntent={agentIntent}
             />
           </div>
         </div>
