@@ -898,8 +898,8 @@ const AssistantMessage: React.FC<any> = ({
       {!isAnyMessageStreaming &&
         !isMessageLoading &&
         isLastMessage &&
-        (refundCalculated || paycheckCalculated) &&
-        (agentIntent === "tax_refund_calculation" || agentIntent === "tax_paycheck_calculation") &&
+        (paycheckCalculated) &&
+        ( agentIntent === "tax_paycheck_calculation") &&
         !showScenarios && (
           <div style={{ marginTop: "12px", marginLeft: "32px" }}>
             <button
@@ -958,8 +958,8 @@ const AssistantMessage: React.FC<any> = ({
       {!isAnyMessageStreaming &&
         !isMessageLoading &&
         isLastMessage &&
-        (refundCalculated || paycheckCalculated) &&
-        (agentIntent === "tax_refund_calculation" || agentIntent === "tax_paycheck_calculation") &&
+        ( paycheckCalculated) &&
+        (agentIntent === "tax_paycheck_calculation") &&
         showScenarios && (
           <div style={{ marginTop: "12px", marginLeft: "32px", maxWidth: "600px" }}>
             <ScenarioCheckbox
