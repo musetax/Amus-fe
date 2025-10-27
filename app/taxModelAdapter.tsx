@@ -150,3 +150,128 @@ export const getUserAndSessionId = async (
     throw new Error("Failed to get session id");
   }
 };
+
+export const calculateTaxScenarios = async (
+  userId: string,
+  sessionId: string,
+  originalPayroll: any,
+  modifiedPayroll: any,
+  userIntent: "tax_refund_calculation" | "tax_paycheck_calculation",
+  onChunk?: (text: string) => void
+) => {
+  try {
+    // Build the payload based on the user intent
+    const payload: any = {
+      message: "calculate my tax",
+      session_id: sessionId,
+      user_id: userId,
+      user_intent: userIntent,
+    };
+
+    // Add paycheck data if available
+    if (modifiedPayroll) {
+      payload.paycheck = {
+        income_type: modifiedPayroll.income_type || "salary",
+        salary: modifiedPayroll.salary || modifiedPayroll.annual_salary || 0,
+        hourly_rate: modifiedPayroll.hourly_rate || 0,
+        hours_per_week: modifiedPayroll.hours_per_week || 0,
+        pay_frequency: modifiedPayroll.pay_frequency || "weekly",
+        filing_status: modifiedPayroll.filing_status || "single",
+        home_address: modifiedPayroll.home_address || "10001",
+        work_address: modifiedPayroll.work_address || "10001",
+        spouse_income: modifiedPayroll.spouse_income || 0,
+        pre_tax_deductions: modifiedPayroll.pre_tax_deductions || 0,
+        post_tax_deductions: modifiedPayroll.post_tax_deductions || 0,
+        dependents: modifiedPayroll.dependents || 0,
+        age: modifiedPayroll.age || 22,
+      };
+    }
+
+    // Add refund data if user intent is tax_refund_calculation
+    if (userIntent === "tax_refund_calculation" && modifiedPayroll) {
+      payload.refund = {
+        app_enum: "amus",
+        first_name: modifiedPayroll.first_name || "",
+        middle_name: modifiedPayroll.middle_name || "",
+        last_name: modifiedPayroll.last_name || "",
+        income_type: modifiedPayroll.income_type || "salary",
+        annual_salary: modifiedPayroll.annual_salary || modifiedPayroll.salary || 0,
+        hourly_rate: modifiedPayroll.hourly_rate || 0,
+        average_hours_per_week: modifiedPayroll.hours_per_week || 0,
+        seasonal_variation: "none",
+        estimated_annual_income: modifiedPayroll.estimated_annual_income || modifiedPayroll.annual_salary || 0,
+        filing_status: modifiedPayroll.filing_status || "single",
+        pay_frequency: modifiedPayroll.pay_frequency || "weekly",
+        current_withholding_per_paycheck: modifiedPayroll.current_withholding_per_paycheck || 0,
+        desired_boost_per_paycheck: 0,
+        additional_income: modifiedPayroll.additional_income || 0,
+        deductions: modifiedPayroll.deductions || modifiedPayroll.pre_tax_deductions || 0,
+        dependents: modifiedPayroll.dependents || 0,
+        spouse_income: modifiedPayroll.spouse_income || 0,
+        current_date: new Date().toISOString(),
+        paychecks_already_received: modifiedPayroll.paychecks_already_received || 0,
+      };
+    }
+
+    // Make streaming request
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_API}tax-calculate`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("authTokenMuse")}`,
+          "Cache-Control": "no-cache",
+          Connection: "keep-alive",
+        },
+        body: JSON.stringify(payload),
+      }
+    );
+
+    if (!response.ok || !response.body) {
+      throw new Error("Bad response from tax-calculate API");
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder("utf-8");
+    let accumulated = "";
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      const chunkStr = decoder.decode(value, { stream: true });
+      const lines = chunkStr.split("\n");
+
+      for (const line of lines) {
+        if (!line.trim()) continue;
+
+        if (line.startsWith("data: ")) {
+          const jsonStr = line.slice("data: ".length).trim();
+          if (!jsonStr || jsonStr === "[DONE]") continue;
+
+          try {
+            const json = JSON.parse(jsonStr);
+
+            if (json.response || json.message) {
+              const chunk = json.response || json.message;
+              accumulated += chunk;
+
+              // Call the callback with each chunk
+              if (onChunk) {
+                onChunk(accumulated);
+              }
+            }
+          } catch (err) {
+            console.error("JSON parse error:", jsonStr, err);
+          }
+        }
+      }
+    }
+
+    return accumulated;
+  } catch (error: any) {
+    console.error("Error calculating tax scenarios:", error);
+    throw error;
+  }
+};

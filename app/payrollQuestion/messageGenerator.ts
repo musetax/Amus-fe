@@ -249,12 +249,12 @@ export const generateMessageForStep = (
               },
               { label: "State or Local Tax", value: "state_local_tax" },
               { label: "Medical Expenses", value: "medical_expenses" },
-              { label: "Other Deductions", value: "other_deduction" },
               { label: "Charitable Donations", value: "charitable_donation" },
               {
                 label: "Home Mortgage Interest",
                 value: "home_mortgage_interest",
               },
+              { label: "Other Deductions", value: "other_deduction" },
             ],
             placeholder: "Select all that apply",
           },

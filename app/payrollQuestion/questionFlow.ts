@@ -1,61 +1,88 @@
 import { StepType, FormData, TaxData } from "./types";
 
+type AgentIntent = "tax_refund_calculation" | "tax_paycheck_calculation";
+
 /**
- * Determines which questions to ask based on prefilled data
+ * Determines which questions to ask based on prefilled data and agent intent
  */
-export const getQuestionsToAsk = (prefilledData: Partial<TaxData>): StepType[] => {
+export const getQuestionsToAsk = (
+  prefilledData: Partial<TaxData>,
+  agentIntent: AgentIntent
+): StepType[] => {
   const questions: StepType[] = [];
 
-  if (!prefilledData.filing_status) questions.push("filing_status");
-  questions.push('head_of_household')
+  // ============================================
+  // COMMON QUESTIONS (for both refund and paycheck)
+  // ============================================
 
-  if (!prefilledData.age) questions.push("age");
+  // Filing status
+  if (!prefilledData.filing_status) {
+    questions.push("filing_status");
+    questions.push('head_of_household')
+  }
 
-  // Add income_type question if not prefilled
+  // Age
+
+  // Income type
   if (!prefilledData.income_type) {
     questions.push("income_type");
   }
 
-  // Add both salary and hourly questions - skip logic will handle which to show
+  // Salary or hourly questions - skip logic will handle which to show
   if (!prefilledData.annual_salary) questions.push("annual_salary");
-  if (!prefilledData.hourly_rate) questions.push("hourly_rate");
-  if (!prefilledData.average_hours_per_week) questions.push("average_hours_per_week");
-  if (!prefilledData.seasonal_variation) questions.push("seasonal_variation");
+  if ((!prefilledData.hourly_rate ||prefilledData.hourly_rate===0)&& prefilledData.income_type === "hourly") questions.push("hourly_rate");
+  if (!prefilledData.average_hours_per_week && prefilledData.income_type === "hourly") questions.push("average_hours_per_week");
+  if (!prefilledData.seasonal_variation && prefilledData.income_type === "hourly") questions.push("seasonal_variation");
 
-  if (
-    prefilledData.filing_status === "married_joint" &&
-    !prefilledData.spouse_income
-  )
-    questions.push("spouse_income");
-
+  // Pay frequency
   if (!prefilledData.pay_frequency) questions.push("pay_frequency");
 
-  if (!prefilledData.current_withholding_per_paycheck)
-    questions.push("current_withholding");
-
-  // Only ask additional_yesorno if additional_income is not prefilled
-  if (!prefilledData.additional_income) {
-    questions.push("additional_yesorno");
-    questions.push("additional_income");
-  }
-
-  // Only ask standard_deduction if deductions is not prefilled
-  if (!prefilledData.deductions) {
-    questions.push("standard_deduction");
-    questions.push("deductions");
-  }
-
-  // Only ask dependents_yesno if dependents is not prefilled
+  // Dependents (common for both)
   if (!prefilledData.dependents) {
     questions.push("dependents_yesno");
     questions.push("dependents");
   }
 
-  questions.push("current_date");
-  questions.push("work_address");
-  questions.push("home_address");
-  questions.push("pre_tax_deductions")
-  questions.push("post_tax_deductions")
+  // Spouse income (if married filing jointly)
+  if (!prefilledData.spouse_income && prefilledData.filing_status === 'married_joint') {
+    questions.push("spouse_income");
+  }
+
+  // ============================================
+  // AGENT INTENT SPECIFIC QUESTIONS
+  // ============================================
+
+  if (agentIntent === "tax_refund_calculation") {
+    // Refund-specific questions
+    if (!prefilledData.current_withholding_per_paycheck) {
+      questions.push("current_withholding");
+    }
+
+    // Additional income
+    if (!prefilledData.additional_income) {
+      questions.push("additional_yesorno");
+      questions.push("additional_income");
+    }
+
+    // Deductions
+    if (!prefilledData.deductions) {
+      questions.push("standard_deduction");
+      questions.push("deductions");
+    }
+
+    // Current date
+    if (!prefilledData.current_date) questions.push("current_date");
+
+  } else if (agentIntent === "tax_paycheck_calculation") {
+    // Paycheck-specific questions
+  if (!prefilledData.age) questions.push("age");
+
+    if (!prefilledData.home_address) questions.push("home_address");
+    if (!prefilledData.work_address) questions.push("work_address");
+    if (!prefilledData.pre_tax_deductions) questions.push("pre_tax_deductions");
+    if (!prefilledData.post_tax_deductions) questions.push("post_tax_deductions");
+  }
+
   return questions;
 };
 
@@ -66,12 +93,12 @@ export const shouldSkipQuestion = (
   step: StepType,
   data: FormData
 ): boolean => {
-  console.log(data,"======")
+  console.log(data, "======")
   // Skip additional income if user said no
   if (step === "additional_income" && data.additional_yesorno === "no") {
     return true;
   }
-  if(step==="head_of_household" &&data.filing_status ==='married_joint') return true;
+  if (step === "head_of_household" && data.filing_status === 'married_joint') return true;
   // Skip dependents if user said no
   if (step === "dependents" && data.dependents_yesno === "no") {
     return true;
@@ -81,7 +108,7 @@ export const shouldSkipQuestion = (
   if (step === "annual_salary" && data.income_type === "hourly") {
     return true;
   }
-
+  if (step === 'spouse_income' && data.filing_status === "single") return true
   // Skip hourly-specific questions for salary users
   if (
     ["hourly_rate", "average_hours_per_week", "seasonal_variation"].includes(step) &&

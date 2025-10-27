@@ -35,12 +35,15 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
   onComplete,
   onContinueToChat,
   prefilledData = {},
+  allfillData={},
   image = "",
   companyLogo,
+  agentIntent = "tax_refund_calculation", // Default to refund if not provided
 }) => {
   const [questionsToAsk] = useState<StepType[]>(
-    getQuestionsToAsk(prefilledData)
+    getQuestionsToAsk(prefilledData, agentIntent)
   );
+  console.log(prefilledData,"]]]]")
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
 
   const [formData, setFormData] = useState<FormData>({
@@ -76,6 +79,9 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
     work_address: prefilledData.work_address || null,
     pre_tax_deductions: prefilledData.pre_tax_deductions?.toString() || null,
     post_tax_deductions: prefilledData.post_tax_deductions?.toString() || null,
+    // is_all_data_fill:true
+    "is_refund_data_fill": agentIntent === 'tax_refund_calculation' ? true : allfillData.is_refund_data_fill,
+    "is_paycheck_data_fill": agentIntent === 'tax_paycheck_calculation' ? true : allfillData.is_paycheck_data_fill,
   });
 
   const [currentStep, setCurrentStep] = useState<StepType>(
@@ -170,7 +176,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
 
       case "head_of_household":
         result = {
-          formData: { ...formData, filing_status: value==="yes"?'head_of_household':formData.filing_status},
+          formData: { ...formData, filing_status: value === "yes" ? 'head_of_household' : formData.filing_status },
           userMessage: value === "yes" ? "Yes, I am head of household" : "No, I am not head of household",
         };
         break;
@@ -423,59 +429,66 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
 
       const taxDataToSave: TaxData = {
         // payroll: {
-          first_name: formData.first_name || undefined,
-          middle_name: formData.middle_name || undefined,
-          last_name: formData.last_name || undefined,
-          age: formData.age ? Number(formData.age) : undefined,
-          income_type: (formData.income_type as any) || undefined,
-          annual_salary:
-            formData.income_type === "salary"
-              ? Number(formData.annual_salary)
-              : undefined,
-          hourly_rate:
-            formData.income_type === "hourly"
-              ? Number(formData.hourly_rate)
-              : undefined,
-          average_hours_per_week:
-            formData.income_type === "hourly"
-              ? Number(formData.average_hours_per_week)
-              : undefined,
-          seasonal_variation: (formData.seasonal_variation as any) || undefined,
-          estimated_annual_income: formData.estimated_annual_income
-            ? Number(formData.estimated_annual_income)
+        first_name: formData.first_name || undefined,
+        middle_name: formData.middle_name || undefined,
+        last_name: formData.last_name || undefined,
+        age: formData.age ? Number(formData.age) : undefined,
+        income_type: (formData.income_type as any) || undefined,
+        annual_salary:
+          formData.income_type === "salary"
+            ? Number(formData.annual_salary)
             : undefined,
-          filing_status: (formData.filing_status as any) || undefined,
-          pay_frequency: (formData.pay_frequency as any) || undefined,
-          current_withholding_per_paycheck:
-            formData.current_withholding_per_paycheck
-              ? Number(formData.current_withholding_per_paycheck)
-              : undefined,
-          spouse_income: formData.spouse_income
-            ? Number(formData.spouse_income)
+        hourly_rate:
+          formData.income_type === "hourly"
+            ? Number(formData.hourly_rate)
             : undefined,
-          additional_income: formData.additional_income
-            ? Number(formData.additional_income)
+        average_hours_per_week:
+          formData.income_type === "hourly"
+            ? Number(formData.average_hours_per_week)
             : undefined,
+        seasonal_variation: (formData.seasonal_variation as any) || undefined,
+        estimated_annual_income: formData.estimated_annual_income
+          ? Number(formData.estimated_annual_income)
+          : undefined,
+        filing_status: (formData.filing_status as any) || undefined,
+        pay_frequency: (formData.pay_frequency as any) || undefined,
+        current_withholding_per_paycheck:
+          formData.current_withholding_per_paycheck
+            ? Number(formData.current_withholding_per_paycheck)
+            : undefined,
+        spouse_income: formData.spouse_income
+          ? Number(formData.spouse_income)
+          : undefined,
+        additional_income: formData.additional_income
+          ? Number(formData.additional_income)
+          : undefined,
 
-          deductions: (formData.deductions.reduce(
-            (sum: any, item: any) => sum + Number(item.amount),
+        deductions: Array.isArray(formData.deductions)
+          ? formData.deductions.reduce(
+            (sum: number, item: any) => sum + Number(item.amount || 0),
             0
-          )) || undefined,
-          dependents: formData.dependents
-            ? Number(formData.dependents)
-            : undefined,
-          current_date: formData.current_date || undefined,
-          paychecks_already_received: formData.paychecks_already_received
-            ? Number(formData.paychecks_already_received)
-            : undefined,
-          home_address: formData.home_address || undefined,
-          work_address: formData.work_address || undefined,
-          pre_tax_deductions: formData.pre_tax_deductions
-            ? Number(formData.pre_tax_deductions)
-            : undefined,
-          post_tax_deductions: formData.post_tax_deductions
-            ? Number(formData.post_tax_deductions)
-            : undefined,
+          )
+          : undefined,
+
+        dependents: formData.dependents
+          ? Number(formData.dependents)
+          : undefined,
+        current_date: formData.current_date || undefined,
+        paychecks_already_received: formData.paychecks_already_received
+          ? Number(formData.paychecks_already_received)
+          : undefined,
+        home_address: formData.home_address || undefined,
+        work_address: formData.work_address || undefined,
+        pre_tax_deductions: formData.pre_tax_deductions
+          ? Number(formData.pre_tax_deductions)
+          : undefined,
+        post_tax_deductions: formData.post_tax_deductions
+          ? Number(formData.post_tax_deductions)
+          : undefined,
+        // is_all_data_fill:true
+        "is_refund_data_fill": agentIntent === 'tax_refund_calculation' ? true : formData.is_refund_data_fill,
+        "is_paycheck_data_fill": agentIntent === 'tax_paycheck_calculation' ? true : formData.is_paycheck_data_fill,
+
         // },
       };
 

@@ -34,6 +34,10 @@ import { Tooltip, TooltipTrigger } from "../ui/tooltip";
 import TaxChatbot from "../../../app/payrollQuestionchat";
 import { ErrorBanner } from "./error-ui";
 import Image from "next/image";
+import { HomeScreen } from "./home-screen";
+import { LifeEventsScreen } from "./life-events-screen";
+import { LifeEventsForm } from "./life-events-form";
+import { ScenarioCheckbox } from "./scenario-checkbox";
 // import Image from "next/image";
 
 export const CHAT_HISTORY_KEY = "chat_history";
@@ -49,30 +53,41 @@ export const Thread: any = ({
   // typing,
   image,
   companyLogo,
-  // userId,
+  userId,
   loadingHistory,
-  // sessionId,
+  sessionId,
   showTaxChatbot,
   payrollData,
   onTaxChatbotComplete,
   onContinueToChat,
   globalError,
+  showHomeScreen,
+  onSelectIntent,
+  onReturnToHome,
+  showLifeEventsScreen,
+  showLifeEventsForm,
+  selectedLifeEventCategory,
+  onSelectLifeEventCategory,
+  onBackToLifeEventsCategories,
+  onSaveLifeEvents,
+  agentIntent
 }: any) => {
+  console.log(showHomeScreen, "jknjkdw");
   const { messages } = useThread();
   // const [isLoading, setIsLoading] = useState(false);
   // const [pdfData, setPdfData] = useState<any[]>([]);
   // const [showDownloadLink, setShowDownloadLink] = useState(false);
-  console.log(globalError, "messages", "----------------");
+  console.log(globalError, "messages", "----------------", messages);
   // const isStreaming = messages.some(
   //   (msg: any) => msg.role === "assistant" && msg.status?.type === "running"
   // );
   console.log(payrollData, "p--hjegsj");
-  // const assistantMessages = [...messages]
-  //   .reverse()
-  //   .filter((msg) => msg.role === "assistant");
+  const assistantMessages = [...messages]
+    .reverse()
+    .filter((msg) => msg.role === "assistant");
 
-  // const latest = assistantMessages[0];
-  // const suggestions = (latest?.metadata?.custom?.suggestions ?? []) as string[];
+  const latest = assistantMessages[0];
+  const suggestions = (latest?.metadata?.custom?.suggestions ?? []) as string[];
 
   // Handle tax chatbot completion - now using props
   const handleTaxChatbotComplete = (taxData: any) => {
@@ -100,7 +115,9 @@ export const Thread: any = ({
   }, []);
 
   // Check if we should show the tax chatbot based on props
-  const shouldShowTaxChatbot = messages.length === 0 && showTaxChatbot;
+  // const shouldShowTaxChatbot = messages.length === 0 && showTaxChatbot;
+  const shouldShowTaxChatbot = showTaxChatbot;
+  const [showScenarios, setShowScenarios] = useState(false);
 
   return (
     <>
@@ -113,7 +130,7 @@ export const Thread: any = ({
         >
           <div
             className="bg-[#255be305] overflow-hidden rounded-xl as"
-            style={{ maxHeight: "935px" }}
+            style={{ maxHeight: "935px", position: "sticky", top: "0" }}
           >
             <div
               style={{
@@ -149,7 +166,12 @@ export const Thread: any = ({
                   }}
                 >
                   {companyLogo ? (
-                    <Image src={companyLogo} width={60} height={41} alt="Company Logo" />
+                    <Image
+                      src={companyLogo}
+                      width={60}
+                      height={41}
+                      alt="Company Logo"
+                    />
                   ) : (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -279,6 +301,23 @@ export const Thread: any = ({
 
                 {globalError ? (
                   <ErrorBanner message={globalError} />
+                ) : showHomeScreen ? (
+                  <HomeScreen
+                    onSelectIntent={onSelectIntent}
+                    companyLogo={companyLogo}
+                  />
+                ) : showLifeEventsScreen ? (
+                  <LifeEventsScreen
+                    onSelectCategory={onSelectLifeEventCategory}
+                    onBack={onReturnToHome}
+                  />
+                ) : showLifeEventsForm ? (
+                  <LifeEventsForm
+                    category={selectedLifeEventCategory}
+                    onBack={onBackToLifeEventsCategories}
+                    onSave={onSaveLifeEvents}
+                    userId={userId}
+                  />
                 ) : shouldShowTaxChatbot ? (
                   <div
                     style={{
@@ -291,8 +330,11 @@ export const Thread: any = ({
                       onComplete={handleTaxChatbotComplete}
                       onContinueToChat={handleContinueToChat}
                       prefilledData={payrollData.payroll}
+                      allfillData={payrollData}
+                      
                       image={image}
                       companyLogo={companyLogo}
+                      agentIntent={agentIntent as "tax_refund_calculation" | "tax_paycheck_calculation"}
                     />
                   </div>
                 ) : (
@@ -317,6 +359,13 @@ export const Thread: any = ({
                             <AssistantMessage
                               {...props}
                               companyLogo={companyLogo}
+                              onReturnToHome={onReturnToHome}
+                              userId={userId}
+                              sessionId={sessionId}
+                              agentIntent={agentIntent}
+                              showScenarios={showScenarios}
+                              setShowScenarios={setShowScenarios}
+                             
                             />
                           ),
                         }}
@@ -325,6 +374,21 @@ export const Thread: any = ({
                       <ThreadPrimitive.If empty={false}>
                         <div className="min-h-8 flex-grow" />
                       </ThreadPrimitive.If>
+                      <div className="mt-3 p-4 flex w-full flex-col items-stretch justify-center gap-2">
+                        {!showScenarios && suggestions.map((s, i) => (
+                          <ThreadPrimitive.Suggestion
+                            key={i}
+                            prompt={s}
+                            autoSend
+                            method="replace"
+                            className="hover:bg-muted/80 flex max-w-sm grow basis-0 flex-col items-center justify-center rounded-lg border px-2 py-3 transition-colors ease-in custom-hover"
+                          >
+                            <span className="line-clamp-2 text-ellipsis text-sm font-medium">
+                              {s}
+                            </span>
+                          </ThreadPrimitive.Suggestion>
+                        ))}
+                      </div>
                     </ThreadPrimitive.Viewport>
 
                     <div className="sticky bg-[#255be305] bottom-0 px-3 pt-3 flex w-full max-w-[var(--thread-max-width)] flex-col items-center justify-end rounded-t-lg pb-2">
@@ -445,7 +509,7 @@ const Composer: FC = () => {
         ref={composerRef}
         rows={1}
         autoFocus
-        placeholder="Ask Your Query..."
+        placeholder="Please Ask Your Query..."
         className="placeholder:text-muted-foreground custom_input flex-grow resize-none border-none bg-transparent px-2 py-4 text-sm outline-none focus:ring-0 disabled:cursor-not-allowed"
       />
       <ComposerAction composerRef={composerRef} />
@@ -633,109 +697,289 @@ const UserActionBar: FC = () => {
 //   );
 // };
 
-const AssistantMessage: React.FC<any> = ({ companyLogo }) => {
+const AssistantMessage: React.FC<any> = ({
+  companyLogo,
+  onReturnToHome,
+  userId,
+  sessionId,
+  agentIntent,
+  showScenarios,
+  setShowScenarios,
+
+}) => {
   const message = useMessage();
+  const { messages } = useThread();
   const messageId = message?.id;
   const time = formatTime(message?.createdAt || Date.now());
 
   const urls: any = message?.metadata?.custom?.urls;
   const isMessageLoading = message?.metadata?.custom?.loading;
   const isStreaming = message?.metadata?.custom?.streaming;
+  // const refundCalculated = message?.metadata?.custom?.refundCalculated;
+  const paycheckCalculated = message?.metadata?.custom?.paycheckCalculated;
   const [showUrls, setShowUrls] = useState(false);
+  // const [showScenarios, setShowScenarios] = useState(false);
+
+  // Check if this is the last assistant message
+  const assistantMessages = messages.filter(
+    (msg: any) => msg.role === "assistant"
+  );
+  const isLastMessage =
+    assistantMessages[assistantMessages.length - 1]?.id === messageId;
+
+  // Check if any message is currently streaming
+  const isAnyMessageStreaming = messages.some(
+    (msg: any) => msg.role === "assistant" && msg.metadata?.custom?.streaming
+  );
+
+  // Debug logging for scenario button
+  // console.log("🔍 AssistantMessage metadata:", {
+  //   messageId,
+  //   refundCalculated,
+  //   paycheckCalculated,
+  //   agentIntent,
+  //   isLastMessage,
+  //   isStreaming,
+  //   isMessageLoading,
+  //   metadata: message?.metadata?.custom
+  // });
 
   return (
     <div
       style={{
         display: "flex",
-        alignItems: "baseline",
-        gap: "8px",
+        flexDirection: "column",
         width: "100%",
         paddingLeft: "16px",
         paddingRight: "10px",
       }}
     >
-      <span style={{ position: "relative", top: "10px" }}>
-        {companyLogo ? (
-          <Image
-            width={25}
-            height={25}
-            src={companyLogo}
-            style={{
-              width: "25px",
-              height: "25px",
-              minWidth: "25px",
-              minHeight: "25px",
-              objectFit: "cover",
-              borderRadius: "50%",
-            }}
-            alt="Company Logo"
-          />
-        ) : (
-          <Image
-            width={25}
-            height={25}
-            style={{
-              width: "25px",
-              height: "25px",
-              minWidth: "25px",
-              minHeight: "25px",
-              objectFit: "cover",
-              borderRadius: "50%",
-            }}
-            src="https://appweb-bucket.s3.us-east-1.amazonaws.com/muse-logo.png"
-            alt="useIcon"
-          />
-        )}
-      </span>
-      <MessagePrimitive.Root className="grid grid-cols-[auto_auto_1fr] grid-rows-[auto_1fr] relative w-full max-w-[var(--thread-max-width)] py-4 pr-2">
-        <div className="text-foreground max-w-[calc(var(--thread-max-width)*0.8)] break-words leading-7 col-span-2 col-start-2 row-start-1 my-1.5">
-          {isMessageLoading ? (
-            <div className="flex flex-col  py-4">
-              <div className="flex items-center gap-1">
-                <span
-                  className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"
-                  style={{ animationDelay: "0s" }}
-                ></span>
-                <span
-                  className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"
-                  style={{ animationDelay: "0.2s" }}
-                ></span>
-                <span
-                  className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"
-                  style={{ animationDelay: "0.4s" }}
-                ></span>
-              </div>
-
-              <span className="block text-sm text-gray-600 animate-pulse mt-2">
-                Searching for information....
-              </span>
-            </div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "baseline",
+          gap: "8px",
+          width: "100%",
+        }}
+      >
+        <span style={{ position: "relative", top: "10px" }}>
+          {companyLogo ? (
+            <Image
+              width={25}
+              height={25}
+              src={companyLogo}
+              style={{
+                width: "25px",
+                height: "25px",
+                minWidth: "25px",
+                minHeight: "25px",
+                objectFit: "cover",
+                borderRadius: "50%",
+              }}
+              alt="Company Logo"
+            />
           ) : (
-            <>
-              <MessagePrimitive.Content components={{ Text: MarkdownText }} />
-
-              {isStreaming && (
-                <span className="inline-block w-2 h-0.5 bg-blue-500 animate-pulse ml-1"></span>
-              )}
-
-              {urls && !isStreaming && showUrls && (
-                <URLDisplay urls={urls} messageId={messageId} />
-              )}
-
-              <span
-                style={{ color: "#45556c", fontSize: "12px", marginTop: "4px" }}
-              >
-                {time}
-              </span>
-            </>
+            <Image
+              width={25}
+              height={25}
+              style={{
+                width: "25px",
+                height: "25px",
+                minWidth: "25px",
+                minHeight: "25px",
+                objectFit: "contain",
+                borderRadius: "50%",
+              }}
+              src="https://appweb-bucket.s3.us-east-1.amazonaws.com/muse-logo.png"
+              alt="useIcon"
+            />
           )}
-        </div>
-        <AssistantActionBar
-          urls={urls}
-          onToggleUrls={() => setShowUrls((p) => !p)}
-        />
-        <BranchPicker className="col-start-2 row-start-2 -ml-2 mr-2" />
-      </MessagePrimitive.Root>
+        </span>
+        <MessagePrimitive.Root className="grid grid-cols-[auto_auto_1fr] grid-rows-[auto_1fr] relative w-full max-w-[var(--thread-max-width)] py-4 pr-2">
+          <div className="text-foreground max-w-[calc(var(--thread-max-width)*0.8)] break-words leading-7 col-span-2 col-start-2 row-start-1 my-1.5">
+            {isMessageLoading ? (
+              <div className="flex flex-col  py-4">
+                <div className="flex items-center gap-1">
+                  <span
+                    className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"
+                    style={{ animationDelay: "0s" }}
+                  ></span>
+                  <span
+                    className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"
+                    style={{ animationDelay: "0.2s" }}
+                  ></span>
+                  <span
+                    className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"
+                    style={{ animationDelay: "0.4s" }}
+                  ></span>
+                </div>
+
+                <span className="block text-sm text-gray-600 animate-pulse mt-2">
+                  Searching for information....
+                </span>
+              </div>
+            ) : (
+              <>
+                <MessagePrimitive.Content components={{ Text: MarkdownText }} />
+
+                {isStreaming && (
+                  <span className="inline-block w-2 h-0.5 bg-blue-500 animate-pulse ml-1"></span>
+                )}
+
+                {urls && !isStreaming && showUrls && (
+                  <URLDisplay urls={urls} messageId={messageId} />
+                )}
+
+                <span
+                  style={{
+                    color: "#45556c",
+                    fontSize: "12px",
+                    marginTop: "4px",
+                  }}
+                >
+                  {time}
+                </span>
+              </>
+            )}
+          </div>
+          <AssistantActionBar
+            urls={urls}
+            onToggleUrls={() => setShowUrls((p) => !p)}
+          />
+          <BranchPicker className="col-start-2 row-start-2 -ml-2 mr-2" />
+        </MessagePrimitive.Root>
+      </div>
+
+      {/* Return to Home Screen Button - Only show on last message when not streaming */}
+      {!isAnyMessageStreaming &&
+        !isMessageLoading &&
+        onReturnToHome &&
+        isLastMessage && (
+          <div style={{ marginTop: "12px", marginLeft: "32px" }}>
+            <button
+              onClick={onReturnToHome}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "10px 20px",
+                fontSize: "14px",
+                fontWeight: "500",
+                color: "#ffffff",
+                background:
+                  "linear-gradient(90deg, #69DEC6 0%, #49C2D4 50%, #1595EA 100%)",
+                border: "none",
+                borderRadius: "24px",
+                cursor: "pointer",
+                transition: "all 0.2s ease-in-out",
+                boxShadow: "0 2px 8px rgba(21, 149, 234, 0.2)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "scale(1.02)";
+                e.currentTarget.style.boxShadow =
+                  "0 4px 12px rgba(21, 149, 234, 0.3)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "scale(1)";
+                e.currentTarget.style.boxShadow =
+                  "0 2px 8px rgba(21, 149, 234, 0.2)";
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                <polyline points="9 22 9 12 15 12 15 22" />
+              </svg>
+              Return to Home Screen
+            </button>
+          </div>
+        )}
+
+      {/* Check Other Scenarios Button - Show when refund or paycheck calculated */}
+      {!isAnyMessageStreaming &&
+        !isMessageLoading &&
+        isLastMessage &&
+        (paycheckCalculated) &&
+        (agentIntent === "tax_paycheck_calculation") &&
+        !showScenarios && (
+          <div style={{ marginTop: "12px", marginLeft: "32px" }}>
+            <button
+              onClick={() => setShowScenarios(true)}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "10px 20px",
+                fontSize: "14px",
+                fontWeight: "500",
+                color: "#ffffff",
+                background:
+                  "linear-gradient(90deg, #69DEC6 0%, #49C2D4 50%, #1595EA 100%)",
+                border: "none",
+                borderRadius: "24px",
+                cursor: "pointer",
+                transition: "all 0.2s ease-in-out",
+                boxShadow: "0 2px 8px rgba(21, 149, 234, 0.2)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "scale(1.02)";
+                e.currentTarget.style.boxShadow =
+                  "0 4px 12px rgba(21, 149, 234, 0.3)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "scale(1)";
+                e.currentTarget.style.boxShadow =
+                  "0 2px 8px rgba(21, 149, 234, 0.2)";
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                <polyline points="7.5 4.21 12 6.81 16.5 4.21" />
+                <polyline points="7.5 19.79 7.5 14.6 3 12" />
+                <polyline points="21 12 16.5 14.6 16.5 19.79" />
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                <line x1="12" y1="22.08" x2="12" y2="12" />
+              </svg>
+              Check Other Scenarios
+            </button>
+          </div>
+        )}
+
+      {/* Inline Scenario Checkbox - Show when button is clicked */}
+      {!isAnyMessageStreaming &&
+        !isMessageLoading &&
+        isLastMessage &&
+        (paycheckCalculated) &&
+        (agentIntent === "tax_paycheck_calculation") &&
+        showScenarios && (
+          <div style={{ marginTop: "12px", marginLeft: "32px", maxWidth: "600px" }}>
+            <ScenarioCheckbox
+              userId={userId}
+              sessionId={sessionId}
+              agentIntent={agentIntent}
+              setShowScenarios={setShowScenarios}
+            />
+          </div>
+        )}
     </div>
   );
 };

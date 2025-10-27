@@ -147,21 +147,27 @@ export const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
               {message.options && isLast && !isTyping && (
                 <div
                   className="mt-4 space-y-2"
-                  style={{ display: "flex", alignItems: "center", gap: "10px" }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    flexWrap: "wrap",
+                    gap: "10px",
+                  }}
                 >
                   {message.options.map((option) => (
                     <button
                       key={option.value}
                       onClick={() => onOptionSelect(option.value)}
-                      className="block py-2 px-4 text-left text-sm bg-white text-gray-900 rounded-2xl hover:bg-gray-50 transition-colors font-medium border border-gray-200"
+                      className="block py-2 px-4 text-left text-sm bg-white text-gray-900 rounded-2xl hover:bg-blue-50 hover:border-blue-400 active:scale-95 transition-all duration-150 font-medium border border-gray-200 shadow-sm hover:shadow"
                     >
                       {option.label}
                     </button>
                   ))}
                 </div>
               )}
-                 {typeof message.content === "object" &&
-                (message.content as MessageContent).selectType === "drop-down" &&
+              {typeof message.content === "object" &&
+                (message.content as MessageContent).selectType ===
+                  "drop-down" &&
                 isLast &&
                 !isTyping && (
                   <div className="mt-4">
@@ -181,10 +187,10 @@ export const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
                           e.target.value = "";
                         }
                       }}
-                      className="w-full px-4 py-3 bg-white border border-gray-300 h-10 rounded-2xl focus:outline-none focus:ring-0 outline-none text-gray-900"
+                      className="w-full px-4 py-1 bg-white border border-gray-300 h-10 rounded-2xl focus:outline-none focus:ring-0 outline-none text-gray-900"
                       defaultValue=""
                     >
-                      <option value="" disabled>
+                      <option value="" disabled hidden>
                         {(message.content as MessageContent).placeholder}
                       </option>
                       {(message.content as MessageContent).options?.map(
@@ -195,7 +201,6 @@ export const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
                         )
                       )}
                     </select>
-                  
                   </div>
                 )}
               {typeof message.content === "object" &&
@@ -247,7 +252,7 @@ export const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
                           <button
                             key={option.value}
                             onClick={() => onOptionSelect(option.value)}
-                            className="block py-2 px-4 text-left text-sm bg-white text-gray-900 rounded-2xl hover:bg-gray-50 transition-colors font-medium border border-gray-200 whitespace-nowrap"
+                            className="block py-2 px-4 text-left text-sm bg-white text-gray-900 rounded-2xl hover:bg-blue-50 hover:border-blue-400 active:scale-95 transition-all duration-150 font-medium border border-gray-200 whitespace-nowrap shadow-sm hover:shadow"
                           >
                             {option.label}
                           </button>
@@ -313,25 +318,17 @@ export const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
                         {error}
                       </div>
                     )}
-                    <div className="flex items-center justify-center mt-1">
+                    <div className="flex items-center justify-center mt-2">
                       {(currentStep === "additional_income" ||
                         currentStep === "deductions" ||
                         currentStep === "dependents" ||
                         currentStep === "start_pay_date" ||
-                        currentStep === "work_address" ||
-                        currentStep === "home_address" ||
                         currentStep === "current_date" ||
                         currentStep === "pre_tax_deductions" ||
                         currentStep === "post_tax_deductions") && (
                         <button
                           onClick={() => onInputSubmit("skip")}
-                          className="p-0 font-medium"
-                          style={{
-                            background: "transparent",
-                            color: "#518DE7",
-                            textDecoration: "underline",
-                            fontSize: "14px",
-                          }}
+                          className="text-sm text-blue-600 hover:text-blue-700 underline font-medium transition-colors"
                         >
                           Skip this question
                         </button>
@@ -354,6 +351,7 @@ export const TaxInputField: React.FC<TaxInputFieldProps> = ({
   onSubmit,
 }) => {
   const [value, setValue] = useState<string>("");
+  const [validationError, setValidationError] = useState<string>("");
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -362,8 +360,45 @@ export const TaxInputField: React.FC<TaxInputFieldProps> = ({
     }
   }, []);
 
+  // Real-time validation
+  const validateInput = (val: string, inputType: string): string => {
+    if (!val.trim()) return "";
+
+    switch (inputType) {
+      case "number":
+        const num = parseFloat(val);
+        if (isNaN(num)) return "Please enter a valid number";
+        if (num < 0) return "Value cannot be negative";
+        if (num > 1000000) return "Value seems too large";
+        break;
+      case "date":
+        const date = new Date(val);
+        const today = new Date();
+        if (isNaN(date.getTime())) return "Please enter a valid date";
+        if (date > today) return "Date cannot be in the future";
+        break;
+      case "text":
+        // ZIP code validation if it looks like a ZIP
+        if (/^\d{5}/.test(val)) {
+          const zipRegex = /^\d{5}(-\d{4})?$/;
+          if (!zipRegex.test(val))
+            return "Please enter a valid ZIP code (e.g., 12345 or 12345-6789)";
+        }
+        break;
+    }
+    return "";
+  };
+
   const handleSubmit = (): void => {
     if (!value.trim()) return;
+
+    const error = validateInput(value, type);
+    if (error) {
+      setValidationError(error);
+      return;
+    }
+
+    setValidationError("");
     onSubmit(value);
     // Value will be cleared by key change on success, preserved on error
   };
@@ -374,9 +409,38 @@ export const TaxInputField: React.FC<TaxInputFieldProps> = ({
     }
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+
+    if (type === "number" && Number(newValue) < 0) {
+      return;
+    }
+
+    setValue(newValue);
+
+    // Clear validation error when user starts typing
+    if (validationError) {
+      setValidationError("");
+    }
+
+    // Show real-time feedback for obvious errors
+    if (newValue.trim()) {
+      const error = validateInput(newValue, type);
+      if (error && newValue.length > 3) {
+        // Only show after some input
+        setValidationError(error);
+      }
+    }
+  };
+
+  const hasError = !!validationError;
+  const borderColor = hasError ? "border-red-300" : "border-[#E9E9E9]";
+
   return (
     <div className="mt-4">
-      <div className="focus-within:border-ring/20 flex w-full flex-wrap items-end rounded-full border border-[#E9E9E9] bg-inherit px-2.5 py-0 shadow-sm transition-colors ease-in gap-2 bg-white">
+      <div
+        className={`focus-within:border-ring/20 flex w-full flex-wrap items-end rounded-full border ${borderColor} bg-inherit px-2.5 py-0 shadow-sm transition-colors ease-in gap-2 bg-white`}
+      >
         <input
           ref={inputRef}
           type={type}
@@ -395,27 +459,31 @@ export const TaxInputField: React.FC<TaxInputFieldProps> = ({
             }
           }}
           min={type === "number" ? 0 : undefined}
-           max={type === "date" ? new Date().toISOString().split("T")[0] : undefined} // 👈 Prevent future dates
-          onChange={(e) => {
-            if (type === "number" && Number(e.target.value) < 0) {
-              return;
-            }
-            setValue(e.target.value);
-          }}
+          max={
+            type === "date" ? new Date().toISOString().split("T")[0] : undefined
+          }
+          onChange={handleChange}
           onKeyPress={handleKeyPress}
           placeholder={placeholder}
           className="placeholder:text-muted-foreground custom_input flex-grow resize-none border-none bg-transparent px-2 py-4 text-sm outline-none focus:ring-0 disabled:cursor-not-allowed"
+          aria-invalid={hasError}
+          aria-describedby={hasError ? "input-error" : undefined}
         />
         <TooltipIconButton
           tooltip="Send"
           variant="default"
           className="my-2.5 size-8 p-0 rounded-full transition-opacity ease-in"
           onClick={handleSubmit}
-          disabled={!value.trim()}
+          disabled={!value.trim() || hasError}
         >
           <SendHorizontalIcon />
         </TooltipIconButton>
       </div>
+      {hasError && (
+        <p id="input-error" className="mt-2 text-xs text-red-600" role="alert">
+          {validationError}
+        </p>
+      )}
     </div>
   );
 };

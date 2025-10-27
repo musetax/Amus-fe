@@ -1,14 +1,7 @@
 import React from "react";
 import { FormData } from "./types";
 import { SummaryCard } from "./components";
-import {
-  DollarSign,
-  User,
-  Heart,
-  Calendar,
-  CheckCircle,
-  Home,
-} from "./icons";
+import { DollarSign, User, Heart, Calendar, CheckCircle, Home } from "./icons";
 import { formatCurrency } from "./utils";
 
 interface SummarySectionProps {
@@ -26,7 +19,7 @@ export const SummarySection: React.FC<SummarySectionProps> = ({
   isSaving,
   saveError,
 }) => {
-  console.log(formData.deductions, "=======p[]p[l[pl")
+  console.log(formData.deductions, "=======p[]p[l[pl");
   return (
     <div className="bottom-0 px-3 pt-3 flex w-full max-w-[var(--thread-max-width)] flex-col items-center justify-end rounded-t-lg pb-2">
       <div className="w-full bg-white border border-gray-200 rounded-2xl p-3 mb-4">
@@ -52,7 +45,7 @@ export const SummarySection: React.FC<SummarySectionProps> = ({
                 formData.filing_status === "married_joint"
                   ? "Married"
                   : formData.filing_status.charAt(0).toUpperCase() +
-                  formData.filing_status.slice(1)
+                    formData.filing_status.slice(1)
               }
               color="bg-gradient-to-r from-purple-600 to-purple-400"
             />
@@ -190,30 +183,33 @@ export const SummarySection: React.FC<SummarySectionProps> = ({
           )}
 
           {/* Deductions - show selected deductions */}
-          {formData.deductions && Array.isArray(formData.deductions) && formData.deductions.length > 0 && (() => {
-            // const labels: { [key: string]: string } = {
-            //   ira_contribution: "IRA Contribution",
-            //   student_loan_interest: "Student Loan Interest",
-            //   state_local_tax: "State/Local Tax",
-            //   medical_expenses: "Medical Expenses",
-            //   other_deduction: "Other Deductions",
-            //   charitable_donation: "Charitable Donations",
-            //   home_mortgage_interest: "Home Mortgage Interest"
-            // };
-            const deductionsList = formData.deductions.reduce(
-              (sum, item) => sum + Number(item.amount),
-              0
-            );
+          {formData.deductions &&
+            Array.isArray(formData.deductions) &&
+            formData.deductions.length > 0 &&
+            (() => {
+              // const labels: { [key: string]: string } = {
+              //   ira_contribution: "IRA Contribution",
+              //   student_loan_interest: "Student Loan Interest",
+              //   state_local_tax: "State/Local Tax",
+              //   medical_expenses: "Medical Expenses",
+              //   other_deduction: "Other Deductions",
+              //   charitable_donation: "Charitable Donations",
+              //   home_mortgage_interest: "Home Mortgage Interest"
+              // };
+              const deductionsList = formData.deductions.reduce(
+                (sum, item) => sum + Number(item.amount),
+                0
+              );
 
-            return (
-              <SummaryCard
-                icon={CheckCircle}
-                title="Deductions"
-                value={deductionsList}
-                color="bg-gradient-to-r from-purple-600 to-purple-400"
-              />
-            );
-          })()}
+              return (
+                <SummaryCard
+                  icon={CheckCircle}
+                  title="Deductions"
+                  value={deductionsList}
+                  color="bg-gradient-to-r from-purple-600 to-purple-400"
+                />
+              );
+            })()}
 
           {/* Dependents */}
           {formData.dependents && formData.dependents !== "0" && (
@@ -226,14 +222,15 @@ export const SummarySection: React.FC<SummarySectionProps> = ({
           )}
 
           {/* Pre-Tax Deductions */}
-          {formData.pre_tax_deductions && formData.pre_tax_deductions !== "0" && (
-            <SummaryCard
-              icon={DollarSign}
-              title="Pre-Tax Deductions"
-              value={formatCurrency(formData.pre_tax_deductions)}
-              color="bg-gradient-to-r from-amber-600 to-amber-400"
-            />
-          )}
+          {formData.pre_tax_deductions &&
+            formData.pre_tax_deductions !== "0" && (
+              <SummaryCard
+                icon={DollarSign}
+                title="Pre-Tax Deductions"
+                value={formatCurrency(formData.pre_tax_deductions)}
+                color="bg-gradient-to-r from-amber-600 to-amber-400"
+              />
+            )}
 
           {/* Post-Tax Deductions */}
           {formData.post_tax_deductions &&
@@ -279,22 +276,26 @@ export const SummarySection: React.FC<SummarySectionProps> = ({
 
         <div
           className="flex flex-col sm:flex-row gap-3 items-center justify-center"
-          style={{ marginTop: "40px" }}
+          style={{ marginTop: "32px" }}
         >
           <button
             onClick={onSave}
             disabled={isSaving}
+            className="group bg_custom relative inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-500 text-white text-sm font-medium rounded-full shadow-md hover:shadow-lg hover:from-blue-700 hover:to-blue-600 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-md disabled:active:scale-100"
             style={{
-              paddingTop: "12px",
-              paddingBottom: "12px",
-              backgroundColor: "#1595ea",
-              color: "#ffffff",
-              border: "1px solid #1595ea",
-              fontSize: "14px",
+              minWidth: "160px",
             }}
-            className="flex items-center justify-center gap-2 px-6 py-3 bg-white border border-gray-300 text-gray-900 rounded-2xl hover:bg-gray-50 transition-colors font-medium disabled:opacity-50"
           >
-            {isSaving ? "Saving..." : "Save My Information"}
+            {isSaving ? (
+              <>
+                <span>Saving...</span>
+              </>
+            ) : (
+              <>
+              
+                <span>Save Information</span>
+              </>
+            )}
           </button>
         </div>
 

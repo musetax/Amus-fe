@@ -9,6 +9,7 @@ export const API_ENDPOINTS = {
     RESET_PASSWORD: '/v1/amus-reset-password',
     GET_ALL_USERS: '/v1/users',
     LOGOUT: '/v1/amus-logout',
+    LIFE_EVENTS: '/v1/life-events',
 
   };
   
