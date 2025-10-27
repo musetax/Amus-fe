@@ -20,8 +20,8 @@ const scenarios: Scenario[] = [
   { id: "got_married", label: "Got Married", description: "Change filing status to married filing jointly" },
   { id: "had_child", label: "Had a Child", description: "Add one dependent" },
   { id: "received_raise", label: "Received a 10% Raise", description: "Increase annual salary by 10%" },
-  { id: "no_tax_state", label: "Moved to a No-Tax State", description: "Update home address to 73301" },
-  { id: "high_tax_state", label: "Moved to a High-Tax State", description: "Update home address to 90001" },
+  { id: "no_tax_state", label: "Moved to a No-Tax State", description: "Low State Taxes like Florida, Texas,Nevada,etc" },
+  { id: "high_tax_state", label: "Moved to a High-Tax State", description: "High State States like California,New Jersey,New York,etc" },
   { id: "maxed_401k", label: "Maxed Out 401(k)", description: "Maximize 401(k) contributions" },
 ];
 
@@ -93,7 +93,7 @@ export const ScenarioSelector: React.FC<ScenarioSelectorProps> = ({
 
       case "no_tax_state":
          payload.home_address = "77001";
-        payload.work_address=="77001"
+          payload.work_address="77001"
         break;
 
       case "high_tax_state":
