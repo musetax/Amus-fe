@@ -3,9 +3,9 @@ import { getTokens, refreshToken } from "../utilities/auth";
 
 type AgentIntent = "tax_education" | "tax_refund_calculation" | "tax_paycheck_calculation" | "life_events_update" | null;
 
-interface PayrollData {
-  payroll?: any;
-}
+// interface PayrollData {
+//   payroll?: any;
+// }
 
 export const MyModelAdapter = (
   userId: string,

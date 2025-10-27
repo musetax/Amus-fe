@@ -29,8 +29,6 @@ const scenarios: Scenario[] = [
 
 export const ScenarioCheckbox: React.FC<ScenarioCheckboxProps> = ({
   userId,
-  sessionId,
-  agentIntent,
 setShowScenarios
 }) => {
   const thread = useThreadRuntime();
@@ -163,8 +161,8 @@ const handleCheckboxChange = (scenarioId: string) => {
     <div className="space-y-3 mt-4">
       <div className="flex flex-wrap gap-3">
         {scenarios.map((scenario) => {
-          const isStateScenario =
-            scenario.id === "no_tax_state" || scenario.id === "high_tax_state";
+          // const isStateScenario =
+          //   scenario.id === "no_tax_state" || scenario.id === "high_tax_state";
           
 
           return (

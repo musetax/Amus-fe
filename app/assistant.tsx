@@ -338,7 +338,7 @@ function Assistant() {
         console.error("❌ Failed to load chat history:", err);
         setloadingHistory(false);
       });
-  }, [agentIntent]);  // Only depend on agentIntent to avoid infinite loops
+  }, [agentIntent,history,learnRuntime]);  // Only depend on agentIntent to avoid infinite loops
 
   // Show loading state while checking payroll data
   if (isLoadingPayroll) {
