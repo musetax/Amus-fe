@@ -502,7 +502,7 @@ const Composer: FC = () => {
         ref={composerRef}
         rows={1}
         autoFocus
-        placeholder="PLease Ask Your Query..."
+        placeholder="Please Ask Your Query..."
         className="placeholder:text-muted-foreground custom_input flex-grow resize-none border-none bg-transparent px-2 py-4 text-sm outline-none focus:ring-0 disabled:cursor-not-allowed"
       />
       <ComposerAction composerRef={composerRef} />
