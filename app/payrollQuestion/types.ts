@@ -51,7 +51,9 @@ export interface TaxData {
   pre_tax_deductions?: number;
   post_tax_deductions?: number;
   age?: number;
-  is_all_data_fill?:boolean
+  // is_all_data_fill?:boolean
+   is_refund_data_fill?:boolean,
+  is_paycheck_data_fill?: boolean,
 }
 
 export interface FormData {
@@ -82,7 +84,9 @@ export interface FormData {
   work_address: string | null;
   pre_tax_deductions: string | null;
   post_tax_deductions: string | null;
-  is_all_data_fill:boolean
+  // is_all_data_fill:boolean,
+    is_refund_data_fill?:boolean,
+  is_paycheck_data_fill?: boolean,
 }
 
 export interface Payload {
@@ -117,6 +121,7 @@ export interface TaxChatbotProps {
   image?: string;
   companyLogo?: string;
   prefilledData?: Partial<TaxData>;
+  agentIntent?: "tax_refund_calculation" | "tax_paycheck_calculation";
 }
 
 export interface TaxUserMessageProps {

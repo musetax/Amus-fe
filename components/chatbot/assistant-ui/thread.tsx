@@ -331,6 +331,7 @@ export const Thread: any = ({
                       prefilledData={payrollData.payroll}
                       image={image}
                       companyLogo={companyLogo}
+                      agentIntent={agentIntent as "tax_refund_calculation" | "tax_paycheck_calculation"}
                     />
                   </div>
                 ) : (

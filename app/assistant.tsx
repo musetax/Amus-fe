@@ -176,16 +176,23 @@ console.log("agentintent",agentIntent)
       setShowLifeEventsForm(false);
     } else if (intent === "tax_refund_calculation" || intent === "tax_paycheck_calculation") {
       // Show question flow first
-      if(payrollData?.is_all_data_fill)
+      if(intent === "tax_refund_calculation"&&!payrollData?.is_refund_data_fill)
       {
          setShowHomeScreen(false);
-      setShowTaxChatbot(false);
+      setShowTaxChatbot(true);
+      setShowLifeEventsScreen(false);
+      setShowLifeEventsForm(false);
+      }
+      else if(intent === "tax_paycheck_calculation"&&!payrollData?.is_paycheck_data_fill)
+      {
+         setShowHomeScreen(false);
+      setShowTaxChatbot(true);
       setShowLifeEventsScreen(false);
       setShowLifeEventsForm(false);
       }
       else{
       setShowHomeScreen(false);
-      setShowTaxChatbot(true);
+      setShowTaxChatbot(false);
       setShowLifeEventsScreen(false);
       setShowLifeEventsForm(false);
       }
