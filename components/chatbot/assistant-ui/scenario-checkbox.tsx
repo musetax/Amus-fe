@@ -461,9 +461,7 @@ export const ScenarioCheckbox: React.FC<ScenarioCheckboxProps> = ({
       case "got_married":
         payload.filing_status = "married_joint";
         // 🆕 Include spouse income if provided
-        if (spouseIncome && Number(spouseIncome) > 0) {
-         payload.spouse_income== Number(spouseIncome)
-        }
+      
         break;
 
       case "had_child":
@@ -514,7 +512,7 @@ export const ScenarioCheckbox: React.FC<ScenarioCheckboxProps> = ({
     const userMessage = `calcualte my paycheck with updated values`;
 
     try {
-      let modifiedPayroll = { ...payrollData.payroll };
+      let modifiedPayroll = { ...payrollData.payroll,spouse_income: spouseIncome?Number(spouseIncome):0 };
       selectedScenarios.forEach((id) => {
         modifiedPayroll = generatePayloadForScenario(id, modifiedPayroll);
       });
