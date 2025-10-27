@@ -1,10 +1,61 @@
 import React from "react";
-
+import { Check } from "lucide-react";
 interface CheckboxDeductionsProps {
   options: Array<{ label: string; value: string }>;
   onSubmit: (selectedDeductions: any[]) => void;
 }
 
+interface CustomCheckboxProps {
+  checked: boolean;
+  onChange: () => void;
+}
+export const CustomCheckbox: React.FC<CustomCheckboxProps> = ({
+  checked,
+  onChange,
+}) => {
+  return (
+    <label
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        cursor: "pointer",
+        userSelect: "none",
+        position: "relative",
+      }}
+    >
+      {/* Hidden native checkbox */}
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={onChange}
+        style={{
+          position: "absolute",
+          opacity: 0,
+          width: 0,
+          height: 0,
+        }}
+      />
+
+      {/* Custom box */}
+      <div
+        style={{
+          width: "18px",
+          height: "18px",
+          border: checked ? "1px solid #518DE7" : "1px solid #d1d5db",
+          backgroundColor: checked ? "#518DE7" : "#ffffff",
+          borderRadius: "6px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          transition: "all 0.2s ease",
+          boxSizing: "border-box",
+        }}
+      >
+        {checked && <Check size={14} color="#ffffff" strokeWidth={3} />}
+      </div>
+    </label>
+  );
+};
 const CheckboxDeductions: React.FC<CheckboxDeductionsProps> = ({
   options,
   onSubmit,
@@ -98,13 +149,17 @@ const CheckboxDeductions: React.FC<CheckboxDeductionsProps> = ({
             className="flex items-center space-x-3 gap-1 cursor-pointer p-3 rounded-lg hover:bg-gray-50 transition-colors"
             style={{ border: "1px solid #e5e7eb" }}
           >
-            <input
+            {/* <input
               type="checkbox"
               value={option.value}
               checked={selectedDeductions.includes(option.value)}
               onChange={() => handleCheckboxChange(option.value)}
               className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
               style={{ accentColor: "#518DE7" }}
+            /> */}
+            <CustomCheckbox
+              checked={selectedDeductions.includes(option.value)}
+              onChange={() => handleCheckboxChange(option.value)}
             />
             <span className="text-sm" style={{ color: "#31333f" }}>
               {option.label}
@@ -115,7 +170,7 @@ const CheckboxDeductions: React.FC<CheckboxDeductionsProps> = ({
       <div className="flex gap-2 mt-4">
         <button
           onClick={handleContinue}
-          className="flex-1 py-3 px-4 text-white rounded-2xl transition-colors font-medium"
+          className="flex-1 py-2 px-4 text-white rounded-2xl transition-colors font-medium"
           style={{
             backgroundColor:
               selectedDeductions.length === 0 ? "#9ca3af" : "#518DE7",
@@ -127,7 +182,7 @@ const CheckboxDeductions: React.FC<CheckboxDeductionsProps> = ({
         </button>
         <button
           onClick={() => onSubmit([])}
-          className="py-3 px-4 rounded-2xl transition-colors font-medium"
+          className="py-2 px-4 rounded-2xl transition-colors font-medium"
           style={{
             backgroundColor: "#f3f4f6",
             color: "#374151",

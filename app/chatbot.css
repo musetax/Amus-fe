@@ -2328,6 +2328,11 @@ input[type="number"] {
   padding-top: 0.75rem /* 12px */;
   padding-bottom: 0.75rem /* 12px */;
 }
+.custom_btn:hover {
+  background-color: #518de7 !important;
+  border-color: #518de7 !important;
+  color: #ffffff !important;
+}
 .custom-scrollbar::-webkit-scrollbar-track {
   background: #f1f5f9; /* light gray */
   border-radius: 10px;

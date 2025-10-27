@@ -3,33 +3,102 @@
 import { useState, useEffect } from "react";
 import { useThreadRuntime } from "@assistant-ui/react";
 import { getPayrollDetails } from "../../../app/taxModelAdapter";
-
+import { Check } from "lucide-react";
 interface ScenarioCheckboxProps {
   userId: string;
   sessionId: string;
   agentIntent: "tax_refund_calculation" | "tax_paycheck_calculation";
-  setShowScenarios:(value:boolean)=>void;
+  setShowScenarios: (value: boolean) => void;
 }
-
 
 interface Scenario {
   id: string;
   label: string;
   description: string;
 }
+interface CustomCheckboxProps {
+  checked: boolean;
+  onChange: () => void;
+}
+export const CustomCheckbox: React.FC<CustomCheckboxProps> = ({
+  checked,
+  onChange,
+}) => {
+  return (
+    <label
+      style={{
+        display: "inline-flex",
+        alignItems: "start",
+        cursor: "pointer",
+        userSelect: "none",
+        position: "relative",
+      }}
+    >
+      {/* Hidden native checkbox */}
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={onChange}
+        style={{
+          position: "absolute",
+          opacity: 0,
+          width: 0,
+          height: 0,
+        }}
+      />
 
+      {/* Custom box */}
+      <div
+        style={{
+          width: "18px",
+          height: "18px",
+          border: checked ? "1px solid #518DE7" : "1px solid #d1d5db",
+          backgroundColor: checked ? "#518DE7" : "#ffffff",
+          borderRadius: "6px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          transition: "all 0.2s ease",
+          boxSizing: "border-box",
+        }}
+      >
+        {checked && <Check size={14} color="#ffffff" strokeWidth={3} />}
+      </div>
+    </label>
+  );
+};
 const scenarios: Scenario[] = [
-  { id: "got_married", label: "Got Married", description: "Change filing status to married filing jointly" },
+  {
+    id: "got_married",
+    label: "Got Married",
+    description: "Change filing status to married filing jointly",
+  },
   { id: "had_child", label: "Had a Child", description: "Add one dependent" },
-  { id: "received_raise", label: "Received a 10% Raise", description: "Increase annual salary by 10%" },
-  { id: "no_tax_state", label: "Moved to a No-Tax State", description: "Update home address to 77001" },
-  { id: "high_tax_state", label: "Moved to a High-Tax State", description: "Update home address to 94102" },
-  { id: "maxed_401k", label: "Maxed Out 401(k)", description: "Maximize 401(k) contributions" },
+  {
+    id: "received_raise",
+    label: "Received a 10% Raise",
+    description: "Increase annual salary by 10%",
+  },
+  {
+    id: "no_tax_state",
+    label: "Moved to a No-Tax State",
+    description: "Update home address to 77001",
+  },
+  {
+    id: "high_tax_state",
+    label: "Moved to a High-Tax State",
+    description: "Update home address to 94102",
+  },
+  {
+    id: "maxed_401k",
+    label: "Maxed Out 401(k)",
+    description: "Maximize 401(k) contributions",
+  },
 ];
 
 export const ScenarioCheckbox: React.FC<ScenarioCheckboxProps> = ({
   userId,
-setShowScenarios
+  setShowScenarios,
 }) => {
   const thread = useThreadRuntime();
   const [selectedScenarios, setSelectedScenarios] = useState<string[]>([]);
@@ -49,28 +118,29 @@ setShowScenarios
     fetchPayrollData();
   }, [userId]);
 
-const handleCheckboxChange = (scenarioId: string) => {
-  setSelectedScenarios((prev) => {
-    // Handle mutual exclusivity between no_tax_state and high_tax_state
-    if (scenarioId === "no_tax_state" || scenarioId === "high_tax_state") {
-      if (prev.includes(scenarioId)) {
-        // Uncheck the clicked one if it was already selected
-        return prev.filter((id) => id !== scenarioId);
+  const handleCheckboxChange = (scenarioId: string) => {
+    setSelectedScenarios((prev) => {
+      // Handle mutual exclusivity between no_tax_state and high_tax_state
+      if (scenarioId === "no_tax_state" || scenarioId === "high_tax_state") {
+        if (prev.includes(scenarioId)) {
+          // Uncheck the clicked one if it was already selected
+          return prev.filter((id) => id !== scenarioId);
+        }
+        // Remove the other state if selected, then add the current one
+        return [
+          ...prev.filter(
+            (id) => id !== "no_tax_state" && id !== "high_tax_state"
+          ),
+          scenarioId,
+        ];
       }
-      // Remove the other state if selected, then add the current one
-      return [
-        ...prev.filter((id) => id !== "no_tax_state" && id !== "high_tax_state"),
-        scenarioId,
-      ];
-    }
 
-    // Normal toggle for other scenarios
-    return prev.includes(scenarioId)
-      ? prev.filter((id) => id !== scenarioId)
-      : [...prev, scenarioId];
-  });
-};
-
+      // Normal toggle for other scenarios
+      return prev.includes(scenarioId)
+        ? prev.filter((id) => id !== scenarioId)
+        : [...prev, scenarioId];
+    });
+  };
 
   const generatePayloadForScenario = (scenarioId: string, basePayroll: any) => {
     const payload = { ...basePayroll };
@@ -128,23 +198,25 @@ const handleCheckboxChange = (scenarioId: string) => {
 
       // Update payroll data so MyModelAdapter can access it
       payrollData.payroll = modifiedPayroll;
-       
+
       // Simply append the user message - MyModelAdapter will detect the keyword
       // "Calculate taxes with:" and automatically call tax-calculate API
       thread.append({
         role: "user",
         content: [{ type: "text", text: userMessage }],
-         metadata: {
-              custom: {
-                loading: false,
-                streaming: true,
-                payrollData:payrollData,
-                isTaxCalculation:true
-              },
-            },
+        metadata: {
+          custom: {
+            loading: false,
+            streaming: true,
+            payrollData: payrollData,
+            isTaxCalculation: true,
+          },
+        },
       });
-      setShowScenarios(false)
-      console.log("✅ User message appended, MyModelAdapter will handle the rest");
+      setShowScenarios(false);
+      console.log(
+        "✅ User message appended, MyModelAdapter will handle the rest"
+      );
     } catch (error) {
       console.error("Error triggering scenario calculation:", error);
       setCalculating(false);
@@ -159,31 +231,46 @@ const handleCheckboxChange = (scenarioId: string) => {
 
   return (
     <div className="space-y-3 mt-4">
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-col flex-wrap gap-3">
         {scenarios.map((scenario) => {
           // const isStateScenario =
           //   scenario.id === "no_tax_state" || scenario.id === "high_tax_state";
-          
 
           return (
             <label
               key={scenario.id}
-              className="flex items-center space-x-3 gap-1 cursor-pointer p-3 rounded-lg border hover:bg-gray-50 transition-colors border-gray-200"
+              className="flex items-start space-x-3 gap-1 cursor-pointer rounded-lg hover:bg-gray-50 transition-colors"
+              style={{
+                border: "1px solid #e5e7eb",
+                paddingLeft: "12px",
+                paddingTop: "8px",
+                paddingBottom: "8px",
+                paddingRight: "12px",
+              }}
             >
-              <input
+              {/* <input
                 type="checkbox"
                 checked={selectedScenarios.includes(scenario.id)}
                 onChange={() => handleCheckboxChange(scenario.id)}
                 className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 accent-[#518DE7]"
+                style={{ position: "relative", top: "3px" }}
+              /> */}
+              <CustomCheckbox
+                checked={selectedScenarios.includes(scenario.id)}
+                onChange={() => handleCheckboxChange(scenario.id)}
               />
-              <div className="flex flex-col">
-                <span className="text-sm text-[#31333F] font-medium">
+              <div className="flex flex-col" style={{ marginLeft: "4px" }}>
+                <span
+                  className="text-sm text-[#31333F] font-medium"
+                  style={{ color: "#31333f" }}
+                >
                   {scenario.label}
                 </span>
-                <span className="text-xs text-gray-500">{scenario.description}</span>
+                <span className="text-xs text-gray-500">
+                  {scenario.description}
+                </span>
               </div>
             </label>
-
           );
         })}
       </div>
@@ -192,15 +279,17 @@ const handleCheckboxChange = (scenarioId: string) => {
         <button
           onClick={handleCalculate}
           disabled={selectedScenarios.length === 0 || calculating}
-          className={`flex-1 py-3 px-4 rounded-2xl font-medium text-center transition-colors 
-    ${selectedScenarios.length === 0 || calculating
-              ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-              : "bg-gray-200 text-gray-400hover:bg-gray-700"
-            }`}
+          className={`flex-1 py-3 px-4 rounded-2xl font-medium text-center transition-colors custom_btn 
+            
+    ${
+      selectedScenarios.length === 0 || calculating
+        ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+        : "bg-gray-200 text-gray-400 hover:bg-gray-700"
+    }`}
+          style={{ border: "1px solid #e5e7eb" }}
         >
           {calculating ? "Calculating..." : "Continue"}
         </button>
-
 
         {/* <button
           onClick={() => setSelectedScenarios([])}

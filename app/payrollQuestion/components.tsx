@@ -147,7 +147,12 @@ export const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
               {message.options && isLast && !isTyping && (
                 <div
                   className="mt-4 space-y-2"
-                  style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "10px" }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    flexWrap: "wrap",
+                    gap: "10px",
+                  }}
                 >
                   {message.options.map((option) => (
                     <button
@@ -160,8 +165,9 @@ export const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
                   ))}
                 </div>
               )}
-                 {typeof message.content === "object" &&
-                (message.content as MessageContent).selectType === "drop-down" &&
+              {typeof message.content === "object" &&
+                (message.content as MessageContent).selectType ===
+                  "drop-down" &&
                 isLast &&
                 !isTyping && (
                   <div className="mt-4">
@@ -181,10 +187,10 @@ export const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
                           e.target.value = "";
                         }
                       }}
-                      className="w-full px-4 py-3 bg-white border border-gray-300 h-10 rounded-2xl focus:outline-none focus:ring-0 outline-none text-gray-900"
+                      className="w-full px-4 py-1 bg-white border border-gray-300 h-10 rounded-2xl focus:outline-none focus:ring-0 outline-none text-gray-900"
                       defaultValue=""
                     >
-                      <option value="" disabled>
+                      <option value="" disabled hidden>
                         {(message.content as MessageContent).placeholder}
                       </option>
                       {(message.content as MessageContent).options?.map(
@@ -195,7 +201,6 @@ export const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
                         )
                       )}
                     </select>
-                  
                   </div>
                 )}
               {typeof message.content === "object" &&
@@ -376,7 +381,8 @@ export const TaxInputField: React.FC<TaxInputFieldProps> = ({
         // ZIP code validation if it looks like a ZIP
         if (/^\d{5}/.test(val)) {
           const zipRegex = /^\d{5}(-\d{4})?$/;
-          if (!zipRegex.test(val)) return "Please enter a valid ZIP code (e.g., 12345 or 12345-6789)";
+          if (!zipRegex.test(val))
+            return "Please enter a valid ZIP code (e.g., 12345 or 12345-6789)";
         }
         break;
     }
@@ -420,7 +426,8 @@ export const TaxInputField: React.FC<TaxInputFieldProps> = ({
     // Show real-time feedback for obvious errors
     if (newValue.trim()) {
       const error = validateInput(newValue, type);
-      if (error && newValue.length > 3) { // Only show after some input
+      if (error && newValue.length > 3) {
+        // Only show after some input
         setValidationError(error);
       }
     }
@@ -431,7 +438,9 @@ export const TaxInputField: React.FC<TaxInputFieldProps> = ({
 
   return (
     <div className="mt-4">
-      <div className={`focus-within:border-ring/20 flex w-full flex-wrap items-end rounded-full border ${borderColor} bg-inherit px-2.5 py-0 shadow-sm transition-colors ease-in gap-2 bg-white`}>
+      <div
+        className={`focus-within:border-ring/20 flex w-full flex-wrap items-end rounded-full border ${borderColor} bg-inherit px-2.5 py-0 shadow-sm transition-colors ease-in gap-2 bg-white`}
+      >
         <input
           ref={inputRef}
           type={type}
@@ -450,7 +459,9 @@ export const TaxInputField: React.FC<TaxInputFieldProps> = ({
             }
           }}
           min={type === "number" ? 0 : undefined}
-          max={type === "date" ? new Date().toISOString().split("T")[0] : undefined}
+          max={
+            type === "date" ? new Date().toISOString().split("T")[0] : undefined
+          }
           onChange={handleChange}
           onKeyPress={handleKeyPress}
           placeholder={placeholder}
@@ -469,11 +480,7 @@ export const TaxInputField: React.FC<TaxInputFieldProps> = ({
         </TooltipIconButton>
       </div>
       {hasError && (
-        <p
-          id="input-error"
-          className="mt-2 text-xs text-red-600"
-          role="alert"
-        >
+        <p id="input-error" className="mt-2 text-xs text-red-600" role="alert">
           {validationError}
         </p>
       )}
