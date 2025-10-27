@@ -30,7 +30,7 @@ export const getQuestionsToAsk = (
 
   // Salary or hourly questions - skip logic will handle which to show
   if (!prefilledData.annual_salary) questions.push("annual_salary");
-  if (!prefilledData.hourly_rate && prefilledData.income_type === "hourly") questions.push("hourly_rate");
+  if ((!prefilledData.hourly_rate ||prefilledData.hourly_rate===0)&& prefilledData.income_type === "hourly") questions.push("hourly_rate");
   if (!prefilledData.average_hours_per_week && prefilledData.income_type === "hourly") questions.push("average_hours_per_week");
   if (!prefilledData.seasonal_variation && prefilledData.income_type === "hourly") questions.push("seasonal_variation");
 

@@ -330,6 +330,8 @@ export const Thread: any = ({
                       onComplete={handleTaxChatbotComplete}
                       onContinueToChat={handleContinueToChat}
                       prefilledData={payrollData.payroll}
+                      allfillData={payrollData}
+                      
                       image={image}
                       companyLogo={companyLogo}
                       agentIntent={agentIntent as "tax_refund_calculation" | "tax_paycheck_calculation"}

@@ -121,6 +121,7 @@ export interface TaxChatbotProps {
   image?: string;
   companyLogo?: string;
   prefilledData?: Partial<TaxData>;
+  allfillData?:any;
   agentIntent?: "tax_refund_calculation" | "tax_paycheck_calculation";
 }
 

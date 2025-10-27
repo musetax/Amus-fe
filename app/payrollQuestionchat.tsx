@@ -35,6 +35,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
   onComplete,
   onContinueToChat,
   prefilledData = {},
+  allfillData={},
   image = "",
   companyLogo,
   agentIntent = "tax_refund_calculation", // Default to refund if not provided
@@ -42,6 +43,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
   const [questionsToAsk] = useState<StepType[]>(
     getQuestionsToAsk(prefilledData, agentIntent)
   );
+  console.log(prefilledData,"]]]]")
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
 
   const [formData, setFormData] = useState<FormData>({
@@ -78,8 +80,8 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
     pre_tax_deductions: prefilledData.pre_tax_deductions?.toString() || null,
     post_tax_deductions: prefilledData.post_tax_deductions?.toString() || null,
     // is_all_data_fill:true
-    "is_refund_data_fill": agentIntent === 'tax_refund_calculation' ? true : false,
-    "is_paycheck_data_fill": agentIntent === 'tax_paycheck_calculation' ? true : false,
+    "is_refund_data_fill": agentIntent === 'tax_refund_calculation' ? true : allfillData.is_refund_data_fill,
+    "is_paycheck_data_fill": agentIntent === 'tax_paycheck_calculation' ? true : allfillData.is_paycheck_data_fill,
   });
 
   const [currentStep, setCurrentStep] = useState<StepType>(
@@ -484,8 +486,8 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
           ? Number(formData.post_tax_deductions)
           : undefined,
         // is_all_data_fill:true
-        "is_refund_data_fill": agentIntent === 'tax_refund_calculation' ? true : false,
-        "is_paycheck_data_fill": agentIntent === 'tax_paycheck_calculation' ? true : false,
+        "is_refund_data_fill": agentIntent === 'tax_refund_calculation' ? true : formData.is_refund_data_fill,
+        "is_paycheck_data_fill": agentIntent === 'tax_paycheck_calculation' ? true : formData.is_paycheck_data_fill,
 
         // },
       };

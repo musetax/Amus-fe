@@ -116,7 +116,7 @@ const handleCheckboxChange = (scenarioId: string) => {
       .join(", ");
 
     // const userMessage = `Calculate taxes with: ${scenarioLabels}`;
-    const userMessage=`calculate My paycheck`
+    const userMessage=`calcualte my paycheck with updated values`
     console.log("🚀 Triggering scenario calculation for:", scenarioLabels);
 
     try {
