@@ -52,7 +52,7 @@ export const MyModelAdapter = (
           const modifiedPayroll = payrollData.payroll;
 
           payload = {
-            message: "calculate my tax",
+            message: "calcualte my paycheck with updated values",
             session_id: sessionId,
             user_id: userId,
             user_intent: agentIntent,

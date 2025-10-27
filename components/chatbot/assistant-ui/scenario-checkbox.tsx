@@ -158,10 +158,12 @@ export const ScenarioCheckbox: React.FC<ScenarioCheckboxProps> = ({
         if (payload.salary) payload.salary = Math.round(payload.salary * 1.1);
         break;
       case "no_tax_state":
-        payload.home_address = "73301";
+        payload.home_address = "77001";
+        payload.work_address=="77001"
         break;
       case "high_tax_state":
         payload.home_address = "94102";
+        payload.work_address="94102"
         break;
       case "maxed_401k":
         const age = payload.age || 0;
