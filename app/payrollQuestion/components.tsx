@@ -318,8 +318,6 @@ export const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
                         currentStep === "deductions" ||
                         currentStep === "dependents" ||
                         currentStep === "start_pay_date" ||
-                        currentStep === "work_address" ||
-                        currentStep === "home_address" ||
                         currentStep === "current_date" ||
                         currentStep === "pre_tax_deductions" ||
                         currentStep === "post_tax_deductions") && (
