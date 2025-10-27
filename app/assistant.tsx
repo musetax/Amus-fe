@@ -32,10 +32,9 @@ function Assistant() {
   const [currentSessionId, setCurrentSessionId] = useState<string | undefined>();
   const [currentUserId, setCurrentUserId] = useState<string | undefined>();
 
-  const [payrollData, setPayrollData] = useState<any|null>(null);
+  const [payrollData, setPayrollData] = useState<any | null>(null);
   const [showTaxChatbot, setShowTaxChatbot] = useState(false);
   const [isLoadingPayroll, setIsLoadingPayroll] = useState(false);
-
   // Agent intent state management
   const [agentIntent, setAgentIntent] = useState<AgentIntent>(null);
   const [showHomeScreen, setShowHomeScreen] = useState(true);
@@ -44,15 +43,15 @@ function Assistant() {
   const [showLifeEventsScreen, setShowLifeEventsScreen] = useState(false);
   const [showLifeEventsForm, setShowLifeEventsForm] = useState(false);
   const [selectedLifeEventCategory, setSelectedLifeEventCategory] = useState<LifeEventCategory>(null);
-console.log("agentintent",agentIntent)
+  console.log("agentintent", agentIntent)
   const searchParams = useSearchParams();
   const sessionId: any = searchParams.get("session_id");
   const userId: any = searchParams.get("user_id")
   const access_token: any = searchParams.get("access_token");
   const user_image: any = searchParams.get("user_image")
   const companyLogo: any = searchParams.get("company_logo")
-  const clientId:any=searchParams.get("client_id")
-  const clientSecret:any=searchParams.get("client_secret")
+  const clientId: any = searchParams.get("client_id")
+  const clientSecret: any = searchParams.get("client_secret")
 
   // const refresh_access_token: any = params.get("refresh_token");
   const [globalError, setGlobalError] = useState<string | null>(null);
@@ -64,8 +63,8 @@ console.log("agentintent",agentIntent)
   if (user_image) {
     localStorage.setItem("image", user_image)
   }
-  if(clientId) localStorage.setItem("clientId",clientId)
-  if(clientSecret)localStorage.setItem("clientSecret",clientSecret)  
+  if (clientId) localStorage.setItem("clientId", clientId)
+  if (clientSecret) localStorage.setItem("clientSecret", clientSecret)
 
   console.log(currentUserId)
   useEffect(() => {
@@ -117,7 +116,7 @@ console.log("agentintent",agentIntent)
         setShowHomeScreen(false);
       } finally {
         setIsLoadingPayroll(false);
-      
+
       }
     }
     if (!globalError && userId) {
@@ -176,25 +175,23 @@ console.log("agentintent",agentIntent)
       setShowLifeEventsForm(false);
     } else if (intent === "tax_refund_calculation" || intent === "tax_paycheck_calculation") {
       // Show question flow first
-      if(intent === "tax_refund_calculation"&&!payrollData?.is_refund_data_fill)
-      {
-         setShowHomeScreen(false);
-      setShowTaxChatbot(true);
-      setShowLifeEventsScreen(false);
-      setShowLifeEventsForm(false);
+      if (intent === "tax_refund_calculation" && !payrollData?.is_refund_data_fill) {
+        setShowHomeScreen(false);
+        setShowTaxChatbot(true);
+        setShowLifeEventsScreen(false);
+        setShowLifeEventsForm(false);
       }
-      else if(intent === "tax_paycheck_calculation"&&!payrollData?.is_paycheck_data_fill)
-      {
-         setShowHomeScreen(false);
-      setShowTaxChatbot(true);
-      setShowLifeEventsScreen(false);
-      setShowLifeEventsForm(false);
+      else if (intent === "tax_paycheck_calculation" && !payrollData?.is_paycheck_data_fill) {
+        setShowHomeScreen(false);
+        setShowTaxChatbot(true);
+        setShowLifeEventsScreen(false);
+        setShowLifeEventsForm(false);
       }
-      else{
-      setShowHomeScreen(false);
-      setShowTaxChatbot(false);
-      setShowLifeEventsScreen(false);
-      setShowLifeEventsForm(false);
+      else {
+        setShowHomeScreen(false);
+        setShowTaxChatbot(false);
+        setShowLifeEventsScreen(false);
+        setShowLifeEventsForm(false);
       }
     } else if (intent === "life_events_update") {
       // Show life events category selection
@@ -291,7 +288,13 @@ console.log("agentintent",agentIntent)
   }), [history]);
 
   const learnRuntime = useLocalThreadRuntime(
-    MyModelAdapter(userId, setTyping, currentSessionId, setGlobalError, agentIntent, payrollData),
+    MyModelAdapter(
+  userId,
+  setTyping,
+  currentSessionId,
+  setGlobalError,
+  agentIntent
+),
     runtimeOptions
   );
 
@@ -388,6 +391,7 @@ console.log("agentintent",agentIntent)
               onBackToLifeEventsCategories={handleBackToLifeEventsCategories}
               onSaveLifeEvents={handleSaveLifeEvents}
               agentIntent={agentIntent}
+           
             />
           </div>
         </div>

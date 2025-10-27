@@ -70,7 +70,7 @@ export const Thread: any = ({
   onSelectLifeEventCategory,
   onBackToLifeEventsCategories,
   onSaveLifeEvents,
-  agentIntent,
+  agentIntent
 }: any) => {
   console.log(showHomeScreen, "jknjkdw");
   const { messages } = useThread();
@@ -117,6 +117,7 @@ export const Thread: any = ({
   // Check if we should show the tax chatbot based on props
   // const shouldShowTaxChatbot = messages.length === 0 && showTaxChatbot;
   const shouldShowTaxChatbot = showTaxChatbot;
+  const [showScenarios, setShowScenarios] = useState(false);
 
   return (
     <>
@@ -360,6 +361,9 @@ export const Thread: any = ({
                               userId={userId}
                               sessionId={sessionId}
                               agentIntent={agentIntent}
+                              showScenarios={showScenarios}
+                              setShowScenarios={setShowScenarios}
+                             
                             />
                           ),
                         }}
@@ -369,7 +373,7 @@ export const Thread: any = ({
                         <div className="min-h-8 flex-grow" />
                       </ThreadPrimitive.If>
                       <div className="mt-3 p-4 flex w-full flex-col items-stretch justify-center gap-2">
-                        {suggestions.map((s, i) => (
+                        {!showScenarios && suggestions.map((s, i) => (
                           <ThreadPrimitive.Suggestion
                             key={i}
                             prompt={s}
@@ -696,7 +700,10 @@ const AssistantMessage: React.FC<any> = ({
   onReturnToHome,
   userId,
   sessionId,
-  agentIntent
+  agentIntent,
+  showScenarios,
+  setShowScenarios,
+
 }) => {
   const message = useMessage();
   const { messages } = useThread();
@@ -709,7 +716,7 @@ const AssistantMessage: React.FC<any> = ({
   const refundCalculated = message?.metadata?.custom?.refundCalculated;
   const paycheckCalculated = message?.metadata?.custom?.paycheckCalculated;
   const [showUrls, setShowUrls] = useState(false);
-  const [showScenarios, setShowScenarios] = useState(false);
+  // const [showScenarios, setShowScenarios] = useState(false);
 
   // Check if this is the last assistant message
   const assistantMessages = messages.filter(
@@ -724,16 +731,16 @@ const AssistantMessage: React.FC<any> = ({
   );
 
   // Debug logging for scenario button
-  console.log("🔍 AssistantMessage metadata:", {
-    messageId,
-    refundCalculated,
-    paycheckCalculated,
-    agentIntent,
-    isLastMessage,
-    isStreaming,
-    isMessageLoading,
-    metadata: message?.metadata?.custom
-  });
+  // console.log("🔍 AssistantMessage metadata:", {
+  //   messageId,
+  //   refundCalculated,
+  //   paycheckCalculated,
+  //   agentIntent,
+  //   isLastMessage,
+  //   isStreaming,
+  //   isMessageLoading,
+  //   metadata: message?.metadata?.custom
+  // });
 
   return (
     <div
@@ -900,7 +907,7 @@ const AssistantMessage: React.FC<any> = ({
         !isMessageLoading &&
         isLastMessage &&
         (paycheckCalculated) &&
-        ( agentIntent === "tax_paycheck_calculation") &&
+        (agentIntent === "tax_paycheck_calculation") &&
         !showScenarios && (
           <div style={{ marginTop: "12px", marginLeft: "32px" }}>
             <button
@@ -959,7 +966,7 @@ const AssistantMessage: React.FC<any> = ({
       {!isAnyMessageStreaming &&
         !isMessageLoading &&
         isLastMessage &&
-        ( paycheckCalculated) &&
+        (paycheckCalculated) &&
         (agentIntent === "tax_paycheck_calculation") &&
         showScenarios && (
           <div style={{ marginTop: "12px", marginLeft: "32px", maxWidth: "600px" }}>
@@ -967,6 +974,7 @@ const AssistantMessage: React.FC<any> = ({
               userId={userId}
               sessionId={sessionId}
               agentIntent={agentIntent}
+              setShowScenarios={setShowScenarios}
             />
           </div>
         )}

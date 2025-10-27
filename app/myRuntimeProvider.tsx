@@ -13,7 +13,6 @@ export const MyModelAdapter = (
   sessionId?: string,
   setGlobalError?: (message: string | null) => void,
   agentIntent?: AgentIntent,
-  payrollData?: PayrollData
 ): any => ({
   async *run({ messages }: any) {
     setTyping(true);
@@ -31,12 +30,16 @@ export const MyModelAdapter = (
       }
 
       const lastUserText = messages[messages.length - 1].content[0]?.text || "";
+      const isTaxCalculation=messages[messages.length-1]?.metadata?.custom?.isTaxCalculation||false
+      const payrollData=messages[messages.length-1]?.metadata?.custom?.payrollData||{}
       const AUTH_API_URL = process.env.NEXT_PUBLIC_BACKEND_API;
 
       // Check if message contains scenario calculation keyword
-      const isTaxCalculation = lastUserText.toLowerCase().includes("calculate taxes with:");
+      // const isTaxCalculation = lastUserText.toLowerCase().includes("calculate taxes with:");
 
       // Determine which API to call
+      console.log(isTaxCalculation,"][][[[[[[[[[[[[[[[[[[")
+      console.log(isTaxCalculation ? "tax-calculate" : "chat","][][[[[[[[[[[[[[[[[[[")
       const apiEndpoint = isTaxCalculation ? "tax-calculate" : "chat";
 
       console.log(`🔄 MyModelAdapter calling: /${apiEndpoint} for message: "${lastUserText.substring(0, 50)}..."`);

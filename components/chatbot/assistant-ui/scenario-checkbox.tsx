@@ -8,7 +8,9 @@ interface ScenarioCheckboxProps {
   userId: string;
   sessionId: string;
   agentIntent: "tax_refund_calculation" | "tax_paycheck_calculation";
+  setShowScenarios:(value:boolean)=>void;
 }
+
 
 interface Scenario {
   id: string;
@@ -20,8 +22,8 @@ const scenarios: Scenario[] = [
   { id: "got_married", label: "Got Married", description: "Change filing status to married filing jointly" },
   { id: "had_child", label: "Had a Child", description: "Add one dependent" },
   { id: "received_raise", label: "Received a 10% Raise", description: "Increase annual salary by 10%" },
-  { id: "no_tax_state", label: "Moved to a No-Tax State", description: "Update home address to 73301" },
-  { id: "high_tax_state", label: "Moved to a High-Tax State", description: "Update home address to 90001" },
+  { id: "no_tax_state", label: "Moved to a No-Tax State", description: "Update home address to 77001" },
+  { id: "high_tax_state", label: "Moved to a High-Tax State", description: "Update home address to 94102" },
   { id: "maxed_401k", label: "Maxed Out 401(k)", description: "Maximize 401(k) contributions" },
 ];
 
@@ -29,6 +31,7 @@ export const ScenarioCheckbox: React.FC<ScenarioCheckboxProps> = ({
   userId,
   sessionId,
   agentIntent,
+setShowScenarios
 }) => {
   const thread = useThreadRuntime();
   const [selectedScenarios, setSelectedScenarios] = useState<string[]>([]);
@@ -90,12 +93,12 @@ const handleCheckboxChange = (scenarioId: string) => {
         payload.home_address = "73301";
         break;
       case "high_tax_state":
-        payload.home_address = "90001";
+        payload.home_address = "94102";
         break;
       case "maxed_401k":
         const age = payload.age || 0;
         const maxContribution = age >= 50 ? 30500 : 23000;
-        payload.pre_tax_deductions = (payload.pre_tax_deductions || 0) + maxContribution;
+        payload.pre_tax_deductions = maxContribution;
         break;
     }
 
@@ -114,8 +117,8 @@ const handleCheckboxChange = (scenarioId: string) => {
       .filter(Boolean)
       .join(", ");
 
-    const userMessage = `Calculate taxes with: ${scenarioLabels}`;
-
+    // const userMessage = `Calculate taxes with: ${scenarioLabels}`;
+    const userMessage=`calculate My paycheck`
     console.log("🚀 Triggering scenario calculation for:", scenarioLabels);
 
     try {
@@ -127,14 +130,22 @@ const handleCheckboxChange = (scenarioId: string) => {
 
       // Update payroll data so MyModelAdapter can access it
       payrollData.payroll = modifiedPayroll;
-
+       
       // Simply append the user message - MyModelAdapter will detect the keyword
       // "Calculate taxes with:" and automatically call tax-calculate API
       thread.append({
         role: "user",
         content: [{ type: "text", text: userMessage }],
+         metadata: {
+              custom: {
+                loading: false,
+                streaming: true,
+                payrollData:payrollData,
+                isTaxCalculation:true
+              },
+            },
       });
-
+      setShowScenarios(false)
       console.log("✅ User message appended, MyModelAdapter will handle the rest");
     } catch (error) {
       console.error("Error triggering scenario calculation:", error);
