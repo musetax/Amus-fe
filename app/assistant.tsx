@@ -287,7 +287,7 @@ function Assistant() {
     },
   }), [history]);
 
-  const learnRuntime = useLocalThreadRuntime(
+  const paycheck=useLocalThreadRuntime(
     MyModelAdapter(
   userId,
   setTyping,
@@ -297,6 +297,37 @@ function Assistant() {
 ),
     runtimeOptions
   );
+  const refund=useLocalThreadRuntime(
+    MyModelAdapter(
+  userId,
+  setTyping,
+  currentSessionId,
+  setGlobalError,
+  agentIntent
+),
+    runtimeOptions
+  );
+  const normalChat=useLocalThreadRuntime(
+    MyModelAdapter(
+  userId,
+  setTyping,
+  currentSessionId,
+  setGlobalError,
+  agentIntent
+),
+    runtimeOptions
+  );
+//   const learnRuntime = useLocalThreadRuntime(
+//     MyModelAdapter(
+//   userId,
+//   setTyping,
+//   currentSessionId,
+//   setGlobalError,
+//   agentIntent
+// ),
+//     runtimeOptions
+//   );
+const learnRuntime=agentIntent==='tax_education'?normalChat:agentIntent==='tax_paycheck_calculation'?paycheck:refund
 
   // Manually load and import history when agentIntent changes
   // This is necessary because the automatic history loading might not trigger properly on intent change
