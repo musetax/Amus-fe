@@ -371,7 +371,7 @@ export const Thread: any = ({
                             <AssistantMessage
                               {...props}
                               companyLogo={companyLogo}
-                              onReturnToHome={onReturnToHome}
+                              // onReturnToHome={onReturnToHome}
                               userId={userId}
                               sessionId={sessionId}
                               agentIntent={agentIntent}
@@ -712,7 +712,7 @@ const UserActionBar: FC = () => {
 
 const AssistantMessage: React.FC<any> = ({
   companyLogo,
-  onReturnToHome,
+  // onReturnToHome,
   userId,
   sessionId,
   agentIntent,
