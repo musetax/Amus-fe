@@ -95,7 +95,7 @@ export const SummarySection: React.FC<SummarySectionProps> = ({
           )}
 
           {/* Average Hours Per Week */}
-          {formData.average_hours_per_week && (
+          {formData.average_hours_per_week && formData.income_type === "hourly"&& (
             <SummaryCard
               icon={Calendar}
               title="Avg Hours/Week"
@@ -105,7 +105,7 @@ export const SummarySection: React.FC<SummarySectionProps> = ({
           )}
 
           {/* Seasonal Variation */}
-          {formData.seasonal_variation && (
+          {formData.seasonal_variation&& formData.income_type === "hourly" && (
             <SummaryCard
               icon={Calendar}
               title="Seasonal Variation"

@@ -390,12 +390,12 @@ const scenarios: Scenario[] = [
   {
     id: "no_tax_state",
     label: "Moved to a No-Tax State",
-    description: "Update home address to 77001",
+    description: "Low State Taxes like Florida, Texas,Nevada,etc",
   },
   {
     id: "high_tax_state",
     label: "Moved to a High-Tax State",
-    description: "Update home address to 94102",
+    description: "High State States like California,New Jersey,New York,etc",
   },
   {
     id: "maxed_401k",
