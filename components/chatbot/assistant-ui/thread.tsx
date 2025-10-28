@@ -493,6 +493,7 @@ const formatTime = (date: Date | string | number) => {
       hour: "2-digit",
       minute: "2-digit",
       hour12: true,
+      timeZone: "UTC",
     })
     .replace("AM", "AM")
     .replace("PM", "PM");
