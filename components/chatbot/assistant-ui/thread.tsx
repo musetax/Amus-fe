@@ -486,18 +486,18 @@ const ThreadWelcome: FC = () => {
 //   );
 // };
 
-const formatTime = (date: Date | string | number) => {
+export const formatTime = (date: Date | string | number): string => {
   const d = new Date(date);
   return d
-    .toLocaleTimeString("en-US", {
+    .toLocaleTimeString(undefined, {
       hour: "2-digit",
       minute: "2-digit",
       hour12: true,
-      timeZone: "UTC",
     })
-    .replace("AM", "AM")
-    .replace("PM", "PM");
+    .replace(/\bam\b/i, "AM")
+    .replace(/\bpm\b/i, "PM");
 };
+
 
 const ThreadScrollToBottom: FC = () => {
   return (
