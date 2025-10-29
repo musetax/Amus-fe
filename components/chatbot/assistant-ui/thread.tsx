@@ -500,7 +500,7 @@ const ThreadWelcome: FC<any> = (
     // This sends a message into the assistant thread
     thread.append({
       role: "user",
-      content: [{ type: "text", text: `I want to calculate my ${agentIntent === "tax_paycheck_calculation" ? "paycheck" : "tax"}` }],
+      content: [{ type: "text", text: `Let’s begin calculating my ${agentIntent === "tax_paycheck_calculation" ? "paycheck" : "tax"}` }],
     });
   };
   return (
