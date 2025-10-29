@@ -29,6 +29,8 @@ export const CustomCheckbox: React.FC<CustomCheckboxProps> = ({
   checked,
   onChange,
 }) => {
+  const isRadioStyle = type === "radio"; // just controls visuals
+
   return (
     <label
       style={{
@@ -38,11 +40,15 @@ export const CustomCheckbox: React.FC<CustomCheckboxProps> = ({
         userSelect: "none",
         position: "relative",
       }}
+      onClick={(e) => {
+        e.preventDefault(); // prevent default radio locking behavior
+        onChange(); // always toggle
+      }}
     >
       <input
-        type={type}
+        type="checkbox" // ✅ Always checkbox for toggle behavior
         checked={checked}
-        onChange={onChange}
+        onChange={() => {}} // ignore native event
         style={{
           position: "absolute",
           opacity: 0,
@@ -57,7 +63,7 @@ export const CustomCheckbox: React.FC<CustomCheckboxProps> = ({
           height: "18px",
           border: checked ? "1px solid #518DE7" : "1px solid #d1d5db",
           backgroundColor: checked ? "#518DE7" : "#ffffff",
-          borderRadius: type === "radio" ? "50%" : "6px", // ✅ circular for radio
+          borderRadius: isRadioStyle ? "50%" : "6px", // ✅ visual style
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -65,10 +71,10 @@ export const CustomCheckbox: React.FC<CustomCheckboxProps> = ({
           boxSizing: "border-box",
         }}
       >
-        {checked && type === "checkbox" && (
+        {checked && !isRadioStyle && (
           <Check size={14} color="#ffffff" strokeWidth={3} />
         )}
-        {checked && type === "radio" && (
+        {checked && isRadioStyle && (
           <div
             style={{
               width: "8px",
@@ -82,6 +88,7 @@ export const CustomCheckbox: React.FC<CustomCheckboxProps> = ({
     </label>
   );
 };
+
 
 const scenarios: Scenario[] = [
   {
@@ -207,7 +214,7 @@ export const ScenarioCheckbox: React.FC<ScenarioCheckboxProps> = ({
     setCalculating(true);
     setCompleted(true);
 
-    const userMessage = `calcualte my paycheck with updated values`;
+    const userMessage = `calculate my paycheck with updated values`;
 
     try {
       let modifiedPayroll = {
@@ -243,7 +250,10 @@ export const ScenarioCheckbox: React.FC<ScenarioCheckboxProps> = ({
   if (completed) return null;
 
   return (
-    <div className="space-y-3 mt-4">
+    <div className="space-y-4 mt-4">
+        <p className="text-large text-black">
+    Please choose what suits you best.
+  </p>
       <div className="flex flex-col flex-wrap gap-3">
         {scenarios.map((scenario) => {
           const isStateOption =

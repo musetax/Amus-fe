@@ -412,7 +412,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       </div>
 
       {/* Footer Text */}
-      <p
+      {/* <p
         style={{
           fontSize: "12px",
           color: "#a0aec0",
@@ -423,7 +423,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       >
         Need help? Our AI-powered assistant is here to guide you through every
         step
-      </p>
+      </p> */}
     </div>
   );
 };
