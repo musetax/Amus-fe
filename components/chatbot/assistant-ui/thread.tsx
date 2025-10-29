@@ -6,6 +6,7 @@ import {
   TextContentPartComponent,
   ThreadPrimitive,
   useMessage,
+  useThreadRuntime,
 } from "@assistant-ui/react";
 import { useEffect, useRef, useState, type FC } from "react";
 import {
@@ -132,151 +133,151 @@ export const Thread: any = ({
             className="bg-[#255be305] overflow-hidden rounded-xl as"
             style={{ maxHeight: "935px", position: "sticky", top: "0" }}
           >
-           <div
-  style={{
-    backgroundImage:
-      "url(https://i.postimg.cc/5y3yqfhC/chat-Header-Bglatest.png)",
-    backgroundSize: "100% 140px",
-    backgroundColor: "#255be305",
-    backgroundRepeat: "no-repeat",
-    borderTopLeftRadius: "8px",
-    borderTopRightRadius: "8px",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    flexWrap: "wrap", // ✅ allows wrapping on small screens
-    backgroundPosition: "bottom",
-    width: "100%",
-    padding: "20px 16px 60px",
-    position: "relative",
-    gap: "12px",
-  }}
->
-  {/* LEFT: Logo */}
-  <div
-    style={{
-      display: "flex",
-      alignItems: "center",
-      gap: "10px",
-      flexShrink: 0,
-    }}
-  >
-    <span
-      style={{
-        width: "48px",
-        height: "48px",
-        backgroundColor: "#ffffff",
-        borderRadius: "50%",
-        padding: "4px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      {companyLogo ? (
-        <Image src={companyLogo} width={60} height={41} alt="Company Logo" />
-      ) : (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="60"
-          height="41"
-          viewBox="0 0 60 41"
-          fill="none"
-        >
-          {/* your existing svg paths */}
-        </svg>
-      )}
-    </span>
-  </div>
+            <div
+              style={{
+                backgroundImage:
+                  "url(https://i.postimg.cc/5y3yqfhC/chat-Header-Bglatest.png)",
+                backgroundSize: "100% 140px",
+                backgroundColor: "#255be305",
+                backgroundRepeat: "no-repeat",
+                borderTopLeftRadius: "8px",
+                borderTopRightRadius: "8px",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                flexWrap: "wrap", // ✅ allows wrapping on small screens
+                backgroundPosition: "bottom",
+                width: "100%",
+                padding: "20px 16px 60px",
+                position: "relative",
+                gap: "12px",
+              }}
+            >
+              {/* LEFT: Logo */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  flexShrink: 0,
+                }}
+              >
+                <span
+                  style={{
+                    width: "48px",
+                    height: "48px",
+                    backgroundColor: "#ffffff",
+                    borderRadius: "50%",
+                    padding: "4px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  {companyLogo ? (
+                    <Image src={companyLogo} width={60} height={41} alt="Company Logo" />
+                  ) : (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="60"
+                      height="41"
+                      viewBox="0 0 60 41"
+                      fill="none"
+                    >
+                      {/* your existing svg paths */}
+                    </svg>
+                  )}
+                </span>
+              </div>
 
-  {/* MIDDLE: Title */}
-  <div
-    style={{
-      display: "flex",
-      flexDirection: "column",
-      flex: 1,
-      minWidth: "200px",
-    }}
-  >
-    <h3
-      style={{
-        color: "#ffffff",
-        fontSize: "18px",
-        fontWeight: "600",
-        margin: 0,
-      }}
-    >
-      How Can I Help You Today?
-    </h3>
-    <p
-      style={{
-        color: "#ffffff",
-        fontSize: "14px",
-        fontWeight: "normal",
-        margin: "4px 0 0 0",
-      }}
-    >
-      We typically reply in a few minutes
-    </p>
-  </div>
+              {/* MIDDLE: Title */}
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  flex: 1,
+                  minWidth: "200px",
+                }}
+              >
+                <h3
+                  style={{
+                    color: "#ffffff",
+                    fontSize: "18px",
+                    fontWeight: "600",
+                    margin: 0,
+                  }}
+                >
+                  How Can I Help You Today?
+                </h3>
+                <p
+                  style={{
+                    color: "#ffffff",
+                    fontSize: "14px",
+                    fontWeight: "normal",
+                    margin: "4px 0 0 0",
+                  }}
+                >
+                  We typically reply in a few minutes
+                </p>
+              </div>
 
-  {/* RIGHT: Home Button */}
-  {!showHomeScreen&&<div
-    style={{
-      display: "flex",
-      justifyContent: "flex-end",
-      flexShrink: 0,
-      width: "auto",
-    }}
-  >
-    <button
-      onClick={onReturnToHome}
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: "8px",
-        padding: "10px 20px",
-        fontSize: "14px",
-        fontWeight: "500",
-        color: "#ffffff",
-        background:
-          "linear-gradient(90deg, #69DEC6 0%, #49C2D4 50%, #1595EA 100%)",
-        border: "none",
-        borderRadius: "24px",
-        cursor: "pointer",
-        transition: "all 0.2s ease-in-out",
-        boxShadow: "0 2px 8px rgba(21, 149, 234, 0.2)",
-        whiteSpace: "nowrap",
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = "scale(1.02)";
-        e.currentTarget.style.boxShadow =
-          "0 4px 12px rgba(21, 149, 234, 0.3)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = "scale(1)";
-        e.currentTarget.style.boxShadow =
-          "0 2px 8px rgba(21, 149, 234, 0.2)";
-      }}
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-        <polyline points="9 22 9 12 15 12 15 22" />
-      </svg>
-      {/* Return Home */}
-    </button>
-  </div>}
-</div>
+              {/* RIGHT: Home Button */}
+              {!showHomeScreen && <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  flexShrink: 0,
+                  width: "auto",
+                }}
+              >
+                <button
+                  onClick={onReturnToHome}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    padding: "10px 20px",
+                    fontSize: "14px",
+                    fontWeight: "500",
+                    color: "#ffffff",
+                    background:
+                      "linear-gradient(90deg, #69DEC6 0%, #49C2D4 50%, #1595EA 100%)",
+                    border: "none",
+                    borderRadius: "24px",
+                    cursor: "pointer",
+                    transition: "all 0.2s ease-in-out",
+                    boxShadow: "0 2px 8px rgba(21, 149, 234, 0.2)",
+                    whiteSpace: "nowrap",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = "scale(1.02)";
+                    e.currentTarget.style.boxShadow =
+                      "0 4px 12px rgba(21, 149, 234, 0.3)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "scale(1)";
+                    e.currentTarget.style.boxShadow =
+                      "0 2px 8px rgba(21, 149, 234, 0.2)";
+                  }}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                  </svg>
+                  {/* Return Home */}
+                </button>
+              </div>}
+            </div>
 
 
             {loadingHistory ? (
@@ -342,7 +343,7 @@ export const Thread: any = ({
                       onContinueToChat={handleContinueToChat}
                       prefilledData={payrollData.payroll}
                       allfillData={payrollData}
-                      
+
                       image={image}
                       companyLogo={companyLogo}
                       agentIntent={agentIntent as "tax_refund_calculation" | "tax_paycheck_calculation"}
@@ -350,7 +351,7 @@ export const Thread: any = ({
                   </div>
                 ) : (
                   <>
-                   
+
                     <ThreadPrimitive.Viewport
                       style={{
                         height: "calc(100vh - 210px)",
@@ -359,7 +360,7 @@ export const Thread: any = ({
                       }}
                       className="flex flex-col items-center chat-scroll overflow-y-scroll scroll-smooth bg-inherit pr-0 pl-3 pt-0"
                     >
-                      <ThreadWelcome />
+                      <ThreadWelcome agentIntent={agentIntent} />
 
                       <ThreadPrimitive.Messages
                         components={{
@@ -377,7 +378,7 @@ export const Thread: any = ({
                               agentIntent={agentIntent}
                               showScenarios={showScenarios}
                               setShowScenarios={setShowScenarios}
-                             
+
                             />
                           ),
                         }}
@@ -386,7 +387,7 @@ export const Thread: any = ({
                       <ThreadPrimitive.If empty={false}>
                         <div className="min-h-8 flex-grow" />
                       </ThreadPrimitive.If>
-                      <div className="mt-3 p-4 flex w-full flex-col items-stretch justify-center gap-2">
+                      <div className="mt-3 p-4 flex w-full flex-col items-center justify-center gap-2">
                         {!showScenarios && suggestions.map((s, i) => (
                           <ThreadPrimitive.Suggestion
                             key={i}
@@ -419,7 +420,19 @@ export const Thread: any = ({
 };
 
 // Modified ThreadWelcome to handle the transition case
-const ThreadWelcome: FC = () => {
+const ThreadWelcome: FC<any> = (
+  {
+    agentIntent
+  }
+) => {
+  const thread = useThreadRuntime();
+  const handleCalculateClick = async () => {
+    // This sends a message into the assistant thread
+    thread.append({
+      role: "user",
+      content: [{ type: "text", text: `I want to calculate my ${agentIntent === "tax_paycheck_calculation" ? "paycheck" : "tax"}` }],
+    });
+  };
   return (
     <ThreadPrimitive.Empty>
       <div className="flex w-full max-w-[var(--thread-max-width)] flex-grow flex-col px-4">
@@ -451,6 +464,23 @@ const ThreadWelcome: FC = () => {
               need to update your profile after a life event? Don’t worry Uncle
               Sam is here to help!
             </p>
+            {(agentIntent === "tax_paycheck_calculation" || agentIntent === "tax_refund_calculation") && <div className="flex justify-center mt-6">
+              <button
+                onClick={handleCalculateClick}
+                className="px-6 py-2 rounded-full font-medium text-white shadow-md transition-all"
+                style={{
+                  backgroundColor: "rgb(81, 141, 231)",
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.backgroundColor = "rgb(65, 120, 210)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.backgroundColor = "rgb(81, 141, 231)")
+                }
+              >
+                Calculate My Taxes
+              </button>
+            </div>}
           </div>
         </div>
         {/* <ThreadWelcomeSuggestions /> */}
