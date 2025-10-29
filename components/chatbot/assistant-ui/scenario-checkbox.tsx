@@ -103,12 +103,12 @@ const scenarios: Scenario[] = [
   {
     id: "no_tax_state",
     label: "Moved to a No-Tax State",
-    description: "Low State Taxes like Florida, Texas, Nevada, etc.",
+    description: "Low State Taxes (ex: Florida, Texas, Nevada, etc.)",
   },
   {
     id: "high_tax_state",
     label: "Moved to a High-Tax State",
-    description: "High State Taxes like California, New Jersey, New York, etc.",
+    description: "High State Taxes (ex:California, New Jersey, New York, etc.)",
   },
 ];
 

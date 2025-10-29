@@ -44,7 +44,7 @@ export const SummarySection: React.FC<SummarySectionProps> = ({
               value={
                 formData.filing_status === "married_joint"
                   ? "Married"
-                  : formData.filing_status.charAt(0).toUpperCase() +
+                  :formData.filing_status === "head_of_household"?"Head of household": formData.filing_status.charAt(0).toUpperCase() +
                     formData.filing_status.slice(1)
               }
               color="bg-gradient-to-r from-purple-600 to-purple-400"
