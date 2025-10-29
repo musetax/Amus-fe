@@ -288,8 +288,14 @@ export const ScenarioCheckbox: React.FC<ScenarioCheckboxProps> = ({
                         const val = e.target.value;
                         if (/^\d*$/.test(val)) setSpouseIncome(val);
                       }}
+                       onWheel={(e) => e.currentTarget.blur()} 
+
                       className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition-all"
                       min="0"
+                      style={{
+                        WebkitAppearance: "none",
+                        MozAppearance: "textfield",
+                      }}
                     />
                   </div>
                 )}
@@ -303,11 +309,10 @@ export const ScenarioCheckbox: React.FC<ScenarioCheckboxProps> = ({
           onClick={handleCalculate}
           disabled={selectedScenarios.length === 0 || calculating}
           className={`flex-1 py-3 px-4 rounded-2xl font-medium text-center transition-colors custom_btn 
-      ${
-        selectedScenarios.length === 0 || calculating
-          ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-          : "bg-gray-200 text-gray-400 hover:bg-gray-700"
-      }`}
+      ${selectedScenarios.length === 0 || calculating
+              ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+              : "bg-gray-200 text-gray-400 hover:bg-gray-700"
+            }`}
           style={{ border: "1px solid #e5e7eb" }}
         >
           {calculating ? "Calculating..." : "Continue"}
