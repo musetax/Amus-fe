@@ -119,7 +119,7 @@ export const handleHourlyRateInput = (
 
   return {
     formData: { ...formData, hourly_rate: rate.toString() },
-    userMessage: `My Hourlyly rate is $${rate}`,
+    userMessage: `My Hourly rate is $${rate}`,
   };
 };
 
@@ -259,6 +259,7 @@ export const handleCurrentWithholdingInput = (
   if (isNaN(numValue) || numValue < 0) {
     return { error: "Withholding must be a positive number." };
   }
+  console.log(formData.annual_salary,"formData.annual_salary")
   if (formData.annual_salary && numValue > Number(formData.annual_salary)) {
     return { error: "Withholding cannot exceed your annual Salary." };
   }
