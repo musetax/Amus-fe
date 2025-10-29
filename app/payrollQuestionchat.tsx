@@ -41,7 +41,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
   agentIntent = "tax_refund_calculation", // Default to refund if not provided
 }) => {
   const [questionsToAsk] = useState<StepType[]>(
-    getQuestionsToAsk(prefilledData, agentIntent)
+    getQuestionsToAsk(prefilledData, agentIntent,allfillData)
   );
   console.log(prefilledData,"]]]]")
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);

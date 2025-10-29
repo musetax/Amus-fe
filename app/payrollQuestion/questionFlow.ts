@@ -7,7 +7,8 @@ type AgentIntent = "tax_refund_calculation" | "tax_paycheck_calculation";
  */
 export const getQuestionsToAsk = (
   prefilledData: Partial<TaxData>,
-  agentIntent: AgentIntent
+  agentIntent: AgentIntent,
+  allfillData:any
 ): StepType[] => {
   const questions: StepType[] = [];
 
@@ -37,8 +38,9 @@ export const getQuestionsToAsk = (
   // Pay frequency
   if (!prefilledData.pay_frequency) questions.push("pay_frequency");
 
-  // Dependents (common for both)
-  if (!prefilledData.dependents) {
+    // Dependents (common for both)
+    console.log(!prefilledData.dependents &&!allfillData.is_refund_data_fill&&!allfillData.is_paycheck_data_fill,"[[[]p[pl")
+  if (!prefilledData.dependents &&!allfillData.is_refund_data_fill&&!allfillData.is_paycheck_data_fill) {
     questions.push("dependents_yesno");
     questions.push("dependents");
   }
@@ -47,7 +49,10 @@ export const getQuestionsToAsk = (
   if (!prefilledData.spouse_income && prefilledData.filing_status === 'married_joint') {
     questions.push("spouse_income");
   }
+    if (!prefilledData.age) questions.push("age");
 
+    if (!prefilledData.home_address) questions.push("home_address");
+    if (!prefilledData.work_address) questions.push("work_address");
   // ============================================
   // AGENT INTENT SPECIFIC QUESTIONS
   // ============================================
@@ -75,10 +80,7 @@ export const getQuestionsToAsk = (
 
   } else if (agentIntent === "tax_paycheck_calculation") {
     // Paycheck-specific questions
-  if (!prefilledData.age) questions.push("age");
 
-    if (!prefilledData.home_address) questions.push("home_address");
-    if (!prefilledData.work_address) questions.push("work_address");
     if (!prefilledData.pre_tax_deductions) questions.push("pre_tax_deductions");
     if (!prefilledData.post_tax_deductions) questions.push("post_tax_deductions");
   }
