@@ -122,7 +122,15 @@ const CheckboxDeductions: React.FC<CheckboxDeductionsProps> = ({
                 type="number"
                 placeholder="Enter amount"
                 value={deductionValues[deduction] || ""}
-                onChange={(e) => handleValueChange(deduction, e.target.value)}
+                onChange={(e) => 
+                  {
+                    const val = e.target.value;
+                        if (/^\d*$/.test(val)) {
+                    handleValueChange(deduction, val)
+                  }}}
+                // onWheel={(e)=>e.preventDefault()}
+                onWheel={(e) => e.currentTarget.blur()} 
+                min="0"
                 className="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-0 outline-none h-10"
                 style={{ backgroundColor: "white", color: "#31333f" }}
               />
