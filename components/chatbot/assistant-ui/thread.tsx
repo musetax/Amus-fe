@@ -38,6 +38,8 @@ import Image from "next/image";
 import { HomeScreen } from "./home-screen";
 import { LifeEventsScreen } from "./life-events-screen";
 import { LifeEventsForm } from "./life-events-form";
+import { SelcectForHowToFillDataButton } from './handleUploadOCR'
+import { OCRUploadComponent } from './OCRUploadComponent'
 import { ScenarioCheckbox } from "./scenario-checkbox";
 // import Image from "next/image";
 
@@ -48,6 +50,10 @@ export function saveMessagesToLocalStorage(messages: any[]) {
   localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(trimmed));
 }
 
+interface PayloadInterface {
+  enterManually: boolean;
+  ocr: boolean;
+}
 export const Thread: any = ({
   // activeTab,
   // setActiveTab,
@@ -119,7 +125,10 @@ export const Thread: any = ({
   // const shouldShowTaxChatbot = messages.length === 0 && showTaxChatbot;
   const shouldShowTaxChatbot = showTaxChatbot;
   const [showScenarios, setShowScenarios] = useState(false);
-
+  const [payloadButton, setPayloadButton] = useState<PayloadInterface>({
+    enterManually: false,
+    ocr: false,
+  });
   return (
     <>
       <div>
@@ -408,7 +417,11 @@ export const Thread: any = ({
                       overflowY: "auto",
                     }}
                   >
-                    <TaxChatbot
+                    {!payloadButton.enterManually && !payloadButton.ocr && (
+                      <SelcectForHowToFillDataButton setPayloadButton={setPayloadButton} />
+                    )}
+
+                    {/* <TaxChatbot
                       onComplete={handleTaxChatbotComplete}
                       onContinueToChat={handleContinueToChat}
                       prefilledData={payrollData.payroll}
@@ -417,7 +430,31 @@ export const Thread: any = ({
                       image={image}
                       companyLogo={companyLogo}
                       agentIntent={agentIntent as "tax_refund_calculation" | "tax_paycheck_calculation"}
-                    />
+                      
+                    /> */}
+                    {payloadButton.enterManually && (
+                      <TaxChatbot
+                        onComplete={handleTaxChatbotComplete}
+                        onContinueToChat={handleContinueToChat}
+                        prefilledData={payrollData.payroll}
+                        allfillData={payrollData}
+                        image={image}
+                        companyLogo={companyLogo}
+                        agentIntent={agentIntent as
+                          | "tax_refund_calculation"
+                          | "tax_paycheck_calculation"}
+                      />
+                    )}
+
+                    {payloadButton.ocr && (
+                      <OCRUploadComponent
+                        userId={userId}
+                        // onSave={(payload) => {
+                        //   console.log("OCR payload:", payload);
+                        //   // then trigger TaxChatbot with prefilled data
+                        // }}
+                      />
+                    )}
                   </div>
                 ) : (
                   <>
