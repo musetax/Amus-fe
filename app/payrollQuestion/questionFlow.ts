@@ -110,7 +110,7 @@ export const shouldSkipQuestion = (
   if (step === "annual_salary" && data.income_type === "hourly") {
     return true;
   }
-  if (step === 'spouse_income' && data.filing_status === "single") return true
+  if (step === 'spouse_income' && (data.filing_status === "single"||data.filing_status==="head_of_household")) {return true}
   // Skip hourly-specific questions for salary users
   if (
     ["hourly_rate", "average_hours_per_week", "seasonal_variation"].includes(step) &&
