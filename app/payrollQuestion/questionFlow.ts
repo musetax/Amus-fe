@@ -44,9 +44,9 @@ export const getQuestionsToAsk = (
     questions.push("dependents_yesno");
     questions.push("dependents");
   }
-
+console.log()
   // Spouse income (if married filing jointly)
-  if (!prefilledData.spouse_income && prefilledData.filing_status === 'married_joint') {
+  if ((!prefilledData.spouse_income ||prefilledData.spouse_income===0)&& (prefilledData.filing_status === 'married_joint' ||!prefilledData.filing_status)) {
     questions.push("spouse_income");
   }
     if (!prefilledData.age) questions.push("age");
@@ -100,7 +100,7 @@ export const shouldSkipQuestion = (
   if (step === "additional_income" && data.additional_yesorno === "no") {
     return true;
   }
-  if (step === "head_of_household" && data.filing_status === 'married_joint') return true;
+  if (step === "head_of_household" && data.filing_status === 'married_joint'){ return true;}
   // Skip dependents if user said no
   if (step === "dependents" && data.dependents_yesno === "no") {
     return true;
