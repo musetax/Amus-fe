@@ -551,7 +551,7 @@ const ThreadWelcome: FC<any> = (
                   (e.currentTarget.style.backgroundColor = "rgb(81, 141, 231)")
                 }
               >
-                Start My {agentIntent === "tax_paycheck_calculation" ? "paycheck" : "tax"} Calculation
+                {agentIntent === "tax_paycheck_calculation" ? "Calculate My Paycheck Now" : "Calculate My Tax Now"} 
               </button>
             </div>}
           </div>
