@@ -449,6 +449,7 @@ export const Thread: any = ({
                     {payloadButton.ocr && (
                       <OCRUploadComponent
                         userId={userId}
+                        onComplete={handleTaxChatbotComplete}
                         // onSave={(payload) => {
                         //   console.log("OCR payload:", payload);
                         //   // then trigger TaxChatbot with prefilled data

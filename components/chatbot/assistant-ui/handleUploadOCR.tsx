@@ -19,7 +19,7 @@ export const SelcectForHowToFillDataButton: FC<
   return (
     <ThreadPrimitive.Empty>
       <div className="flex w-full max-w-[var(--thread-max-width)] flex-grow flex-col px-4">
-        <div className="flex w-full flex-grow flex-col items-center justify-center">
+        <div className="flex w-full flex-grow flex-col items-center justify-center" style={{height:"calc(100vh - 135px)"}}>
           <div
             className="mt-4 font-medium text-sm"
             style={{
@@ -83,7 +83,7 @@ export const SelcectForHowToFillDataButton: FC<
                   (e.currentTarget.style.backgroundColor = "rgb(81, 141, 231)")
                 }
               >
-                Use OCR
+                Upload Paycheck
               </button>
             </div>
           </div>

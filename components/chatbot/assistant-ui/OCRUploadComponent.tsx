@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { X, Edit3, Save } from "lucide-react";
 import axios from "axios";
+import { TaxDataForm } from './taxDataForm'
 
 export interface TaxData {
     first_name?: string;
@@ -32,7 +33,7 @@ export interface TaxData {
     is_paycheck_data_fill?: boolean;
 }
 
-export const OCRUploadComponent: React.FC<{ userId: string }> = ({ userId }) => {
+export const OCRUploadComponent: React.FC<{ userId: string, onComplete: (data: TaxData) => void }> = ({ userId, onComplete }) => {
     const [file, setFile] = useState<File | null>(null);
     const [progress, setProgress] = useState<number>(0);
     const [loading, setLoading] = useState(false);
@@ -46,7 +47,7 @@ export const OCRUploadComponent: React.FC<{ userId: string }> = ({ userId }) => 
             formData.append("file", file);
 
             const response = await axios.post(
-                `https://dev-ocr.musetax.com/Azure/paycheck_form?user_id=${userId}`,
+                `https://dev-ocr.musetax.com/vision/extract?user_id=${userId}`,
                 formData,
                 {
                     headers: {
@@ -86,6 +87,22 @@ export const OCRUploadComponent: React.FC<{ userId: string }> = ({ userId }) => 
         setFile(null);
         setProgress(0);
     };
+    const convertResponse = (response: any) => {
+        const data = response?.data || {};
+
+        const sumArray = (arr: any[] | null | undefined) =>
+            Array.isArray(arr)
+                ? arr.reduce((sum, item) => sum + (item.amount || 0), 0)
+                : 0;
+
+
+        data.pre_tax_deductions = sumArray(data.pre_tax_deductions),
+            data.post_tax_deductions = sumArray(data.post_tax_deductions),
+            data.deductions = sumArray(data.deductions)
+
+
+        return data;
+    }
 
     // ✅ Proceed to upload and get OCR data
     const handleProceed = async () => {
@@ -93,8 +110,37 @@ export const OCRUploadComponent: React.FC<{ userId: string }> = ({ userId }) => 
         setLoading(true);
         try {
             const result = await uploadOcrData(userId, file);
+            const reponse= convertResponse(result)
             // Assume OCR returns data shaped like TaxData
-            setTaxData(result);
+            // let result = {
+            //     data: {
+            //         "first_name": "tester",
+            //         "middle_name": "",
+            //         "last_name": "test",
+            //         "income_type": null,
+            //         "annual_salary": null,
+            //         "hourly_rate": null,
+            //         "average_hours_per_week": null,
+            //         "seasonal_variation": null,
+            //         "estimated_annual_income": null,
+            //         "filing_status": null,
+            //         "pay_frequency": null,
+            //         "current_withholding_per_paycheck": null,
+            //         "desired_boost_per_paycheck": null,
+            //         "additional_income": 0.0,
+            //         "deductions": 0.0,
+            //         "dependents": 0,
+            //         "spouse_income": 0.0,
+            //         "current_date": null,
+            //         "paychecks_already_received": null,
+            //         "home_address": null,
+            //         "work_address": null,
+            //         "pre_tax_deductions": null,
+            //         "post_tax_deductions": null,
+            //         "age": null
+            //     }
+            // }
+            setTaxData(reponse);
             setFile(null);
         } catch {
             alert("Upload failed! Please try again.");
@@ -103,137 +149,68 @@ export const OCRUploadComponent: React.FC<{ userId: string }> = ({ userId }) => 
         }
     };
 
-    const handleNestedEditChange = (
-        section: string,
-        key: string,
-        value: string
-    ) => {
-        setTaxData((prev:any) => {
-            if (!prev || !prev.data) return prev;
-            return {
-                ...prev,
-                data: {
-                    ...prev.data,
-                    [section]: {
-                        ...prev.data[section],
-                        [key]: value,
-                    },
-                },
-            };
-        });
-    };
+    // const handleNestedEditChange = (
+    //     section: string,
+    //     key: string,
+    //     value: string
+    // ) => {
+    //     setTaxData((prev:any) => {
+    //         if (!prev || !prev.data) return prev;
+    //         return {
+    //             ...prev,
+    //             data: {
+    //                 ...prev.data,
+    //                 [section]: {
+    //                     ...prev.data[section],
+    //                     [key]: value,
+    //                 },
+    //             },
+    //         };
+    //     });
+    // };
 
-    const handleSave = () => {
-        console.log("Updated TaxData:", taxData);
-        alert("Details saved successfully!");
-        setEditMode(false);
-    };
+    // const handleSave = () => {
+    //     console.log("Updated TaxData:", taxData);
+    //     alert("Details saved successfully!");
+    //     // onComplete(taxData)
+    //     setEditMode(false);
+    // };
 
+    // 🔹 Show Tax Details if available
     // 🔹 Show Tax Details if available
     if (taxData) {
         return (
-            <div className="p-6 max-w-lg mx-auto bg-white rounded-2xl shadow-md mt-10 border border-gray-200">
-                <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-lg font-semibold text-gray-800">Details Provided</h2>
-                    <button
-                        onClick={() => setEditMode(!editMode)}
-                        className="flex items-center text-sm text-[#255BE3] hover:underline"
-                    >
-                        <Edit3 size={16} className="mr-1" />
-                        {editMode ? "Cancel" : "Edit"}
-                    </button>
-                </div>
-
-                <div className="space-y-4 text-sm text-gray-700">
-                    {taxData?.data &&
-                        Object.entries(taxData.data).map(([sectionKey, sectionValue]) => (
-                            <div
-                                key={sectionKey}
-                                className="border border-gray-200 rounded-xl p-4 bg-gray-50"
-                            >
-                                {/* Section Title */}
-                                <h3 className="font-semibold text-gray-800 mb-2 capitalize">
-                                    {sectionKey.replace(/([A-Z])/g, " $1").trim()}
-                                </h3>
-
-                                {/* Section Fields */}
-                                <div className="space-y-1">
-                                    {Object.entries(sectionValue as Record<string, any>).map(
-                                        ([fieldKey, fieldValue]) => (
-                                            <div
-                                                key={fieldKey}
-                                                className="flex justify-between border-b border-gray-100 py-1"
-                                            >
-                                                <span className="font-medium capitalize">
-                                                    {fieldKey.replace(/_/g, " ")}:
-                                                </span>
-
-                                                {editMode ? (
-                                                    <input
-                                                        className="border rounded px-2 py-0.5 text-gray-700 w-40 text-right"
-                                                        value={fieldValue ?? ""}
-                                                        onChange={(e) =>
-                                                            handleNestedEditChange(
-                                                                sectionKey,
-                                                                fieldKey,
-                                                                e.target.value
-                                                            )
-                                                        }
-                                                    />
-                                                ) : (
-                                                    <span className="text-gray-600 text-right">
-                                                        {fieldValue?.toString() || "-"}
-                                                    </span>
-                                                )}
-                                            </div>
-                                        )
-                                    )}
-                                </div>
-                            </div>
-                        ))}
-                </div>
-
-
-                {!editMode && (
-                    <div className="flex justify-end mt-5">
-                        <button
-                            onClick={handleSave}
-                            className="px-6 py-2 rounded-full font-medium text-white shadow-md transition-all"
-                            style={{
-                                backgroundColor: "rgb(81, 141, 231)",
-                            }}
-                            onMouseEnter={(e) =>
-                                (e.currentTarget.style.backgroundColor = "rgb(65, 120, 210)")
-                            }
-                            onMouseLeave={(e) =>
-                                (e.currentTarget.style.backgroundColor = "rgb(81, 141, 231)")
-                            }    >
-                            <Save size={16} className="mr-2" />
-                            Save
-                        </button>
-                    </div>
-                )}
-            </div>
+            <TaxDataForm
+                taxData={taxData}
+                onSave={(updated) => {
+                    console.log("Updated Tax Data:", updated);
+                    onComplete(updated);
+                }}
+            />
         );
     }
+
 
     // 🔹 Otherwise show upload UI
     return (
         <div className="fixed inset-0 bg-[#49C2D420] flex justify-center items-center z-50">
-            <div className="bg-white w-[430px] rounded-2xl shadow-xl p-6 relative">
-                <h2 className="text-lg font-semibold mb-5">Upload file</h2>
+            <div className="bg-white w-full rounded-2xl shadow-xl p-6 relative" style={{maxWidth:"430px"}}>
+                <h2 className="text-lg font-semibold mb-2">Upload file</h2>
 
                 {!file ? (
                     <>
                         <label
                             htmlFor="fileInput"
-                            className="flex flex-col items-center justify-center border border-dashed border-gray-300 rounded-xl py-10 cursor-pointer hover:bg-gray-50 transition"
+                            className="flex flex-col items-center justify-center border border-dashed border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 transition"
+                            style={{paddingTop:"20px",
+                                paddingBottom:"20px"
+                            }}
                         >
                             <div className="flex flex-col items-center">
                                 <img
                                     src="https://cdn-icons-png.flaticon.com/512/109/109612.png"
                                     alt="upload"
-                                    className="w-10 h-10 mb-3 opacity-70"
+                                    className="w-6 h-6 mb-3 opacity-70"
                                 />
                                 <p className="text-gray-600 text-sm text-center">
                                     Drag and Drop file here or{" "}
@@ -247,40 +224,65 @@ export const OCRUploadComponent: React.FC<{ userId: string }> = ({ userId }) => 
                             id="fileInput"
                             accept=".pdf"
                             className="hidden"
+                            style={{display:"none"}}
                             onChange={handleFileChange}
                         />
 
-                        <div className="flex justify-between w-full px-4 mt-5 text-xs text-gray-400">
+                        <div className="flex justify-between w-full px-0 text-xs text-gray-400" style={{marginTop:10}}>
                             <span>Supported format: PDF</span>
                             <span>Maximum size: 5MB</span>
                         </div>
                     </>
                 ) : (
-                    <div className="relative mt-3 border border-gray-200 rounded-lg p-4 bg-gray-50">
+                    <div className="relative mt-3 border border-gray-200 rounded-lg p-4 bg-gray-50" style={{padding:"10px"}}>
                         <button
                             onClick={handleRemoveFile}
-                            className="absolute top-3 right-3 text-gray-400 hover:text-gray-600"
+                            className=" text-white hover:text-gray-600"
+                            style={{position:"absolute",
+                                right:"22px",
+                                top:"1px",
+                                background:"rgb(81, 141, 231)",
+                                borderRadius:"50px",
+                                padding:2,
+                                cursor:"pointer"
+                            }}
                         >
-                            <X size={18} />
+                            <X size={14} />
                         </button>
 
-                        <div className="flex items-center justify-center mb-4">
-                            <img
-                                src="https://cdn-icons-png.flaticon.com/512/337/337946.png"
-                                alt="pdf"
-                                className="w-24 h-24 opacity-80"
-                            />
+                        {/* Preview Section */}
+                        <div className="flex flex-col items-center justify-center mb-4" >
+                            {file.type === "application/pdf" ? (
+                                // PDF Preview
+                                <iframe
+                                    src={URL.createObjectURL(file)}
+                                    className="w-full rounded-lg border"
+                                    title="PDF Preview"
+                                    style={{height:"100%"}}
+                                ></iframe>
+                            ) : file.type.startsWith("image/") ? (
+                                // Image Preview
+                                <img
+                                    src={URL.createObjectURL(file)}
+                                    alt="Preview"
+                                    className="max-w-full max-h-[400px] rounded-lg border"
+                                />
+                            ) : (
+                                // Default Icon if not previewable
+                                <img
+                                    src="https://cdn-icons-png.flaticon.com/512/337/337946.png"
+                                    alt="pdf"
+                                    className="w-24 h-24 opacity-80"
+                                />
+                            )}
                         </div>
 
                         <div className="text-center">
-                            <p className="text-sm font-medium text-gray-700 truncate">
-                                {file.name}
-                            </p>
+                            <p className="text-sm font-medium text-gray-700 truncate">{file.name}</p>
                             <p className="text-xs text-gray-500 mt-1">
                                 {(file.size / 1024 / 1024).toFixed(1)} MB
                             </p>
                         </div>
-
                         {loading && (
                             <div className="mt-4 w-full bg-gray-200 rounded-full h-2">
                                 <div
@@ -294,7 +296,7 @@ export const OCRUploadComponent: React.FC<{ userId: string }> = ({ userId }) => 
 
                 {file && <div className="flex justify-end mt-6">
                     <button
-                        disabled={!file || loading}
+                        disabled={loading}
                         onClick={handleProceed}
                         className="px-6 py-2 rounded-full font-medium text-white shadow-md transition-all"
                         style={{
