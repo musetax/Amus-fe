@@ -277,11 +277,12 @@ function makeHistoryAdapter(
           setLoadingHistory?.(false);
           return { messages: [], headId: null };
         }
-
+        let timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
         const res = await axiosInstanceAuth.post("/get-user-chats", {
           user_id: userId,
           session_id: sessionId,
           user_intent: agentIntent,
+          time_zone:Intl.DateTimeFormat().resolvedOptions().timeZone
         });
 
         console.log("✅ Chat history API response:", {
