@@ -282,6 +282,8 @@ function makeHistoryAdapter(
           user_id: userId,
           session_id: sessionId,
           user_intent: agentIntent,
+          time_zone: Intl.DateTimeFormat().resolvedOptions().timeZone
+          
         });
 
         console.log("✅ Chat history API response:", {
