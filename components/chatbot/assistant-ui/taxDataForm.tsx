@@ -31,11 +31,12 @@ export interface TaxData {
   is_paycheck_data_fill?: boolean;
 }
 
-export const TaxDataForm: React.FC<{ taxData: TaxData; onSave: (payload: any) => void }> = ({
-  taxData,
-  onSave,
-}) => {
-    const defaultFields: TaxData = {
+export const TaxDataForm: React.FC<{
+  taxData: TaxData;
+  onSave: (payload: any) => void;
+  onCancel?: () => void;
+}> = ({ taxData, onSave,onCancel }) => {
+  const defaultFields: TaxData = {
     // first_name: "",
     // middle_name: "",
     // last_name: "",
@@ -43,7 +44,7 @@ export const TaxDataForm: React.FC<{ taxData: TaxData; onSave: (payload: any) =>
     annual_salary: undefined,
     hourly_rate: undefined,
     average_hours_per_week: undefined,
-    seasonal_variation:undefined,
+    seasonal_variation: undefined,
     estimated_annual_income: undefined,
     filing_status: undefined,
     pay_frequency: undefined,
@@ -63,42 +64,55 @@ export const TaxDataForm: React.FC<{ taxData: TaxData; onSave: (payload: any) =>
     // is_refund_data_fill: false,
     // is_paycheck_data_fill: false,
   };
-const normalizeField = (field: string, value: any) => {
-  if (!value) return value;
+  const normalizeField = (field: string, value: any) => {
+    if (!value) return value;
 
-  const lowercase = typeof value === "string" ? value.trim().toLowerCase() : value;
+    const lowercase =
+      typeof value === "string" ? value.trim().toLowerCase() : value;
 
-  switch (field) {
-    case "income_type":
-      return ["salary", "hourly"].includes(lowercase) ? lowercase : undefined;
+    switch (field) {
+      case "income_type":
+        return ["salary", "hourly"].includes(lowercase) ? lowercase : undefined;
 
-    case "filing_status":
-      // allow flexible matching
-      if (lowercase === "married" || lowercase === "married_joint") return "married_joint";
-      if (lowercase === "single") return "single";
-      if (lowercase === "head_of_household" || lowercase === "head of household")
-        return "head_of_household";
-      return undefined;
+      case "filing_status":
+        // allow flexible matching
+        if (lowercase === "married" || lowercase === "married_joint")
+          return "married_joint";
+        if (lowercase === "single") return "single";
+        if (
+          lowercase === "head_of_household" ||
+          lowercase === "head of household"
+        )
+          return "head_of_household";
+        return undefined;
 
-    case "pay_frequency":
-      if (["weekly", "bi-weekly", "semi-monthly", "monthly"].includes(lowercase))
-        return lowercase;
-      // fix common spelling variants
-      if (lowercase === "biweekly") return "bi-weekly";
-      if (lowercase === "semimonthly") return "semi-monthly";
-      return undefined;
+      case "pay_frequency":
+        if (
+          ["weekly", "bi-weekly", "semi-monthly", "monthly"].includes(lowercase)
+        )
+          return lowercase;
+        // fix common spelling variants
+        if (lowercase === "biweekly") return "bi-weekly";
+        if (lowercase === "semimonthly") return "semi-monthly";
+        return undefined;
 
-    default:
-      return value;
-  }
-};
-const normalizedTaxData = Object.fromEntries(
-  Object.entries(taxData || {}).map(([key, value]) => [key, normalizeField(key, value)])
-);
+      default:
+        return value;
+    }
+  };
+  const normalizedTaxData = Object.fromEntries(
+    Object.entries(taxData || {}).map(([key, value]) => [
+      key,
+      normalizeField(key, value),
+    ])
+  );
 
-  const [form, setForm] = useState<any>({...defaultFields,...normalizedTaxData } );
+  const [form, setForm] = useState<any>({
+    ...defaultFields,
+    ...normalizedTaxData,
+  });
   const [errors, setErrors] = useState<any>({});
-const [submitted, setSubmitted] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   const incomeTypeOptions = [
     { label: "Hourly", value: "hourly" },
@@ -125,12 +139,18 @@ const [submitted, setSubmitted] = useState(false);
   ];
 
   const handleChange = (field: string, value: any) => {
-    let updated = { ...form, [field]: value };
+    const updated = { ...form, [field]: value };
 
     // Auto calculate estimated annual income if hourly
-    if (field === "hourly_rate" || field === "average_hours_per_week" || field === "seasonal_variation") {
+    if (
+      field === "hourly_rate" ||
+      field === "average_hours_per_week" ||
+      field === "seasonal_variation"
+    ) {
       if (form.income_type === "hourly") {
-        const seasonal = seasonalVariationOptions.find((o) => o.value === updated.seasonal_variation);
+        const seasonal = seasonalVariationOptions.find(
+          (o) => o.value === updated.seasonal_variation
+        );
         const multiplier = seasonal?.multiplier ?? 1;
         updated.estimated_annual_income = (
           parseFloat(updated.hourly_rate || 0) *
@@ -143,112 +163,174 @@ const [submitted, setSubmitted] = useState(false);
 
     setForm(updated);
   };
-const validate = () => {
-  const newErrors: Record<string, string> = {};
+  const validate = () => {
+    const newErrors: Record<string, string> = {};
 
-  // ✅ List of always-required fields
-  const requiredFields = [
-    "age",
-    "filing_status",
-    "income_type",
-    "pay_frequency",
-    "home_address",
-    "work_address",
-  ];
+    const requiredFields = [
+      "age",
+      "filing_status",
+      "income_type",
+      "pay_frequency",
+      "home_address",
+      "work_address",
+    ];
 
-  // ✅ Validate all required fields, including undefined/null
-  console.log(form,"=====")
-  requiredFields.forEach((key) => {
-    const value = form[key];
-    if (
-      value === undefined ||
-      value === null ||
-      value === "" ||
-      (typeof value === "string" && value.trim() === "")
-    ) {
-      newErrors[key] = `${key.replace(/_/g, " ")} is required`;
+    // ✅ Check all required fields
+    requiredFields.forEach((key) => {
+      const value = form[key];
+      if (
+        value === undefined ||
+        value === null ||
+        value === "" ||
+        (typeof value === "string" && value.trim() === "")
+      ) {
+        newErrors[key] = `${key.replace(/_/g, " ")} is required`;
+      }
+    });
+
+    // ✅ Conditional validation: filing status
+    if (form.filing_status === "married_joint") {
+      if (
+        form.spouse_income === undefined ||
+        form.spouse_income === null ||
+        form.spouse_income === ""
+      ) {
+        newErrors.spouse_income =
+          "Spouse income is required for married filing status";
+      }
     }
-  });
 
-  // ✅ Conditional validation based on income type and filing status
-  if (form.filing_status === "married_joint") {
-    if (
-      form.spouse_income === undefined ||
-      form.spouse_income === null ||
-      form.spouse_income === ""
-    ) {
-      newErrors.spouse_income = "Spouse income is required for married filing status";
+    // ✅ Conditional validation: salary
+    if (form.income_type === "salary") {
+      if (
+        form.annual_salary === undefined ||
+        form.annual_salary === null ||
+        form.annual_salary === ""
+      ) {
+        newErrors.annual_salary =
+          "Annual salary is required for salary income type";
+      }
     }
-  }
 
-  if (form.income_type === "salary") {
-    if (
-      form.annual_salary === undefined ||
-      form.annual_salary === null ||
-      form.annual_salary === ""
-    ) {
-      newErrors.annual_salary = "Annual salary is required for salary income type";
+    // ✅ Conditional validation: hourly
+    if (form.income_type === "hourly") {
+      if (
+        form.hourly_rate === undefined ||
+        form.hourly_rate === null ||
+        form.hourly_rate === ""
+      ) {
+        newErrors.hourly_rate =
+          "Hourly rate is required for hourly income type";
+      }
+      if (
+        form.average_hours_per_week === undefined ||
+        form.average_hours_per_week === null ||
+        form.average_hours_per_week === ""
+      ) {
+        newErrors.average_hours_per_week =
+          "Average hours per week is required for hourly income type";
+      }
+      if (
+        form.seasonal_variation === undefined ||
+        form.seasonal_variation === null ||
+        form.seasonal_variation === ""
+      ) {
+        newErrors.seasonal_variation =
+          "Seasonal variation is required for hourly income type";
+      }
     }
-  }
 
-  if (form.income_type === "hourly") {
-    if (
-      form.hourly_rate === undefined ||
-      form.hourly_rate === null ||
-      form.hourly_rate === ""
-    ) {
-      newErrors.hourly_rate = "Hourly rate is required for hourly income type";
+    // ✅ Address format validation (ZIP)
+    if (form.home_address && !/^\d{5}$/.test(form.home_address)) {
+      newErrors.home_address = "Enter a valid 5-digit ZIP code";
     }
-    if (
-      form.average_hours_per_week === undefined ||
-      form.average_hours_per_week === null ||
-      form.average_hours_per_week === ""
-    ) {
-      newErrors.average_hours_per_week = "Average hours per week is required for hourly income type";
+    if (form.work_address && !/^\d{5}$/.test(form.work_address)) {
+      newErrors.work_address = "Enter a valid 5-digit ZIP code";
     }
-    if (
-      form.seasonal_variation === undefined ||
-      form.seasonal_variation === null ||
-      form.seasonal_variation === ""
-    ) {
-      newErrors.seasonal_variation = "Seasonal variation is required for hourly income type";
+
+    // ✅ Date validation
+    if (form.current_date && dayjs(form.current_date).isAfter(dayjs())) {
+      newErrors.current_date = "Date cannot be in the future";
     }
-  }
 
-  // ✅ Address format validation (ZIP code)
-  if (form.home_address && !/^\d{5}$/.test(form.home_address)) {
-    newErrors.home_address = "Enter a valid 5-digit ZIP code";
-  }
-  if (form.work_address && !/^\d{5}$/.test(form.work_address)) {
-    newErrors.work_address = "Enter a valid 5-digit ZIP code";
-  }
+    // ✅ Age validation (13–99)
+    if (form.age !== undefined && form.age !== null && form.age !== "") {
+      const age = Number(form.age);
+      if (isNaN(age) || age < 13 || age > 99) {
+        newErrors.age = "Age must be between 13 and 99";
+      }
+    }
 
-  // ✅ Date validation
-  if (form.current_date && dayjs(form.current_date).isAfter(dayjs())) {
-    newErrors.current_date = "Date cannot be in the future";
-  }
+    // ✅ Annual salary limit
+    if (
+      form.annual_salary !== undefined &&
+      form.annual_salary !== null &&
+      form.annual_salary !== ""
+    ) {
+      const salary = Number(form.annual_salary);
+      if (isNaN(salary) || salary > 500000) {
+        newErrors.annual_salary = "Annual salary cannot exceed 500,000";
+      } else if (salary < 0) {
+        newErrors.annual_salary = "Annual salary cannot be negative";
+      }
+    }
 
-  setErrors(newErrors);
-  return Object.keys(newErrors).length === 0;
-};
+    // ✅ Current withholding < annual salary
+    if (
+      form.current_withholding_per_paycheck !== undefined &&
+      form.current_withholding_per_paycheck !== null &&
+      form.current_withholding_per_paycheck !== "" &&
+      form.annual_salary !== undefined &&
+      form.annual_salary !== null &&
+      form.annual_salary !== ""
+    ) {
+      const withholding = Number(form.current_withholding_per_paycheck);
+      const salary = Number(form.annual_salary);
+      if (withholding < 0) {
+        newErrors.current_withholding_per_paycheck =
+          "Current withholding cannot be negative";
+      } else if (withholding > salary) {
+        newErrors.current_withholding_per_paycheck =
+          "Current withholding cannot exceed annual salary";
+      }
+    }
 
+    // ✅ Generic check for negative numbers in all numeric fields
+    Object.entries(form).forEach(([key, value]: any) => {
+      if (typeof value === "number" || (!isNaN(value) && value !== "")) {
+        if (Number(value) < 0) {
+          newErrors[key] = `${key.replace(/_/g, " ")} cannot be negative`;
+        }
+      }
+    });
 
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
+  const handleSubmit = () => {
+    setSubmitted(true); // mark that user tried to submit
 
-const handleSubmit = () => {
-  setSubmitted(true); // mark that user tried to submit
-  if (!validate()) return;
-  form.is_refund_data_fill=true,
-  form.is_paycheck_data_fill=true
-  onSave(form);
-};
+    // Safely update form flags before validation
 
+    // Validate with the updated form
+    if (!validate()) return;
+    setForm((prev: any) => ({
+      ...prev,
+      is_refund_data_fill: true,
+      is_paycheck_data_fill: true,
+    }));
+    onSave(form);
+  };
 
   const renderField = (key: string, value: any) => {
     const dropdownFields: any = {
       income_type: incomeTypeOptions,
       filing_status: filingStatusOptions,
-      seasonal_variation: seasonalVariationOptions.map(({ value, label }) => ({ value, label })),
+      seasonal_variation: seasonalVariationOptions.map(({ value, label }) => ({
+        value,
+        label,
+      })),
       pay_frequency: payFrequencyOptions,
     };
 
@@ -261,9 +343,10 @@ const handleSubmit = () => {
           onChange={(e) => handleChange(key, e.target.value)}
           // className="border rounded-lg px-3 py-2 text-sm text-gray-700 w-full sm:w-48"
           className={`border rounded-lg px-3 py-2 text-sm text-gray-700 w-full sm:w-48 ${
-  submitted && errors[key] ? "border-red bg-red-50" : "border-gray-300"
-}`}
-
+            submitted && errors[key]
+              ? "border-red bg-red-50"
+              : "border-gray-300"
+          }`}
         >
           <option value="">Select...</option>
           {options.map((opt: any) => (
@@ -311,8 +394,8 @@ const handleSubmit = () => {
           value={value ?? ""}
           onChange={(e) => handleChange(key, e.target.value)}
           className={`border rounded-lg px-3 py-2 text-sm text-gray-700 w-full sm:w-48 ${
-  submitted && errors[key] ? "border-red" : "border-gray-300"
-}`}
+            submitted && errors[key] ? "border-red" : "border-gray-300"
+          }`}
         />
       );
     }
@@ -323,43 +406,91 @@ const handleSubmit = () => {
         value={value ?? ""}
         onChange={(e) => handleChange(key, e.target.value)}
         className={`border rounded-lg px-3 py-2 text-sm text-gray-700 w-full sm:w-48 ${
-  submitted && errors[key] ? "border-red" : "border-gray-300"
-}`}
+          submitted && errors[key] ? "border-red" : "border-gray-300"
+        }`}
       />
     );
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto bg-white shadow-md rounded-xl p-6 sm:p-8 space-y-6" style={{paddingBottom:20}}>
+    <div
+      className="w-full max-w-3xl mx-auto bg-white shadow-md rounded-xl p-6 sm:p-8 space-y-6"
+      style={{ paddingBottom: 20 }}
+    >
       <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4 text-center">
         Tax Data Form
       </h2>
 
-      <div className="grid grid-cols-1 gap-x-8 gap-y-4" style={{gap:8,marginBottom:16}}>
+      <div
+        className="grid grid-cols-1 gap-x-8 gap-y-4"
+        style={{ gap: 8, marginBottom: 16 }}
+      >
         {Object.entries(form).map(([key, value]) => {
-          if (form.income_type === "salary" && ["hourly_rate", "average_hours_per_week", "seasonal_variation"].includes(key)) return null;
-          if (form.income_type === "hourly" && key === "annual_salary") return null;
-          if (form.filing_status !== "married_joint" && key === "spouse_income") return null;
+          if (
+            form.income_type === "salary" &&
+            [
+              "hourly_rate",
+              "average_hours_per_week",
+              "seasonal_variation",
+            ].includes(key)
+          )
+            return null;
+          if (form.income_type === "hourly" && key === "annual_salary")
+            return null;
+          if (form.filing_status !== "married_joint" && key === "spouse_income")
+            return null;
 
           return (
             <div key={key} className="flex flex-col">
-              <label className="font-medium text-gray-700 mb-1 capitalize" style={{fontSize:14,textTransform:"capitalize",marginBottom:"4px"}}>
+              <label
+                className="font-medium text-gray-700 mb-1 capitalize"
+                style={{
+                  fontSize: 14,
+                  textTransform: "capitalize",
+                  marginBottom: "4px",
+                }}
+              >
                 {key.replace(/_/g, " ")}
               </label>
               {renderField(key, value)}
-              {errors[key] && <span className="text-red-500 text-xs mt-1" style={{color:"red"}}>{errors[key]}</span>}
+              {errors[key] && (
+                <span
+                  className="text-red-500 text-xs mt-1"
+                  style={{ color: "red" }}
+                >
+                  {errors[key]}
+                </span>
+              )}
             </div>
           );
         })}
       </div>
 
-      <div className="flex justify-center pt-6" style={{marginTop:"0px",marginBottom:"22px"}}>
+      <div
+        className="flex justify-center flex-col gap-3 pt-6"
+        style={{ marginTop: "0px", marginBottom: "22px" }}
+      >
+        <button
+          onClick={onCancel}
+          className="px-6 py-2 rounded-full font-medium text-white  transition-all w-full sm:w-auto"
+          style={{
+            border: "1px solid rgb(81, 141, 231)",
+            color: "rgb(81, 141, 231)",
+            backgroundColor: "transparent",
+          }}
+        >
+          Cancel
+        </button>
         <button
           onClick={handleSubmit}
           className="px-6 py-2 rounded-full font-medium text-white shadow-md transition-all w-full sm:w-auto"
           style={{ backgroundColor: "rgb(81, 141, 231)" }}
-          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgb(65, 120, 210)")}
-          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "rgb(81, 141, 231)")}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.backgroundColor = "rgb(65, 120, 210)")
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.backgroundColor = "rgb(81, 141, 231)")
+          }
         >
           Save
         </button>

@@ -38,8 +38,8 @@ import Image from "next/image";
 import { HomeScreen } from "./home-screen";
 import { LifeEventsScreen } from "./life-events-screen";
 import { LifeEventsForm } from "./life-events-form";
-import { SelcectForHowToFillDataButton } from './handleUploadOCR'
-import { OCRUploadComponent } from './OCRUploadComponent'
+import { SelcectForHowToFillDataButton } from "./handleUploadOCR";
+import { OCRUploadComponent } from "./OCRUploadComponent";
 import { ScenarioCheckbox } from "./scenario-checkbox";
 // import Image from "next/image";
 
@@ -77,7 +77,7 @@ export const Thread: any = ({
   onSelectLifeEventCategory,
   onBackToLifeEventsCategories,
   onSaveLifeEvents,
-  agentIntent
+  agentIntent,
 }: any) => {
   console.log(showHomeScreen, "jknjkdw");
   const { messages } = useThread();
@@ -157,9 +157,9 @@ export const Thread: any = ({
                 flexWrap: "wrap", // ✅ allows wrapping on small screens
                 backgroundPosition: "bottom",
                 width: "100%",
-                padding: "20px 16px 60px",
+                padding: "14px 16px 60px",
                 position: "relative",
-                gap: "12px",
+                gap: "10px",
               }}
             >
               {/* LEFT: Logo */}
@@ -169,6 +169,7 @@ export const Thread: any = ({
                   alignItems: "center",
                   gap: "10px",
                   flexShrink: 0,
+                  marginRight: 0,
                 }}
               >
                 <span
@@ -184,7 +185,12 @@ export const Thread: any = ({
                   }}
                 >
                   {companyLogo ? (
-                    <Image src={companyLogo} width={60} height={41} alt="Company Logo" />
+                    <Image
+                      src={companyLogo}
+                      width={60}
+                      height={41}
+                      alt="Company Logo"
+                    />
                   ) : (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -281,9 +287,11 @@ export const Thread: any = ({
                 <h3
                   style={{
                     color: "#ffffff",
-                    fontSize: "18px",
+                    fontSize: "16px",
                     fontWeight: "600",
                     margin: 0,
+                    position: "relative",
+                    top: 5,
                   }}
                 >
                   How Can I Help You Today?
@@ -291,7 +299,7 @@ export const Thread: any = ({
                 <p
                   style={{
                     color: "#ffffff",
-                    fontSize: "14px",
+                    fontSize: "12px",
                     fontWeight: "normal",
                     margin: "4px 0 0 0",
                   }}
@@ -301,63 +309,64 @@ export const Thread: any = ({
               </div>
 
               {/* RIGHT: Home Button */}
-              {!showHomeScreen && <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  flexShrink: 0,
-                  width: "auto",
-                }}
-              >
-                <button
-                  onClick={onReturnToHome}
+              {!showHomeScreen && (
+                <div
                   style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    padding: "10px 20px",
-                    fontSize: "14px",
-                    fontWeight: "500",
-                    color: "#ffffff",
-                    background:
-                      "linear-gradient(90deg, #69DEC6 0%, #49C2D4 50%, #1595EA 100%)",
-                    border: "none",
-                    borderRadius: "24px",
-                    cursor: "pointer",
-                    transition: "all 0.2s ease-in-out",
-                    boxShadow: "0 2px 8px rgba(21, 149, 234, 0.2)",
-                    whiteSpace: "nowrap",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = "scale(1.02)";
-                    e.currentTarget.style.boxShadow =
-                      "0 4px 12px rgba(21, 149, 234, 0.3)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = "scale(1)";
-                    e.currentTarget.style.boxShadow =
-                      "0 2px 8px rgba(21, 149, 234, 0.2)";
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    flexShrink: 0,
+                    width: "auto",
                   }}
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                  <button
+                    onClick={onReturnToHome}
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "8px",
+                      padding: "10px 20px",
+                      fontSize: "14px",
+                      fontWeight: "500",
+                      color: "#ffffff",
+                      background:
+                        "linear-gradient(90deg, #69DEC6 0%, #49C2D4 50%, #1595EA 100%)",
+                      border: "none",
+                      borderRadius: "24px",
+                      cursor: "pointer",
+                      transition: "all 0.2s ease-in-out",
+                      boxShadow: "0 2px 8px rgba(21, 149, 234, 0.2)",
+                      whiteSpace: "nowrap",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = "scale(1.02)";
+                      e.currentTarget.style.boxShadow =
+                        "0 4px 12px rgba(21, 149, 234, 0.3)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = "scale(1)";
+                      e.currentTarget.style.boxShadow =
+                        "0 2px 8px rgba(21, 149, 234, 0.2)";
+                    }}
                   >
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                    <polyline points="9 22 9 12 15 12 15 22" />
-                  </svg>
-                  {/* Return Home */}
-                </button>
-              </div>}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                      <polyline points="9 22 9 12 15 12 15 22" />
+                    </svg>
+                    {/* Return Home */}
+                  </button>
+                </div>
+              )}
             </div>
-
 
             {loadingHistory ? (
               <div className="flex items-center justify-center py-10 min-h-300">
@@ -418,7 +427,9 @@ export const Thread: any = ({
                     }}
                   >
                     {!payloadButton.enterManually && !payloadButton.ocr && (
-                      <SelcectForHowToFillDataButton setPayloadButton={setPayloadButton} />
+                      <SelcectForHowToFillDataButton
+                        setPayloadButton={setPayloadButton}
+                      />
                     )}
 
                     {/* <TaxChatbot
@@ -440,9 +451,11 @@ export const Thread: any = ({
                         allfillData={payrollData}
                         image={image}
                         companyLogo={companyLogo}
-                        agentIntent={agentIntent as
-                          | "tax_refund_calculation"
-                          | "tax_paycheck_calculation"}
+                        agentIntent={
+                          agentIntent as
+                            | "tax_refund_calculation"
+                            | "tax_paycheck_calculation"
+                        }
                       />
                     )}
 
@@ -459,7 +472,6 @@ export const Thread: any = ({
                   </div>
                 ) : (
                   <>
-
                     <ThreadPrimitive.Viewport
                       style={{
                         height: "calc(100vh - 210px)",
@@ -486,7 +498,6 @@ export const Thread: any = ({
                               agentIntent={agentIntent}
                               showScenarios={showScenarios}
                               setShowScenarios={setShowScenarios}
-
                             />
                           ),
                         }}
@@ -496,19 +507,20 @@ export const Thread: any = ({
                         <div className="min-h-8 flex-grow" />
                       </ThreadPrimitive.If>
                       <div className="mt-3 p-4 flex w-full flex-col items-center justify-center gap-2">
-                        {!showScenarios && suggestions.map((s, i) => (
-                          <ThreadPrimitive.Suggestion
-                            key={i}
-                            prompt={s}
-                            autoSend
-                            method="replace"
-                            className="hover:bg-muted/80 flex max-w-sm grow basis-0 flex-col items-center justify-center rounded-lg border px-2 py-3 transition-colors ease-in custom-hover"
-                          >
-                            <span className="line-clamp-2 text-ellipsis text-sm font-medium">
-                              {s}
-                            </span>
-                          </ThreadPrimitive.Suggestion>
-                        ))}
+                        {!showScenarios &&
+                          suggestions.map((s, i) => (
+                            <ThreadPrimitive.Suggestion
+                              key={i}
+                              prompt={s}
+                              autoSend
+                              method="replace"
+                              className="hover:bg-muted/80 flex max-w-sm grow basis-0 flex-col items-center justify-center rounded-lg border px-2 py-3 transition-colors ease-in custom-hover"
+                            >
+                              <span className="line-clamp-2 text-ellipsis text-sm font-medium">
+                                {s}
+                              </span>
+                            </ThreadPrimitive.Suggestion>
+                          ))}
                       </div>
                     </ThreadPrimitive.Viewport>
 
@@ -528,17 +540,20 @@ export const Thread: any = ({
 };
 
 // Modified ThreadWelcome to handle the transition case
-const ThreadWelcome: FC<any> = (
-  {
-    agentIntent
-  }
-) => {
+const ThreadWelcome: FC<any> = ({ agentIntent }) => {
   const thread = useThreadRuntime();
   const handleCalculateClick = async () => {
     // This sends a message into the assistant thread
     thread.append({
       role: "user",
-      content: [{ type: "text", text: `Let’s begin calculating my ${agentIntent === "tax_paycheck_calculation" ? "paycheck" : "tax"}` }],
+      content: [
+        {
+          type: "text",
+          text: `Let’s begin calculating my ${
+            agentIntent === "tax_paycheck_calculation" ? "paycheck" : "tax"
+          }`,
+        },
+      ],
     });
   };
   return (
@@ -572,26 +587,36 @@ const ThreadWelcome: FC<any> = (
               {/* Have questions about your taxes, want to check your refund, or
               need to update your profile after a life event? Don’t worry Uncle
               Sam is here to help! */}
-              Hi, I’m Uncle Sam ! Your personal tax assistant.
-              Need help calculating your taxes, checking your refund, or updating your info after a life change? I’ve got you covered. Let’s get started!
+              Hi, I’m Uncle Sam ! Your personal tax assistant. Need help
+              calculating your taxes, checking your refund, or updating your
+              info after a life change? I’ve got you covered. Let’s get started!
             </p>
-            {(agentIntent === "tax_paycheck_calculation" || agentIntent === "tax_refund_calculation") && <div className="flex justify-center mt-6">
-              <button
-                onClick={handleCalculateClick}
-                className="px-6 py-2 rounded-full font-medium text-white shadow-md transition-all"
-                style={{
-                  backgroundColor: "rgb(81, 141, 231)",
-                }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.backgroundColor = "rgb(65, 120, 210)")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.backgroundColor = "rgb(81, 141, 231)")
-                }
-              >
-                Start My {agentIntent === "tax_paycheck_calculation" ? "paycheck" : "tax"} Calculation
-              </button>
-            </div>}
+            {(agentIntent === "tax_paycheck_calculation" ||
+              agentIntent === "tax_refund_calculation") && (
+              <div className="flex justify-center mt-6">
+                <button
+                  onClick={handleCalculateClick}
+                  className="px-6 py-2 rounded-full font-medium text-white shadow-md transition-all"
+                  style={{
+                    backgroundColor: "rgb(81, 141, 231)",
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.backgroundColor =
+                      "rgb(65, 120, 210)")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.backgroundColor =
+                      "rgb(81, 141, 231)")
+                  }
+                >
+                  Start My{" "}
+                  {agentIntent === "tax_paycheck_calculation"
+                    ? "paycheck"
+                    : "tax"}{" "}
+                  Calculation
+                </button>
+              </div>
+            )}
           </div>
         </div>
         {/* <ThreadWelcomeSuggestions /> */}
@@ -638,7 +663,6 @@ export const formatTime = (date: Date | string | number): string => {
     .replace(/\bam\b/i, "AM")
     .replace(/\bpm\b/i, "PM");
 };
-
 
 const ThreadScrollToBottom: FC = () => {
   return (
@@ -859,7 +883,6 @@ const AssistantMessage: React.FC<any> = ({
   agentIntent,
   showScenarios,
   setShowScenarios,
-
 }) => {
   const message = useMessage();
   const { messages } = useThread();
@@ -1062,8 +1085,8 @@ const AssistantMessage: React.FC<any> = ({
       {!isAnyMessageStreaming &&
         !isMessageLoading &&
         isLastMessage &&
-        (paycheckCalculated) &&
-        (agentIntent === "tax_paycheck_calculation") &&
+        paycheckCalculated &&
+        agentIntent === "tax_paycheck_calculation" &&
         !showScenarios && (
           <div style={{ marginTop: "12px", marginLeft: "32px" }}>
             <button
@@ -1122,10 +1145,12 @@ const AssistantMessage: React.FC<any> = ({
       {!isAnyMessageStreaming &&
         !isMessageLoading &&
         isLastMessage &&
-        (paycheckCalculated) &&
-        (agentIntent === "tax_paycheck_calculation") &&
+        paycheckCalculated &&
+        agentIntent === "tax_paycheck_calculation" &&
         showScenarios && (
-          <div style={{ marginTop: "12px", marginLeft: "32px", maxWidth: "600px" }}>
+          <div
+            style={{ marginTop: "12px", marginLeft: "32px", maxWidth: "600px" }}
+          >
             <ScenarioCheckbox
               userId={userId}
               sessionId={sessionId}
