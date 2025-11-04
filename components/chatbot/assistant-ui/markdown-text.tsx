@@ -13,15 +13,27 @@ import { FC, memo, useState } from "react";
 import { CheckIcon, CopyIcon } from "lucide-react";
 import { cn } from "../../../lib/utils";
 
+
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
+
+
+
+
 import { TooltipIconButton } from "./tooltip-icon-button";
 
 const MarkdownTextImpl = () => {
   return (
+
+
     <MarkdownTextPrimitive
-      remarkPlugins={[remarkGfm]}
+      remarkPlugins={[remarkGfm, remarkMath]}
+      rehypePlugins={[rehypeKatex]}
       className="aui-md"
       components={defaultComponents}
     />
+
+
   );
 };
 
