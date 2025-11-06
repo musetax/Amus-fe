@@ -683,6 +683,17 @@ const Composer: FC = () => {
   console.log(composerRef, "composerRef---2222");
   return (
     <ComposerPrimitive.Root className="focus-within:border-ring/20 flex w-full flex-wrap items-end rounded-full border border-[#E9E9E9] bg-inherit px-2.5 py-0 shadow-sm transition-colors ease-in gap-2 bg-white ">
+        <ComposerPrimitive.AddAttachment
+          asChild
+        >
+          <TooltipIconButton
+            tooltip="Add Attachment"
+            variant="default"
+            className="my-2.5 size-8 p-2 transition-opacity ease-in text-gray-500"
+          >
+            <LinkIcon />
+          </TooltipIconButton>
+        </ComposerPrimitive.AddAttachment>
       <ComposerPrimitive.Input
         ref={composerRef}
         rows={1}
@@ -735,7 +746,15 @@ const ComposerAction: FC<ComposerActionProps> = ({ composerRef }) => {
       <ThreadPrimitive.If running={false}>
         <ComposerPrimitive.AddAttachment
           asChild
-        ></ComposerPrimitive.AddAttachment>
+        >
+          <TooltipIconButton
+            tooltip="Add Attachment"
+            variant="default"
+            className="my-2.5 size-8 p-2 transition-opacity ease-in"
+          >
+            <LinkIcon />
+          </TooltipIconButton>
+        </ComposerPrimitive.AddAttachment>
 
         <ComposerPrimitive.Send asChild>
           <TooltipIconButton
