@@ -680,7 +680,7 @@ const ThreadScrollToBottom: FC = () => {
 
 const Composer: FC = () => {
   const composerRef = useRef<HTMLTextAreaElement | null>(null);
-
+  console.log(composerRef, "composerRef---2222");
   return (
     <ComposerPrimitive.Root className="focus-within:border-ring/20 flex w-full flex-wrap items-end rounded-full border border-[#E9E9E9] bg-inherit px-2.5 py-0 shadow-sm transition-colors ease-in gap-2 bg-white ">
       <ComposerPrimitive.Input
@@ -700,6 +700,7 @@ interface ComposerActionProps {
 }
 
 const ComposerAction: FC<ComposerActionProps> = ({ composerRef }) => {
+  console.log(composerRef, "composerRef---");
   // const { transcript, listening, startListening, stopListening } =
   const { transcript, listening } = useSpeechRecognition();
   // const message = composerRef.current?.value.trim();
@@ -908,7 +909,7 @@ const AssistantMessage: React.FC<any> = ({
   const isAnyMessageStreaming = messages.some(
     (msg: any) => msg.role === "assistant" && msg.metadata?.custom?.streaming
   );
-
+console.log("AssistantMessage rendered with messageId:", messageId);
   // Debug logging for scenario button
   // console.log("🔍 AssistantMessage metadata:", {
   //   messageId,
@@ -1170,7 +1171,7 @@ interface ActionBarProps {
 
 const AssistantActionBar: FC<ActionBarProps> = ({ urls, onToggleUrls }) => {
   const [open, setOpen] = useState(false);
-  if (!urls || !Array.isArray(urls) || urls.length === 0) return null;
+  // if (!urls || !Array.isArray(urls) || urls.length === 0) return null;
 
   // const firstUrl = urls[0];
 
@@ -1208,7 +1209,7 @@ const AssistantActionBar: FC<ActionBarProps> = ({ urls, onToggleUrls }) => {
         </ActionBarPrimitive.StopSpeaking>
       </MessagePrimitive.If>
 
-      <Tooltip open={open} onOpenChange={setOpen}>
+      {/* <Tooltip open={open} onOpenChange={setOpen}>
         <TooltipTrigger asChild>
           <TooltipIconButton
             tooltip="Related resources"
@@ -1220,7 +1221,7 @@ const AssistantActionBar: FC<ActionBarProps> = ({ urls, onToggleUrls }) => {
             <LinkIcon />
           </TooltipIconButton>
         </TooltipTrigger>
-      </Tooltip>
+      </Tooltip> */}
     </ActionBarPrimitive.Root>
   );
 };
