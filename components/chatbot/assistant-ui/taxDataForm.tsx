@@ -54,7 +54,7 @@ export const TaxDataForm: React.FC<{
     deductions: undefined,
     dependents: undefined,
     spouse_income: undefined,
-    current_date: dayjs().format("YYYY-MM-DD"),
+    // current_date: dayjs().format("YYYY-MM-DD"),
     // paychecks_already_received: undefined,
     home_address: "",
     work_address: "",

@@ -23,7 +23,7 @@ export interface TaxData {
   deductions?: any;
   dependents?: number;
   spouse_income?: number;
-  current_date?: string;
+  // current_date?: string;
   paychecks_already_received?: number;
   home_address?: string;
   work_address?: string;
