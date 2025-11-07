@@ -35,7 +35,7 @@ export const TaxDataForm: React.FC<{
   taxData: TaxData;
   onSave: (payload: any) => void;
   onCancel?: () => void;
-}> = ({ taxData, onSave,onCancel }) => {
+}> = ({ taxData, onSave, onCancel }) => {
   const defaultFields: TaxData = {
     // first_name: "",
     // middle_name: "",
@@ -315,12 +315,16 @@ export const TaxDataForm: React.FC<{
 
     // Validate with the updated form
     if (!validate()) return;
-    setForm((prev: any) => ({
-      ...prev,
+
+    const updatedForm = {
+      ...form,
       is_refund_data_fill: true,
       is_paycheck_data_fill: true,
-    }));
-    onSave(form);
+    };
+
+    setForm(updatedForm);
+    onSave(updatedForm);
+
   };
 
   const renderField = (key: string, value: any) => {
@@ -342,11 +346,10 @@ export const TaxDataForm: React.FC<{
           value={current}
           onChange={(e) => handleChange(key, e.target.value)}
           // className="border rounded-lg px-3 py-2 text-sm text-gray-700 w-full sm:w-48"
-          className={`border rounded-lg px-3 py-2 text-sm text-gray-700 w-full sm:w-48 ${
-            submitted && errors[key]
+          className={`border rounded-lg px-3 py-2 text-sm text-gray-700 w-full sm:w-48 ${submitted && errors[key]
               ? "border-red bg-red-50"
               : "border-gray-300"
-          }`}
+            }`}
         >
           <option value="">Select...</option>
           {options.map((opt: any) => (
@@ -393,9 +396,8 @@ export const TaxDataForm: React.FC<{
           type="number"
           value={value ?? ""}
           onChange={(e) => handleChange(key, e.target.value)}
-          className={`border rounded-lg px-3 py-2 text-sm text-gray-700 w-full sm:w-48 ${
-            submitted && errors[key] ? "border-red" : "border-gray-300"
-          }`}
+          className={`border rounded-lg px-3 py-2 text-sm text-gray-700 w-full sm:w-48 ${submitted && errors[key] ? "border-red" : "border-gray-300"
+            }`}
         />
       );
     }
@@ -405,9 +407,8 @@ export const TaxDataForm: React.FC<{
         type="text"
         value={value ?? ""}
         onChange={(e) => handleChange(key, e.target.value)}
-        className={`border rounded-lg px-3 py-2 text-sm text-gray-700 w-full sm:w-48 ${
-          submitted && errors[key] ? "border-red" : "border-gray-300"
-        }`}
+        className={`border rounded-lg px-3 py-2 text-sm text-gray-700 w-full sm:w-48 ${submitted && errors[key] ? "border-red" : "border-gray-300"
+          }`}
       />
     );
   };

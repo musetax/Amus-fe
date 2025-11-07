@@ -51,7 +51,7 @@ export const OCRUploadComponent: React.FC<{
       formData.append("file", file);
 
       const response = await axios.post(
-        `https://dev-ocr.musetax.com/vision/extract?user_id=${userId}`,
+        `https://amus-devapi.musetax.com/v1/api/ocr/vision/extract`,
         formData,
         {
           headers: {
@@ -92,7 +92,8 @@ export const OCRUploadComponent: React.FC<{
     setProgress(0);
   };
   const convertResponse = (response: any) => {
-    const data = response?.data || {};
+    console.log("OCR Response:", response);
+    const data = response || {};
 
     const sumArray = (arr: any[] | null | undefined): number =>
       Array.isArray(arr)
