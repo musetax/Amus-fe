@@ -31,7 +31,7 @@ import { UserMessageAttachments } from "../../../components/assistant-ui/attachm
 // import toast from "react-hot-toast";
 // import { downloadPdf, sendEmail } from "../../../app/taxModelAdapter";
 import { URLDisplay } from "./url-display";
-import { Tooltip, TooltipTrigger } from "../ui/tooltip";
+// import { Tooltip, TooltipTrigger } from "../ui/tooltip";
 import TaxChatbot from "../../../app/payrollQuestionchat";
 import { ErrorBanner } from "./error-ui";
 import Image from "next/image";
@@ -41,6 +41,7 @@ import { LifeEventsForm } from "./life-events-form";
 import { SelcectForHowToFillDataButton } from "./handleUploadOCR";
 import { OCRUploadComponent } from "./OCRUploadComponent";
 import { ScenarioCheckbox } from "./scenario-checkbox";
+import { Tooltip, TooltipTrigger } from "@radix-ui/react-tooltip";
 // import Image from "next/image";
 
 export const CHAT_HISTORY_KEY = "chat_history";
@@ -1171,7 +1172,7 @@ interface ActionBarProps {
 
 const AssistantActionBar: FC<ActionBarProps> = ({ urls, onToggleUrls }) => {
   const [open, setOpen] = useState(false);
-  // if (!urls || !Array.isArray(urls) || urls.length === 0) return null;
+   if (!urls || !Array.isArray(urls) || urls.length === 0) return null;
 
   // const firstUrl = urls[0];
 
@@ -1209,7 +1210,7 @@ const AssistantActionBar: FC<ActionBarProps> = ({ urls, onToggleUrls }) => {
         </ActionBarPrimitive.StopSpeaking>
       </MessagePrimitive.If>
 
-      {/* <Tooltip open={open} onOpenChange={setOpen}>
+      <Tooltip open={open} onOpenChange={setOpen}>
         <TooltipTrigger asChild>
           <TooltipIconButton
             tooltip="Related resources"
@@ -1221,7 +1222,7 @@ const AssistantActionBar: FC<ActionBarProps> = ({ urls, onToggleUrls }) => {
             <LinkIcon />
           </TooltipIconButton>
         </TooltipTrigger>
-      </Tooltip> */}
+      </Tooltip>
     </ActionBarPrimitive.Root>
   );
 };
