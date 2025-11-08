@@ -33,7 +33,7 @@ export interface TaxData {
 
 export const TaxDataForm: React.FC<{
   taxData: TaxData;
-  onSave: (payload: any) => void;
+  onSave: (payload: TaxData) => void;
   onCancel?: () => void;
 }> = ({ taxData, onSave, onCancel }) => {
   const defaultFields: TaxData = {
@@ -139,7 +139,13 @@ export const TaxDataForm: React.FC<{
   ];
 
   const handleChange = (field: string, value: any) => {
-    const updated = { ...form, [field]: value };
+      let newValue = value;
+      if (numberFields.includes(field)) {
+    newValue = value === "" ? undefined : Number(value);
+  }
+
+  const updated = { ...form, [field]: newValue };
+    // const updated = { ...form, [field]: value };
 
     // Auto calculate estimated annual income if hourly
     if (
@@ -314,18 +320,29 @@ export const TaxDataForm: React.FC<{
     // Safely update form flags before validation
 
     // Validate with the updated form
+    console.log("Submitting form:", form);
     if (!validate()) return;
 
-    const updatedForm = {
-      ...form,
-      is_refund_data_fill: true,
-      is_paycheck_data_fill: true,
-    };
-
-    setForm(updatedForm);
-    onSave(updatedForm);
+   
+    onSave(form);
 
   };
+     const numberFields = [
+      "age",
+      "annual_salary",
+      "hourly_rate",
+      "average_hours_per_week",
+      "spouse_income",
+      "estimated_annual_income",
+      "dependents",
+      "deductions",
+      "additional_income",
+      "pre_tax_deductions",
+      "post_tax_deductions",
+      "current_withholding_per_paycheck",
+      "desired_boost_per_paycheck",
+      "paychecks_already_received",
+    ];
 
   const renderField = (key: string, value: any) => {
     const dropdownFields: any = {
@@ -373,29 +390,15 @@ export const TaxDataForm: React.FC<{
       );
     }
 
-    const numberFields = [
-      "age",
-      "annual_salary",
-      "hourly_rate",
-      "average_hours_per_week",
-      "spouse_income",
-      "estimated_annual_income",
-      "dependents",
-      "deductions",
-      "additional_income",
-      "pre_tax_deductions",
-      "post_tax_deductions",
-      "current_withholding_per_paycheck",
-      "desired_boost_per_paycheck",
-      "paychecks_already_received",
-    ];
+ 
 
     if (numberFields.includes(key)) {
       return (
         <input
           type="number"
-          value={value ?? ""}
+          value={value??''}
           onChange={(e) => handleChange(key, e.target.value)}
+          onWheel={(e) => e.currentTarget.blur()} // prevent scroll changing number input
           className={`border rounded-lg px-3 py-2 text-sm text-gray-700 w-full sm:w-48 ${submitted && errors[key] ? "border-red" : "border-gray-300"
             }`}
         />
