@@ -75,10 +75,15 @@ Authentication is handled via token-based auth in [utilities/auth.ts](utilities/
 ### Chat System
 
 The chat implementation uses `@assistant-ui/react`:
-- **Runtime Provider**: [myRuntimeProvider.tsx](app/myRuntimeProvider.tsx) - Streaming chat adapter that calls backend `/chat` endpoint with `intent` parameter
+- **Runtime Provider**: [myRuntimeProvider.tsx](app/myRuntimeProvider.tsx) - Streaming chat adapter that dynamically calls either `/chat` or `/tax-calculate` endpoint based on message metadata
+  - Regular chat messages → `/chat` endpoint
+  - Tax calculation messages (with `isTaxCalculation: true` metadata) → `/tax-calculate` endpoint
 - **History Adapter**: [services/chatbot.tsx](services/chatbot.tsx) - Loads previous conversations from `/get-user-chats`
 - **Messages**: Streamed from backend as Server-Sent Events (SSE) with format `data: {response, urls}`
-- **Metadata**: Messages can include `urls` for citation display
+- **Metadata**: Messages can include:
+  - `urls` for citation display
+  - `custom.isTaxCalculation` boolean to trigger tax calculation API
+  - `custom.payrollData` object containing tax form data for calculations
 
 ### Form System
 
@@ -155,3 +160,5 @@ utilities/
 - All API calls go through the backend proxy to avoid CORS
 - TypeScript strict mode is enabled; ensure type safety when making changes
 - The chatbot supports streaming responses with visual feedback
+- The `utilities/auth.ts` module must be imported in [assistant.tsx](app/assistant.tsx) to activate axios interceptors globally
+- Remote image domains are whitelisted in [next.config.ts](next.config.ts) for S3, postimg.cc, and ibb.co
