@@ -114,7 +114,8 @@ export const OCRUploadComponent: React.FC<{
     setLoading(true);
     try {
       const result = await uploadOcrData(userId, file);
-      const reponse = convertResponse(result);
+      // const reponse = convertResponse(result);
+      const reponse = result
       // Assume OCR returns data shaped like TaxData
       // let result = {
       //     data: {
@@ -207,7 +208,7 @@ export const OCRUploadComponent: React.FC<{
     return (
       <TaxDataForm
         taxData={taxData}
-        onSave={(updated) => {
+        onSave={(updated:any) => {
           console.log("Updated Tax Data:", updated);
           const updatedForm = {
             ...updated,

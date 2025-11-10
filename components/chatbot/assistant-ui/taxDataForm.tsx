@@ -24,8 +24,8 @@ export interface TaxData {
   paychecks_already_received?: number;
   home_address?: string;
   work_address?: string;
-  pre_tax_deductions?: number;
-  post_tax_deductions?: number;
+  pre_tax_deductions?: any;
+  post_tax_deductions?: any;
   age?: number;
   is_refund_data_fill?: boolean;
   is_paycheck_data_fill?: boolean;
@@ -37,9 +37,6 @@ export const TaxDataForm: React.FC<{
   onCancel?: () => void;
 }> = ({ taxData, onSave, onCancel }) => {
   const defaultFields: TaxData = {
-    // first_name: "",
-    // middle_name: "",
-    // last_name: "",
     income_type: undefined,
     annual_salary: undefined,
     hourly_rate: undefined,
@@ -49,21 +46,17 @@ export const TaxDataForm: React.FC<{
     filing_status: undefined,
     pay_frequency: undefined,
     current_withholding_per_paycheck: undefined,
-    // desired_boost_per_paycheck: undefined,
     additional_income: undefined,
     deductions: undefined,
     dependents: undefined,
     spouse_income: undefined,
-    // current_date: dayjs().format("YYYY-MM-DD"),
-    // paychecks_already_received: undefined,
     home_address: "",
     work_address: "",
     pre_tax_deductions: undefined,
     post_tax_deductions: undefined,
     age: undefined,
-    // is_refund_data_fill: false,
-    // is_paycheck_data_fill: false,
   };
+
   const normalizeField = (field: string, value: any) => {
     if (!value) return value;
 
@@ -75,7 +68,6 @@ export const TaxDataForm: React.FC<{
         return ["salary", "hourly"].includes(lowercase) ? lowercase : undefined;
 
       case "filing_status":
-        // allow flexible matching
         if (lowercase === "married" || lowercase === "married_joint")
           return "married_joint";
         if (lowercase === "single") return "single";
@@ -91,7 +83,6 @@ export const TaxDataForm: React.FC<{
           ["weekly", "bi-weekly", "semi-monthly", "monthly"].includes(lowercase)
         )
           return lowercase;
-        // fix common spelling variants
         if (lowercase === "biweekly") return "bi-weekly";
         if (lowercase === "semimonthly") return "semi-monthly";
         return undefined;
@@ -100,6 +91,7 @@ export const TaxDataForm: React.FC<{
         return value;
     }
   };
+
   const normalizedTaxData = Object.fromEntries(
     Object.entries(taxData || {}).map(([key, value]) => [
       key,
@@ -138,16 +130,31 @@ export const TaxDataForm: React.FC<{
     { label: "Monthly", value: "monthly" },
   ];
 
+  const numberFields = [
+    "age",
+    "annual_salary",
+    "hourly_rate",
+    "average_hours_per_week",
+    "spouse_income",
+    "estimated_annual_income",
+    "dependents",
+    "deductions",
+    "additional_income",
+    "pre_tax_deductions",
+    "post_tax_deductions",
+    "current_withholding_per_paycheck",
+    "desired_boost_per_paycheck",
+    "paychecks_already_received",
+  ];
+
   const handleChange = (field: string, value: any) => {
-      let newValue = value;
-      if (numberFields.includes(field)) {
-    newValue = value === "" ? undefined : Number(value);
-  }
+    let newValue = value;
+    if (numberFields.includes(field)) {
+      newValue = value === "" ? undefined : Number(value);
+    }
 
-  const updated = { ...form, [field]: newValue };
-    // const updated = { ...form, [field]: value };
+    const updated = { ...form, [field]: newValue };
 
-    // Auto calculate estimated annual income if hourly
     if (
       field === "hourly_rate" ||
       field === "average_hours_per_week" ||
@@ -169,6 +176,12 @@ export const TaxDataForm: React.FC<{
 
     setForm(updated);
   };
+
+  const sumArray = (arr: any) =>
+    Array.isArray(arr)
+      ? arr.reduce((sum, item) => sum + (item?.amount || 0), 0)
+      : 0;
+
   const validate = () => {
     const newErrors: Record<string, string> = {};
 
@@ -181,7 +194,6 @@ export const TaxDataForm: React.FC<{
       "work_address",
     ];
 
-    // ✅ Check all required fields
     requiredFields.forEach((key) => {
       const value = form[key];
       if (
@@ -194,7 +206,6 @@ export const TaxDataForm: React.FC<{
       }
     });
 
-    // ✅ Conditional validation: filing status
     if (form.filing_status === "married_joint") {
       if (
         form.spouse_income === undefined ||
@@ -206,7 +217,6 @@ export const TaxDataForm: React.FC<{
       }
     }
 
-    // ✅ Conditional validation: salary
     if (form.income_type === "salary") {
       if (
         form.annual_salary === undefined ||
@@ -218,7 +228,6 @@ export const TaxDataForm: React.FC<{
       }
     }
 
-    // ✅ Conditional validation: hourly
     if (form.income_type === "hourly") {
       if (
         form.hourly_rate === undefined ||
@@ -246,7 +255,6 @@ export const TaxDataForm: React.FC<{
       }
     }
 
-    // ✅ Address format validation (ZIP)
     if (form.home_address && !/^\d{5}$/.test(form.home_address)) {
       newErrors.home_address = "Enter a valid 5-digit ZIP code";
     }
@@ -254,12 +262,10 @@ export const TaxDataForm: React.FC<{
       newErrors.work_address = "Enter a valid 5-digit ZIP code";
     }
 
-    // ✅ Date validation
     if (form.current_date && dayjs(form.current_date).isAfter(dayjs())) {
       newErrors.current_date = "Date cannot be in the future";
     }
 
-    // ✅ Age validation (13–99)
     if (form.age !== undefined && form.age !== null && form.age !== "") {
       const age = Number(form.age);
       if (isNaN(age) || age < 13 || age > 99) {
@@ -267,82 +273,30 @@ export const TaxDataForm: React.FC<{
       }
     }
 
-    // ✅ Annual salary limit
-    if (
-      form.annual_salary !== undefined &&
-      form.annual_salary !== null &&
-      form.annual_salary !== ""
-    ) {
-      const salary = Number(form.annual_salary);
-      if (isNaN(salary) || salary > 500000) {
-        newErrors.annual_salary = "Annual salary cannot exceed 500,000";
-      } else if (salary < 0) {
-        newErrors.annual_salary = "Annual salary cannot be negative";
-      }
-    }
-
-    // ✅ Current withholding < annual salary
-    if (
-      form.current_withholding_per_paycheck !== undefined &&
-      form.current_withholding_per_paycheck !== null &&
-      form.current_withholding_per_paycheck !== "" &&
-      form.annual_salary !== undefined &&
-      form.annual_salary !== null &&
-      form.annual_salary !== ""
-    ) {
-      const withholding = Number(form.current_withholding_per_paycheck);
-      const salary = Number(form.annual_salary);
-      if (withholding < 0) {
-        newErrors.current_withholding_per_paycheck =
-          "Current withholding cannot be negative";
-      } else if (withholding > salary) {
-        newErrors.current_withholding_per_paycheck =
-          "Current withholding cannot exceed annual salary";
-      }
-    }
-
-    // ✅ Generic check for negative numbers in all numeric fields
-    Object.entries(form).forEach(([key, value]: any) => {
-      if (typeof value === "number" || (!isNaN(value) && value !== "")) {
-        if (Number(value) < 0) {
-          newErrors[key] = `${key.replace(/_/g, " ")} cannot be negative`;
-        }
-      }
-    });
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = () => {
-    setSubmitted(true); // mark that user tried to submit
-
-    // Safely update form flags before validation
-
-    // Validate with the updated form
-    console.log("Submitting form:", form);
+    setSubmitted(true);
     if (!validate()) return;
 
-   
-    onSave(form);
+    const updatedForm = {
+      ...form,
+      pre_tax_deductions: Array.isArray(form.pre_tax_deductions)
+        ? sumArray(form.pre_tax_deductions)
+        : form.pre_tax_deductions,
+      post_tax_deductions: Array.isArray(form.post_tax_deductions)
+        ? sumArray(form.post_tax_deductions)
+        : form.post_tax_deductions,
+      deductions: Array.isArray(form.deductions)
+        ? sumArray(form.deductions)
+        : form.deductions,
+    };
 
+    console.log("Submitting form:", updatedForm);
+    onSave(updatedForm);
   };
-     const numberFields = [
-      "age",
-      "annual_salary",
-      "hourly_rate",
-      "average_hours_per_week",
-      "spouse_income",
-      "estimated_annual_income",
-      "dependents",
-      "deductions",
-      "additional_income",
-      "pre_tax_deductions",
-      "post_tax_deductions",
-      "current_withholding_per_paycheck",
-      "desired_boost_per_paycheck",
-      "paychecks_already_received",
-    ];
 
   const renderField = (key: string, value: any) => {
     const dropdownFields: any = {
@@ -362,10 +316,7 @@ export const TaxDataForm: React.FC<{
         <select
           value={current}
           onChange={(e) => handleChange(key, e.target.value)}
-          // className="border rounded-lg px-3 py-2 text-sm text-gray-700 w-full sm:w-48"
-          className={`border rounded-lg px-3 py-2 text-sm text-gray-700 w-full sm:w-48 ${submitted && errors[key]
-              ? "border-red bg-red-50"
-              : "border-gray-300"
+          className={`border rounded-lg px-3 py-2 text-sm text-gray-700 w-full sm:w-48 ${submitted && errors[key] ? "border-red bg-red-50" : "border-gray-300"
             }`}
         >
           <option value="">Select...</option>
@@ -390,15 +341,13 @@ export const TaxDataForm: React.FC<{
       );
     }
 
- 
-
     if (numberFields.includes(key)) {
       return (
         <input
           type="number"
-          value={value??''}
+          value={value ?? ""}
           onChange={(e) => handleChange(key, e.target.value)}
-          onWheel={(e) => e.currentTarget.blur()} // prevent scroll changing number input
+          onWheel={(e) => e.currentTarget.blur()}
           className={`border rounded-lg px-3 py-2 text-sm text-gray-700 w-full sm:w-48 ${submitted && errors[key] ? "border-red" : "border-gray-300"
             }`}
         />
@@ -417,66 +366,109 @@ export const TaxDataForm: React.FC<{
   };
 
   return (
-    <div
-      className="w-full max-w-3xl mx-auto bg-white shadow-md rounded-xl p-6 sm:p-8 space-y-6"
-      style={{ paddingBottom: 20 }}
-    >
+    <div className="w-full max-w-3xl mx-auto bg-white shadow-md rounded-xl p-6 sm:p-8 space-y-6">
       <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4 text-center">
         Tax Data Form
       </h2>
 
-      <div
-        className="grid grid-cols-1 gap-x-8 gap-y-4"
-        style={{ gap: 8, marginBottom: 16 }}
-      >
+      <div className="grid grid-cols-1 gap-x-8 gap-y-4">
         {Object.entries(form).map(([key, value]) => {
           if (
+            ["pre_tax_deductions", "post_tax_deductions", "deductions"].includes(
+              key
+            )
+          )
+            return null;
+
+          if (
             form.income_type === "salary" &&
-            [
-              "hourly_rate",
-              "average_hours_per_week",
-              "seasonal_variation",
-            ].includes(key)
+            ["hourly_rate", "average_hours_per_week", "seasonal_variation"].includes(
+              key
+            )
           )
             return null;
           if (form.income_type === "hourly" && key === "annual_salary")
             return null;
           if (form.filing_status !== "married_joint" && key === "spouse_income")
             return null;
+          let label = key
+            .replace(/_/g, " ")
+            .replace(/\b\w/g, (l) => l.toUpperCase());
 
+          if (key === "home_address") label = "Home Zipcode";
+          if (key === "work_address") label = "Work Zipcode";
+      {console.log("Rendering field:", key, value);}
           return (
             <div key={key} className="flex flex-col">
               <label
                 className="font-medium text-gray-700 mb-1 capitalize"
-                style={{
-                  fontSize: 14,
-                  textTransform: "capitalize",
-                  marginBottom: "4px",
-                }}
+                style={{ fontSize: 14 }}
               >
-                {key.replace(/_/g, " ")}
+                {label}
+                {/* {key.replace(/_/g, " ")} */}
               </label>
               {renderField(key, value)}
               {errors[key] && (
-                <span
-                  className="text-red-500 text-xs mt-1"
-                  style={{ color: "red" }}
-                >
+                <span className="text-red-500 text-xs mt-1">
                   {errors[key]}
                 </span>
               )}
             </div>
           );
         })}
+
+        {/* 🧾 Deduction Arrays */}
+        {["pre_tax_deductions", "post_tax_deductions", "deductions"].map(
+          (fieldKey) => {
+            const arr = form[fieldKey];
+            if (!Array.isArray(arr) || arr.length === 0) return null;
+
+            return (
+              <div
+                key={fieldKey}
+                className="mt-4 border-t pt-4 bg-gray-50 rounded-lg p-3"
+              >
+                <h3 className="text-md font-semibold text-gray-700 mb-2 capitalize">
+                  {fieldKey.replace(/_/g, " ")}
+                </h3>
+
+                {arr.map((item: any, index: number) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between mb-2 space-x-3"
+                  >
+                    <span className="text-sm text-gray-800 w-1/2">
+                      {item.deduction_type}
+                    </span>
+                    <input
+                      type="number"
+                      value={item.amount ?? ""}
+                      onChange={(e) => {
+                        const updatedArr = [...arr];
+                        updatedArr[index].amount = Number(e.target.value) || 0;
+                        setForm({ ...form, [fieldKey]: updatedArr });
+                      }}
+                      className="border rounded-lg px-3 py-1 text-sm text-gray-700 w-32"
+                    />
+                  </div>
+                ))}
+
+                <div className="mt-2 text-right font-medium text-gray-700">
+                  Total:{" "}
+                  {arr
+                    .reduce((sum, item) => sum + (item.amount || 0), 0)
+                    .toFixed(2)}
+                </div>
+              </div>
+            );
+          }
+        )}
       </div>
 
-      <div
-        className="flex justify-center flex-col gap-3 pt-6"
-        style={{ marginTop: "0px", marginBottom: "22px" }}
-      >
+      <div className="flex justify-center flex-col gap-3 pt-6">
         <button
           onClick={onCancel}
-          className="px-6 py-2 rounded-full font-medium text-white  transition-all w-full sm:w-auto"
+          className="px-6 py-2 rounded-full font-medium text-white w-full sm:w-auto"
           style={{
             border: "1px solid rgb(81, 141, 231)",
             color: "rgb(81, 141, 231)",
@@ -487,7 +479,7 @@ export const TaxDataForm: React.FC<{
         </button>
         <button
           onClick={handleSubmit}
-          className="px-6 py-2 rounded-full font-medium text-white shadow-md transition-all w-full sm:w-auto"
+          className="px-6 py-2 rounded-full font-medium text-white shadow-md w-full sm:w-auto"
           style={{ backgroundColor: "rgb(81, 141, 231)" }}
           onMouseEnter={(e) =>
             (e.currentTarget.style.backgroundColor = "rgb(65, 120, 210)")
