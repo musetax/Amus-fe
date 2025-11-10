@@ -480,7 +480,12 @@ export const TaxInputField: React.FC<TaxInputFieldProps> = ({
         </TooltipIconButton>
       </div>
       {hasError && (
-        <p id="input-error" className="mt-2 text-xs text-red-600" role="alert">
+        <p
+          id="input-error"
+          className="mt-2 text-xs text-red-600"
+          role="alert"
+          style={{ color: "red" }}
+        >
           {validationError}
         </p>
       )}

@@ -48,7 +48,7 @@ export const CustomCheckbox: React.FC<CustomCheckboxProps> = ({
       <input
         type="checkbox" // ✅ Always checkbox for toggle behavior
         checked={checked}
-        onChange={() => { }} // ignore native event
+        onChange={() => {}} // ignore native event
         style={{
           position: "absolute",
           opacity: 0,
@@ -88,7 +88,6 @@ export const CustomCheckbox: React.FC<CustomCheckboxProps> = ({
     </label>
   );
 };
-
 
 const scenarios: Scenario[] = [
   {
@@ -145,7 +144,6 @@ export const ScenarioCheckbox: React.FC<ScenarioCheckboxProps> = ({
   }, [userId]);
 
   const handleCheckboxChange = (scenarioId: string) => {
-
     setSelectedScenarios((prev) => {
       // ✅ Radio behavior for state options (but allow deselect)
 
@@ -210,7 +208,9 @@ export const ScenarioCheckbox: React.FC<ScenarioCheckboxProps> = ({
       selectedScenarios.includes("got_married") &&
       (!spouseIncome || Number(spouseIncome) <= 0)
     ) {
-      setSpouseIncomeError("Please enter a valid spouse income greater than 0.");
+      setSpouseIncomeError(
+        "Please enter a valid spouse income greater than 0."
+      );
       return;
     }
 
@@ -251,7 +251,6 @@ export const ScenarioCheckbox: React.FC<ScenarioCheckboxProps> = ({
     }
   };
 
-
   if (completed) return null;
 
   return (
@@ -263,9 +262,17 @@ export const ScenarioCheckbox: React.FC<ScenarioCheckboxProps> = ({
         {scenarios.map((scenario) => {
           const isStateOption =
             scenario.id === "no_tax_state" || scenario.id === "high_tax_state";
-
+          const showStateTitle = scenario.id === "no_tax_state";
           return (
             <div key={scenario.id}>
+              {showStateTitle && (
+                <p
+                  className=" text-[#31333F] font-medium"
+                  style={{ marginBottom: "4px" }}
+                >
+                  Select State Tax
+                </p>
+              )}
               <label
                 className="flex items-start space-x-3 gap-1 cursor-pointer rounded-lg hover:bg-gray-50 transition-colors"
                 style={{
@@ -310,10 +317,11 @@ export const ScenarioCheckbox: React.FC<ScenarioCheckboxProps> = ({
                         }
                       }}
                       onWheel={(e) => e.currentTarget.blur()}
-                      className={`w-full text-sm border rounded-lg px-3 py-2 focus:ring-2 transition-all outline-none ${spouseIncomeError
+                      className={`w-full text-sm border rounded-lg px-3 py-2 focus:ring-2 transition-all outline-none ${
+                        spouseIncomeError
                           ? "border-red-500 focus:ring-red-200 focus:border-red-400"
                           : "border-gray-300 focus:ring-blue-200 focus:border-blue-400"
-                        }`}
+                      }`}
                       min="0"
                       style={{
                         WebkitAppearance: "none",
@@ -322,12 +330,15 @@ export const ScenarioCheckbox: React.FC<ScenarioCheckboxProps> = ({
                     />
 
                     {spouseIncomeError && (
-                      <p className="text-red-500 text-xs mt-1"
-                      style={{ color: "red" }}>{spouseIncomeError}</p>
+                      <p
+                        className="text-red-500 text-xs mt-1"
+                        style={{ color: "red" }}
+                      >
+                        {spouseIncomeError}
+                      </p>
                     )}
                   </div>
                 )}
-
             </div>
           );
         })}
@@ -338,10 +349,11 @@ export const ScenarioCheckbox: React.FC<ScenarioCheckboxProps> = ({
           onClick={handleCalculate}
           disabled={selectedScenarios.length === 0 || calculating}
           className={`flex-1 py-3 px-4 rounded-2xl font-medium text-center transition-colors custom_btn 
-      ${selectedScenarios.length === 0 || calculating
-              ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-              : "bg-gray-200 text-gray-400 hover:bg-gray-700"
-            }`}
+      ${
+        selectedScenarios.length === 0 || calculating
+          ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+          : "bg-gray-200 text-gray-400 hover:bg-gray-700"
+      }`}
           style={{ border: "1px solid #e5e7eb" }}
         >
           {calculating ? "Calculating..." : "Continue"}

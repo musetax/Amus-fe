@@ -103,7 +103,7 @@ export const OCRUploadComponent: React.FC<{
     return {
       ...data,
       pre_tax_deductions: sumArray(data.pre_tax_deductions),
-      post_tax_deductions:sumArray(data.post_tax_deductions),
+      post_tax_deductions: sumArray(data.post_tax_deductions),
       deductions: sumArray(data.deductions),
     };
   };
@@ -115,7 +115,7 @@ export const OCRUploadComponent: React.FC<{
     try {
       const result = await uploadOcrData(userId, file);
       // const reponse = convertResponse(result);
-      const reponse = result
+      const reponse = result;
       // Assume OCR returns data shaped like TaxData
       // let result = {
       //     data: {
@@ -208,7 +208,7 @@ export const OCRUploadComponent: React.FC<{
     return (
       <TaxDataForm
         taxData={taxData}
-        onSave={(updated:any) => {
+        onSave={(updated: any) => {
           console.log("Updated Tax Data:", updated);
           const updatedForm = {
             ...updated,
@@ -216,10 +216,12 @@ export const OCRUploadComponent: React.FC<{
             is_paycheck_data_fill: true,
           };
 
-
           onComplete(updatedForm);
         }}
-        onCancel={() => { setFile(null); setTaxData(null) }} // <-- wrapped in arrow function
+        onCancel={() => {
+          setFile(null);
+          setTaxData(null);
+        }} // <-- wrapped in arrow function
       />
     );
   }
@@ -231,7 +233,6 @@ export const OCRUploadComponent: React.FC<{
 
     // Open the file in a new browser tab
     window.open(fileURL, "_blank");
-
   };
   // 🔹 Otherwise show upload UI
   return (
@@ -312,8 +313,8 @@ export const OCRUploadComponent: React.FC<{
               className=" text-white hover:text-gray-600"
               style={{
                 position: "absolute",
-                right: "22px",
-                top: "1px",
+                right: "-6px",
+                top: "-9px",
                 background: "rgb(81, 141, 231)",
                 borderRadius: "50px",
                 padding: 2,

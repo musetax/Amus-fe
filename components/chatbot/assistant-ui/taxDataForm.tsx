@@ -308,7 +308,20 @@ export const TaxDataForm: React.FC<{
       })),
       pay_frequency: payFrequencyOptions,
     };
+    const getPlaceholder = (field: string) => {
+      const label = field
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, (l) => l.toUpperCase());
 
+      if (dropdownFields[field]) return `Select ${label}`;
+      if (numberFields.includes(field)) return `Enter ${label}`;
+      if (field === "current_date") return "";
+      if (field === "home_address") return "Enter Home Zipcode";
+      if (field === "work_address") return "Enter Work Zipcode";
+      return `Enter ${label}`;
+    };
+
+    const placeholder = getPlaceholder(key);
     if (dropdownFields[key]) {
       const options = dropdownFields[key];
       const current = options.find((o: any) => o.value === value) ? value : "";
@@ -316,8 +329,12 @@ export const TaxDataForm: React.FC<{
         <select
           value={current}
           onChange={(e) => handleChange(key, e.target.value)}
-          className={`border rounded-lg px-3 py-2 text-sm text-gray-700 w-full sm:w-48 ${submitted && errors[key] ? "border-red bg-red-50" : "border-gray-300"
-            }`}
+          style={{ height: 40 }}
+          className={`border rounded-lg px-3 py-2 text-sm text-gray-700 w-full sm:w-48 ${
+            submitted && errors[key]
+              ? "border-red bg-red-50"
+              : "border-gray-300"
+          }`}
         >
           <option value="">Select...</option>
           {options.map((opt: any) => (
@@ -337,6 +354,7 @@ export const TaxDataForm: React.FC<{
           max={dayjs().format("YYYY-MM-DD")}
           onChange={(e) => handleChange(key, e.target.value)}
           className="border rounded-lg px-3 py-2 text-sm text-gray-700 w-full sm:w-48"
+          style={{ height: 40 }}
         />
       );
     }
@@ -346,10 +364,13 @@ export const TaxDataForm: React.FC<{
         <input
           type="number"
           value={value ?? ""}
+          placeholder={placeholder}
           onChange={(e) => handleChange(key, e.target.value)}
           onWheel={(e) => e.currentTarget.blur()}
-          className={`border rounded-lg px-3 py-2 text-sm text-gray-700 w-full sm:w-48 ${submitted && errors[key] ? "border-red" : "border-gray-300"
-            }`}
+          className={`border rounded-lg px-3 py-2 text-sm text-gray-700 w-full sm:w-48 ${
+            submitted && errors[key] ? "border-red" : "border-gray-300"
+          }`}
+          style={{ height: 40 }}
         />
       );
     }
@@ -358,9 +379,12 @@ export const TaxDataForm: React.FC<{
       <input
         type="text"
         value={value ?? ""}
+        placeholder={placeholder}
         onChange={(e) => handleChange(key, e.target.value)}
-        className={`border rounded-lg px-3 py-2 text-sm text-gray-700 w-full sm:w-48 ${submitted && errors[key] ? "border-red" : "border-gray-300"
-          }`}
+        className={`border rounded-lg px-3 py-2 text-sm text-gray-700 w-full sm:w-48 ${
+          submitted && errors[key] ? "border-red" : "border-gray-300"
+        }`}
+        style={{ height: 40 }}
       />
     );
   };
@@ -374,17 +398,21 @@ export const TaxDataForm: React.FC<{
       <div className="grid grid-cols-1 gap-x-8 gap-y-4">
         {Object.entries(form).map(([key, value]) => {
           if (
-            ["pre_tax_deductions", "post_tax_deductions", "deductions"].includes(
-              key
-            )
+            [
+              "pre_tax_deductions",
+              "post_tax_deductions",
+              "deductions",
+            ].includes(key)
           )
             return null;
 
           if (
             form.income_type === "salary" &&
-            ["hourly_rate", "average_hours_per_week", "seasonal_variation"].includes(
-              key
-            )
+            [
+              "hourly_rate",
+              "average_hours_per_week",
+              "seasonal_variation",
+            ].includes(key)
           )
             return null;
           if (form.income_type === "hourly" && key === "annual_salary")
@@ -397,19 +425,48 @@ export const TaxDataForm: React.FC<{
 
           if (key === "home_address") label = "Home Zipcode";
           if (key === "work_address") label = "Work Zipcode";
-      {console.log("Rendering field:", key, value);}
+          {
+            console.log("Rendering field:", key, value);
+          }
           return (
-            <div key={key} className="flex flex-col">
+            <div
+              key={key}
+              className="flex flex-col"
+              style={{ marginBottom: 8 }}
+            >
               <label
                 className="font-medium text-gray-700 mb-1 capitalize"
-                style={{ fontSize: 14 }}
+                style={{
+                  fontSize: 14,
+                  marginBottom: 4,
+                  display: "flex",
+                  alignItems: "start",
+                  gap: 4,
+                }}
               >
                 {label}
+                {errors[key] && (
+                  <svg
+                    stroke="red"
+                    fill="red"
+                    stroke-width="0"
+                    viewBox="0 0 24 24"
+                    height="10px"
+                    width="10px"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path fill="none" d="M0 0h24v24H0V0z"></path>
+                    <path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z"></path>
+                  </svg>
+                )}
                 {/* {key.replace(/_/g, " ")} */}
               </label>
               {renderField(key, value)}
               {errors[key] && (
-                <span className="text-red-500 text-xs mt-1">
+                <span
+                  className="text-red-500 text-xs mt-1"
+                  style={{ color: "red" }}
+                >
                   {errors[key]}
                 </span>
               )}
@@ -449,6 +506,7 @@ export const TaxDataForm: React.FC<{
                         setForm({ ...form, [fieldKey]: updatedArr });
                       }}
                       className="border rounded-lg px-3 py-1 text-sm text-gray-700 w-32"
+                      style={{ height: 40 }}
                     />
                   </div>
                 ))}

@@ -325,7 +325,7 @@ export const Thread: any = ({
                       display: "inline-flex",
                       alignItems: "center",
                       gap: "8px",
-                      padding: "10px 20px",
+                      padding: "10px 16px",
                       fontSize: "14px",
                       fontWeight: "500",
                       color: "#ffffff",
@@ -351,8 +351,8 @@ export const Thread: any = ({
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
+                      width="20"
+                      height="20"
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
@@ -910,7 +910,7 @@ const AssistantMessage: React.FC<any> = ({
   const isAnyMessageStreaming = messages.some(
     (msg: any) => msg.role === "assistant" && msg.metadata?.custom?.streaming
   );
-console.log("AssistantMessage rendered with messageId:", messageId);
+  console.log("AssistantMessage rendered with messageId:", messageId);
   // Debug logging for scenario button
   // console.log("🔍 AssistantMessage metadata:", {
   //   messageId,
@@ -929,7 +929,7 @@ console.log("AssistantMessage rendered with messageId:", messageId);
         display: "flex",
         flexDirection: "column",
         width: "100%",
-        paddingLeft: "16px",
+        paddingLeft: "12px",
         paddingRight: "10px",
       }}
     >
@@ -1172,7 +1172,7 @@ interface ActionBarProps {
 
 const AssistantActionBar: FC<ActionBarProps> = ({ urls, onToggleUrls }) => {
   const [open, setOpen] = useState(false);
-   if (!urls || !Array.isArray(urls) || urls.length === 0) return null;
+  if (!urls || !Array.isArray(urls) || urls.length === 0) return null;
 
   // const firstUrl = urls[0];
 
