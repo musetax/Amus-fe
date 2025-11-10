@@ -91,22 +91,22 @@ export const OCRUploadComponent: React.FC<{
     setFile(null);
     setProgress(0);
   };
-  const convertResponse = (response: any) => {
-    console.log("OCR Response:", response);
-    const data = response || {};
+  // const convertResponse = (response: any) => {
+  //   console.log("OCR Response:", response);
+  //   const data = response || {};
 
-    const sumArray = (arr: any[] | null | undefined): number =>
-      Array.isArray(arr)
-        ? arr.reduce((sum, item) => sum + (item?.amount || 0), 0)
-        : 0;
+  //   const sumArray = (arr: any[] | null | undefined): number =>
+  //     Array.isArray(arr)
+  //       ? arr.reduce((sum, item) => sum + (item?.amount || 0), 0)
+  //       : 0;
 
-    return {
-      ...data,
-      pre_tax_deductions: sumArray(data.pre_tax_deductions),
-      post_tax_deductions: sumArray(data.post_tax_deductions),
-      deductions: sumArray(data.deductions),
-    };
-  };
+  //   return {
+  //     ...data,
+  //     pre_tax_deductions: sumArray(data.pre_tax_deductions),
+  //     post_tax_deductions: sumArray(data.post_tax_deductions),
+  //     deductions: sumArray(data.deductions),
+  //   };
+  // };
 
   // ✅ Proceed to upload and get OCR data
   const handleProceed = async () => {
