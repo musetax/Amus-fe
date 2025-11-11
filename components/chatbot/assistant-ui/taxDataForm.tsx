@@ -445,20 +445,7 @@ export const TaxDataForm: React.FC<{
                 }}
               >
                 {label}
-                {errors[key] && (
-                  <svg
-                    stroke="red"
-                    fill="red"
-                    stroke-width="0"
-                    viewBox="0 0 24 24"
-                    height="10px"
-                    width="10px"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path fill="none" d="M0 0h24v24H0V0z"></path>
-                    <path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z"></path>
-                  </svg>
-                )}
+                {errors[key] && <span style={{ color: "red" }}>*</span>}
                 {/* {key.replace(/_/g, " ")} */}
               </label>
               {renderField(key, value)}
@@ -523,7 +510,7 @@ export const TaxDataForm: React.FC<{
         )}
       </div>
 
-      <div className="flex justify-center flex-col gap-3 pt-6">
+      <div className="flex justify-center gap-3 pt-6">
         <button
           onClick={onCancel}
           className="px-6 py-2 rounded-full font-medium text-white w-full sm:w-auto"
