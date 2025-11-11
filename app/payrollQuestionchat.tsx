@@ -29,7 +29,10 @@ import {
 
 // Import input handlers
 import * as InputHandlers from "./payrollQuestion/inputHandlers";
-import Image from "next/image";
+import {
+  DEFAULT_COMPANY_LOGO,
+  FallbackImage,
+} from "../components/chatbot/assistant-ui/fallback-image";
 
 const TaxChatbot: React.FC<TaxChatbotProps> = ({
   onComplete,
@@ -553,7 +556,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
             }}
           >
             <span style={{ position: "relative", top: "10px" }}>
-              <Image
+              <FallbackImage
                 width={25}
                 height={25}
                 style={{
@@ -565,8 +568,9 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
                   borderRadius: "50%",
                   background: "white",
                 }}
-                src="https://appweb-bucket.s3.us-east-1.amazonaws.com/muse-logo.png"
-                alt="botIcon"
+                src={companyLogo}
+                fallbackSrc={DEFAULT_COMPANY_LOGO}
+                alt="Assistant avatar"
               />
             </span>
             <div className="bg-gray-100 text-gray-900 px-6 py-4 rounded-3xl">

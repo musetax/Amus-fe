@@ -149,6 +149,7 @@
   ChatModelRunResult
 } from "@assistant-ui/react";
 import { axiosInstanceAuth } from '../utilities/auth';
+import { formatAssistantText } from "../lib/chatFormatting";
 
 function makeThreadMessage(
   role: "user" | "assistant",
@@ -164,6 +165,9 @@ function makeThreadMessage(
     status,
   };
 
+  const formattedText =
+    role === "assistant" ? formatAssistantText(text) : text;
+
   if (role === "user") {
     return {
       ...base,
@@ -176,7 +180,7 @@ function makeThreadMessage(
     return {
       ...base,
       role: "assistant",
-      content: [{ type: "text", text }],
+      content: [{ type: "text", text: formattedText }],
       metadata: {
         unstable_state: null,
         unstable_annotations: [],

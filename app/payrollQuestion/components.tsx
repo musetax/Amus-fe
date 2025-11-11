@@ -9,7 +9,10 @@ import {
 } from "./types";
 import { SendHorizontalIcon, TooltipIconButton, CompanyLogo } from "./icons";
 import { formatTime } from "./utils";
-import Image from "next/image";
+import {
+  DEFAULT_USER_AVATAR,
+  FallbackImage,
+} from "../../components/chatbot/assistant-ui/fallback-image";
 
 // Tax User Message Component
 export const TaxUserMessage: React.FC<TaxUserMessageProps> = ({
@@ -55,35 +58,20 @@ export const TaxUserMessage: React.FC<TaxUserMessageProps> = ({
             {time}
           </span>
         </div>
-        {image ? (
-          <Image
-            width={25}
-            height={25}
-            style={{
-              width: "25px",
-              height: "25px",
-              minHeight: "25px",
-              objectFit: "cover",
-              borderRadius: "50%",
-            }}
-            src={image}
-            alt="useIcon"
-          />
-        ) : (
-          <Image
-            width={25}
-            height={25}
-            style={{
-              width: "25px",
-              height: "25px",
-              minHeight: "25px",
-              objectFit: "cover",
-              borderRadius: "50%",
-            }}
-            src="https://i.ibb.co/Ty3Grj0/dummy-Icon.png"
-            alt="useIcon"
-          />
-        )}
+        <FallbackImage
+          width={25}
+          height={25}
+          style={{
+            width: "25px",
+            height: "25px",
+            minHeight: "25px",
+            objectFit: "cover",
+            borderRadius: "50%",
+          }}
+          src={image}
+          fallbackSrc={DEFAULT_USER_AVATAR}
+          alt="User avatar"
+        />
       </div>
     </div>
   );

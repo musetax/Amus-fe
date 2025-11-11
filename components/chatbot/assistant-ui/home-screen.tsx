@@ -1,5 +1,8 @@
 import React from "react";
-import Image from "next/image";
+import {
+  DEFAULT_COMPANY_LOGO,
+  FallbackImage,
+} from "./fallback-image";
 
 export type AgentIntent =
   | "tax_education"
@@ -45,11 +48,12 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           }}
         >
           {companyLogo ? (
-            <Image
+            <FallbackImage
               src={companyLogo}
               width={70}
               height={70}
               alt="Company Logo"
+              fallbackSrc={DEFAULT_COMPANY_LOGO}
               style={{ borderRadius: "50%" }}
             />
           ) : (

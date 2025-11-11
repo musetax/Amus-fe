@@ -35,6 +35,11 @@ import { URLDisplay } from "./url-display";
 import TaxChatbot from "../../../app/payrollQuestionchat";
 import { ErrorBanner } from "./error-ui";
 import Image from "next/image";
+import {
+  DEFAULT_COMPANY_LOGO,
+  DEFAULT_USER_AVATAR,
+  FallbackImage,
+} from "./fallback-image";
 import { HomeScreen } from "./home-screen";
 import { LifeEventsScreen } from "./life-events-screen";
 import { LifeEventsForm } from "./life-events-form";
@@ -186,11 +191,13 @@ export const Thread: any = ({
                   }}
                 >
                   {companyLogo ? (
-                    <Image
+                    <FallbackImage
                       src={companyLogo}
                       width={60}
                       height={41}
                       alt="Company Logo"
+                      fallbackSrc={DEFAULT_COMPANY_LOGO}
+                      style={{ borderRadius: "50%" }}
                     />
                   ) : (
                     <svg
@@ -810,35 +817,20 @@ const UserMessage: React.FC<UserMessageProps> = ({ image }) => {
           </span>
         </div>
         <BranchPicker className="col-span-full col-start-1 row-start-3 -mr-1 justify-end" />
-        {image ? (
-          <Image
-            width={25}
-            height={25}
-            style={{
-              width: "25px",
-              height: "25px",
-              minHeight: "25px",
-              objectFit: "cover",
-              borderRadius: "50%",
-            }}
-            src={image}
-            alt="useIcon"
-          />
-        ) : (
-          <Image
-            width={25}
-            height={25}
-            style={{
-              width: "25px",
-              height: "25px",
-              minHeight: "25px",
-              objectFit: "cover",
-              borderRadius: "50%",
-            }}
-            src="https://i.ibb.co/Ty3Grj0/dummy-Icon.png"
-            alt="useIcon"
-          />
-        )}
+        <FallbackImage
+          width={25}
+          height={25}
+          src={image}
+          fallbackSrc={DEFAULT_USER_AVATAR}
+          style={{
+            width: "25px",
+            height: "25px",
+            minHeight: "25px",
+            objectFit: "cover",
+            borderRadius: "50%",
+          }}
+          alt="User avatar"
+        />
       </div>
     </MessagePrimitive.Root>
   );
@@ -942,37 +934,21 @@ const AssistantMessage: React.FC<any> = ({
         }}
       >
         <span style={{ position: "relative", top: "10px" }}>
-          {companyLogo ? (
-            <Image
-              width={25}
-              height={25}
-              src={companyLogo}
-              style={{
-                width: "25px",
-                height: "25px",
-                minWidth: "25px",
-                minHeight: "25px",
-                objectFit: "cover",
-                borderRadius: "50%",
-              }}
-              alt="Company Logo"
-            />
-          ) : (
-            <Image
-              width={25}
-              height={25}
-              style={{
-                width: "25px",
-                height: "25px",
-                minWidth: "25px",
-                minHeight: "25px",
-                objectFit: "contain",
-                borderRadius: "50%",
-              }}
-              src="https://appweb-bucket.s3.us-east-1.amazonaws.com/muse-logo.png"
-              alt="useIcon"
-            />
-          )}
+          <FallbackImage
+            width={25}
+            height={25}
+            src={companyLogo}
+            fallbackSrc={DEFAULT_COMPANY_LOGO}
+            style={{
+              width: "25px",
+              height: "25px",
+              minWidth: "25px",
+              minHeight: "25px",
+              objectFit: "cover",
+              borderRadius: "50%",
+            }}
+            alt="Company Logo"
+          />
         </span>
         <MessagePrimitive.Root className="grid grid-cols-[auto_auto_1fr] grid-rows-[auto_1fr] relative w-full max-w-[var(--thread-max-width)] py-4 pr-2">
           <div className="text-foreground max-w-[calc(var(--thread-max-width)*0.8)] break-words leading-7 col-span-2 col-start-2 row-start-1 my-1.5">

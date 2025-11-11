@@ -130,6 +130,15 @@ export const TaxDataForm: React.FC<{
     { label: "Monthly", value: "monthly" },
   ];
 
+  const requiredFields = [
+    "age",
+    "filing_status",
+    "income_type",
+    "pay_frequency",
+    "home_address",
+    "work_address",
+  ];
+
   const numberFields = [
     "age",
     "annual_salary",
@@ -146,6 +155,105 @@ export const TaxDataForm: React.FC<{
     "desired_boost_per_paycheck",
     "paychecks_already_received",
   ];
+
+  const formatFieldLabel = (field: string) => {
+    if (field === "home_address") return "Home Zipcode";
+    if (field === "work_address") return "Work Zipcode";
+
+    return field
+      .replace(/_/g, " ")
+      .split(" ")
+      .filter(Boolean)
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  };
+
+  const isEmptyValue = (value: any) =>
+    value === undefined ||
+    value === null ||
+    value === "" ||
+    (typeof value === "string" && value.trim() === "");
+
+  const getFieldError = (field: string, values: Record<string, any>) => {
+    const value = values[field];
+
+    if (requiredFields.includes(field) && isEmptyValue(value)) {
+      return `${formatFieldLabel(field)} is required`;
+    }
+
+    switch (field) {
+      case "spouse_income":
+        if (
+          values.filing_status === "married_joint" &&
+          isEmptyValue(value)
+        ) {
+          return "Spouse income is required for married filing status";
+        }
+        break;
+      case "annual_salary":
+        if (
+          values.income_type === "salary" &&
+          isEmptyValue(value)
+        ) {
+          return "Annual salary is required for salary income type";
+        }
+        break;
+      case "hourly_rate":
+        if (
+          values.income_type === "hourly" &&
+          isEmptyValue(value)
+        ) {
+          return "Hourly rate is required for hourly income type";
+        }
+        break;
+      case "average_hours_per_week":
+        if (
+          values.income_type === "hourly" &&
+          isEmptyValue(value)
+        ) {
+          return "Average hours per week is required for hourly income type";
+        }
+        break;
+      case "seasonal_variation":
+        if (
+          values.income_type === "hourly" &&
+          isEmptyValue(value)
+        ) {
+          return "Seasonal variation is required for hourly income type";
+        }
+        break;
+      case "home_address":
+        if (!isEmptyValue(value) && !/^\d{5}$/.test(String(value).trim())) {
+          return "Enter a valid 5-digit ZIP code";
+        }
+        break;
+      case "work_address":
+        if (!isEmptyValue(value) && !/^\d{5}$/.test(String(value).trim())) {
+          return "Enter a valid 5-digit ZIP code";
+        }
+        break;
+      case "current_date":
+        if (
+          value &&
+          dayjs(value).isAfter(dayjs())
+        ) {
+          return "Date cannot be in the future";
+        }
+        break;
+      case "age":
+        if (!isEmptyValue(value)) {
+          const age = Number(value);
+          if (isNaN(age) || age < 13 || age > 99) {
+            return "Age must be between 13 and 99";
+          }
+        }
+        break;
+      default:
+        break;
+    }
+
+    return undefined;
+  };
 
   const handleChange = (field: string, value: any) => {
     let newValue = value;
@@ -175,6 +283,31 @@ export const TaxDataForm: React.FC<{
     }
 
     setForm(updated);
+    setErrors((prevErrors: Record<string, string>) => {
+      const nextErrors = { ...prevErrors };
+      const affectedFields = new Set<string>([field]);
+
+      if (field === "income_type") {
+        ["annual_salary", "hourly_rate", "average_hours_per_week", "seasonal_variation"].forEach(
+          (f) => affectedFields.add(f)
+        );
+      }
+
+      if (field === "filing_status") {
+        affectedFields.add("spouse_income");
+      }
+
+      affectedFields.forEach((f) => {
+        const error = getFieldError(f, updated);
+        if (error) {
+          nextErrors[f] = error;
+        } else {
+          delete nextErrors[f];
+        }
+      });
+
+      return nextErrors;
+    });
   };
 
   const sumArray = (arr: any) =>
@@ -185,93 +318,25 @@ export const TaxDataForm: React.FC<{
   const validate = () => {
     const newErrors: Record<string, string> = {};
 
-    const requiredFields = [
-      "age",
-      "filing_status",
-      "income_type",
-      "pay_frequency",
+    const fieldsToValidate = new Set<string>([
+      ...requiredFields,
+      "spouse_income",
+      "annual_salary",
+      "hourly_rate",
+      "average_hours_per_week",
+      "seasonal_variation",
       "home_address",
       "work_address",
-    ];
+      "current_date",
+      "age",
+    ]);
 
-    requiredFields.forEach((key) => {
-      const value = form[key];
-      if (
-        value === undefined ||
-        value === null ||
-        value === "" ||
-        (typeof value === "string" && value.trim() === "")
-      ) {
-        newErrors[key] = `${key.replace(/_/g, " ")} is required`;
+    fieldsToValidate.forEach((field) => {
+      const error = getFieldError(field, form);
+      if (error) {
+        newErrors[field] = error;
       }
     });
-
-    if (form.filing_status === "married_joint") {
-      if (
-        form.spouse_income === undefined ||
-        form.spouse_income === null ||
-        form.spouse_income === ""
-      ) {
-        newErrors.spouse_income =
-          "Spouse income is required for married filing status";
-      }
-    }
-
-    if (form.income_type === "salary") {
-      if (
-        form.annual_salary === undefined ||
-        form.annual_salary === null ||
-        form.annual_salary === ""
-      ) {
-        newErrors.annual_salary =
-          "Annual salary is required for salary income type";
-      }
-    }
-
-    if (form.income_type === "hourly") {
-      if (
-        form.hourly_rate === undefined ||
-        form.hourly_rate === null ||
-        form.hourly_rate === ""
-      ) {
-        newErrors.hourly_rate =
-          "Hourly rate is required for hourly income type";
-      }
-      if (
-        form.average_hours_per_week === undefined ||
-        form.average_hours_per_week === null ||
-        form.average_hours_per_week === ""
-      ) {
-        newErrors.average_hours_per_week =
-          "Average hours per week is required for hourly income type";
-      }
-      if (
-        form.seasonal_variation === undefined ||
-        form.seasonal_variation === null ||
-        form.seasonal_variation === ""
-      ) {
-        newErrors.seasonal_variation =
-          "Seasonal variation is required for hourly income type";
-      }
-    }
-
-    if (form.home_address && !/^\d{5}$/.test(form.home_address)) {
-      newErrors.home_address = "Enter a valid 5-digit ZIP code";
-    }
-    if (form.work_address && !/^\d{5}$/.test(form.work_address)) {
-      newErrors.work_address = "Enter a valid 5-digit ZIP code";
-    }
-
-    if (form.current_date && dayjs(form.current_date).isAfter(dayjs())) {
-      newErrors.current_date = "Date cannot be in the future";
-    }
-
-    if (form.age !== undefined && form.age !== null && form.age !== "") {
-      const age = Number(form.age);
-      if (isNaN(age) || age < 13 || age > 99) {
-        newErrors.age = "Age must be between 13 and 99";
-      }
-    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -309,9 +374,7 @@ export const TaxDataForm: React.FC<{
       pay_frequency: payFrequencyOptions,
     };
     const getPlaceholder = (field: string) => {
-      const label = field
-        .replace(/_/g, " ")
-        .replace(/\b\w/g, (l) => l.toUpperCase());
+      const label = formatFieldLabel(field);
 
       if (dropdownFields[field]) return `Select ${label}`;
       if (numberFields.includes(field)) return `Enter ${label}`;
@@ -419,12 +482,8 @@ export const TaxDataForm: React.FC<{
             return null;
           if (form.filing_status !== "married_joint" && key === "spouse_income")
             return null;
-          let label = key
-            .replace(/_/g, " ")
-            .replace(/\b\w/g, (l) => l.toUpperCase());
-
-          if (key === "home_address") label = "Home Zipcode";
-          if (key === "work_address") label = "Work Zipcode";
+          const label = formatFieldLabel(key);
+          const isRequiredField = requiredFields.includes(key);
           {
             console.log("Rendering field:", key, value);
           }
@@ -445,19 +504,15 @@ export const TaxDataForm: React.FC<{
                 }}
               >
                 {label}
-                {errors[key] && (
-                  <svg
-                    stroke="red"
-                    fill="red"
-                    stroke-width="0"
-                    viewBox="0 0 24 24"
-                    height="10px"
-                    width="10px"
-                    xmlns="http://www.w3.org/2000/svg"
+                {isRequiredField && (
+                  <span
+                    style={{
+                      color: errors[key] ? "red" : "#f97316",
+                      fontWeight: 600,
+                    }}
                   >
-                    <path fill="none" d="M0 0h24v24H0V0z"></path>
-                    <path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z"></path>
-                  </svg>
+                    *
+                  </span>
                 )}
                 {/* {key.replace(/_/g, " ")} */}
               </label>

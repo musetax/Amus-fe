@@ -1,5 +1,8 @@
-import Image from "next/image";
 import React from "react";
+import {
+  DEFAULT_COMPANY_LOGO,
+  FallbackImage,
+} from "../../components/chatbot/assistant-ui/fallback-image";
 
 export const SendHorizontalIcon: React.FC = () => (
   <svg
@@ -62,7 +65,15 @@ export const Home: React.FC = () => (
 
 export const CompanyLogo: React.FC<{ src?: string }> = ({ src }) => {
   if (src) {
-    return <Image src={src} width="60" height="41" alt="Company Logo" />;
+    return (
+      <FallbackImage
+        src={src}
+        width={60}
+        height={41}
+        alt="Company Logo"
+        fallbackSrc={DEFAULT_COMPANY_LOGO}
+      />
+    );
   }
 
   return (
