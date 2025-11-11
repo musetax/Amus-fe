@@ -540,8 +540,8 @@ export const TaxDataForm: React.FC<{
                 key={fieldKey}
                 className="mt-4 border-t pt-4 bg-gray-50 rounded-lg p-3"
               >
-                <h3 className="text-md font-semibold text-gray-700 mb-2 capitalize">
-                  {fieldKey.replace(/_/g, " ")}
+                <h3 className="text-md font-semibold text-gray-700 mb-2">
+                  {formatFieldLabel(fieldKey)}
                 </h3>
 
                 {arr.map((item: any, index: number) => (
