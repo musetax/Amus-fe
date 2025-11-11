@@ -598,32 +598,23 @@ const ThreadWelcome: FC<any> = ({ agentIntent }) => {
               calculating your taxes, checking your refund, or updating your
               info after a life change? I’ve got you covered. Let’s get started!
             </p>
-            {(agentIntent === "tax_paycheck_calculation" ||
-              agentIntent === "tax_refund_calculation") && (
-              <div className="flex justify-center mt-6">
-                <button
-                  onClick={handleCalculateClick}
-                  className="px-6 py-2 rounded-full font-medium text-white shadow-md transition-all"
-                  style={{
-                    backgroundColor: "rgb(81, 141, 231)",
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.backgroundColor =
-                      "rgb(65, 120, 210)")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.backgroundColor =
-                      "rgb(81, 141, 231)")
-                  }
-                >
-                  Start My{" "}
-                  {agentIntent === "tax_paycheck_calculation"
-                    ? "paycheck"
-                    : "tax"}{" "}
-                  Calculation
-                </button>
-              </div>
-            )}
+            {(agentIntent === "tax_paycheck_calculation" || agentIntent === "tax_refund_calculation") && <div className="flex justify-center mt-6">
+              <button
+                onClick={handleCalculateClick}
+                className="px-6 py-2 rounded-full font-medium text-white shadow-md transition-all"
+                style={{
+                  backgroundColor: "rgb(81, 141, 231)",
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.backgroundColor = "rgb(65, 120, 210)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.backgroundColor = "rgb(81, 141, 231)")
+                }
+              >
+                {agentIntent === "tax_paycheck_calculation" ? "Calculate My Paycheck Now" : "Calculate My Tax Now"} 
+              </button>
+            </div>}
           </div>
         </div>
         {/* <ThreadWelcomeSuggestions /> */}

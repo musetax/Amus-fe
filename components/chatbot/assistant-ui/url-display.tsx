@@ -134,10 +134,14 @@ export const URLDisplay: React.FC<URLDisplayProps> = ({ urls, messageId }) => {
           </div>
           {urls.length > 1 && (
             <div className="text-center mt-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 rounded-full text-xs font-medium border border-blue-200">
+              <button
+                onClick={() => setIsExpanded(true)}
+                className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 rounded-full text-xs font-medium border border-blue-200 hover:from-blue-100 hover:to-indigo-100 hover:border-blue-300 transition-all duration-200 transform hover:scale-105 cursor-pointer"
+                aria-label="Show more resources"
+              >
                 <Plus className="w-3 h-3" />
                 {urls.length - 1} more resource{urls.length - 1 > 1 ? 's' : ''} available
-              </div>
+              </button>
             </div>
           )}
         </div>

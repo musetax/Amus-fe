@@ -149,7 +149,7 @@
   ChatModelRunResult
 } from "@assistant-ui/react";
 import { axiosInstanceAuth } from '../utilities/auth';
-import { formatAssistantText } from "../lib/chatFormatting";
+import { normalizeMarkdownText, attachSourceLinks } from "../lib/markdown";
 
 function makeThreadMessage(
   role: "user" | "assistant",
@@ -165,14 +165,15 @@ function makeThreadMessage(
     status,
   };
 
-  const formattedText =
-    role === "assistant" ? formatAssistantText(text) : text;
+  const normalizedText = normalizeMarkdownText(text);
+  const finalText =
+    role === "assistant" ? attachSourceLinks(normalizedText, urls) : normalizedText;
 
   if (role === "user") {
     return {
       ...base,
       role: "user",
-      content: [{ type: "text", text }],
+      content: [{ type: "text", text: finalText }],
       attachments: [],
       metadata: { custom: {} },
     };
@@ -180,7 +181,7 @@ function makeThreadMessage(
     return {
       ...base,
       role: "assistant",
-      content: [{ type: "text", text: formattedText }],
+      content: [{ type: "text", text: finalText }],
       metadata: {
         unstable_state: null,
         unstable_annotations: [],
@@ -287,6 +288,7 @@ function makeHistoryAdapter(
           session_id: sessionId,
           user_intent: agentIntent,
           time_zone: Intl.DateTimeFormat().resolvedOptions().timeZone
+          
         });
 
         console.log("✅ Chat history API response:", {

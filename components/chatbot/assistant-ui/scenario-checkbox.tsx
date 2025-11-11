@@ -48,7 +48,7 @@ export const CustomCheckbox: React.FC<CustomCheckboxProps> = ({
       <input
         type="checkbox" // ✅ Always checkbox for toggle behavior
         checked={checked}
-        onChange={() => {}} // ignore native event
+        onChange={() => { }} // ignore native event
         style={{
           position: "absolute",
           opacity: 0,
@@ -208,9 +208,7 @@ export const ScenarioCheckbox: React.FC<ScenarioCheckboxProps> = ({
       selectedScenarios.includes("got_married") &&
       (!spouseIncome || Number(spouseIncome) <= 0)
     ) {
-      setSpouseIncomeError(
-        "Please enter a valid spouse income greater than 0."
-      );
+      setSpouseIncomeError("Please enter a valid spouse income greater than 0.");
       return;
     }
 
@@ -250,6 +248,7 @@ export const ScenarioCheckbox: React.FC<ScenarioCheckboxProps> = ({
       setCompleted(false);
     }
   };
+
 
   if (completed) return null;
 
@@ -317,11 +316,10 @@ export const ScenarioCheckbox: React.FC<ScenarioCheckboxProps> = ({
                         }
                       }}
                       onWheel={(e) => e.currentTarget.blur()}
-                      className={`w-full text-sm border rounded-lg px-3 py-2 focus:ring-2 transition-all outline-none ${
-                        spouseIncomeError
+                      className={`w-full text-sm border rounded-lg px-3 py-2 focus:ring-2 transition-all outline-none ${spouseIncomeError
                           ? "border-red-500 focus:ring-red-200 focus:border-red-400"
                           : "border-gray-300 focus:ring-blue-200 focus:border-blue-400"
-                      }`}
+                        }`}
                       min="0"
                       style={{
                         WebkitAppearance: "none",
@@ -330,15 +328,12 @@ export const ScenarioCheckbox: React.FC<ScenarioCheckboxProps> = ({
                     />
 
                     {spouseIncomeError && (
-                      <p
-                        className="text-red-500 text-xs mt-1"
-                        style={{ color: "red" }}
-                      >
-                        {spouseIncomeError}
-                      </p>
+                      <p className="text-red-500 text-xs mt-1"
+                      style={{ color: "red" }}>{spouseIncomeError}</p>
                     )}
                   </div>
                 )}
+
             </div>
           );
         })}
