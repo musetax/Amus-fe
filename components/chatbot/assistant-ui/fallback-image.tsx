@@ -14,10 +14,7 @@ export const DEFAULT_COMPANY_LOGO =
 export const DEFAULT_USER_AVATAR =
   "https://i.ibb.co/Ty3Grj0/dummy-Icon.png";
 
-const isDataLike = (value?: string | null) => {
-  if (!value) return false;
-  return value.startsWith("data:") || value.startsWith("blob:");
-};
+ 
 
 export interface FallbackImageProps
   extends Omit<ImageProps, "src" | "unoptimized"> {

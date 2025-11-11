@@ -34,7 +34,6 @@ import { URLDisplay } from "./url-display";
 // import { Tooltip, TooltipTrigger } from "../ui/tooltip";
 import TaxChatbot from "../../../app/payrollQuestionchat";
 import { ErrorBanner } from "./error-ui";
-import Image from "next/image";
 import {
   DEFAULT_COMPANY_LOGO,
   DEFAULT_USER_AVATAR,
