@@ -140,6 +140,8 @@ const defaultComponents = memoizeMarkdownComponents({
         "text-primary font-medium underline underline-offset-4",
         className
       )}
+       target="_blank"
+      rel="noopener noreferrer"
       {...props}
     />
   ),
