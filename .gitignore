@@ -10,7 +10,6 @@ dist/
 
 # env
 .env*.local 
-.env.local
 
 # package-lock
 package-lock.json
@@ -58,5 +57,5 @@ Thumbs.db
 *.flv
 *.mov
 *.wmv
-.env
 
+config.bat
