@@ -28,6 +28,7 @@ export const FallbackImage = ({
   fallbackSrc = DEFAULT_COMPANY_LOGO,
   onError,
   unoptimized,
+  alt = "",
   ...rest
 }: FallbackImageProps) => {
   const resolvedFallback = fallbackSrc;
@@ -56,6 +57,7 @@ export const FallbackImage = ({
 
   return (
     <Image
+      alt={alt}
       {...rest}
       src={currentSrc || resolvedFallback}
       onError={handleError}
