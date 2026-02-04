@@ -8,7 +8,7 @@ import makeHistoryAdapter from '../services/chatbot'
 
 import {
   AssistantRuntimeProvider,
-  useLocalThreadRuntime,
+  useLocalRuntime,
   WebSpeechSynthesisAdapter,
   CompositeAttachmentAdapter,
   SimpleTextAttachmentAdapter,
@@ -287,7 +287,7 @@ function Assistant() {
     },
   }), [history]);
 
-  const paycheck=useLocalThreadRuntime(
+  const paycheck=useLocalRuntime(
     MyModelAdapter(
   userId,
   setTyping,
@@ -297,7 +297,7 @@ function Assistant() {
 ),
     runtimeOptions
   );
-  const refund=useLocalThreadRuntime(
+  const refund=useLocalRuntime(
     MyModelAdapter(
   userId,
   setTyping,
@@ -307,7 +307,7 @@ function Assistant() {
 ),
     runtimeOptions
   );
-  const normalChat=useLocalThreadRuntime(
+  const normalChat=useLocalRuntime(
     MyModelAdapter(
   userId,
   setTyping,
@@ -317,7 +317,7 @@ function Assistant() {
 ),
     runtimeOptions
   );
-//   const learnRuntime = useLocalThreadRuntime(
+//   const learnRuntime = useLocalRuntime(
 //     MyModelAdapter(
 //   userId,
 //   setTyping,
@@ -345,7 +345,7 @@ const learnRuntime=agentIntent==='tax_education'?normalChat:agentIntent==='tax_p
     setloadingHistory(true);
 
     history.load()
-      .then((repository) => {
+      .then((repository: any) => {
         console.log("✅ Chat history loaded from API:", {
           messagesCount: repository.messages.length,
           headId: repository.headId,
@@ -365,7 +365,7 @@ const learnRuntime=agentIntent==='tax_education'?normalChat:agentIntent==='tax_p
         }
         setloadingHistory(false);
       })
-      .catch((err) => {
+      .catch((err: any) => {
         console.error("❌ Failed to load chat history:", err);
         setloadingHistory(false);
       });
