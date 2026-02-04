@@ -142,14 +142,11 @@
  import {
   ExportedMessageRepository,
   MessageStatus,
-  ThreadAssistantMessagePart,
-  ThreadHistoryAdapter,
   ThreadMessage,
   ChatModelRunOptions,
   ChatModelRunResult
 } from "@assistant-ui/react";
 import { axiosInstanceAuth } from '../utilities/auth';
-import { normalizeMarkdownText, attachSourceLinks } from "../lib/markdown";
 
 function makeThreadMessage(
   role: "user" | "assistant",
@@ -165,15 +162,11 @@ function makeThreadMessage(
     status,
   };
 
-  const normalizedText = normalizeMarkdownText(text);
-  const finalText =
-    role === "assistant" ? attachSourceLinks(normalizedText, urls) : normalizedText;
-
   if (role === "user") {
     return {
       ...base,
       role: "user",
-      content: [{ type: "text", text: finalText }],
+      content: [{ type: "text", text }],
       attachments: [],
       metadata: { custom: {} },
     };
@@ -181,9 +174,8 @@ function makeThreadMessage(
     return {
       ...base,
       role: "assistant",
-      content: [{ type: "text", text: finalText }],
+      content: [{ type: "text", text }],
       metadata: {
-        unstable_state: null,
         unstable_annotations: [],
         unstable_data: [],
         steps: [],
@@ -271,7 +263,7 @@ function makeHistoryAdapter(
   sessionId?: string,
   setLoadingHistory?: (loading: boolean) => void,
   agentIntent?: AgentIntent
-): ThreadHistoryAdapter {
+) {
   return {
     async load(): Promise<ExportedMessageRepository> {
       try {
@@ -288,7 +280,6 @@ function makeHistoryAdapter(
           session_id: sessionId,
           user_intent: agentIntent,
           time_zone: Intl.DateTimeFormat().resolvedOptions().timeZone
-          
         });
 
         console.log("✅ Chat history API response:", {
@@ -329,7 +320,7 @@ function makeHistoryAdapter(
       }
     },
 
-    async append({ message }) {
+    async append({ message }: { message: ThreadMessage }) {
       console.log("append new message", message);
     },
 
@@ -339,7 +330,7 @@ function makeHistoryAdapter(
       const status: MessageStatus = { type: "complete", reason: "stop" };
 
       yield {
-        content: [] as ThreadAssistantMessagePart[],
+        content: [],
         status,
       };
     },

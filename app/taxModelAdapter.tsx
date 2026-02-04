@@ -58,6 +58,28 @@ export const getPayrollDetails=async(userId:string)=>{
     throw error
   }
 }
+export const uploadOcrData = async (userId: string, file: File) => {
+  try {
+    const formData = new FormData();
+    formData.append("file", file); // backend expects the PDF file under key "file"
+
+    const response = await axiosInstanceAuth.post(
+      `https://dev-ocr.musetax.com/Azure/paycheck_form?user_id=${userId}`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "ngrok-skip-browser-warning": "69420",
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error: any) {
+    console.error("OCR Upload Error:", error);
+    throw error;
+  }
+};
 export const payrollDetailsUpdate=async(userId:string,payload:any)=>{
    try {
     const response = await axiosInstanceAuth.patch(`/user/${userId}`,payload);

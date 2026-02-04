@@ -1,6 +1,5 @@
 import { saveMessagesToLocalStorage } from "../components/chatbot/assistant-ui/thread";
 import { getTokens, refreshToken } from "../utilities/auth";
-import { normalizeMarkdownText, attachSourceLinks } from "../lib/markdown";
 
 type AgentIntent = "tax_education" | "tax_refund_calculation" | "tax_paycheck_calculation" | "life_events_update" | null;
 
@@ -205,12 +204,8 @@ export const MyModelAdapter = (
           console.log(isRefund,"=====",isPaycheck ? true : !!paycheckCalculated,"]]]]",isPaycheck,isRefund ? true : !!refundCalculated,)
            const now = Date.now();
         if (hasNewContent && (accumulated.length < 50 || now - lastYield >= MIN_YIELD_INTERVAL)) {
-          const displayText = attachSourceLinks(
-            normalizeMarkdownText(accumulated),
-            urls
-          );
           yield {
-            content: [{ type: "text", text: displayText }],
+            content: [{ type: "text", text: accumulated }],
             metadata: {
               custom: {
                 loading: false,
@@ -231,12 +226,9 @@ export const MyModelAdapter = (
       const isRefund = apiEndpoint === "tax-calculate" && agentIntent === "tax_refund_calculation";
       const isPaycheck = apiEndpoint === "tax-calculate" && agentIntent === "tax_paycheck_calculation";
           console.log(isRefund,"=====",isPaycheck ? true : !!paycheckCalculated,"]]]]",isPaycheck,isRefund ? true : !!refundCalculated,)
-      const displayText = attachSourceLinks(
-        normalizeMarkdownText(accumulated),
-        urls
-      );
+      
       yield {
-        content: [{ type: "text", text: displayText }],
+        content: [{ type: "text", text: accumulated }],
         metadata: {
           custom: {
             loading: false,
@@ -252,7 +244,7 @@ export const MyModelAdapter = (
       // Save messages
       saveMessagesToLocalStorage([
         ...accumulatedMessages,
-        { role: "assistant", content: [{ type: "text", text: displayText }] },
+        { role: "assistant", content: [{ type: "text", text: accumulated }] },
       ]);
 
     } catch (error) {

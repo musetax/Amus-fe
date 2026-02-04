@@ -19,7 +19,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 }) => {
   return (
     <div
-      className="flex flex-col items-center  px-6 py-8"
+      className="flex flex-col  items-center  px-6 py-8"
       style={{
         height: "calc(100vh - 210px)",
         minHeight: "440px",
@@ -29,7 +29,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       }}
     >
       {/* Logo and Welcome Section */}
-      <div className="flex flex-col items-center mb-8">
+      <div className="flex flex-col items-center mb-4">
         <div
           style={{
             width: "80px",
@@ -40,7 +40,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            marginBottom: "16px",
+            marginBottom: "6px",
             boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
           }}
         >
@@ -131,7 +131,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             fontWeight: "600",
             color: "#1a202c",
             textAlign: "center",
-            marginBottom: "8px",
+            marginBottom: "2px",
           }}
         >
           Welcome! How Can I Help You?
@@ -151,20 +151,20 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       </div>
 
       {/* Three Buttons */}
-      <div className="flex flex-col gap-4 w-full max-w-md">
+      <div className="flex flex-col gap-2 w-full max-w-md">
         {/* Ask My Uncle Sam Button */}
         <button
           onClick={() => onSelectIntent("tax_education")}
           className="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#69DEC6] via-[#49C2D4] to-[#1595EA] p-[2px] transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
         >
-          <div className="bg-white rounded-2xl px-4 py-4 transition-all duration-300 group-hover:bg-opacity-95 custom-hover">
+          <div className="bg-white rounded-2xl px-2 py-2 transition-all duration-300 group-hover:bg-opacity-95 custom-hover">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#69DEC6] to-[#1595EA] flex items-center justify-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
+                    width="22"
+                    height="22"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="#518de7"
@@ -178,17 +178,17 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 <div className="text-left">
                   <h3
                     style={{
-                      fontSize: "16px",
+                      fontSize: "14px",
                       fontWeight: "600",
                       color: "#1a202c",
-                      marginBottom: "2px",
+                      marginBottom: "0px",
                     }}
                   >
                     Get instant answers to your tax questions
                   </h3>
                   <p
                     style={{
-                      fontSize: "13px",
+                      fontSize: "12px",
                       color: "#718096",
                       fontWeight: "400",
                     }}
@@ -199,8 +199,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               </div>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
+                width="18"
+                height="18"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="#718096"
@@ -220,14 +220,14 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           onClick={() => onSelectIntent("tax_refund_calculation")}
           className="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#518DE7] via-[#7687E5] to-[#9B8FE3] p-[2px] transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
         >
-          <div className="bg-white rounded-2xl px-4 py-4 transition-all duration-300 group-hover:bg-opacity-95 custom-hover">
+          <div className="bg-white rounded-2xl px-2 py-2 transition-all duration-300 group-hover:bg-opacity-95 custom-hover">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#518DE7] to-[#7687E5] flex items-center justify-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
+                    width="22"
+                    height="22"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="#518de7"
@@ -241,17 +241,17 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 <div className="text-left">
                   <h3
                     style={{
-                      fontSize: "16px",
+                      fontSize: "14px",
                       fontWeight: "600",
                       color: "#1a202c",
-                      marginBottom: "2px",
+                      marginBottom: "0px",
                     }}
                   >
                     Optimize withholdings for maximum refund
                   </h3>
                   <p
                     style={{
-                      fontSize: "13px",
+                      fontSize: "12px",
                       color: "#718096",
                       fontWeight: "400",
                     }}
@@ -262,8 +262,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               </div>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
+                width="18"
+                height="18"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="#718096"
@@ -283,14 +283,14 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           onClick={() => onSelectIntent("tax_paycheck_calculation")}
           className="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#48C2D4] via-[#1595EA] to-[#548CE7] p-[2px] transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
         >
-          <div className="bg-white rounded-2xl px-4 py-4 transition-all duration-300 group-hover:bg-opacity-95 custom-hover">
+          <div className="bg-white rounded-2xl px-2 py-2 transition-all duration-300 group-hover:bg-opacity-95 custom-hover">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#1595EA] to-[#548CE7] flex items-center justify-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
+                    width="22"
+                    height="22"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="#518de7"
@@ -305,17 +305,17 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 <div className="text-left">
                   <h3
                     style={{
-                      fontSize: "16px",
+                      fontSize: "14px",
                       fontWeight: "600",
                       color: "#1a202c",
-                      marginBottom: "2px",
+                      marginBottom: "0px",
                     }}
                   >
                     Calculate your take-home pay instantly
                   </h3>
                   <p
                     style={{
-                      fontSize: "13px",
+                      fontSize: "12px",
                       color: "#718096",
                       fontWeight: "400",
                     }}
@@ -326,8 +326,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               </div>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
+                width="18"
+                height="18"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="#718096"

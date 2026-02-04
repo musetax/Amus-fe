@@ -13,27 +13,15 @@ import { FC, memo, useState } from "react";
 import { CheckIcon, CopyIcon } from "lucide-react";
 import { cn } from "../../../lib/utils";
 
-
-import remarkMath from "remark-math";
-import rehypeKatex from "rehype-katex";
-
-
-
-
 import { TooltipIconButton } from "./tooltip-icon-button";
 
 const MarkdownTextImpl = () => {
   return (
-
-
     <MarkdownTextPrimitive
-      remarkPlugins={[remarkGfm, remarkMath]}
-      rehypePlugins={[rehypeKatex]}
+      remarkPlugins={[remarkGfm]}
       className="aui-md"
       components={defaultComponents}
     />
-
-
   );
 };
 
@@ -140,8 +128,6 @@ const defaultComponents = memoizeMarkdownComponents({
         "text-primary font-medium underline underline-offset-4",
         className
       )}
-       target="_blank"
-      rel="noopener noreferrer"
       {...props}
     />
   ),

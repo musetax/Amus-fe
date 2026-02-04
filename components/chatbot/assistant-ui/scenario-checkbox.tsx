@@ -48,7 +48,7 @@ export const CustomCheckbox: React.FC<CustomCheckboxProps> = ({
       <input
         type="checkbox" // ✅ Always checkbox for toggle behavior
         checked={checked}
-        onChange={() => { }} // ignore native event
+        onChange={() => {}} // ignore native event
         style={{
           position: "absolute",
           opacity: 0,
@@ -125,9 +125,7 @@ export const ScenarioCheckbox: React.FC<ScenarioCheckboxProps> = ({
 }) => {
   const thread = useThreadRuntime();
   const [selectedScenarios, setSelectedScenarios] = useState<string[]>([]);
-  const [spouseIncome, setSpouseIncome] = useState("");
-  const [spouseIncomeError, setSpouseIncomeError] = useState("");
-
+  const [spouseIncome, setSpouseIncome] = useState<string>("");
   const [payrollData, setPayrollData] = useState<any>(null);
   const [calculating, setCalculating] = useState(false);
   const [completed, setCompleted] = useState(false);
@@ -205,16 +203,14 @@ export const ScenarioCheckbox: React.FC<ScenarioCheckboxProps> = ({
 
   const handleCalculate = () => {
     if (selectedScenarios.length === 0 || !payrollData) return;
-
     if (
       selectedScenarios.includes("got_married") &&
       (!spouseIncome || Number(spouseIncome) <= 0)
     ) {
-      setSpouseIncomeError("Please enter a valid spouse income greater than 0.");
+      alert("Please enter a valid spouse income greater than 0.");
       return;
     }
 
-    setSpouseIncomeError(""); // ✅ Clear any old error
     setCalculating(true);
     setCompleted(true);
 
@@ -242,7 +238,7 @@ export const ScenarioCheckbox: React.FC<ScenarioCheckboxProps> = ({
             isTaxCalculation: true,
           },
         },
-      });
+      } as any);
       setShowScenarios(false);
     } catch (error) {
       console.error("Error triggering scenario calculation:", error);
@@ -251,14 +247,13 @@ export const ScenarioCheckbox: React.FC<ScenarioCheckboxProps> = ({
     }
   };
 
-
   if (completed) return null;
 
   return (
     <div className="space-y-4 mt-4">
-      <p className="text-large text-black">
-        Please choose what suits you best.
-      </p>
+        <p className="text-large text-black">
+    Please choose what suits you best.
+  </p>
       <div className="flex flex-col flex-wrap gap-3">
         {scenarios.map((scenario) => {
           const isStateOption =
@@ -301,33 +296,19 @@ export const ScenarioCheckbox: React.FC<ScenarioCheckboxProps> = ({
                       value={spouseIncome}
                       onChange={(e) => {
                         const val = e.target.value;
-                        if (/^\d*$/.test(val)) {
-                          setSpouseIncome(val);
-                          // Clear error as soon as valid value is entered
-                          if (val && Number(val) > 0) {
-                            setSpouseIncomeError("");
-                          }
-                        }
+                        if (/^\d*$/.test(val)) setSpouseIncome(val);
                       }}
-                      onWheel={(e) => e.currentTarget.blur()}
-                      className={`w-full text-sm border rounded-lg px-3 py-2 focus:ring-2 transition-all outline-none ${spouseIncomeError
-                          ? "border-red-500 focus:ring-red-200 focus:border-red-400"
-                          : "border-gray-300 focus:ring-blue-200 focus:border-blue-400"
-                        }`}
+                       onWheel={(e) => e.currentTarget.blur()} 
+
+                      className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition-all"
                       min="0"
                       style={{
                         WebkitAppearance: "none",
                         MozAppearance: "textfield",
                       }}
                     />
-
-                    {spouseIncomeError && (
-                      <p className="text-red-500 text-xs mt-1"
-                      style={{ color: "red" }}>{spouseIncomeError}</p>
-                    )}
                   </div>
                 )}
-
             </div>
           );
         })}
