@@ -22,7 +22,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       className="flex flex-col  items-center  px-6 py-8"
       style={{
         height: "calc(100vh - 210px)",
-        minHeight: "440px",
+        minHeight: "400px",
         maxHeight: "740px",
         overflowY: "auto",
         justifyContent: "start",
