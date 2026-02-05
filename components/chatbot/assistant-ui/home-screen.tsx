@@ -22,7 +22,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       className="flex flex-col  items-center  px-6 py-8"
       style={{
         height: "calc(100vh - 210px)",
-        minHeight: "400px",
+        minHeight: "365px",
         maxHeight: "740px",
         overflowY: "auto",
         justifyContent: "start",
@@ -32,8 +32,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       <div className="flex flex-col items-center mb-4">
         <div
           style={{
-            width: "80px",
-            height: "80px",
+            width: "60px",
+            height: "60px",
             backgroundColor: "#ffffff",
             borderRadius: "50%",
             padding: "8px",
@@ -127,7 +127,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </div>
         <h2
           style={{
-            fontSize: "20px",
+            fontSize: "16px",
             fontWeight: "600",
             color: "#1a202c",
             textAlign: "center",
@@ -138,7 +138,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </h2>
         <p
           style={{
-            fontSize: "14px",
+            fontSize: "12px",
             fontWeight: "400",
             color: "#718096",
             textAlign: "center",
@@ -178,7 +178,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 <div className="text-left">
                   <h3
                     style={{
-                      fontSize: "14px",
+                      fontSize: "12px",
                       fontWeight: "600",
                       color: "#1a202c",
                       marginBottom: "0px",
@@ -241,7 +241,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 <div className="text-left">
                   <h3
                     style={{
-                      fontSize: "14px",
+                      fontSize: "12px",
                       fontWeight: "600",
                       color: "#1a202c",
                       marginBottom: "0px",
@@ -305,7 +305,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 <div className="text-left">
                   <h3
                     style={{
-                      fontSize: "14px",
+                      fontSize: "12px",
                       fontWeight: "600",
                       color: "#1a202c",
                       marginBottom: "0px",
