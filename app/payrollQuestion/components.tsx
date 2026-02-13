@@ -112,7 +112,7 @@ export const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
             alignItems: "baseline",
             gap: "8px",
             width: "100%",
-            paddingLeft: "16px",
+            paddingLeft: "10px",
             paddingRight: "10px",
           }}
         >
@@ -176,7 +176,7 @@ export const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
                         if (e.target.value) {
                           if (e.target.value === "Other") {
                             const customValue = prompt(
-                              "Please enter your custom pay frequency:"
+                              "Please enter your custom pay frequency:",
                             );
                             if (customValue && customValue.trim()) {
                               onInputSubmit(customValue);
@@ -198,7 +198,7 @@ export const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
                           <option key={option.value} value={option.value}>
                             {option.label}
                           </option>
-                        )
+                        ),
                       )}
                     </select>
                   </div>
@@ -256,7 +256,7 @@ export const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
                           >
                             {option.label}
                           </button>
-                        )
+                        ),
                       )}
                     </div>
                   </div>

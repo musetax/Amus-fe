@@ -19,7 +19,10 @@ export const SelcectForHowToFillDataButton: FC<
   return (
     <ThreadPrimitive.Empty>
       <div className="flex w-full max-w-[var(--thread-max-width)] flex-grow flex-col px-4">
-        <div className="flex w-full flex-grow flex-col items-center justify-center" style={{height:"calc(100vh - 135px)"}}>
+        <div
+          className="flex w-full flex-grow flex-col items-center justify-center"
+          style={{ height: "calc(100vh - 135px)" }}
+        >
           <div
             className="mt-4 font-medium text-sm"
             style={{
@@ -47,8 +50,9 @@ export const SelcectForHowToFillDataButton: FC<
               }}
               className="mt-2 text-center text-sm text-muted-foreground max-w-md"
             >
-              Hi, I’m Uncle Sam! Your personal tax assistant.
-              Need help calculating your taxes, checking your refund, or updating your info after a life change? I’ve got you covered.
+              Hi, I’m Uncle Sam! Your personal tax assistant. Need help
+              calculating your taxes, checking your refund, or updating your
+              info after a life change? I’ve got you covered.
             </p>
 
             <div className="flex justify-center gap-4 mt-6">
@@ -57,13 +61,13 @@ export const SelcectForHowToFillDataButton: FC<
                 onClick={handleEnterManually}
                 className="px-6 py-2 rounded-full font-medium text-white shadow-md transition-all"
                 style={{
-                  backgroundColor: "rgb(81, 141, 231)",
+                  backgroundColor: "#6F56DD",
                 }}
                 onMouseEnter={(e) =>
-                  (e.currentTarget.style.backgroundColor = "rgb(65, 120, 210)")
+                  (e.currentTarget.style.backgroundColor = "#6F56DD")
                 }
                 onMouseLeave={(e) =>
-                  (e.currentTarget.style.backgroundColor = "rgb(81, 141, 231)")
+                  (e.currentTarget.style.backgroundColor = "#6F56DD")
                 }
               >
                 Enter Manually
@@ -74,13 +78,13 @@ export const SelcectForHowToFillDataButton: FC<
                 onClick={handleUseOCR}
                 className="px-6 py-2 rounded-full font-medium text-white shadow-md transition-all"
                 style={{
-                  backgroundColor: "rgb(81, 141, 231)",
+                  backgroundColor: "#6F56DD",
                 }}
                 onMouseEnter={(e) =>
-                  (e.currentTarget.style.backgroundColor = "rgb(65, 120, 210)")
+                  (e.currentTarget.style.backgroundColor = "#6F56DD")
                 }
                 onMouseLeave={(e) =>
-                  (e.currentTarget.style.backgroundColor = "rgb(81, 141, 231)")
+                  (e.currentTarget.style.backgroundColor = "#6F56DD")
                 }
               >
                 Upload Paycheck

@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Thread } from "../components/chatbot/assistant-ui/thread";
 import "../utilities/auth"; // Import to activate axios interceptors
-import makeHistoryAdapter from '../services/chatbot'
+import makeHistoryAdapter from "../services/chatbot";
 
 import {
   AssistantRuntimeProvider,
@@ -29,7 +29,9 @@ function Assistant() {
   const [activeTab, setActiveTab] = useState<"tax" | "learn">("learn");
   const [typing, setTyping] = useState(false);
   const [loadingHistory, setloadingHistory] = useState(false);
-  const [currentSessionId, setCurrentSessionId] = useState<string | undefined>();
+  const [currentSessionId, setCurrentSessionId] = useState<
+    string | undefined
+  >();
   const [currentUserId, setCurrentUserId] = useState<string | undefined>();
 
   const [payrollData, setPayrollData] = useState<any | null>(null);
@@ -42,31 +44,32 @@ function Assistant() {
   // Life events state management
   const [showLifeEventsScreen, setShowLifeEventsScreen] = useState(false);
   const [showLifeEventsForm, setShowLifeEventsForm] = useState(false);
-  const [selectedLifeEventCategory, setSelectedLifeEventCategory] = useState<LifeEventCategory>(null);
-  console.log("agentintent", agentIntent)
+  const [selectedLifeEventCategory, setSelectedLifeEventCategory] =
+    useState<LifeEventCategory>(null);
+  console.log("agentintent", agentIntent);
   const searchParams = useSearchParams();
   const sessionId: any = searchParams.get("session_id");
-  const userId: any = searchParams.get("user_id")
+  const userId: any = searchParams.get("user_id");
   const access_token: any = searchParams.get("access_token");
-  const user_image: any = searchParams.get("user_image")
-  const companyLogo: any = searchParams.get("company_logo")
-  const clientId: any = searchParams.get("client_id")
-  const clientSecret: any = searchParams.get("client_secret")
+  const user_image: any = searchParams.get("user_image");
+  const companyLogo: any = searchParams.get("company_logo");
+  const clientId: any = searchParams.get("client_id");
+  const clientSecret: any = searchParams.get("client_secret");
 
   // const refresh_access_token: any = params.get("refresh_token");
   const [globalError, setGlobalError] = useState<string | null>(null);
 
-  console.log(userId, sessionId, access_token)
+  console.log(userId, sessionId, access_token);
   if (companyLogo) {
-    localStorage.setItem("companyLogo", companyLogo)
+    localStorage.setItem("companyLogo", companyLogo);
   }
   if (user_image) {
-    localStorage.setItem("image", user_image)
+    localStorage.setItem("image", user_image);
   }
-  if (clientId) localStorage.setItem("clientId", clientId)
-  if (clientSecret) localStorage.setItem("clientSecret", clientSecret)
+  if (clientId) localStorage.setItem("clientId", clientId);
+  if (clientSecret) localStorage.setItem("clientSecret", clientSecret);
 
-  console.log(currentUserId)
+  console.log(currentUserId);
   useEffect(() => {
     const storedSessionId = localStorage.getItem("chat_session_id");
     if (!sessionId || !userId || !access_token) {
@@ -82,16 +85,16 @@ function Assistant() {
       setCurrentSessionId(storedSessionId);
     }
     if (access_token) {
-      localStorage.setItem("authTokenMuse", access_token)
+      localStorage.setItem("authTokenMuse", access_token);
     }
     // if (refresh_access_token) {
     //   localStorage.setItem("refreshTokenMuse", refresh_access_token)
     // }
     if (userId) {
-      localStorage.setItem("userId", userId)
-      setCurrentUserId(userId)
+      localStorage.setItem("userId", userId);
+      setCurrentUserId(userId);
     }
-  }, [sessionId, access_token, userId])
+  }, [sessionId, access_token, userId]);
 
   useEffect(() => {
     const userInfo = async () => {
@@ -110,30 +113,31 @@ function Assistant() {
         setIsLoadingPayroll(false);
         // loadHistory()
       } catch (error: any) {
-        setGlobalError(error.response.data.detail || "User ID not found")
+        setGlobalError(error.response.data.detail || "User ID not found");
         console.error("Error fetching payroll:", error);
         setShowTaxChatbot(true);
         setShowHomeScreen(false);
       } finally {
         setIsLoadingPayroll(false);
-
       }
-    }
+    };
     if (!globalError && userId) {
       userInfo();
-
     }
   }, [userId, globalError]);
   // Handle tax chatbot completion
   const handleTaxChatbotComplete = async (taxData: any) => {
     try {
-      const response = await payrollDetailsUpdate(userId, taxData)
-      console.log(response, "response")
+      const response = await payrollDetailsUpdate(userId, taxData);
+      console.log(response, "response");
       setShowTaxChatbot(false);
       setPayrollData(taxData);
 
       // After form completion, decide what to do based on agent intent
-      if (agentIntent === "tax_refund_calculation" || agentIntent === "tax_paycheck_calculation") {
+      if (
+        agentIntent === "tax_refund_calculation" ||
+        agentIntent === "tax_paycheck_calculation"
+      ) {
         // Start chat directly after form completion for these intents
         setShowHomeScreen(false);
       } else {
@@ -141,7 +145,9 @@ function Assistant() {
         setShowHomeScreen(true);
       }
     } catch (error: any) {
-      setGlobalError(error.response.data.details || "Failed to update payroll data.");
+      setGlobalError(
+        error.response.data.details || "Failed to update payroll data.",
+      );
     }
     // You might want to save this data to your backend here
   };
@@ -162,7 +168,9 @@ function Assistant() {
       setPayrollData(response);
     } catch (error: any) {
       console.error("Error fetching payroll on intent change:", error);
-      setGlobalError(error.response?.data?.detail || "Failed to fetch payroll details");
+      setGlobalError(
+        error.response?.data?.detail || "Failed to fetch payroll details",
+      );
     } finally {
       setIsLoadingPayroll(false);
     }
@@ -173,21 +181,28 @@ function Assistant() {
       setShowTaxChatbot(false);
       setShowLifeEventsScreen(false);
       setShowLifeEventsForm(false);
-    } else if (intent === "tax_refund_calculation" || intent === "tax_paycheck_calculation") {
+    } else if (
+      intent === "tax_refund_calculation" ||
+      intent === "tax_paycheck_calculation"
+    ) {
       // Show question flow first
-      if (intent === "tax_refund_calculation" && !payrollData?.is_refund_data_fill) {
+      if (
+        intent === "tax_refund_calculation" &&
+        !payrollData?.is_refund_data_fill
+      ) {
         setShowHomeScreen(false);
         setShowTaxChatbot(true);
         setShowLifeEventsScreen(false);
         setShowLifeEventsForm(false);
-      }
-      else if (intent === "tax_paycheck_calculation" && !payrollData?.is_paycheck_data_fill) {
+      } else if (
+        intent === "tax_paycheck_calculation" &&
+        !payrollData?.is_paycheck_data_fill
+      ) {
         setShowHomeScreen(false);
         setShowTaxChatbot(true);
         setShowLifeEventsScreen(false);
         setShowLifeEventsForm(false);
-      }
-      else {
+      } else {
         setShowHomeScreen(false);
         setShowTaxChatbot(false);
         setShowLifeEventsScreen(false);
@@ -247,7 +262,6 @@ function Assistant() {
   // Load history when page renders
   // const loadHistory = async () => {
 
-
   //   if (currentSessionId && userId) {
   //     const historyAdapter = makeHistoryAdapter(userId, sessionId, setloadingHistory);
   //     try {
@@ -261,73 +275,87 @@ function Assistant() {
   // IMPORTANT: history adapter is created with the current userId so it can load the right messages
   // Re-create history adapter when agentIntent changes to reload chat history with new context
   // ONLY create history when agentIntent is available (not null)
-  const history = useMemo(
-    () => {
-      if (!sessionId || !userId || !agentIntent) {
-        console.log("⏸️  History adapter NOT created:", { sessionId: !!sessionId, userId: !!userId, agentIntent });
-        return undefined;
-      }
-      console.log("✅ Creating history adapter for intent:", agentIntent);
-      return makeHistoryAdapter(userId, sessionId, setloadingHistory, agentIntent);
-    },
-    [userId, sessionId, agentIntent]
-  );
+  const history = useMemo(() => {
+    if (!sessionId || !userId || !agentIntent) {
+      console.log("⏸️  History adapter NOT created:", {
+        sessionId: !!sessionId,
+        userId: !!userId,
+        agentIntent,
+      });
+      return undefined;
+    }
+    console.log("✅ Creating history adapter for intent:", agentIntent);
+    return makeHistoryAdapter(
+      userId,
+      sessionId,
+      setloadingHistory,
+      agentIntent,
+    );
+  }, [userId, sessionId, agentIntent]);
 
   // Single unified runtime with history adapter
   // The runtime will automatically call history.load() and import messages when initialized with a history adapter
-  const runtimeOptions = useMemo(() => ({
-    adapters: {
-      attachments: new CompositeAttachmentAdapter([
-        new CustomAttachmentAdapter(),
-        new SimpleTextAttachmentAdapter(),
-      ]),
-      speech: new WebSpeechSynthesisAdapter(),
-      // Include history adapter only when available
-      ...(history ? { history } : {}),
-    },
-  }), [history]);
+  const runtimeOptions = useMemo(
+    () => ({
+      adapters: {
+        attachments: new CompositeAttachmentAdapter([
+          new CustomAttachmentAdapter(),
+          new SimpleTextAttachmentAdapter(),
+        ]),
+        speech: new WebSpeechSynthesisAdapter(),
+        // Include history adapter only when available
+        ...(history ? { history } : {}),
+      },
+    }),
+    [history],
+  );
 
-  const paycheck=useLocalRuntime(
+  const paycheck = useLocalRuntime(
     MyModelAdapter(
-  userId,
-  setTyping,
-  currentSessionId,
-  setGlobalError,
-  agentIntent
-),
-    runtimeOptions
+      userId,
+      setTyping,
+      currentSessionId,
+      setGlobalError,
+      agentIntent,
+    ),
+    runtimeOptions,
   );
-  const refund=useLocalRuntime(
+  const refund = useLocalRuntime(
     MyModelAdapter(
-  userId,
-  setTyping,
-  currentSessionId,
-  setGlobalError,
-  agentIntent
-),
-    runtimeOptions
+      userId,
+      setTyping,
+      currentSessionId,
+      setGlobalError,
+      agentIntent,
+    ),
+    runtimeOptions,
   );
-  const normalChat=useLocalRuntime(
+  const normalChat = useLocalRuntime(
     MyModelAdapter(
-  userId,
-  setTyping,
-  currentSessionId,
-  setGlobalError,
-  agentIntent
-),
-    runtimeOptions
+      userId,
+      setTyping,
+      currentSessionId,
+      setGlobalError,
+      agentIntent,
+    ),
+    runtimeOptions,
   );
-//   const learnRuntime = useLocalRuntime(
-//     MyModelAdapter(
-//   userId,
-//   setTyping,
-//   currentSessionId,
-//   setGlobalError,
-//   agentIntent
-// ),
-//     runtimeOptions
-//   );
-const learnRuntime=agentIntent==='tax_education'?normalChat:agentIntent==='tax_paycheck_calculation'?paycheck:refund
+  //   const learnRuntime = useLocalRuntime(
+  //     MyModelAdapter(
+  //   userId,
+  //   setTyping,
+  //   currentSessionId,
+  //   setGlobalError,
+  //   agentIntent
+  // ),
+  //     runtimeOptions
+  //   );
+  const learnRuntime =
+    agentIntent === "tax_education"
+      ? normalChat
+      : agentIntent === "tax_paycheck_calculation"
+        ? paycheck
+        : refund;
 
   // Manually load and import history when agentIntent changes
   // This is necessary because the automatic history loading might not trigger properly on intent change
@@ -336,15 +364,19 @@ const learnRuntime=agentIntent==='tax_education'?normalChat:agentIntent==='tax_p
       console.log("⏸️  Skipping manual history import:", {
         hasIntent: !!agentIntent,
         hasHistory: !!history,
-        hasRuntime: !!learnRuntime
+        hasRuntime: !!learnRuntime,
       });
       return;
     }
 
-    console.log("🔄 Manually loading and importing chat history for intent:", agentIntent);
+    console.log(
+      "🔄 Manually loading and importing chat history for intent:",
+      agentIntent,
+    );
     setloadingHistory(true);
 
-    history.load()
+    history
+      .load()
       .then((repository: any) => {
         console.log("✅ Chat history loaded from API:", {
           messagesCount: repository.messages.length,
@@ -358,7 +390,10 @@ const learnRuntime=agentIntent==='tax_education'?normalChat:agentIntent==='tax_p
             learnRuntime.thread.import(repository);
             console.log("✅ Chat history imported into runtime successfully");
           } catch (importError) {
-            console.error("❌ Failed to import history into runtime:", importError);
+            console.error(
+              "❌ Failed to import history into runtime:",
+              importError,
+            );
           }
         } else {
           console.log("ℹ️  No chat history messages to import");
@@ -369,15 +404,20 @@ const learnRuntime=agentIntent==='tax_education'?normalChat:agentIntent==='tax_p
         console.error("❌ Failed to load chat history:", err);
         setloadingHistory(false);
       });
-  }, [agentIntent,history,learnRuntime]);  // Only depend on agentIntent to avoid infinite loops
+  }, [agentIntent, history, learnRuntime]); // Only depend on agentIntent to avoid infinite loops
 
   // Show loading state while checking payroll data
   if (isLoadingPayroll) {
     return (
       <div className="myUniquechatbot">
-        <div className="flex items-center justify-center py-10 min-h-[400px]">
+        <div
+          className="flex items-center justify-center py-10"
+          style={{ minHeight: "550px" }}
+        >
           <div className="text-center">
-            <div className="flex items-center justify-center w-full mb-2"><div className="smooth-ring"></div></div>
+            <div className="flex items-center justify-center w-full mb-2">
+              <div className="smooth-ring"></div>
+            </div>
 
             {/* <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#4d37f5] mb-4"></div> */}
             <h3 className="text-lg font-medium text-gray-800 mb-2">
@@ -395,7 +435,10 @@ const learnRuntime=agentIntent==='tax_education'?normalChat:agentIntent==='tax_p
   return (
     <div className="myUniquechatbot">
       {/* key includes userId and agentIntent so switching users or intent re-initializes the runtime + history load */}
-      <AssistantRuntimeProvider key={`${agentIntent}-${userId}`} runtime={learnRuntime}>
+      <AssistantRuntimeProvider
+        key={`${agentIntent}-${userId}`}
+        runtime={learnRuntime}
+      >
         <div className="flex justify-between px-0 py-0 w-full">
           <div className="grid grid-cols-1 gap-x-2 px-0 py-0 w-full">
             <Thread
@@ -422,7 +465,6 @@ const learnRuntime=agentIntent==='tax_education'?normalChat:agentIntent==='tax_p
               onBackToLifeEventsCategories={handleBackToLifeEventsCategories}
               onSaveLifeEvents={handleSaveLifeEvents}
               agentIntent={agentIntent}
-           
             />
           </div>
         </div>
