@@ -1,5 +1,5 @@
 import React from "react";
-import Image from "next/image";
+// import Image from "next/image";
 
 export type AgentIntent =
   | "tax_education"
@@ -15,7 +15,7 @@ interface HomeScreenProps {
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({
   onSelectIntent,
-  companyLogo,
+  // companyLogo,
 }) => {
   return (
     <div
