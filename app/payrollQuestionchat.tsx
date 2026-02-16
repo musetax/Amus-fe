@@ -35,15 +35,15 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
   onComplete,
   onContinueToChat,
   prefilledData = {},
-  allfillData={},
+  allfillData = {},
   image = "",
   companyLogo,
   agentIntent = "tax_refund_calculation", // Default to refund if not provided
 }) => {
   const [questionsToAsk] = useState<StepType[]>(
-    getQuestionsToAsk(prefilledData, agentIntent,allfillData)
+    getQuestionsToAsk(prefilledData, agentIntent, allfillData),
   );
-  console.log(prefilledData,"]]]]")
+  console.log(prefilledData, "]]]]");
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
 
   const [formData, setFormData] = useState<FormData>({
@@ -80,12 +80,18 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
     pre_tax_deductions: prefilledData.pre_tax_deductions?.toString() || null,
     post_tax_deductions: prefilledData.post_tax_deductions?.toString() || null,
     // is_all_data_fill:true
-    "is_refund_data_fill": agentIntent === 'tax_refund_calculation' ? true : allfillData.is_refund_data_fill,
-    "is_paycheck_data_fill": agentIntent === 'tax_paycheck_calculation' ? true : allfillData.is_paycheck_data_fill,
+    is_refund_data_fill:
+      agentIntent === "tax_refund_calculation"
+        ? true
+        : allfillData.is_refund_data_fill,
+    is_paycheck_data_fill:
+      agentIntent === "tax_paycheck_calculation"
+        ? true
+        : allfillData.is_paycheck_data_fill,
   });
 
   const [currentStep, setCurrentStep] = useState<StepType>(
-    questionsToAsk.length > 0 ? questionsToAsk[0] : "complete"
+    questionsToAsk.length > 0 ? questionsToAsk[0] : "complete",
   );
 
   const [messages, setMessages] = useState<Message[]>([
@@ -97,13 +103,22 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
   const [error, setError] = useState<string>("");
   const [inputKey, setInputKey] = useState<number>(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const prevMessageCountRef = useRef(messages.length);
 
   const scrollToBottom = (): void => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+    });
   };
 
   useEffect(() => {
-    scrollToBottom();
+    const prevCount = prevMessageCountRef.current;
+    const currentCount = messages.length;
+    prevMessageCountRef.current = currentCount;
+    if (currentCount > prevCount) {
+      scrollToBottom();
+    }
   }, [messages]);
 
   useEffect(() => {
@@ -126,7 +141,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         ]);
         setIsTyping(false);
       },
-      type === "bot" ? 800 : 0
+      type === "bot" ? 800 : 0,
     );
   };
 
@@ -134,14 +149,14 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
     const nextIndex = getNextQuestionIndex(
       currentQuestionIndex,
       questionsToAsk,
-      data
+      data,
     );
 
     // End of questions
     if (nextIndex >= questionsToAsk.length) {
       addMessage(
         "bot",
-        "Perfect! I have all the information I need. Let me summarize everything for you:"
+        "Perfect! I have all the information I need. Let me summarize everything for you:",
       );
       setCurrentStep("complete");
       return;
@@ -166,7 +181,8 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
       case "filing_status":
         result = {
           formData: { ...formData, filing_status: value },
-          userMessage: value === "married_joint" ? "I am Married" : `I am ${value}`,
+          userMessage:
+            value === "married_joint" ? "I am Married" : `I am ${value}`,
         };
         break;
 
@@ -176,8 +192,15 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
 
       case "head_of_household":
         result = {
-          formData: { ...formData, filing_status: value === "yes" ? 'head_of_household' : formData.filing_status },
-          userMessage: value === "yes" ? "Yes, I am head of household" : "No, I am not head of household",
+          formData: {
+            ...formData,
+            filing_status:
+              value === "yes" ? "head_of_household" : formData.filing_status,
+          },
+          userMessage:
+            value === "yes"
+              ? "Yes, I am head of household"
+              : "No, I am not head of household",
         };
         break;
 
@@ -186,7 +209,11 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         break;
 
       case "seasonal_variation":
-        result = InputHandlers.handleSeasonalVariationInput(value, formData, false);
+        result = InputHandlers.handleSeasonalVariationInput(
+          value,
+          formData,
+          false,
+        );
         break;
 
       case "additional_yesorno":
@@ -230,7 +257,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
     }
 
     // Clear input field by changing key
-    setInputKey(prev => prev + 1);
+    setInputKey((prev) => prev + 1);
 
     // Move to next question
     moveToNextQuestion(result.formData);
@@ -253,7 +280,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         result = InputHandlers.handleIncomeTypeInput(
           value,
           formData,
-          isSkipped
+          isSkipped,
         );
         break;
 
@@ -261,7 +288,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         result = InputHandlers.handleAnnualSalaryInput(
           value,
           formData,
-          isSkipped
+          isSkipped,
         );
         break;
 
@@ -269,7 +296,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         result = InputHandlers.handleHourlyRateInput(
           value,
           formData,
-          isSkipped
+          isSkipped,
         );
         break;
 
@@ -277,7 +304,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         result = InputHandlers.handleAverageHoursInput(
           value,
           formData,
-          isSkipped
+          isSkipped,
         );
         break;
 
@@ -285,7 +312,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         result = InputHandlers.handleSeasonalVariationInput(
           value,
           formData,
-          isSkipped
+          isSkipped,
         );
         break;
 
@@ -293,7 +320,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         result = InputHandlers.handleSpouseIncomeInput(
           value,
           formData,
-          isSkipped
+          isSkipped,
         );
         break;
 
@@ -301,7 +328,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         result = InputHandlers.handlePayFrequencyInput(
           value,
           formData,
-          isSkipped
+          isSkipped,
         );
         break;
 
@@ -309,7 +336,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         result = InputHandlers.handleCurrentWithholdingInput(
           value,
           formData,
-          isSkipped
+          isSkipped,
         );
         break;
 
@@ -321,7 +348,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         result = InputHandlers.handleAdditionalIncomeInput(
           value,
           formData,
-          isSkipped
+          isSkipped,
         );
         break;
 
@@ -333,7 +360,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         result = InputHandlers.handleDeductionsInput(
           value,
           formData,
-          isSkipped
+          isSkipped,
         );
         break;
 
@@ -345,7 +372,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         result = InputHandlers.handleDependentsInput(
           value,
           formData,
-          isSkipped
+          isSkipped,
         );
         break;
 
@@ -353,7 +380,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         result = InputHandlers.handleCurrentDateInput(
           value,
           formData,
-          isSkipped
+          isSkipped,
         );
         break;
 
@@ -361,7 +388,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         result = InputHandlers.handleWorkAddressInput(
           value,
           formData,
-          isSkipped
+          isSkipped,
         );
         break;
 
@@ -369,7 +396,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         result = InputHandlers.handleHomeAddressInput(
           value,
           formData,
-          isSkipped
+          isSkipped,
         );
         break;
 
@@ -377,7 +404,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         result = InputHandlers.handlePreTaxDeductionsInput(
           value,
           formData,
-          isSkipped
+          isSkipped,
         );
         break;
 
@@ -385,7 +412,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
         result = InputHandlers.handlePostTaxDeductionsInput(
           value,
           formData,
-          isSkipped
+          isSkipped,
         );
         break;
 
@@ -414,7 +441,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
     }
 
     // Clear input field by changing key
-    setInputKey(prev => prev + 1);
+    setInputKey((prev) => prev + 1);
 
     // Move to next question
     moveToNextQuestion(result.formData);
@@ -465,9 +492,9 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
 
         deductions: Array.isArray(formData.deductions)
           ? formData.deductions.reduce(
-            (sum: number, item: any) => sum + Number(item.amount || 0),
-            0
-          )
+              (sum: number, item: any) => sum + Number(item.amount || 0),
+              0,
+            )
           : undefined,
 
         dependents: formData.dependents
@@ -486,8 +513,14 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
           ? Number(formData.post_tax_deductions)
           : undefined,
         // is_all_data_fill:true
-        "is_refund_data_fill": agentIntent === 'tax_refund_calculation' ? true : formData.is_refund_data_fill,
-        "is_paycheck_data_fill": agentIntent === 'tax_paycheck_calculation' ? true : formData.is_paycheck_data_fill,
+        is_refund_data_fill:
+          agentIntent === "tax_refund_calculation"
+            ? true
+            : formData.is_refund_data_fill,
+        is_paycheck_data_fill:
+          agentIntent === "tax_paycheck_calculation"
+            ? true
+            : formData.is_paycheck_data_fill,
 
         // },
       };
@@ -515,7 +548,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
     <div className="bg-inherit" style={{ height: "calc(100vh - 138px)" }}>
       <div
         style={{
-          height: "calc(100vh - 210px)",
+          // height: "calc(100vh - 210px)",
           minHeight: "120px",
           maxHeight: "740px",
           paddingTop: "20px",
@@ -538,7 +571,7 @@ const TaxChatbot: React.FC<TaxChatbotProps> = ({
               companyLogo={companyLogo}
               inputKey={inputKey}
             />
-          )
+          ),
         )}
 
         {isTyping && (

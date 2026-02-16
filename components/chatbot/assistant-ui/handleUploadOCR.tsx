@@ -8,7 +8,8 @@ interface SelcectForHowToFillDataButtonProps {
 export const SelcectForHowToFillDataButton: FC<
   SelcectForHowToFillDataButtonProps
 > = ({ setPayloadButton }) => {
-  const handleEnterManually = () => {
+  const handleEnterManually = (e: React.MouseEvent) => {
+    e.preventDefault();
     setPayloadButton({ enterManually: true, ocr: false });
   };
 
@@ -58,6 +59,7 @@ export const SelcectForHowToFillDataButton: FC<
             <div className="flex justify-center gap-4 mt-6">
               {/* --- Enter Manually Button --- */}
               <button
+                type="button"
                 onClick={handleEnterManually}
                 className="px-6 py-2 rounded-full font-medium text-white shadow-md transition-all"
                 style={{
@@ -75,6 +77,7 @@ export const SelcectForHowToFillDataButton: FC<
 
               {/* --- Use OCR Button --- */}
               <button
+                type="button"
                 onClick={handleUseOCR}
                 className="px-6 py-2 rounded-full font-medium text-white shadow-md transition-all"
                 style={{

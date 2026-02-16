@@ -8,7 +8,7 @@ import {
   useMessage,
   useThreadRuntime,
 } from "@assistant-ui/react";
-import { useEffect, useRef, useState, type FC } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type FC } from "react";
 import {
   ArrowDownIcon,
   CheckIcon,
@@ -129,6 +129,14 @@ export const Thread: any = ({
     enterManually: false,
     ocr: false,
   });
+  const taxChatbotScrollRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    if (payloadButton.enterManually && taxChatbotScrollRef.current) {
+      taxChatbotScrollRef.current.scrollTop = 0;
+    }
+  }, [payloadButton.enterManually]);
+
   return (
     <>
       <div>
@@ -423,10 +431,12 @@ export const Thread: any = ({
                   />
                 ) : shouldShowTaxChatbot ? (
                   <div
+                    ref={taxChatbotScrollRef}
                     style={{
                       height: "calc(100vh - 130px)",
                       minHeight: "440px",
                       overflowY: "auto",
+                      overflowAnchor: "none",
                     }}
                   >
                     {!payloadButton.enterManually && !payloadButton.ocr && (
