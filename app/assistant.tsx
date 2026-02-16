@@ -409,10 +409,10 @@ function Assistant() {
   // Show loading state while checking payroll data
   if (isLoadingPayroll) {
     return (
-      <div className="myUniquechatbot">
+      <div className="myUniquechatbot" style={{ minHeight: "100vh" }}>
         <div
           className="flex items-center justify-center py-10"
-          style={{ minHeight: "550px" }}
+          style={{ minHeight: "100vh" }}
         >
           <div className="text-center">
             <div className="flex items-center justify-center w-full mb-2">
