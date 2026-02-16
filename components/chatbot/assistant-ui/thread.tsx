@@ -157,6 +157,7 @@ export const Thread: any = ({
                 padding: "14px 16px 20px",
                 position: "relative",
                 gap: "4px",
+                zIndex: 100,
               }}
             >
               <div
@@ -427,6 +428,7 @@ export const Thread: any = ({
                       height: "calc(100vh - 130px)",
                       minHeight: "440px",
                       overflowY: "auto",
+                      position: "relative",
                     }}
                   >
                     {!payloadButton.enterManually && !payloadButton.ocr && (
@@ -456,8 +458,8 @@ export const Thread: any = ({
                         companyLogo={companyLogo}
                         agentIntent={
                           agentIntent as
-                            | "tax_refund_calculation"
-                            | "tax_paycheck_calculation"
+                          | "tax_refund_calculation"
+                          | "tax_paycheck_calculation"
                         }
                       />
                     )}
@@ -466,10 +468,10 @@ export const Thread: any = ({
                       <OCRUploadComponent
                         userId={userId}
                         onComplete={handleTaxChatbotComplete}
-                        // onSave={(payload) => {
-                        //   console.log("OCR payload:", payload);
-                        //   // then trigger TaxChatbot with prefilled data
-                        // }}
+                      // onSave={(payload) => {
+                      //   console.log("OCR payload:", payload);
+                      //   // then trigger TaxChatbot with prefilled data
+                      // }}
                       />
                     )}
                   </div>
@@ -552,9 +554,8 @@ const ThreadWelcome: FC<any> = ({ agentIntent }) => {
       content: [
         {
           type: "text",
-          text: `Let’s begin calculating my ${
-            agentIntent === "tax_paycheck_calculation" ? "paycheck" : "tax"
-          }`,
+          text: `Let’s begin calculating my ${agentIntent === "tax_paycheck_calculation" ? "paycheck" : "tax"
+            }`,
         },
       ],
     });
@@ -596,30 +597,30 @@ const ThreadWelcome: FC<any> = ({ agentIntent }) => {
             </p>
             {(agentIntent === "tax_paycheck_calculation" ||
               agentIntent === "tax_refund_calculation") && (
-              <div className="flex justify-center mt-6">
-                <button
-                  onClick={handleCalculateClick}
-                  className="px-6 py-2 rounded-full font-medium text-white shadow-md transition-all"
-                  style={{
-                    backgroundColor: "rgb(81, 141, 231)",
-                  }}
-                  onMouseEnter={(e) =>
+                <div className="flex justify-center mt-6">
+                  <button
+                    onClick={handleCalculateClick}
+                    className="px-6 py-2 rounded-full font-medium text-white shadow-md transition-all"
+                    style={{
+                      backgroundColor: "rgb(81, 141, 231)",
+                    }}
+                    onMouseEnter={(e) =>
                     (e.currentTarget.style.backgroundColor =
                       "rgb(65, 120, 210)")
-                  }
-                  onMouseLeave={(e) =>
+                    }
+                    onMouseLeave={(e) =>
                     (e.currentTarget.style.backgroundColor =
                       "rgb(81, 141, 231)")
-                  }
-                >
-                  Start My{" "}
-                  {agentIntent === "tax_paycheck_calculation"
-                    ? "paycheck"
-                    : "tax"}{" "}
-                  Calculation
-                </button>
-              </div>
-            )}
+                    }
+                  >
+                    Start My{" "}
+                    {agentIntent === "tax_paycheck_calculation"
+                      ? "paycheck"
+                      : "tax"}{" "}
+                    Calculation
+                  </button>
+                </div>
+              )}
           </div>
         </div>
         {/* <ThreadWelcomeSuggestions /> */}
