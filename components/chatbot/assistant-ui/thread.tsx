@@ -17,7 +17,6 @@ import {
   CopyIcon,
   LinkIcon,
   PencilIcon,
-  SendHorizontalIcon,
   Volume2Icon,
   VolumeXIcon,
 } from "lucide-react";
@@ -41,6 +40,7 @@ import { LifeEventsForm } from "./life-events-form";
 import { SelcectForHowToFillDataButton } from "./handleUploadOCR";
 import { OCRUploadComponent } from "./OCRUploadComponent";
 import { ScenarioCheckbox } from "./scenario-checkbox";
+import { SendHorizontalIcon } from "../../../app/payrollQuestion/icons";
 // import Image from "next/image";
 
 export const CHAT_HISTORY_KEY = "chat_history";
@@ -141,7 +141,7 @@ export const Thread: any = ({
     <>
       <div>
         <ThreadPrimitive.Root
-          className="bg-white box-border flex flex-col overflow-hidden rounded-xl"
+          className="bg-[#ECE8F8] box-border flex flex-col overflow-hidden rounded-xl"
           style={{
             ["--thread-max-width" as string]: "42rem",
           }}
@@ -537,7 +537,7 @@ export const Thread: any = ({
                       </div>
                     </ThreadPrimitive.Viewport>
 
-                    <div className="sticky bg-[#255be305] bottom-0 px-3 pt-3 flex w-full max-w-[var(--thread-max-width)] flex-col items-center justify-end rounded-t-lg pb-2">
+                    <div className="sticky bg-[#ECE8F8] bottom-0 px-3 pt-3 flex w-full max-w-[var(--thread-max-width)] flex-col items-center justify-end rounded-t-lg pb-2">
                       <Composer />
                       <ThreadScrollToBottom />
                     </div>
@@ -611,15 +611,13 @@ const ThreadWelcome: FC<any> = ({ agentIntent }) => {
                   onClick={handleCalculateClick}
                   className="px-6 py-2 rounded-full font-medium text-white shadow-md transition-all"
                   style={{
-                    backgroundColor: "rgb(81, 141, 231)",
+                    backgroundColor: "#6F56DD",
                   }}
                   onMouseEnter={(e) =>
-                    (e.currentTarget.style.backgroundColor =
-                      "rgb(65, 120, 210)")
+                    (e.currentTarget.style.backgroundColor = "#6F56DD")
                   }
                   onMouseLeave={(e) =>
-                    (e.currentTarget.style.backgroundColor =
-                      "rgb(81, 141, 231)")
+                    (e.currentTarget.style.backgroundColor = "#6F56DD")
                   }
                 >
                   Start My{" "}
@@ -695,13 +693,14 @@ const Composer: FC = () => {
   const composerRef = useRef<HTMLTextAreaElement | null>(null);
 
   return (
-    <ComposerPrimitive.Root className="focus-within:border-ring/20 flex w-full flex-wrap items-end rounded-full border border-[#E9E9E9] bg-inherit px-2.5 py-0 shadow-sm transition-colors ease-in gap-2 bg-white ">
+    <ComposerPrimitive.Root className=" flex w-full flex-wrap items-end  bg-inherit px-2.5 py-0  transition-colors ease-in gap-2  ">
       <ComposerPrimitive.Input
         ref={composerRef}
         rows={1}
         autoFocus
         placeholder="Please Ask Your Query..."
-        className="placeholder:text-muted-foreground custom_input flex-grow resize-none border-none bg-transparent px-2 py-4 text-sm outline-none focus:ring-0 disabled:cursor-not-allowed"
+        className="placeholder:text-muted-foreground custom_input flex-grow resize-none  px-2 py-4 focus-within:border-ring/20  border border-[#E9E9E9] rounded-xl text-sm outline-none focus:ring-0 disabled:cursor-not-allowed  shadow-sm"
+        style={{ backgroundColor: "#F4F3F9" }}
       />
       <ComposerAction composerRef={composerRef} />
     </ComposerPrimitive.Root>
@@ -753,7 +752,8 @@ const ComposerAction: FC<ComposerActionProps> = ({ composerRef }) => {
           <TooltipIconButton
             tooltip="Send"
             variant="default"
-            className="my-2.5 size-8 p-2 bg-ChatBtnGradient rounded-full transition-opacity ease-in"
+            className=" p-0 size-12  bg-ChatBtnGradient rounded-xl transition-opacity ease-in"
+            style={{ height: "52px", width: "52px" }}
           >
             <SendHorizontalIcon />
           </TooltipIconButton>
@@ -765,7 +765,8 @@ const ComposerAction: FC<ComposerActionProps> = ({ composerRef }) => {
           <TooltipIconButton
             tooltip="Cancel"
             variant="default"
-            className="my-2.5 size-8 p-2 transition-opacity ease-in"
+            className=" size-12 p-2 transition-opacity ease-in"
+            style={{ height: "52px", width: "52px" }}
           >
             <CircleStopIcon />
           </TooltipIconButton>
@@ -811,7 +812,7 @@ const UserMessage: React.FC<UserMessageProps> = ({ image }) => {
             alignItems: "end",
           }}
         >
-          <div className="bg-ChatBtnGradient text-white d max-w-[calc(var(--thread-max-width)*0.8)] text-sm break-all break-words rounded-3xl px-5 py-2.5 col-start-2 row-start-2">
+          <div className="bg-ChatBtnGradient text-white d max-w-[calc(var(--thread-max-width)*0.8)] text-sm break-all break-words rounded-xl px-5 py-2.5 col-start-2 row-start-2">
             <MessagePrimitive.Content components={{ Text: TrimmedText }} />
           </div>
           <span
@@ -1010,16 +1011,25 @@ const AssistantMessage: React.FC<any> = ({
               </div>
             ) : (
               <>
-                <MessagePrimitive.Content components={{ Text: MarkdownText }} />
+                <div
+                  style={{
+                    backgroundColor: "#ffffff",
+                    padding: "12px",
+                    borderRadius: "12px",
+                  }}
+                >
+                  <MessagePrimitive.Content
+                    components={{ Text: MarkdownText }}
+                  />
 
-                {isStreaming && (
-                  <span className="inline-block w-2 h-0.5 bg-blue-500 animate-pulse ml-1"></span>
-                )}
+                  {isStreaming && (
+                    <span className="inline-block w-2 h-0.5 bg-blue-500 animate-pulse ml-1"></span>
+                  )}
 
-                {urls && !isStreaming && showUrls && (
-                  <URLDisplay urls={urls} messageId={messageId} />
-                )}
-
+                  {urls && !isStreaming && showUrls && (
+                    <URLDisplay urls={urls} messageId={messageId} />
+                  )}
+                </div>
                 <span
                   style={{
                     color: "#45556c",

@@ -26,6 +26,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         maxHeight: "740px",
         overflowY: "auto",
         justifyContent: "center",
+        background: "#ECE8F8",
       }}
     >
       {/* Logo and Welcome Section */}
@@ -159,7 +160,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         {/* Ask My Uncle Sam Button */}
         <button
           onClick={() => onSelectIntent("tax_education")}
-          className="group relative overflow-hidden rounded-2xl bg-[#F4F3F9] p-[2px] transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
+          className="group relative overflow-hidden rounded-2xl bg-[#ffffff] p-[2px] transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
+          style={{ backgroundColor: "#ffffff" }}
         >
           <div className="bg-[#F4F3F9] rounded-2xl px-2 py-2 transition-all duration-300 group-hover:bg-opacity-95 custom-hover">
             <div className="flex items-center justify-between">
@@ -224,7 +226,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           onClick={() => onSelectIntent("tax_refund_calculation")}
           className="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#518DE7] via-[#7687E5] to-[#9B8FE3] p-[2px] transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
         >
-          <div className="bg-[#F4F3F9] rounded-2xl px-2 py-2 transition-all duration-300 group-hover:bg-opacity-95 custom-hover">
+          <div
+            className="bg-[#ffffff] rounded-2xl px-2 py-2 transition-all duration-300 group-hover:bg-opacity-95 custom-hover"
+            style={{ backgroundColor: "#ffffff" }}
+          >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#518DE7] to-[#7687E5] flex items-center justify-center">
@@ -287,7 +292,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           onClick={() => onSelectIntent("tax_paycheck_calculation")}
           className="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#48C2D4] via-[#1595EA] to-[#548CE7] p-[2px] transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
         >
-          <div className="bg-[#F4F3F9] rounded-2xl px-2 py-2 transition-all duration-300 group-hover:bg-opacity-95 custom-hover">
+          <div
+            className="bg-[#ffffff] rounded-2xl px-2 py-2 transition-all duration-300 group-hover:bg-opacity-95 custom-hover"
+            style={{ backgroundColor: "#ffffff" }}
+          >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#1595EA] to-[#548CE7] flex items-center justify-center">

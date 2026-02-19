@@ -2166,12 +2166,12 @@ video {
   text-align: right;
 }
 
-.myUniquechatbot
+/* .myUniquechatbot
   .\[\&_svg\:not\(\[class\*\=\'size-\'\]\)\]\:size-4
   svg:not([class*="size-"]) {
   width: 1rem;
   height: 1rem;
-}
+} */
 
 .myUniquechatbot .\[\&_svg\]\:pointer-events-none svg {
   pointer-events: none;
