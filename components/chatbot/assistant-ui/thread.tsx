@@ -34,9 +34,9 @@ import { Tooltip, TooltipTrigger } from "../ui/tooltip";
 import TaxChatbot from "../../../app/payrollQuestionchat";
 import { ErrorBanner } from "./error-ui";
 import Image from "next/image";
-import { HomeScreen } from "./home-screen";
-import { LifeEventsScreen } from "./life-events-screen";
-import { LifeEventsForm } from "./life-events-form";
+// import { HomeScreen } from "./home-screen";
+// import { LifeEventsScreen } from "./life-events-screen";
+// import { LifeEventsForm } from "./life-events-form";
 import { SelcectForHowToFillDataButton } from "./handleUploadOCR";
 import { OCRUploadComponent } from "./OCRUploadComponent";
 import { ScenarioCheckbox } from "./scenario-checkbox";
@@ -69,14 +69,14 @@ export const Thread: any = ({
   onContinueToChat,
   globalError,
   showHomeScreen,
-  onSelectIntent,
-  onReturnToHome,
-  showLifeEventsScreen,
-  showLifeEventsForm,
-  selectedLifeEventCategory,
-  onSelectLifeEventCategory,
-  onBackToLifeEventsCategories,
-  onSaveLifeEvents,
+  // onSelectIntent,
+  // onReturnToHome,
+  // showLifeEventsScreen,
+  // showLifeEventsForm,
+  // selectedLifeEventCategory,
+  // onSelectLifeEventCategory,
+  // onBackToLifeEventsCategories,
+  // onSaveLifeEvents,
   agentIntent,
 }: any) => {
   console.log(showHomeScreen, "jknjkdw");
