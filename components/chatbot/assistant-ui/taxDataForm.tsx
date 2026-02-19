@@ -35,7 +35,7 @@ export const TaxDataForm: React.FC<{
   taxData: TaxData;
   onSave: (payload: any) => void;
   onCancel?: () => void;
-}> = ({ taxData, onSave,onCancel }) => {
+}> = ({ taxData, onSave, onCancel }) => {
   const defaultFields: TaxData = {
     // first_name: "",
     // middle_name: "",
@@ -104,7 +104,7 @@ export const TaxDataForm: React.FC<{
     Object.entries(taxData || {}).map(([key, value]) => [
       key,
       normalizeField(key, value),
-    ])
+    ]),
   );
 
   const [form, setForm] = useState<any>({
@@ -149,7 +149,7 @@ export const TaxDataForm: React.FC<{
     ) {
       if (form.income_type === "hourly") {
         const seasonal = seasonalVariationOptions.find(
-          (o) => o.value === updated.seasonal_variation
+          (o) => o.value === updated.seasonal_variation,
         );
         const multiplier = seasonal?.multiplier ?? 1;
         updated.estimated_annual_income = (
@@ -484,12 +484,12 @@ export const TaxDataForm: React.FC<{
         <button
           onClick={handleSubmit}
           className="px-6 py-2 rounded-full font-medium text-white shadow-md transition-all w-full sm:w-auto"
-          style={{ backgroundColor: "rgb(81, 141, 231)" }}
+          style={{ backgroundColor: "#6F56DD" }}
           onMouseEnter={(e) =>
-            (e.currentTarget.style.backgroundColor = "rgb(65, 120, 210)")
+            (e.currentTarget.style.backgroundColor = "#6F56DD")
           }
           onMouseLeave={(e) =>
-            (e.currentTarget.style.backgroundColor = "rgb(81, 141, 231)")
+            (e.currentTarget.style.backgroundColor = "#6F56DD")
           }
         >
           Save

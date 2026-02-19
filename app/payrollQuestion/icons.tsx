@@ -3,16 +3,35 @@ import React from "react";
 
 export const SendHorizontalIcon: React.FC = () => (
   <svg
-    viewBox="0 0 24 24"
-    aria-hidden="true"
-    focusable="false"
-    fill="currentColor"
     xmlns="http://www.w3.org/2000/svg"
-    color="inherit"
-    className="e1t4gh341 st-emotion-cache-1f3w014 ex0cdmw0"
+    width="28"
+    height="28"
+    viewBox="0 0 23 23"
+    fill="none"
   >
-    <rect width="24" height="24" fill="none"></rect>
-    <path d="M3 5.51v3.71c0 .46.31.86.76.97L11 12l-7.24 1.81c-.45.11-.76.51-.76.97v3.71c0 .72.73 1.2 1.39.92l15.42-6.49c.82-.34.82-1.5 0-1.84L4.39 4.58C3.73 4.31 3 4.79 3 5.51z"></path>
+    <g clip-path="url(#clip0_3114_1001)">
+      <path
+        d="M16.9551 1.63569L1.29024 10.0226C0.805041 10.2999 0.805041 11.0623 1.35955 11.2703L15.7768 17.3005C16.1926 17.5085 16.6778 17.1619 16.7471 16.746L17.9255 2.32882C17.9948 1.705 17.4403 1.35843 16.9551 1.63569Z"
+        stroke="white"
+        strokeWidth="2"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M16.6773 2.39062L7.6665 13.4808V18.5407C7.6665 19.1645 8.49827 19.5111 8.91415 19.0259L11.8253 15.5602"
+        stroke="white"
+        strokeWidth="2"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </g>
+    <defs>
+      <clipPath id="clip0_3114_1001">
+        <rect width="22.1803" height="22.1803" rx="11.0902" fill="white" />
+      </clipPath>
+    </defs>
   </svg>
 );
 
@@ -52,9 +71,9 @@ export const Calendar: React.FC = () => (
   <div className="text-white text-lg">📅</div>
 );
 
-export const CheckCircle: React.FC<{ className?: string }> = ({ className }) => (
-  <div className={`text-xl ${className}`}>✅</div>
-);
+export const CheckCircle: React.FC<{ className?: string }> = ({
+  className,
+}) => <div className={`text-xl ${className}`}>✅</div>;
 
 export const Home: React.FC = () => (
   <div className="text-white text-lg">🏠</div>

@@ -17,7 +17,6 @@ import {
   CopyIcon,
   LinkIcon,
   PencilIcon,
-  SendHorizontalIcon,
   Volume2Icon,
   VolumeXIcon,
 } from "lucide-react";
@@ -41,6 +40,7 @@ import { LifeEventsForm } from "./life-events-form";
 import { SelcectForHowToFillDataButton } from "./handleUploadOCR";
 import { OCRUploadComponent } from "./OCRUploadComponent";
 import { ScenarioCheckbox } from "./scenario-checkbox";
+import { SendHorizontalIcon } from "../../../app/payrollQuestion/icons";
 // import Image from "next/image";
 
 export const CHAT_HISTORY_KEY = "chat_history";
@@ -141,7 +141,7 @@ export const Thread: any = ({
     <>
       <div>
         <ThreadPrimitive.Root
-          className="bg-white box-border flex flex-col overflow-hidden rounded-xl"
+          className="bg-[#ECE8F8] box-border flex flex-col overflow-hidden rounded-xl"
           style={{
             ["--thread-max-width" as string]: "42rem",
           }}
@@ -150,232 +150,7 @@ export const Thread: any = ({
             className=" overflow-hidden rounded-xl as"
             style={{ maxHeight: "935px", position: "sticky", top: "0" }}
           >
-            <div
-              style={{
-                backgroundColor: "#6F56DD",
-                backgroundRepeat: "no-repeat",
-                borderTopLeftRadius: "8px",
-                borderTopRightRadius: "8px",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                flexWrap: "nowrap", // ✅ allows wrapping on small screens
-                backgroundPosition: "bottom",
-                width: "100%",
-                padding: "14px 16px 20px",
-                position: "relative",
-                gap: "4px",
-                zIndex: 100,
-              }}
-            >
-              <div
-                style={{ display: "flex", alignItems: "center", gap: "10px" }}
-              >
-                {/* LEFT: Logo */}
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "10px",
-                    flexShrink: 0,
-                    marginRight: 0,
-                  }}
-                >
-                  <span
-                    style={{
-                      width: "48px",
-                      height: "48px",
-                      backgroundColor: "#ffffff",
-                      borderRadius: "50%",
-                      padding: "4px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {companyLogo ? (
-                      <Image
-                        src={companyLogo}
-                        width={60}
-                        height={41}
-                        alt="Company Logo"
-                      />
-                    ) : (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="60"
-                        height="41"
-                        viewBox="0 0 60 41"
-                        fill="none"
-                      >
-                        {/* <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="60"
-      height="41"
-      viewBox="0 0 60 41"
-      fill="none"
-    > */}
-                        <path
-                          d="M12.7905 7.42385L1.20752 31.1693C-0.502414 34.6745 1.17634 38.2925 4.9571 39.2503C8.73794 40.2081 13.189 38.1427 14.899 34.6375L26.482 10.892C28.192 7.38677 26.5131 3.76859 22.7323 2.81097C18.9515 1.85316 14.5005 3.91858 12.7905 7.42385Z"
-                          fill="url(#paint0_linear_7768_1391)"
-                        />
-                        <path
-                          d="M27.7745 7.0597L34.9048 21.6752C36.5827 25.1143 34.9357 28.6641 31.2263 29.6037C27.5169 30.5435 23.1499 28.5174 21.4722 25.0783L14.3417 10.4628C12.6637 7.02373 14.3107 3.47396 18.0201 2.53433C21.7295 1.59451 26.0967 3.62062 27.7745 7.0597Z"
-                          fill="url(#paint1_linear_7768_1391)"
-                        />
-                        <path
-                          d="M30.0391 7.08014L22.9286 21.6547C21.2453 25.1051 22.8975 28.6665 26.6189 29.6095C30.3406 30.5523 34.7221 28.5195 36.4055 25.0691L43.5158 10.4946C45.1993 7.04417 43.547 3.48272 39.8253 2.53993C36.1039 1.59696 31.7224 3.62975 30.0391 7.08014Z"
-                          fill="url(#paint2_linear_7768_1391)"
-                        />
-                        <path
-                          d="M45.5962 7.19045L57.2931 31.1693C59.0031 34.6746 57.3244 38.2927 53.5436 39.2504C49.7629 40.2082 45.3116 38.1427 43.6017 34.6375L31.9048 10.6586C30.1948 7.15337 31.8737 3.53519 35.6544 2.57757C39.435 1.61976 43.8864 3.68518 45.5962 7.19045Z"
-                          fill="url(#paint3_linear_7768_1391)"
-                        />
-                        <defs>
-                          <linearGradient
-                            id="paint0_linear_7768_1391"
-                            x1="4.04851"
-                            y1="38.9984"
-                            x2="28.5694"
-                            y2="6.83259"
-                            gradientUnits="userSpaceOnUse"
-                          >
-                            <stop stopColor="#69DEC6" />
-                            <stop offset="1" stopColor="#49C2D4" />
-                          </linearGradient>
-                          <linearGradient
-                            id="paint1_linear_7768_1391"
-                            x1="16.9186"
-                            y1="3.08128"
-                            x2="44.3829"
-                            y2="35.4655"
-                            gradientUnits="userSpaceOnUse"
-                          >
-                            <stop stopColor="#48C2D4" />
-                            <stop offset="1" stopColor="#1595EA" />
-                          </linearGradient>
-                          <linearGradient
-                            id="paint2_linear_7768_1391"
-                            x1="25.1579"
-                            y1="29.422"
-                            x2="62.1925"
-                            y2="-12.9475"
-                            gradientUnits="userSpaceOnUse"
-                          >
-                            <stop stopColor="#1695EA" />
-                            <stop offset="1" stopColor="#548CE7" />
-                          </linearGradient>
-                          <linearGradient
-                            id="paint3_linear_7768_1391"
-                            x1="36.5681"
-                            y1="2.06437"
-                            x2="61.2194"
-                            y2="35.6826"
-                            gradientUnits="userSpaceOnUse"
-                          >
-                            <stop stopColor="#518DE7" />
-                            <stop offset="1" stopColor="#7687E5" />
-                          </linearGradient>
-                        </defs>
-                        {/* </svg> */}
-                        {/* your existing svg paths */}
-                      </svg>
-                    )}
-                  </span>
-                </div>
 
-                {/* MIDDLE: Title */}
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    flex: 1,
-                    minWidth: "200px",
-                  }}
-                >
-                  <h3
-                    style={{
-                      color: "#ffffff",
-                      fontSize: "16px",
-                      fontWeight: "600",
-                      margin: 0,
-                      position: "relative",
-                      top: 5,
-                    }}
-                  >
-                    How Can I Help You Today?
-                  </h3>
-                  <p
-                    style={{
-                      color: "#ffffff",
-                      fontSize: "12px",
-                      fontWeight: "normal",
-                      margin: "4px 0 0 0",
-                    }}
-                  >
-                    We typically reply in a few minutes
-                  </p>
-                </div>
-              </div>
-              {/* RIGHT: Home Button */}
-              {!showHomeScreen && (
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    flexShrink: 0,
-                    width: "auto",
-                  }}
-                >
-                  <button
-                    onClick={onReturnToHome}
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: "8px",
-                      padding: "10px 20px",
-                      fontSize: "14px",
-                      fontWeight: "500",
-                      color: "#ffffff",
-                      background:
-                        "linear-gradient(90deg, #69DEC6 0%, #49C2D4 50%, #1595EA 100%)",
-                      border: "none",
-                      borderRadius: "24px",
-                      cursor: "pointer",
-                      transition: "all 0.2s ease-in-out",
-                      boxShadow: "0 2px 8px rgba(21, 149, 234, 0.2)",
-                      whiteSpace: "nowrap",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = "scale(1.02)";
-                      e.currentTarget.style.boxShadow =
-                        "0 4px 12px rgba(21, 149, 234, 0.3)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = "scale(1)";
-                      e.currentTarget.style.boxShadow =
-                        "0 2px 8px rgba(21, 149, 234, 0.2)";
-                    }}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                      <polyline points="9 22 9 12 15 12 15 22" />
-                    </svg>
-                    {/* Return Home */}
-                  </button>
-                </div>
-              )}
-            </div>
 
             {loadingHistory ? (
               <div
@@ -413,23 +188,23 @@ export const Thread: any = ({
 
                 {globalError ? (
                   <ErrorBanner message={globalError} />
-                ) : showHomeScreen ? (
-                  <HomeScreen
-                    onSelectIntent={onSelectIntent}
-                    companyLogo={companyLogo}
-                  />
-                ) : showLifeEventsScreen ? (
-                  <LifeEventsScreen
-                    onSelectCategory={onSelectLifeEventCategory}
-                    onBack={onReturnToHome}
-                  />
-                ) : showLifeEventsForm ? (
-                  <LifeEventsForm
-                    category={selectedLifeEventCategory}
-                    onBack={onBackToLifeEventsCategories}
-                    onSave={onSaveLifeEvents}
-                    userId={userId}
-                  />
+                  // ) : showHomeScreen ? (
+                  //   <HomeScreen
+                  //     onSelectIntent={onSelectIntent}
+                  //     companyLogo={companyLogo}
+                  //   />
+                  // ) : showLifeEventsScreen ? (
+                  //   <LifeEventsScreen
+                  //     onSelectCategory={onSelectLifeEventCategory}
+                  //     onBack={onReturnToHome}
+                  //   />
+                  // ) : showLifeEventsForm ? (
+                  //   <LifeEventsForm
+                  //     category={selectedLifeEventCategory}
+                  //     onBack={onBackToLifeEventsCategories}
+                  //     onSave={onSaveLifeEvents}
+                  //     userId={userId}
+                  //   />
                 ) : shouldShowTaxChatbot ? (
                   <div
                     ref={taxChatbotScrollRef}
@@ -538,7 +313,7 @@ export const Thread: any = ({
                       </div>
                     </ThreadPrimitive.Viewport>
 
-                    <div className="sticky bg-[#255be305] bottom-0 px-3 pt-3 flex w-full max-w-[var(--thread-max-width)] flex-col items-center justify-end rounded-t-lg pb-2">
+                    <div className="sticky bg-[#ECE8F8] bottom-0 px-3 pt-3 flex w-full max-w-[var(--thread-max-width)] flex-col items-center justify-end rounded-t-lg pb-2">
                       <Composer />
                       <ThreadScrollToBottom />
                     </div>
@@ -611,15 +386,13 @@ const ThreadWelcome: FC<any> = ({ agentIntent }) => {
                     onClick={handleCalculateClick}
                     className="px-6 py-2 rounded-full font-medium text-white shadow-md transition-all"
                     style={{
-                      backgroundColor: "rgb(81, 141, 231)",
+                      backgroundColor: "#6F56DD",
                     }}
                     onMouseEnter={(e) =>
-                    (e.currentTarget.style.backgroundColor =
-                      "rgb(65, 120, 210)")
+                      (e.currentTarget.style.backgroundColor = "#6F56DD")
                     }
                     onMouseLeave={(e) =>
-                    (e.currentTarget.style.backgroundColor =
-                      "rgb(81, 141, 231)")
+                      (e.currentTarget.style.backgroundColor = "#6F56DD")
                     }
                   >
                     Start My{" "}
@@ -695,13 +468,14 @@ const Composer: FC = () => {
   const composerRef = useRef<HTMLTextAreaElement | null>(null);
 
   return (
-    <ComposerPrimitive.Root className="focus-within:border-ring/20 flex w-full flex-wrap items-end rounded-full border border-[#E9E9E9] bg-inherit px-2.5 py-0 shadow-sm transition-colors ease-in gap-2 bg-white ">
+    <ComposerPrimitive.Root className=" flex w-full flex-wrap items-end  bg-inherit px-2.5 py-0  transition-colors ease-in gap-2  ">
       <ComposerPrimitive.Input
         ref={composerRef}
         rows={1}
         autoFocus
         placeholder="Please Ask Your Query..."
-        className="placeholder:text-muted-foreground custom_input flex-grow resize-none border-none bg-transparent px-2 py-4 text-sm outline-none focus:ring-0 disabled:cursor-not-allowed"
+        className="placeholder:text-muted-foreground custom_input flex-grow resize-none  px-2 py-4 focus-within:border-ring/20  border border-[#E9E9E9] rounded-xl text-sm outline-none focus:ring-0 disabled:cursor-not-allowed  shadow-sm"
+        style={{ backgroundColor: "#F4F3F9" }}
       />
       <ComposerAction composerRef={composerRef} />
     </ComposerPrimitive.Root>
@@ -753,7 +527,8 @@ const ComposerAction: FC<ComposerActionProps> = ({ composerRef }) => {
           <TooltipIconButton
             tooltip="Send"
             variant="default"
-            className="my-2.5 size-8 p-2 bg-ChatBtnGradient rounded-full transition-opacity ease-in"
+            className=" p-0 size-12  bg-ChatBtnGradient rounded-xl transition-opacity ease-in"
+            style={{ height: "52px", width: "52px" }}
           >
             <SendHorizontalIcon />
           </TooltipIconButton>
@@ -765,7 +540,8 @@ const ComposerAction: FC<ComposerActionProps> = ({ composerRef }) => {
           <TooltipIconButton
             tooltip="Cancel"
             variant="default"
-            className="my-2.5 size-8 p-2 transition-opacity ease-in"
+            className=" size-12 p-2 transition-opacity ease-in"
+            style={{ height: "52px", width: "52px" }}
           >
             <CircleStopIcon />
           </TooltipIconButton>
@@ -811,7 +587,7 @@ const UserMessage: React.FC<UserMessageProps> = ({ image }) => {
             alignItems: "end",
           }}
         >
-          <div className="bg-ChatBtnGradient text-white d max-w-[calc(var(--thread-max-width)*0.8)] text-sm break-all break-words rounded-3xl px-5 py-2.5 col-start-2 row-start-2">
+          <div className="bg-ChatBtnGradient text-white d max-w-[calc(var(--thread-max-width)*0.8)] text-sm break-all break-words rounded-xl px-5 py-2.5 col-start-2 row-start-2">
             <MessagePrimitive.Content components={{ Text: TrimmedText }} />
           </div>
           <span
@@ -1010,16 +786,25 @@ const AssistantMessage: React.FC<any> = ({
               </div>
             ) : (
               <>
-                <MessagePrimitive.Content components={{ Text: MarkdownText }} />
+                <div
+                  style={{
+                    backgroundColor: "#ffffff",
+                    padding: "12px",
+                    borderRadius: "12px",
+                  }}
+                >
+                  <MessagePrimitive.Content
+                    components={{ Text: MarkdownText }}
+                  />
 
-                {isStreaming && (
-                  <span className="inline-block w-2 h-0.5 bg-blue-500 animate-pulse ml-1"></span>
-                )}
+                  {isStreaming && (
+                    <span className="inline-block w-2 h-0.5 bg-blue-500 animate-pulse ml-1"></span>
+                  )}
 
-                {urls && !isStreaming && showUrls && (
-                  <URLDisplay urls={urls} messageId={messageId} />
-                )}
-
+                  {urls && !isStreaming && showUrls && (
+                    <URLDisplay urls={urls} messageId={messageId} />
+                  )}
+                </div>
                 <span
                   style={{
                     color: "#45556c",

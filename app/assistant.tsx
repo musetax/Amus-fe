@@ -39,7 +39,9 @@ function Assistant() {
   const [isLoadingPayroll, setIsLoadingPayroll] = useState(false);
   // Agent intent state management
   const [agentIntent, setAgentIntent] = useState<AgentIntent>(null);
-  const [showHomeScreen, setShowHomeScreen] = useState(true);
+  const [showHomeScreen, setShowHomeScreen] = useState(false);
+  // const [showHomeScreen, setShowHomeScreen] = useState(true);
+
 
   // Life events state management
   const [showLifeEventsScreen, setShowLifeEventsScreen] = useState(false);
@@ -159,7 +161,7 @@ function Assistant() {
 
   // Handle agent intent selection from home screen
   const handleIntentSelection = async (intent: AgentIntent) => {
-    setAgentIntent(intent);
+    setAgentIntent("tax_education");
 
     // Fetch payroll details when intent changes
     try {

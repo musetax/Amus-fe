@@ -64,7 +64,7 @@ export const OCRUploadComponent: React.FC<{
               setProgress(percent);
             }
           },
-        }
+        },
       );
 
       return response.data;
@@ -151,7 +151,7 @@ export const OCRUploadComponent: React.FC<{
       setLoading(false);
     }
   };
-//   const [isDragging, setIsDragging] = useState(false);
+  //   const [isDragging, setIsDragging] = useState(false);
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -210,27 +210,29 @@ export const OCRUploadComponent: React.FC<{
           console.log("Updated Tax Data:", updated);
           onComplete(updated);
         }}
-        onCancel={() => {setFile(null) ;setTaxData(null)}} // <-- wrapped in arrow function
+        onCancel={() => {
+          setFile(null);
+          setTaxData(null);
+        }} // <-- wrapped in arrow function
       />
     );
   }
-  const handleOpenPDF = (file:any) => {
-     if (!file) return;
+  const handleOpenPDF = (file: any) => {
+    if (!file) return;
 
-  // Create a blob URL for the PDF file
-  const fileURL = URL.createObjectURL(file);
+    // Create a blob URL for the PDF file
+    const fileURL = URL.createObjectURL(file);
 
-  // Open the file in a new browser tab
-  window.open(fileURL, "_blank");
-
+    // Open the file in a new browser tab
+    window.open(fileURL, "_blank");
   };
   // 🔹 Otherwise show upload UI
   return (
     <div className="absolute inset-0 bg-[#49C2D420] flex justify-center items-center z-50">
       <div
-         onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
         className=" w-full rounded-2xl shadow p-4 relative"
         style={{ maxWidth: "290px", backgroundColor: "rgba(81, 141, 231,0.1)" }}
       >
@@ -379,7 +381,7 @@ export const OCRUploadComponent: React.FC<{
         {file && (
           <div className="flex justify-between items-center mt-6">
             <button
-              onClick={()=>handleOpenPDF(file)}
+              onClick={() => handleOpenPDF(file)}
               style={{
                 backgroundColor: "transparent",
                 padding: "0",
@@ -397,13 +399,13 @@ export const OCRUploadComponent: React.FC<{
               onClick={handleProceed}
               className="px-6 py-2 rounded-full font-medium text-white shadow-md transition-all"
               style={{
-                backgroundColor: "rgb(81, 141, 231)",
+                backgroundColor: "#6F56DD",
               }}
               onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor = "rgb(65, 120, 210)")
+                (e.currentTarget.style.backgroundColor = "#6F56DD")
               }
               onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor = "rgb(81, 141, 231)")
+                (e.currentTarget.style.backgroundColor = "#6F56DD")
               }
             >
               {loading ? "Uploading..." : "Proceed"}
