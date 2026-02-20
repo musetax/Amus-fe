@@ -150,8 +150,6 @@ export const Thread: any = ({
             className=" overflow-hidden rounded-xl as"
             style={{ maxHeight: "935px", position: "sticky", top: "0" }}
           >
-
-
             {loadingHistory ? (
               <div
                 className="flex items-center justify-center py-10 "
@@ -188,24 +186,24 @@ export const Thread: any = ({
 
                 {globalError ? (
                   <ErrorBanner message={globalError} />
-                  // ) : showHomeScreen ? (
-                  //   <HomeScreen
-                  //     onSelectIntent={onSelectIntent}
-                  //     companyLogo={companyLogo}
-                  //   />
-                  // ) : showLifeEventsScreen ? (
-                  //   <LifeEventsScreen
-                  //     onSelectCategory={onSelectLifeEventCategory}
-                  //     onBack={onReturnToHome}
-                  //   />
-                  // ) : showLifeEventsForm ? (
-                  //   <LifeEventsForm
-                  //     category={selectedLifeEventCategory}
-                  //     onBack={onBackToLifeEventsCategories}
-                  //     onSave={onSaveLifeEvents}
-                  //     userId={userId}
-                  //   />
-                ) : shouldShowTaxChatbot ? (
+                ) : // ) : showHomeScreen ? (
+                //   <HomeScreen
+                //     onSelectIntent={onSelectIntent}
+                //     companyLogo={companyLogo}
+                //   />
+                // ) : showLifeEventsScreen ? (
+                //   <LifeEventsScreen
+                //     onSelectCategory={onSelectLifeEventCategory}
+                //     onBack={onReturnToHome}
+                //   />
+                // ) : showLifeEventsForm ? (
+                //   <LifeEventsForm
+                //     category={selectedLifeEventCategory}
+                //     onBack={onBackToLifeEventsCategories}
+                //     onSave={onSaveLifeEvents}
+                //     userId={userId}
+                //   />
+                shouldShowTaxChatbot ? (
                   <div
                     ref={taxChatbotScrollRef}
                     style={{
@@ -242,8 +240,8 @@ export const Thread: any = ({
                         companyLogo={companyLogo}
                         agentIntent={
                           agentIntent as
-                          | "tax_refund_calculation"
-                          | "tax_paycheck_calculation"
+                            | "tax_refund_calculation"
+                            | "tax_paycheck_calculation"
                         }
                       />
                     )}
@@ -252,10 +250,10 @@ export const Thread: any = ({
                       <OCRUploadComponent
                         userId={userId}
                         onComplete={handleTaxChatbotComplete}
-                      // onSave={(payload) => {
-                      //   console.log("OCR payload:", payload);
-                      //   // then trigger TaxChatbot with prefilled data
-                      // }}
+                        // onSave={(payload) => {
+                        //   console.log("OCR payload:", payload);
+                        //   // then trigger TaxChatbot with prefilled data
+                        // }}
                       />
                     )}
                   </div>
@@ -263,7 +261,7 @@ export const Thread: any = ({
                   <>
                     <ThreadPrimitive.Viewport
                       style={{
-                        height: "calc(100vh - 210px)",
+                        height: "calc(100vh - 80px)",
                         minHeight: "120px",
                         maxHeight: "740px",
                       }}
@@ -338,8 +336,9 @@ const ThreadWelcome: FC<any> = ({ agentIntent }) => {
       content: [
         {
           type: "text",
-          text: `Let’s begin calculating my ${agentIntent === "tax_paycheck_calculation" ? "paycheck" : "tax"
-            }`,
+          text: `Let’s begin calculating my ${
+            agentIntent === "tax_paycheck_calculation" ? "paycheck" : "tax"
+          }`,
         },
       ],
     });
@@ -381,28 +380,28 @@ const ThreadWelcome: FC<any> = ({ agentIntent }) => {
             </p>
             {(agentIntent === "tax_paycheck_calculation" ||
               agentIntent === "tax_refund_calculation") && (
-                <div className="flex justify-center mt-6">
-                  <button
-                    onClick={handleCalculateClick}
-                    className="px-6 py-2 rounded-full font-medium text-white shadow-md transition-all"
-                    style={{
-                      backgroundColor: "#6F56DD",
-                    }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.backgroundColor = "#6F56DD")
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.backgroundColor = "#6F56DD")
-                    }
-                  >
-                    Start My{" "}
-                    {agentIntent === "tax_paycheck_calculation"
-                      ? "paycheck"
-                      : "tax"}{" "}
-                    Calculation
-                  </button>
-                </div>
-              )}
+              <div className="flex justify-center mt-6">
+                <button
+                  onClick={handleCalculateClick}
+                  className="px-6 py-2 rounded-full font-medium text-white shadow-md transition-all"
+                  style={{
+                    backgroundColor: "#6F56DD",
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.backgroundColor = "#6F56DD")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.backgroundColor = "#6F56DD")
+                  }
+                >
+                  Start My{" "}
+                  {agentIntent === "tax_paycheck_calculation"
+                    ? "paycheck"
+                    : "tax"}{" "}
+                  Calculation
+                </button>
+              </div>
+            )}
           </div>
         </div>
         {/* <ThreadWelcomeSuggestions /> */}
@@ -564,7 +563,10 @@ const UserMessage: React.FC<UserMessageProps> = ({ image }) => {
   const time = formatTime(message?.createdAt || Date.now());
 
   return (
-    <MessagePrimitive.Root className="grid auto-rows-auto grid-cols-[minmax(72px,1fr)_auto] gap-y-2 [&:where(>*)]:col-start-2 w-full max-w-[var(--thread-max-width)] py-4">
+    <MessagePrimitive.Root
+      className="grid auto-rows-auto grid-cols-[minmax(72px,1fr)_auto] gap-y-2 [&:where(>*)]:col-start-2 w-full max-w-[var(--thread-max-width)] "
+      style={{ paddingTop: "4px", paddingBottom: "2px" }}
+    >
       <div style={{ minWidth: "70px" }}>
         <UserActionBar />
       </div>
@@ -761,7 +763,7 @@ const AssistantMessage: React.FC<any> = ({
             />
           )}
         </span>
-        <MessagePrimitive.Root className="grid grid-cols-[auto_auto_1fr] grid-rows-[auto_1fr] relative w-full max-w-[var(--thread-max-width)] py-4 pr-2">
+        <MessagePrimitive.Root className="grid grid-cols-[auto_auto_1fr] grid-rows-[auto_1fr] relative w-full max-w-[var(--thread-max-width)] py-2 pr-2">
           <div className="text-foreground max-w-[calc(var(--thread-max-width)*0.8)] break-words leading-7 col-span-2 col-start-2 row-start-1 my-1.5">
             {isMessageLoading ? (
               <div className="flex flex-col  py-4">

@@ -133,7 +133,7 @@ export const TaxBotMessage: React.FC<TaxBotMessageProps> = ({
           >
             <CompanyLogo src={companyLogo} />
           </span>
-          <div className="grid grid-cols-[auto_auto_1fr] grid-rows-[auto_1fr] relative w-full max-w-[var(--thread-max-width)] py-4 pr-2">
+          <div className="grid grid-cols-[auto_auto_1fr] grid-rows-[auto_1fr] relative w-full max-w-[var(--thread-max-width)] py-2 pr-2">
             <div className="text-foreground break-words leading-7 col-span-2 col-start-2 row-start-1 my-1.5">
               <pre
                 className="whitespace-normal text-sm"
