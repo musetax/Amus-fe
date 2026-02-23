@@ -15,7 +15,7 @@ export default function Home() {
       className="flex  flex-col items-center justify-between p-24"
       style={{ backgroundColor: "#ECE8F8", minHeight: "100vh" }}
     >
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<div />}>
         <Assistant />
       </Suspense>
     </main>

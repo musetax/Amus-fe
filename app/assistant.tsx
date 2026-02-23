@@ -25,7 +25,25 @@ export const CHAT_HISTORY_KEY = "chat_history";
 
 import { getPayrollDetails, payrollDetailsUpdate } from "./taxModelAdapter";
 
-function Assistant() {
+interface AssistantProps {
+  userId?: string;
+  sessionId?: string;
+  accessToken?: string;
+  userImage?: string;
+  companyLogo?: string;
+  clientId?: string;
+  clientSecret?: string;
+}
+
+function Assistant({
+  userId: propUserId,
+  sessionId: propSessionId,
+  accessToken: propAccessToken,
+  userImage: propUserImage,
+  companyLogo: propCompanyLogo,
+  clientId: propClientId,
+  clientSecret: propClientSecret,
+}: AssistantProps = {}) {
   const [activeTab, setActiveTab] = useState<"tax" | "learn">("learn");
   const [typing, setTyping] = useState(false);
   const [loadingHistory, setloadingHistory] = useState(false);
@@ -38,84 +56,66 @@ function Assistant() {
   const [showTaxChatbot, setShowTaxChatbot] = useState(false);
   const [isLoadingPayroll, setIsLoadingPayroll] = useState(false);
   // Agent intent state management
-  const [agentIntent, setAgentIntent] = useState<AgentIntent>(null);
+  const [agentIntent, setAgentIntent] = useState<AgentIntent>("tax_education");
   const [showHomeScreen, setShowHomeScreen] = useState(false);
-  // const [showHomeScreen, setShowHomeScreen] = useState(true);
-
 
   // Life events state management
   const [showLifeEventsScreen, setShowLifeEventsScreen] = useState(false);
   const [showLifeEventsForm, setShowLifeEventsForm] = useState(false);
   const [selectedLifeEventCategory, setSelectedLifeEventCategory] =
     useState<LifeEventCategory>(null);
-  console.log("agentintent", agentIntent);
-  const searchParams = useSearchParams();
-  const sessionId: any = searchParams.get("session_id");
-  const userId: any = searchParams.get("user_id");
-  const access_token: any = searchParams.get("access_token");
-  const user_image: any = searchParams.get("user_image");
-  const companyLogo: any = searchParams.get("company_logo");
-  const clientId: any = searchParams.get("client_id");
-  const clientSecret: any = searchParams.get("client_secret");
 
-  // const refresh_access_token: any = params.get("refresh_token");
+  const searchParams = useSearchParams();
+  const sessionId = (propSessionId || searchParams.get("session_id")) ?? "";
+  const userId = (propUserId || searchParams.get("user_id")) ?? "";
+  const access_token = (propAccessToken || searchParams.get("access_token")) ?? "";
+  const user_image = (propUserImage || searchParams.get("user_image")) ?? "";
+  const companyLogo = (propCompanyLogo || searchParams.get("company_logo")) ?? "";
+  const clientId = (propClientId || searchParams.get("client_id")) ?? "";
+  const clientSecret = (propClientSecret || searchParams.get("client_secret")) ?? "";
+
   const [globalError, setGlobalError] = useState<string | null>(null);
 
   console.log(userId, sessionId, access_token);
-  if (companyLogo) {
-    localStorage.setItem("companyLogo", companyLogo);
-  }
-  if (user_image) {
-    localStorage.setItem("image", user_image);
-  }
-  if (clientId) localStorage.setItem("clientId", clientId);
-  if (clientSecret) localStorage.setItem("clientSecret", clientSecret);
-
-  console.log(currentUserId);
   useEffect(() => {
-    const storedSessionId = localStorage.getItem("chat_session_id");
-    if (!sessionId || !userId || !access_token) {
-      setGlobalError("Missing session_id, user_id or access_token in URL.");
-      return;
-    }
+    if (companyLogo) localStorage.setItem("companyLogo", companyLogo);
+    if (user_image) localStorage.setItem("image", user_image);
+    if (clientId) localStorage.setItem("clientId", clientId);
+    if (clientSecret) localStorage.setItem("clientSecret", clientSecret);
+
     if (sessionId) {
-      // Save new sessionId to localStorage
       localStorage.setItem("chat_session_id", sessionId);
       setCurrentSessionId(sessionId);
-    } else if (storedSessionId) {
-      // Use stored sessionId if no prop provided
-      setCurrentSessionId(storedSessionId);
+    } else {
+      const storedSessionId = localStorage.getItem("chat_session_id");
+      if (storedSessionId) setCurrentSessionId(storedSessionId);
     }
+
     if (access_token) {
       localStorage.setItem("authTokenMuse", access_token);
     }
-    // if (refresh_access_token) {
-    //   localStorage.setItem("refreshTokenMuse", refresh_access_token)
-    // }
+
     if (userId) {
       localStorage.setItem("userId", userId);
       setCurrentUserId(userId);
     }
-  }, [sessionId, access_token, userId]);
+
+    if (!sessionId || !userId || !access_token) {
+      setGlobalError("Missing session_id, user_id or access_token in URL.");
+    }
+  }, [sessionId, access_token, userId, companyLogo, user_image, clientId, clientSecret]);
 
   useEffect(() => {
     const userInfo = async () => {
+      if (!userId) return;
       try {
         setIsLoadingPayroll(true);
         const response = await getPayrollDetails(userId);
-        // console.log(response, "payroll response");
-
         setPayrollData(response);
-
-        // Always show home screen initially when agentIntent is null
-        // User must select an intent from home screen to proceed
         setShowHomeScreen(true);
         setShowTaxChatbot(false);
-
-        setIsLoadingPayroll(false);
-        // loadHistory()
       } catch (error: any) {
-        setGlobalError(error.response.data.detail || "User ID not found");
+        setGlobalError(error.response?.data?.detail || "User ID not found");
         console.error("Error fetching payroll:", error);
         setShowTaxChatbot(true);
         setShowHomeScreen(false);
@@ -123,10 +123,12 @@ function Assistant() {
         setIsLoadingPayroll(false);
       }
     };
+
     if (!globalError && userId) {
       userInfo();
     }
   }, [userId, globalError]);
+
   // Handle tax chatbot completion
   const handleTaxChatbotComplete = async (taxData: any) => {
     try {
@@ -148,10 +150,9 @@ function Assistant() {
       }
     } catch (error: any) {
       setGlobalError(
-        error.response.data.details || "Failed to update payroll data.",
+        error.response?.data?.details || "Failed to update payroll data.",
       );
     }
-    // You might want to save this data to your backend here
   };
 
   // Handle continue to chat action
@@ -161,7 +162,8 @@ function Assistant() {
 
   // Handle agent intent selection from home screen
   const handleIntentSelection = async (intent: AgentIntent) => {
-    setAgentIntent("tax_education");
+    console.log("currentUserId selected:", currentUserId);
+    setAgentIntent(intent);
 
     // Fetch payroll details when intent changes
     try {
@@ -290,7 +292,7 @@ function Assistant() {
     return makeHistoryAdapter(
       userId,
       sessionId,
-      setloadingHistory,
+      // setloadingHistory,
       agentIntent,
     );
   }, [userId, sessionId, agentIntent]);
@@ -375,8 +377,8 @@ function Assistant() {
       "🔄 Manually loading and importing chat history for intent:",
       agentIntent,
     );
-    setloadingHistory(true);
 
+    setloadingHistory(true);
     history
       .load()
       .then((repository: any) => {
@@ -386,7 +388,6 @@ function Assistant() {
           firstMessage: repository.messages[0],
         });
 
-        // Import the loaded messages into the runtime thread
         if (repository.messages.length > 0) {
           try {
             learnRuntime.thread.import(repository);
@@ -397,8 +398,6 @@ function Assistant() {
               importError,
             );
           }
-        } else {
-          console.log("ℹ️  No chat history messages to import");
         }
         setloadingHistory(false);
       })
@@ -407,32 +406,6 @@ function Assistant() {
         setloadingHistory(false);
       });
   }, [agentIntent, history, learnRuntime]); // Only depend on agentIntent to avoid infinite loops
-
-  // Show loading state while checking payroll data
-  if (isLoadingPayroll) {
-    return (
-      <div className="myUniquechatbot" style={{ minHeight: "100vh" }}>
-        <div
-          className="flex items-center justify-center py-10"
-          style={{ minHeight: "100vh" }}
-        >
-          <div className="text-center">
-            <div className="flex items-center justify-center w-full mb-2">
-              <div className="smooth-ring"></div>
-            </div>
-
-            {/* <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#4d37f5] mb-4"></div> */}
-            <h3 className="text-lg font-medium text-gray-800 mb-2">
-              Loading your information...
-            </h3>
-            <p className="text-sm text-gray-500">
-              Please wait while we check your profile
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="myUniquechatbot">
@@ -449,7 +422,7 @@ function Assistant() {
               typing={typing}
               image={user_image}
               companyLogo={companyLogo}
-              loadingHistory={loadingHistory}
+              loadingHistory={loadingHistory || isLoadingPayroll}
               sessionId={sessionId}
               userId={userId}
               showTaxChatbot={showTaxChatbot}

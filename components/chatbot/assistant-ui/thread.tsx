@@ -61,7 +61,7 @@ export const Thread: any = ({
   image,
   companyLogo,
   userId,
-  loadingHistory,
+  // loadingHistory,
   sessionId,
   showTaxChatbot,
   payrollData,
@@ -150,29 +150,10 @@ export const Thread: any = ({
             className=" overflow-hidden rounded-xl as"
             style={{ maxHeight: "935px", position: "sticky", top: "0" }}
           >
-            {loadingHistory ? (
-              <div
-                className="flex items-center justify-center py-10 "
-                style={{ minHeight: "450px" }}
-              >
-                <div className="text-center">
-                  <div className="flex items-center justify-center w-full mb-2">
-                    <div className="smooth-ring"></div>
-                  </div>
-                  {/* <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#4d37f5] mb-4"></div> */}
-                  <h3 className="text-lg font-medium text-gray-800 mb-2">
-                    Loading your conversation
-                  </h3>
-                  <p className="text-sm text-gray-500 animate-pulse">
-                    Please wait while we retrieve your chat history...
-                  </p>
-                </div>
-              </div>
-            ) : (
-              <div>
-                {/* Show tax chatbot if no messages and form not completed */}
+            <div>
+              {/* Show tax chatbot if no messages and form not completed */}
 
-                {/* { <div key={1} className="flex justify-center my-8">
+              {/* { <div key={1} className="flex justify-center my-8">
                 <div className="bg-red-50 border-l-4 border-red-500 rounded-lg p-4 max-w-md w-full shadow-sm">
                   <div className="flex items-start gap-3">
                     <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
@@ -184,9 +165,9 @@ export const Thread: any = ({
                 </div>
               </div>} */}
 
-                {globalError ? (
-                  <ErrorBanner message={globalError} />
-                ) : // ) : showHomeScreen ? (
+              {globalError ? (
+                <ErrorBanner message={globalError} />
+              ) : // ) : showHomeScreen ? (
                 //   <HomeScreen
                 //     onSelectIntent={onSelectIntent}
                 //     companyLogo={companyLogo}
@@ -240,8 +221,8 @@ export const Thread: any = ({
                         companyLogo={companyLogo}
                         agentIntent={
                           agentIntent as
-                            | "tax_refund_calculation"
-                            | "tax_paycheck_calculation"
+                          | "tax_refund_calculation"
+                          | "tax_paycheck_calculation"
                         }
                       />
                     )}
@@ -250,10 +231,10 @@ export const Thread: any = ({
                       <OCRUploadComponent
                         userId={userId}
                         onComplete={handleTaxChatbotComplete}
-                        // onSave={(payload) => {
-                        //   console.log("OCR payload:", payload);
-                        //   // then trigger TaxChatbot with prefilled data
-                        // }}
+                      // onSave={(payload) => {
+                      //   console.log("OCR payload:", payload);
+                      //   // then trigger TaxChatbot with prefilled data
+                      // }}
                       />
                     )}
                   </div>
@@ -317,8 +298,7 @@ export const Thread: any = ({
                     </div>
                   </>
                 )}
-              </div>
-            )}
+            </div>
           </div>
         </ThreadPrimitive.Root>
       </div>
@@ -336,9 +316,8 @@ const ThreadWelcome: FC<any> = ({ agentIntent }) => {
       content: [
         {
           type: "text",
-          text: `Let’s begin calculating my ${
-            agentIntent === "tax_paycheck_calculation" ? "paycheck" : "tax"
-          }`,
+          text: `Let’s begin calculating my ${agentIntent === "tax_paycheck_calculation" ? "paycheck" : "tax"
+            }`,
         },
       ],
     });
@@ -380,28 +359,28 @@ const ThreadWelcome: FC<any> = ({ agentIntent }) => {
             </p>
             {(agentIntent === "tax_paycheck_calculation" ||
               agentIntent === "tax_refund_calculation") && (
-              <div className="flex justify-center mt-6">
-                <button
-                  onClick={handleCalculateClick}
-                  className="px-6 py-2 rounded-full font-medium text-white shadow-md transition-all"
-                  style={{
-                    backgroundColor: "#6F56DD",
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.backgroundColor = "#6F56DD")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.backgroundColor = "#6F56DD")
-                  }
-                >
-                  Start My{" "}
-                  {agentIntent === "tax_paycheck_calculation"
-                    ? "paycheck"
-                    : "tax"}{" "}
-                  Calculation
-                </button>
-              </div>
-            )}
+                <div className="flex justify-center mt-6">
+                  <button
+                    onClick={handleCalculateClick}
+                    className="px-6 py-2 rounded-full font-medium text-white shadow-md transition-all"
+                    style={{
+                      backgroundColor: "#6F56DD",
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.backgroundColor = "#6F56DD")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.backgroundColor = "#6F56DD")
+                    }
+                  >
+                    Start My{" "}
+                    {agentIntent === "tax_paycheck_calculation"
+                      ? "paycheck"
+                      : "tax"}{" "}
+                    Calculation
+                  </button>
+                </div>
+              )}
           </div>
         </div>
         {/* <ThreadWelcomeSuggestions /> */}

@@ -139,7 +139,7 @@
 //   };
 // }
 // export default makeHistoryAdapter
- import {
+import {
   ExportedMessageRepository,
   MessageStatus,
   ThreadMessage,
@@ -261,17 +261,17 @@ type AgentIntent =
 function makeHistoryAdapter(
   userId: string,
   sessionId?: string,
-  setLoadingHistory?: (loading: boolean) => void,
+  // setLoadingHistory?: (loading: boolean) => void,
   agentIntent?: AgentIntent
 ) {
   return {
     async load(): Promise<ExportedMessageRepository> {
       try {
-        setLoadingHistory?.(true);
+        // setLoadingHistory?.(true);
 
         if (!userId) {
           console.warn("No userId provided, skipping chat history load");
-          setLoadingHistory?.(false);
+          // setLoadingHistory?.(false);
           return { messages: [], headId: null };
         }
 
@@ -294,7 +294,7 @@ function makeHistoryAdapter(
 
         if (!Array.isArray(chats)) {
           console.error("❌ Chats is not an array:", chats);
-          setLoadingHistory?.(false);
+          // setLoadingHistory?.(false);
           return { messages: [], headId: null };
         }
 
@@ -306,7 +306,7 @@ function makeHistoryAdapter(
           firstMessage: finalData.messages[0],
         });
 
-        setLoadingHistory?.(false);
+        // setLoadingHistory?.(false);
         return finalData;
       } catch (err: any) {
         console.warn("Failed to load chat history:", {
@@ -315,7 +315,7 @@ function makeHistoryAdapter(
           status: err?.response?.status,
           url: err?.config?.url,
         });
-        setLoadingHistory?.(false);
+        // setLoadingHistory?.(false);
         return { messages: [], headId: null };
       }
     },
