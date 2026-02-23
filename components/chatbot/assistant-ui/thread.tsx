@@ -168,39 +168,39 @@ export const Thread: any = ({
               {globalError ? (
                 <ErrorBanner message={globalError} />
               ) : // ) : showHomeScreen ? (
-                //   <HomeScreen
-                //     onSelectIntent={onSelectIntent}
-                //     companyLogo={companyLogo}
-                //   />
-                // ) : showLifeEventsScreen ? (
-                //   <LifeEventsScreen
-                //     onSelectCategory={onSelectLifeEventCategory}
-                //     onBack={onReturnToHome}
-                //   />
-                // ) : showLifeEventsForm ? (
-                //   <LifeEventsForm
-                //     category={selectedLifeEventCategory}
-                //     onBack={onBackToLifeEventsCategories}
-                //     onSave={onSaveLifeEvents}
-                //     userId={userId}
-                //   />
-                shouldShowTaxChatbot ? (
-                  <div
-                    ref={taxChatbotScrollRef}
-                    style={{
-                      height: "calc(100vh - 130px)",
-                      minHeight: "440px",
-                      overflowY: "auto",
-                      overflowAnchor: "none",
-                    }}
-                  >
-                    {!payloadButton.enterManually && !payloadButton.ocr && (
-                      <SelcectForHowToFillDataButton
-                        setPayloadButton={setPayloadButton}
-                      />
-                    )}
+              //   <HomeScreen
+              //     onSelectIntent={onSelectIntent}
+              //     companyLogo={companyLogo}
+              //   />
+              // ) : showLifeEventsScreen ? (
+              //   <LifeEventsScreen
+              //     onSelectCategory={onSelectLifeEventCategory}
+              //     onBack={onReturnToHome}
+              //   />
+              // ) : showLifeEventsForm ? (
+              //   <LifeEventsForm
+              //     category={selectedLifeEventCategory}
+              //     onBack={onBackToLifeEventsCategories}
+              //     onSave={onSaveLifeEvents}
+              //     userId={userId}
+              //   />
+              shouldShowTaxChatbot ? (
+                <div
+                  ref={taxChatbotScrollRef}
+                  style={{
+                    height: "calc(100vh - 130px)",
+                    minHeight: "440px",
+                    overflowY: "auto",
+                    overflowAnchor: "none",
+                  }}
+                >
+                  {!payloadButton.enterManually && !payloadButton.ocr && (
+                    <SelcectForHowToFillDataButton
+                      setPayloadButton={setPayloadButton}
+                    />
+                  )}
 
-                    {/* <TaxChatbot
+                  {/* <TaxChatbot
                       onComplete={handleTaxChatbotComplete}
                       onContinueToChat={handleContinueToChat}
                       prefilledData={payrollData.payroll}
@@ -211,93 +211,93 @@ export const Thread: any = ({
                       agentIntent={agentIntent as "tax_refund_calculation" | "tax_paycheck_calculation"}
                       
                     /> */}
-                    {payloadButton.enterManually && (
-                      <TaxChatbot
-                        onComplete={handleTaxChatbotComplete}
-                        onContinueToChat={handleContinueToChat}
-                        prefilledData={payrollData.payroll}
-                        allfillData={payrollData}
-                        image={image}
-                        companyLogo={companyLogo}
-                        agentIntent={
-                          agentIntent as
+                  {payloadButton.enterManually && (
+                    <TaxChatbot
+                      onComplete={handleTaxChatbotComplete}
+                      onContinueToChat={handleContinueToChat}
+                      prefilledData={payrollData.payroll}
+                      allfillData={payrollData}
+                      image={image}
+                      companyLogo={companyLogo}
+                      agentIntent={
+                        agentIntent as
                           | "tax_refund_calculation"
                           | "tax_paycheck_calculation"
-                        }
-                      />
-                    )}
+                      }
+                    />
+                  )}
 
-                    {payloadButton.ocr && (
-                      <OCRUploadComponent
-                        userId={userId}
-                        onComplete={handleTaxChatbotComplete}
+                  {payloadButton.ocr && (
+                    <OCRUploadComponent
+                      userId={userId}
+                      onComplete={handleTaxChatbotComplete}
                       // onSave={(payload) => {
                       //   console.log("OCR payload:", payload);
                       //   // then trigger TaxChatbot with prefilled data
                       // }}
-                      />
-                    )}
-                  </div>
-                ) : (
-                  <>
-                    <ThreadPrimitive.Viewport
-                      style={{
-                        height: "calc(100vh - 80px)",
-                        minHeight: "120px",
-                        maxHeight: "740px",
+                    />
+                  )}
+                </div>
+              ) : (
+                <>
+                  <ThreadPrimitive.Viewport
+                    style={{
+                      height: "calc(100vh - 80px)",
+                      minHeight: "120px",
+                      maxHeight: "740px",
+                    }}
+                    className="flex flex-col items-center chat-scroll overflow-y-scroll scroll-smooth bg-inherit pr-0 pl-3 pt-0"
+                  >
+                    <ThreadWelcome agentIntent={agentIntent} />
+
+                    <ThreadPrimitive.Messages
+                      components={{
+                        UserMessage: (props) => (
+                          <UserMessage {...props} image={image} />
+                        ),
+                        // EditComposer: EditComposer,
+                        AssistantMessage: (props) => (
+                          <AssistantMessage
+                            {...props}
+                            companyLogo={companyLogo}
+                            // onReturnToHome={onReturnToHome}
+                            userId={userId}
+                            sessionId={sessionId}
+                            agentIntent={agentIntent}
+                            showScenarios={showScenarios}
+                            setShowScenarios={setShowScenarios}
+                          />
+                        ),
                       }}
-                      className="flex flex-col items-center chat-scroll overflow-y-scroll scroll-smooth bg-inherit pr-0 pl-3 pt-0"
-                    >
-                      <ThreadWelcome agentIntent={agentIntent} />
+                    />
 
-                      <ThreadPrimitive.Messages
-                        components={{
-                          UserMessage: (props) => (
-                            <UserMessage {...props} image={image} />
-                          ),
-                          // EditComposer: EditComposer,
-                          AssistantMessage: (props) => (
-                            <AssistantMessage
-                              {...props}
-                              companyLogo={companyLogo}
-                              // onReturnToHome={onReturnToHome}
-                              userId={userId}
-                              sessionId={sessionId}
-                              agentIntent={agentIntent}
-                              showScenarios={showScenarios}
-                              setShowScenarios={setShowScenarios}
-                            />
-                          ),
-                        }}
-                      />
-
-                      <ThreadPrimitive.If empty={false}>
-                        <div className="min-h-8 flex-grow" />
-                      </ThreadPrimitive.If>
-                      <div className="mt-3 p-4 flex w-full flex-col items-center justify-center gap-2">
-                        {!showScenarios &&
-                          suggestions.map((s, i) => (
-                            <ThreadPrimitive.Suggestion
-                              key={i}
-                              prompt={s}
-                              autoSend
-                              method="replace"
-                              className="hover:bg-muted/80 flex max-w-sm grow basis-0 flex-col items-center justify-center rounded-lg border px-2 py-3 transition-colors ease-in custom-hover"
-                            >
-                              <span className="line-clamp-2 text-ellipsis text-sm font-medium">
-                                {s}
-                              </span>
-                            </ThreadPrimitive.Suggestion>
-                          ))}
-                      </div>
-                    </ThreadPrimitive.Viewport>
-
-                    <div className="sticky bg-[#ECE8F8] bottom-0 px-3 pt-3 flex w-full max-w-[var(--thread-max-width)] flex-col items-center justify-end rounded-t-lg pb-2">
-                      <Composer />
-                      <ThreadScrollToBottom />
+                    <ThreadPrimitive.If empty={false}>
+                      <div className="min-h-8 flex-grow" />
+                    </ThreadPrimitive.If>
+                    <div className="mt-3 p-4 flex w-full flex-col items-center justify-center gap-2">
+                      {!showScenarios &&
+                        suggestions.map((s, i) => (
+                          <ThreadPrimitive.Suggestion
+                            key={i}
+                            prompt={s}
+                            autoSend
+                            method="replace"
+                            className="hover:bg-muted/80 flex max-w-sm grow basis-0 flex-col items-center justify-center rounded-lg border px-2 py-3 transition-colors ease-in custom-hover"
+                          >
+                            <span className="line-clamp-2 text-ellipsis text-sm font-medium">
+                              {s}
+                            </span>
+                          </ThreadPrimitive.Suggestion>
+                        ))}
                     </div>
-                  </>
-                )}
+                  </ThreadPrimitive.Viewport>
+
+                  <div className="sticky bg-[#ECE8F8] bottom-0 px-3 pt-3 flex w-full max-w-[var(--thread-max-width)] flex-col items-center justify-end rounded-t-lg pb-2">
+                    <Composer />
+                    <ThreadScrollToBottom />
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </ThreadPrimitive.Root>
@@ -316,8 +316,9 @@ const ThreadWelcome: FC<any> = ({ agentIntent }) => {
       content: [
         {
           type: "text",
-          text: `Let’s begin calculating my ${agentIntent === "tax_paycheck_calculation" ? "paycheck" : "tax"
-            }`,
+          text: `Let’s begin calculating my ${
+            agentIntent === "tax_paycheck_calculation" ? "paycheck" : "tax"
+          }`,
         },
       ],
     });
@@ -359,28 +360,28 @@ const ThreadWelcome: FC<any> = ({ agentIntent }) => {
             </p>
             {(agentIntent === "tax_paycheck_calculation" ||
               agentIntent === "tax_refund_calculation") && (
-                <div className="flex justify-center mt-6">
-                  <button
-                    onClick={handleCalculateClick}
-                    className="px-6 py-2 rounded-full font-medium text-white shadow-md transition-all"
-                    style={{
-                      backgroundColor: "#6F56DD",
-                    }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.backgroundColor = "#6F56DD")
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.backgroundColor = "#6F56DD")
-                    }
-                  >
-                    Start My{" "}
-                    {agentIntent === "tax_paycheck_calculation"
-                      ? "paycheck"
-                      : "tax"}{" "}
-                    Calculation
-                  </button>
-                </div>
-              )}
+              <div className="flex justify-center mt-6">
+                <button
+                  onClick={handleCalculateClick}
+                  className="px-6 py-2 rounded-full font-medium text-white shadow-md transition-all"
+                  style={{
+                    backgroundColor: "#6F56DD",
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.backgroundColor = "#6F56DD")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.backgroundColor = "#6F56DD")
+                  }
+                >
+                  Start My{" "}
+                  {agentIntent === "tax_paycheck_calculation"
+                    ? "paycheck"
+                    : "tax"}{" "}
+                  Calculation
+                </button>
+              </div>
+            )}
           </div>
         </div>
         {/* <ThreadWelcomeSuggestions /> */}
@@ -580,6 +581,7 @@ const UserMessage: React.FC<UserMessageProps> = ({ image }) => {
         <BranchPicker className="col-span-full col-start-1 row-start-3 -mr-1 justify-end" />
         {image ? (
           <Image
+            priority
             width={25}
             height={25}
             style={{
@@ -594,6 +596,7 @@ const UserMessage: React.FC<UserMessageProps> = ({ image }) => {
           />
         ) : (
           <Image
+            priority
             width={25}
             height={25}
             style={{
@@ -709,9 +712,16 @@ const AssistantMessage: React.FC<any> = ({
           width: "100%",
         }}
       >
-        <span style={{ position: "relative", top: "10px" }}>
+        <span
+          style={{
+            display: "inline-block",
+            position: "relative",
+            marginTop: "10px",
+          }}
+        >
           {companyLogo ? (
             <Image
+              priority
               width={25}
               height={25}
               src={companyLogo}
@@ -727,6 +737,7 @@ const AssistantMessage: React.FC<any> = ({
             />
           ) : (
             <Image
+              priority
               width={25}
               height={25}
               style={{
