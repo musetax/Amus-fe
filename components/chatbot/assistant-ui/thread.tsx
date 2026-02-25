@@ -11,7 +11,6 @@ import {
 import { useEffect, useLayoutEffect, useRef, useState, type FC } from "react";
 import {
   ArrowDownIcon,
-  CalculatorIcon,
   CheckIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -35,10 +34,10 @@ import { Tooltip, TooltipTrigger } from "../ui/tooltip";
 import TaxChatbot from "../../../app/payrollQuestionchat";
 import { ErrorBanner } from "./error-ui";
 import Image from "next/image";
-import CalculaterIcon from "../../assets/icons/calculaterIcon";
-import OptimizeIcon from "../../assets/icons/optimizeIcon";
-import MyTaxIcon from "../../assets/icons/myTaxIcon";
-import LifeChangeIcon from "../../assets/icons/lifeChangeIcon";
+// import CalculaterIcon from "../../assets/icons/calculaterIcon";
+// import OptimizeIcon from "../../assets/icons/optimizeIcon";
+// import MyTaxIcon from "../../assets/icons/myTaxIcon";
+// import LifeChangeIcon from "../../assets/icons/lifeChangeIcon";
 // import { HomeScreen } from "./home-screen";
 // import { LifeEventsScreen } from "./life-events-screen";
 // import { LifeEventsForm } from "./life-events-form";
@@ -282,7 +281,10 @@ export const Thread: any = ({
 
                     {!showScenarios &&
                       suggestions.map((s, i) => (
-                        <div className="mt-1 p-4 flex w-full flex-col items-center justify-center gap-2">
+                        <div
+                          key={i}
+                          className="mt-1 p-4 flex w-full flex-col items-center justify-center gap-2"
+                        >
                           <ThreadPrimitive.Suggestion
                             key={i}
                             prompt={s}
