@@ -11,6 +11,7 @@ import {
 import { useEffect, useLayoutEffect, useRef, useState, type FC } from "react";
 import {
   ArrowDownIcon,
+  CalculatorIcon,
   CheckIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -34,6 +35,10 @@ import { Tooltip, TooltipTrigger } from "../ui/tooltip";
 import TaxChatbot from "../../../app/payrollQuestionchat";
 import { ErrorBanner } from "./error-ui";
 import Image from "next/image";
+import CalculaterIcon from "../../assets/icons/calculaterIcon";
+import OptimizeIcon from "../../assets/icons/optimizeIcon";
+import MyTaxIcon from "../../assets/icons/myTaxIcon";
+import LifeChangeIcon from "../../assets/icons/lifeChangeIcon";
 // import { HomeScreen } from "./home-screen";
 // import { LifeEventsScreen } from "./life-events-screen";
 // import { LifeEventsForm } from "./life-events-form";
@@ -242,7 +247,7 @@ export const Thread: any = ({
                 <>
                   <ThreadPrimitive.Viewport
                     style={{
-                      height: "calc(100vh - 80px)",
+                      height: "calc(100vh - 123px)",
                       minHeight: "120px",
                       maxHeight: "740px",
                     }}
@@ -274,9 +279,10 @@ export const Thread: any = ({
                     <ThreadPrimitive.If empty={false}>
                       <div className="min-h-8 flex-grow" />
                     </ThreadPrimitive.If>
-                    <div className="mt-3 p-4 flex w-full flex-col items-center justify-center gap-2">
-                      {!showScenarios &&
-                        suggestions.map((s, i) => (
+
+                    {!showScenarios &&
+                      suggestions.map((s, i) => (
+                        <div className="mt-1 p-4 flex w-full flex-col items-center justify-center gap-2">
                           <ThreadPrimitive.Suggestion
                             key={i}
                             prompt={s}
@@ -288,13 +294,34 @@ export const Thread: any = ({
                               {s}
                             </span>
                           </ThreadPrimitive.Suggestion>
-                        ))}
-                    </div>
+                        </div>
+                      ))}
                   </ThreadPrimitive.Viewport>
 
                   <div className="sticky bg-[#ECE8F8] bottom-0 px-3 pt-3 flex w-full max-w-[var(--thread-max-width)] flex-col items-center justify-end rounded-t-lg pb-2">
-                    <Composer />
-                    <ThreadScrollToBottom />
+                    <div
+                      style={{
+                        width: "100%",
+                        backgroundColor: "#ffffff",
+                        padding: "10px 4px",
+                        borderRadius: "12px",
+                      }}
+                    >
+                      <p
+                        style={{
+                          fontSize: "12px",
+                          fontWeight: "400",
+                          color: "#000000",
+                          paddingLeft: "8px",
+                          paddingRight: "8px",
+                          marginBottom: "5px",
+                        }}
+                      >
+                        Ask how to increase my take-home pay
+                      </p>
+                      <Composer />
+                      <ThreadScrollToBottom />
+                    </div>
                   </div>
                 </>
               )}
@@ -328,7 +355,7 @@ const ThreadWelcome: FC<any> = ({ agentIntent }) => {
       <div className="flex w-full max-w-[var(--thread-max-width)] flex-grow flex-col px-4">
         <div className="flex w-full flex-grow flex-col items-center justify-center">
           <div
-            className="mt-4 font-medium text-sm"
+            className="mt-6 font-medium text-sm"
             style={{
               maxWidth: "500px",
               marginLeft: "auto",
@@ -338,26 +365,158 @@ const ThreadWelcome: FC<any> = ({ agentIntent }) => {
             {/* Stuck with Taxes. No Worries Uncle Sam is Here */}
             <h4
               style={{
-                fontSize: "16px",
-                fontWeight: 400,
+                fontSize: "18px",
+                fontWeight: 600,
                 textAlign: "center",
                 marginBottom: "8px",
               }}
             >
               {/* Hi, I’m Uncle Sam your personal tax helper! */}
-              Ready to Calculate Your Taxes?
+              Stop Overpaying the IRS
             </h4>
             <p
-              style={{ fontSize: "14px", fontWeight: 400, textAlign: "center" }}
+              style={{
+                fontSize: "16px",
+                fontWeight: 400,
+                textAlign: "center",
+              }}
               className="mt-2 text-center text-sm text-muted-foreground max-w-md"
             >
               {/* Have questions about your taxes, want to check your refund, or
               need to update your profile after a life event? Don’t worry Uncle
               Sam is here to help! */}
-              Hi, I’m Uncle Sam ! Your personal tax assistant. Need help
-              calculating your taxes, checking your refund, or updating your
-              info after a life change? I’ve got you covered. Let’s get started!
+              Let’s Optimize Your Paycheck.
             </p>
+            {/* <div
+              style={{
+                backgroundColor: "#F4EEFC",
+                padding: "12px",
+                borderRadius: "12px",
+                marginTop: "16px",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  borderBottom: "1px solid #E0DDF1",
+                  width: "260px",
+                  margin: "0 auto",
+                  paddingBottom: "12px",
+                  marginBottom: "12px",
+                }}
+              />
+              <p
+                style={{
+                  color: "#000000",
+                  fontWeight: "400",
+                  fontSize: "14px",
+                  textAlign: "center",
+                  fontFamily: "Times New Roman",
+                }}
+              >
+                A smarter tax withholding can increase your paycheck each month
+                and prevent a big IRS surprise later. Let’s get started!
+              </p>
+              <div className="flex justify-center gap-2 mt-4">
+                <div
+                  style={{
+                    backgroundColor: "#ffffff",
+                    borderRadius: "8px",
+                    padding: "8px 8px",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: "8px",
+                  }}
+                >
+                  <CalculaterIcon />
+                  <span
+                    style={{
+                      fontSize: "12px",
+                      textAlign: "center",
+                      lineHeight: "15px",
+                      fontWeight: "500",
+                      fontFamily: "Times New Roman",
+                    }}
+                  >
+                    Calculate My Refund
+                  </span>
+                </div>
+                <div
+                  style={{
+                    backgroundColor: "#ffffff",
+                    borderRadius: "8px",
+                    padding: "8px 8px",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: "8px",
+                  }}
+                >
+                  <OptimizeIcon />
+                  <span
+                    style={{
+                      fontSize: "12px",
+                      lineHeight: "15px",
+                      textAlign: "center",
+                      fontWeight: "500",
+                      fontFamily: "Times New Roman",
+                    }}
+                  >
+                    Optimize My Withholding
+                  </span>
+                </div>
+                <div
+                  style={{
+                    backgroundColor: "#ffffff",
+                    borderRadius: "8px",
+                    padding: "8px 8px",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: "8px",
+                  }}
+                >
+                  <MyTaxIcon />
+                  <span
+                    style={{
+                      fontSize: "12px",
+                      lineHeight: "15px",
+                      textAlign: "center",
+                      fontWeight: "400",
+                      fontFamily: "Times New Roman",
+                    }}
+                  >
+                    Check My Tax Situation
+                  </span>
+                </div>
+                <div
+                  style={{
+                    backgroundColor: "#ffffff",
+                    borderRadius: "8px",
+                    padding: "8px 8px",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: "8px",
+                  }}
+                >
+                  <LifeChangeIcon />
+                  <span
+                    style={{
+                      fontSize: "12px",
+                      lineHeight: "15px",
+                      textAlign: "center",
+                      fontWeight: "400",
+                      fontFamily: "Times New Roman",
+                    }}
+                  >
+                    Life Change Update
+                  </span>
+                </div>
+              </div>
+            </div> */}
             {(agentIntent === "tax_paycheck_calculation" ||
               agentIntent === "tax_refund_calculation") && (
               <div className="flex justify-center mt-6">
@@ -569,7 +728,7 @@ const UserMessage: React.FC<UserMessageProps> = ({ image }) => {
             alignItems: "end",
           }}
         >
-          <div className="bg-ChatBtnGradient text-white d max-w-[calc(var(--thread-max-width)*0.8)] text-sm break-all break-words rounded-xl px-5 py-2.5 col-start-2 row-start-2">
+          <div className="bg-ChatBtnGradient text-white d max-w-[calc(var(--thread-max-width)*0.8)] text-sm break-words rounded-xl px-5 py-2.5 col-start-2 row-start-2">
             <MessagePrimitive.Content components={{ Text: TrimmedText }} />
           </div>
           <span
@@ -681,7 +840,7 @@ const AssistantMessage: React.FC<any> = ({
   const isAnyMessageStreaming = messages.some(
     (msg: any) => msg.role === "assistant" && msg.metadata?.custom?.streaming,
   );
-
+  const contentLength = message?.content?.length || 0;
   // Debug logging for scenario button
   // console.log("🔍 AssistantMessage metadata:", {
   //   messageId,
@@ -776,6 +935,46 @@ const AssistantMessage: React.FC<any> = ({
                   Searching for information....
                 </span>
               </div>
+            ) : contentLength === 0 ? (
+              <>
+                <div
+                  className="flex items-start justify-start"
+                  style={{
+                    position: "relative",
+                    top: "-12px",
+                    display: "flex",
+                    gap: "6px",
+                  }}
+                >
+                  <span
+                    style={{
+                      backgroundColor: "rgb(69, 85, 108)",
+                      width: "4px",
+                      height: "4px",
+                      display: "inline-block",
+                      borderRadius: "50%",
+                    }}
+                  />
+                  <span
+                    style={{
+                      backgroundColor: "rgb(69, 85, 108)",
+                      width: "4px",
+                      height: "4px",
+                      display: "inline-block",
+                      borderRadius: "50%",
+                    }}
+                  />
+                  <span
+                    style={{
+                      backgroundColor: "rgb(69, 85, 108)",
+                      width: "4px",
+                      height: "4px",
+                      display: "inline-block",
+                      borderRadius: "50%",
+                    }}
+                  />
+                </div>
+              </>
             ) : (
               <>
                 <div

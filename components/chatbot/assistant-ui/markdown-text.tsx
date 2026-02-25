@@ -26,6 +26,7 @@ const MarkdownTextImpl = () => {
 };
 
 export const MarkdownText = memo(MarkdownTextImpl);
+console.log("MarkdownText rendered", MarkdownText);
 
 const CodeHeader: FC<CodeHeaderProps> = ({ language, code }) => {
   const { isCopied, copyToClipboard } = useCopyToClipboard();
