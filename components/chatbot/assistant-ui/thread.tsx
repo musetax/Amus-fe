@@ -275,22 +275,22 @@ export const Thread: any = ({
                       }}
                     />
 
-                    <ThreadPrimitive.If empty={false}>
+                    {/* <ThreadPrimitive.If empty={false}>
                       <div className="min-h-8 flex-grow" />
-                    </ThreadPrimitive.If>
+                    </ThreadPrimitive.If> */}
 
                     {!showScenarios &&
                       suggestions.map((s, i) => (
                         <div
                           key={i}
-                          className="mt-1 p-4 flex w-full flex-col items-center justify-center gap-2"
+                          className="mt-1 px-4 flex w-full flex-col items-center justify-center gap-2"
                         >
                           <ThreadPrimitive.Suggestion
                             key={i}
                             prompt={s}
                             autoSend
                             method="replace"
-                            className="hover:bg-muted/80 flex max-w-sm grow basis-0 flex-col items-center justify-center rounded-lg border px-2 py-3 transition-colors ease-in custom-hover"
+                            className="hover:bg-muted/80 flex max-w-sm grow basis-0 flex-col items-center justify-center rounded-lg border px-2 py-2 transition-colors ease-in custom-hover"
                           >
                             <span className="line-clamp-2 text-ellipsis text-sm font-medium">
                               {s}
@@ -914,8 +914,8 @@ const AssistantMessage: React.FC<any> = ({
             />
           )}
         </span>
-        <MessagePrimitive.Root className="grid grid-cols-[auto_auto_1fr] grid-rows-[auto_1fr] relative w-full max-w-[var(--thread-max-width)] py-2 pr-2">
-          <div className="text-foreground max-w-[calc(var(--thread-max-width)*0.8)] break-words leading-7 col-span-2 col-start-2 row-start-1 my-1.5">
+        <MessagePrimitive.Root className="grid grid-cols-[auto_auto_1fr] grid-rows-[auto_1fr] relative w-full max-w-[var(--thread-max-width)] pt-2 pr-2">
+          <div className="text-foreground max-w-[calc(var(--thread-max-width)*0.8)] break-words leading-7 col-span-2 col-start-2 row-start-1 my-1">
             {isMessageLoading ? (
               <div className="flex flex-col  py-4">
                 <div className="flex items-center gap-1">
