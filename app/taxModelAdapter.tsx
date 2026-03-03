@@ -1,8 +1,7 @@
 "use client";
 
 import { default as axios } from "axios";
-import "../utilities/auth"; // Import to activate axios interceptors
-import { axiosInstanceAuth } from "../utilities/auth";
+import { axiosInstanceAuth, refreshToken } from "../utilities/auth";
 export const downloadPdf = async (email: string, sessionId: any, url_type: any) => {
   try {
     const response = await axios.post('https://amus-devapi.musetax.com/v1/api/export/chats', {
@@ -44,16 +43,16 @@ export const createUserInfo = async (taxPayload: any, email: string, url_type: a
   }
 }
 
-export const getPayrollDetails=async(userId:string)=>{
-   try {
+export const getPayrollDetails = async (userId: string) => {
+  try {
     const response = await axiosInstanceAuth.get(`/user?user_id=${userId}`,
-    //  { headers:{
-    //     "ngrok-skip-browser-warning": "69420",
-    //   }}
+      //  { headers:{
+      //     "ngrok-skip-browser-warning": "69420",
+      //   }}
     );
 
     return response.data;
-  } catch (error:any){
+  } catch (error: any) {
 
     throw error
   }
@@ -80,98 +79,98 @@ export const uploadOcrData = async (userId: string, file: File) => {
     throw error;
   }
 };
-export const payrollDetailsUpdate=async(userId:string,payload:any)=>{
-   try {
-    const response = await axiosInstanceAuth.patch(`/user/${userId}`,payload);
+export const payrollDetailsUpdate = async (userId: string, payload: any) => {
+  try {
+    const response = await axiosInstanceAuth.patch(`/user/${userId}`, payload);
 
     return response.data;
-  } catch(error:any) {
+  } catch (error: any) {
     throw error;
   }
 }
 
-interface TokenPayload {
-  client_id: string,
-  client_secret: string
-}
+// interface TokenPayload {
+//   client_id: string,
+//   client_secret: string
+// }
 
-const tokenStore = (data: any) => {
-  localStorage.setItem('authTokenMuse', data.access_token)
-  localStorage.setItem("refreshTokenMuse", data.refresh_token)
-}
+// const tokenStore = (data: any) => {
+//   localStorage.setItem('authTokenMuse', data.access_token)
+//   localStorage.setItem("refreshTokenMuse", data.refresh_token)
+// }
 
-export const tokenCreateFromclientIdandSecret = async (payload: TokenPayload) => {
-  try {
-    const response = await axios.post(`https://api-stgbe.musetax.com/auth/token`, payload)
-    tokenStore(response.data)
-    return response
+// export const tokenCreateFromclientIdandSecret = async (payload: TokenPayload) => {
+//   try {
+//     const response = await axios.post(`https://api-stgbe.musetax.com/auth/token`, payload)
+//     tokenStore(response.data)
+//     return response
 
 
-  } catch (error: any) {
-    console.log(error, "error")
-    throw new Error('Failed to create token');
-  }
-}
+//   } catch (error: any) {
+//     console.log(error, "error")
+//     throw new Error('Failed to create token');
+//   }
+// }
 
-interface UserAndSessionId {
-  payroll_details: any;
-  company_name: string;
-  first_name:string,
-  email:string,
-  last_name:string
-}
+// interface UserAndSessionId {
+//   payroll_details: any;
+//   company_name: string;
+//   first_name: string,
+//   email: string,
+//   last_name: string
+// }
 
 // Store session ID with 1-day expiry
-const storeSessionId = (data: { session_id: string }) => {
-  const ONE_DAY_MS = 24 * 60 * 60 * 1000; // 1 day in ms
+// const storeSessionId = (data: { session_id: string }) => {
+//   const ONE_DAY_MS = 24 * 60 * 60 * 1000; // 1 day in ms
 
-  // Store original session ID
-  localStorage.setItem("originalSessionId", data.session_id);
+//   // Store original session ID
+//   localStorage.setItem("originalSessionId", data.session_id);
 
-  // Store expiry timestamp
-  const expiryTime = Date.now() + ONE_DAY_MS;
-  localStorage.setItem("sessionExpiry", expiryTime.toString());
-};
+//   // Store expiry timestamp
+//   const expiryTime = Date.now() + ONE_DAY_MS;
+//   localStorage.setItem("sessionExpiry", expiryTime.toString());
+// };
 
 // Get session ID if not expired, else return null
-export const getSessionId = (): string | null => {
-  const expiryStr = localStorage.getItem("sessionExpiry");
-  const sessionId = localStorage.getItem("originalSessionId");
+// export const getSessionId = (): string | null => {
+//   const expiryStr = localStorage.getItem("sessionExpiry");
+//   const sessionId = localStorage.getItem("originalSessionId");
 
-  if (!expiryStr || !sessionId) return null;
+//   if (!expiryStr || !sessionId) return null;
 
-  const expiryTime = parseInt(expiryStr, 10);
-  if (Date.now() > expiryTime) {
-    // Session expired
-    return null;
-  }
+//   const expiryTime = parseInt(expiryStr, 10);
+//   if (Date.now() > expiryTime) {
+//     // Session expired
+//     return null;
+//   }
 
-  // Session still valid → return original session ID
-  return sessionId;
-};
+//   // Session still valid → return original session ID
+//   return sessionId;
+// };
 
 
 
 // API call to get session ID and store it
-export const getUserAndSessionId = async (
-  sessionPayload: UserAndSessionId
-) => {
-  try {
-    const response = await axios.post(
-      `https://api-stgbe.musetax.com/auth/token`, // <-- verify endpoint
-      sessionPayload
-    );
-    console.log(response.data);
+// export const getUserAndSessionId = async (
+//   sessionPayload: UserAndSessionId
+// ) => {
+//   try {
+//     const response = await axios.post(
+//       `https://api-stgbe.musetax.com/auth/token`, // <-- verify endpoint
+//       sessionPayload
+//     );
+//     console.log(response.data);
 
-    // Store session ID with 1 day expiry
-    storeSessionId({ session_id: response.data.session_id });
+//     // Store session ID with 1 day expiry
+//     storeSessionId({ session_id: response.data.session_id });
 
-    return response.data; // return only the data
-  } catch (error: any) {
-    console.error(error, "Error fetching session ID");
-    throw new Error("Failed to get session id");
-  }
-};
+//     return response.data; // return only the data
+//   } catch (error: any) {
+//     console.error(error, "Error fetching session ID");
+//     throw new Error("Failed to get session id");
+//   }
+// };
 
 export const calculateTaxScenarios = async (
   userId: string,
@@ -235,20 +234,34 @@ export const calculateTaxScenarios = async (
       };
     }
 
-    // Make streaming request
-    const response = await fetch(
+    // Helper for fetch with Authorization
+    const makeRequest = (token: string) => fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_API}tax-calculate`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("authTokenMuse")}`,
+          Authorization: `Bearer ${token}`,
           "Cache-Control": "no-cache",
           Connection: "keep-alive",
         },
         body: JSON.stringify(payload),
       }
     );
+
+    // Make streaming request
+    let response = await makeRequest(localStorage.getItem("authTokenMuse") || "");
+
+    // Handle 401 Unauthorized
+    if (response.status === 401) {
+      console.log("🔄 tax-calculate 401: Refreshing token...");
+      const newToken = await refreshToken();
+      if (newToken) {
+        response = await makeRequest(newToken);
+      } else {
+        throw new Error("Session expired. Please log in again.");
+      }
+    }
 
     if (!response.ok || !response.body) {
       throw new Error("Bad response from tax-calculate API");

@@ -69,6 +69,7 @@ function Assistant({
   const sessionId = (propSessionId || searchParams.get("session_id")) ?? "";
   const userId = (propUserId || searchParams.get("user_id")) ?? "";
   const access_token = (propAccessToken || searchParams.get("access_token")) ?? "";
+  const refresh_token = (searchParams.get("refresh_token") ?? "")
   const user_image = (propUserImage || searchParams.get("user_image")) ?? "";
   const companyLogo = (propCompanyLogo || searchParams.get("company_logo")) ?? "";
   const clientId = (propClientId || searchParams.get("client_id")) ?? "";
@@ -95,6 +96,10 @@ function Assistant({
       localStorage.setItem("authTokenMuse", access_token);
     }
 
+    if (refresh_token) {
+      localStorage.setItem("refreshTokenMuse", refresh_token);
+    }
+
     if (userId) {
       localStorage.setItem("userId", userId);
       setCurrentUserId(userId);
@@ -103,7 +108,7 @@ function Assistant({
     if (!sessionId || !userId || !access_token) {
       setGlobalError("Missing session_id, user_id or access_token in URL.");
     }
-  }, [sessionId, access_token, userId, companyLogo, user_image, clientId, clientSecret]);
+  }, [sessionId, access_token, userId, companyLogo, user_image, clientId, clientSecret, refresh_token]);
 
   useEffect(() => {
     const userInfo = async () => {
