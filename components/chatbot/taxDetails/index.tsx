@@ -1,9 +1,9 @@
 import { useState } from "react";
-import TaxBenefitDetail from "./taxBenefit";
-import PaycheckSlider from "./taxSlider";
+// import TaxBenefitDetail from "./taxBenefit";
+// import PaycheckSlider from "./taxSlider";
 
 const TaxDetails = () => {
-  const [fixboost, setFixBoost] = useState<number>(0);
+  // const [fixboost, setFixBoost] = useState<number>(0);
   const [activeTab, setActiveTab] = useState<"benefit" | "profile">("benefit");
   return (
     <>
@@ -21,7 +21,7 @@ const TaxDetails = () => {
           </button>
           <button
             onClick={() =>
-              (window.location.href = process.env.NEXT_PUBLIC_FINANCIAL_API ?? "")
+              (window.location.href = "https://staging.musetax.com/FinancialSuite/main/financial-life.html")
             }
             className={`px-5 py-2  rounded-full text-lg font-medium flex items-center justify-center gap-2 transition-all duration-200 ${
               activeTab === "profile"
@@ -33,20 +33,9 @@ const TaxDetails = () => {
           </button>
         </div>
 
-        <div className="block">
-          {activeTab === "benefit" ? (
-            <TaxBenefitDetail />
-          ) : (
-            <div className="block">profile</div>
-          )}
-        </div>
+      
       </div>
-      <PaycheckSlider
-        fixboost={fixboost}
-        setFixBoost={setFixBoost}
-        min={0}
-        max={100}
-      />
+     
     </>
   );
 };

@@ -1,12 +1,16 @@
+// app/layout.tsx
 import type { Metadata } from "next";
+// import "./fonts/css/general-sans.css";
+import "./chatbot.css";
 import "./globals.css";
-import localFont from "next/font/local";
 
-const generalSans = localFont({
-  src: "../components/assets/fonts/fonts/GeneralSans-Regular.woff",
-  variable: "--font-general-sans",
-  weight: "100 900",
-});
+import { ToastContainer } from "react-toastify";
+
+// const generalSans = localFont({
+//   src: "./fonts/fonts/GeneralSans-Regular.woff",
+//   variable: "--font-general-sans",
+//   weight: "100 900",
+// });
 
 export const metadata: Metadata = {
   title: "Amus",
@@ -19,10 +23,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-   
     <html lang="en">
-      <body className={`${generalSans.variable}  antialiased`}>{children}</body>
+      <body className={` antialiased`}>
+        {children}
+        <ToastContainer />
+      </body>
     </html>
- 
   );
 }

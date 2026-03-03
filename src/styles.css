@@ -1,0 +1,2117 @@
+/* .myUniquechatbot {
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
+} */
+
+*,
+::before,
+::after {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-pan-x: ;
+  --tw-pan-y: ;
+  --tw-pinch-zoom: ;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-gradient-from-position: ;
+  --tw-gradient-via-position: ;
+  --tw-gradient-to-position: ;
+  --tw-ordinal: ;
+  --tw-slashed-zero: ;
+  --tw-numeric-figure: ;
+  --tw-numeric-spacing: ;
+  --tw-numeric-fraction: ;
+  --tw-ring-inset: ;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgb(59 130 246 / 0.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-blur: ;
+  --tw-brightness: ;
+  --tw-contrast: ;
+  --tw-grayscale: ;
+  --tw-hue-rotate: ;
+  --tw-invert: ;
+  --tw-saturate: ;
+  --tw-sepia: ;
+  --tw-drop-shadow: ;
+  --tw-backdrop-blur: ;
+  --tw-backdrop-brightness: ;
+  --tw-backdrop-contrast: ;
+  --tw-backdrop-grayscale: ;
+  --tw-backdrop-hue-rotate: ;
+  --tw-backdrop-invert: ;
+  --tw-backdrop-opacity: ;
+  --tw-backdrop-saturate: ;
+  --tw-backdrop-sepia: ;
+  --tw-contain-size: ;
+  --tw-contain-layout: ;
+  --tw-contain-paint: ;
+  --tw-contain-style: ;
+}
+
+::backdrop {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-pan-x: ;
+  --tw-pan-y: ;
+  --tw-pinch-zoom: ;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-gradient-from-position: ;
+  --tw-gradient-via-position: ;
+  --tw-gradient-to-position: ;
+  --tw-ordinal: ;
+  --tw-slashed-zero: ;
+  --tw-numeric-figure: ;
+  --tw-numeric-spacing: ;
+  --tw-numeric-fraction: ;
+  --tw-ring-inset: ;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgb(59 130 246 / 0.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-blur: ;
+  --tw-brightness: ;
+  --tw-contrast: ;
+  --tw-grayscale: ;
+  --tw-hue-rotate: ;
+  --tw-invert: ;
+  --tw-saturate: ;
+  --tw-sepia: ;
+  --tw-drop-shadow: ;
+  --tw-backdrop-blur: ;
+  --tw-backdrop-brightness: ;
+  --tw-backdrop-contrast: ;
+  --tw-backdrop-grayscale: ;
+  --tw-backdrop-hue-rotate: ;
+  --tw-backdrop-invert: ;
+  --tw-backdrop-opacity: ;
+  --tw-backdrop-saturate: ;
+  --tw-backdrop-sepia: ;
+  --tw-contain-size: ;
+  --tw-contain-layout: ;
+  --tw-contain-paint: ;
+  --tw-contain-style: ;
+} /*
+! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com
+*/ /*
+1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
+2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
+*/
+
+*,
+::before,
+::after {
+  box-sizing: border-box; /* 1 */
+  border-width: 0; /* 2 */
+  border-style: solid; /* 2 */
+  border-color: #e5e7eb; /* 2 */
+}
+
+::before,
+::after {
+  --tw-content: "";
+}
+
+/*
+1. Use a consistent sensible line-height in all browsers.
+2. Prevent adjustments of font size after orientation changes in iOS.
+3. Use a more readable tab size.
+4. Use the user's configured `sans` font-family by default.
+5. Use the user's configured `sans` font-feature-settings by default.
+6. Use the user's configured `sans` font-variation-settings by default.
+7. Disable tap highlights on iOS
+*/
+
+html,
+:host {
+  line-height: 1.5; /* 1 */
+  -webkit-text-size-adjust: 100%; /* 2 */
+  -moz-tab-size: 4; /* 3 */
+  -o-tab-size: 4;
+  tab-size: 4; /* 3 */
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; /* 4 */
+  font-feature-settings: normal; /* 5 */
+  font-variation-settings: normal; /* 6 */
+  -webkit-tap-highlight-color: transparent; /* 7 */
+}
+
+/*
+1. Remove the margin in all browsers.
+2. Inherit line-height from `html` so users can set them as a class directly on the `html` element.
+*/
+
+body {
+  margin: 0; /* 1 */
+  line-height: inherit; /* 2 */
+}
+
+/*
+1. Add the correct height in Firefox.
+2. Correct the inheritance of border color in Firefox. (https://bugzilla.mozilla.org/show_bug.cgi?id=190655)
+3. Ensure horizontal rules are visible by default.
+*/
+
+hr {
+  height: 0; /* 1 */
+  color: inherit; /* 2 */
+  border-top-width: 1px; /* 3 */
+}
+
+/*
+Add the correct text decoration in Chrome, Edge, and Safari.
+*/
+
+abbr:where([title]) {
+  -webkit-text-decoration: underline dotted;
+  text-decoration: underline dotted;
+}
+
+/*
+Remove the default font size and weight for headings.
+*/
+
+.myUniquechatbot h1,
+.myUniquechatbot h2,
+.myUniquechatbot h3,
+.myUniquechatbot h4,
+.myUniquechatbot h5,
+.myUniquechatbot h6 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+/*
+Reset links to optimize for opt-in styling instead of opt-out.
+*/
+
+.myUniquechatbot a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+/*
+Add the correct font weight in Edge and Safari.
+*/
+
+.myUniquechatbot b,
+.myUniquechatbot strong {
+  font-weight: bolder;
+}
+
+/*
+1. Use the user's configured `mono` font-family by default.
+2. Use the user's configured `mono` font-feature-settings by default.
+3. Use the user's configured `mono` font-variation-settings by default.
+4. Correct the odd `em` font sizing in all browsers.
+*/
+
+.myUniquechatbot code,
+.myUniquechatbot kbd,
+.myUniquechatbot samp,
+.myUniquechatbot pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace; /* 1 */
+  font-feature-settings: normal; /* 2 */
+  font-variation-settings: normal; /* 3 */
+  font-size: 1em; /* 4 */
+}
+
+/*
+Add the correct font size in all browsers.
+*/
+
+.myUniquechatbot small {
+  font-size: 80%;
+}
+
+/*
+Prevent `sub` and `sup` elements from affecting the line height in all browsers.
+*/
+
+.myUniquechatbot sub,
+.myUniquechatbot sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+.myUniquechatbot sub {
+  bottom: -0.25em;
+}
+
+.myUniquechatbot sup {
+  top: -0.5em;
+}
+
+/*
+1. Remove text indentation from table contents in Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=999088, https://bugs.webkit.org/show_bug.cgi?id=201297)
+2. Correct table border color inheritance in all Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=935729, https://bugs.webkit.org/show_bug.cgi?id=195016)
+3. Remove gaps between table borders by default.
+*/
+
+.myUniquechatbot table {
+  text-indent: 0; /* 1 */
+  border-color: inherit; /* 2 */
+  border-collapse: collapse; /* 3 */
+}
+
+/*
+1. Change the font styles in all browsers.
+2. Remove the margin in Firefox and Safari.
+3. Remove default padding in all browsers.
+*/
+
+.myUniquechatbot button,
+.myUniquechatbot input,
+.myUniquechatbot optgroup,
+.myUniquechatbot select,
+.myUniquechatbot textarea {
+  font-family: inherit; /* 1 */
+  font-feature-settings: inherit; /* 1 */
+  font-variation-settings: inherit; /* 1 */
+  font-size: 100%; /* 1 */
+  font-weight: inherit; /* 1 */
+  line-height: inherit; /* 1 */
+  letter-spacing: inherit; /* 1 */
+  color: inherit; /* 1 */
+  margin: 0; /* 2 */
+  padding: 0; /* 3 */
+}
+
+/*
+Remove the inheritance of text transform in Edge and Firefox.
+*/
+
+.myUniquechatbot button,
+.myUniquechatbot select {
+  text-transform: none;
+}
+
+/*
+1. Correct the inability to style clickable types in iOS and Safari.
+2. Remove default button styles.
+*/
+
+.myUniquechatbot button,
+.myUniquechatbot input:where([type="button"]),
+.myUniquechatbot input:where([type="reset"]),
+.myUniquechatbot input:where([type="submit"]) {
+  -webkit-appearance: button; /* 1 */
+  background-color: transparent; /* 2 */
+  background-image: none; /* 2 */
+}
+
+/*
+Use the modern Firefox focus style for all focusable elements.
+*/
+
+:-moz-focusring {
+  outline: auto;
+}
+
+/*
+Remove the additional `:invalid` styles in Firefox. (https://github.com/mozilla/gecko-dev/blob/2f9eacd9d3d995c937b4251a5557d95d494c9be1/layout/style/res/forms.css#L728-L737)
+*/
+
+:-moz-ui-invalid {
+  box-shadow: none;
+}
+
+/*
+Add the correct vertical alignment in Chrome and Firefox.
+*/
+
+progress {
+  vertical-align: baseline;
+}
+
+/*
+Correct the cursor style of increment and decrement buttons in Safari.
+*/
+
+::-webkit-inner-spin-button,
+::-webkit-outer-spin-button {
+  height: auto;
+}
+
+/*
+1. Correct the odd appearance in Chrome and Safari.
+2. Correct the outline style in Safari.
+*/
+
+[type="search"] {
+  -webkit-appearance: textfield; /* 1 */
+  outline-offset: -2px; /* 2 */
+}
+
+/*
+Remove the inner padding in Chrome and Safari on macOS.
+*/
+
+::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+/*
+1. Correct the inability to style clickable types in iOS and Safari.
+2. Change font properties to `inherit` in Safari.
+*/
+
+::-webkit-file-upload-button {
+  -webkit-appearance: button; /* 1 */
+  font: inherit; /* 2 */
+}
+
+/*
+Add the correct display in Chrome and Safari.
+*/
+
+summary {
+  display: list-item;
+}
+
+/*
+Removes the default spacing and border for appropriate elements.
+*/
+
+.myUniquechatbot blockquote,
+.myUniquechatbot dl,
+.myUniquechatbot dd,
+.myUniquechatbot h1,
+.myUniquechatbot h2,
+.myUniquechatbot h3,
+.myUniquechatbot h4,
+.myUniquechatbot h5,
+.myUniquechatbot h6,
+.myUniquechatbot hr,
+.myUniquechatbot figure,
+.myUniquechatbot p,
+.myUniquechatbot pre {
+  margin: 0;
+}
+
+.myUniquechatbot fieldset {
+  margin: 0;
+  padding: 0;
+}
+
+.myUniquechatbot legend {
+  padding: 0;
+}
+
+.myUniquechatbot ol,
+.myUniquechatbot ul,
+.myUniquechatbot menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/*
+Reset default styling for dialogs.
+*/
+.myUniquechatbot dialog {
+  padding: 0;
+}
+
+/*
+Prevent resizing textareas horizontally by default.
+*/
+
+.myUniquechatbot textarea {
+  resize: vertical;
+}
+
+/*
+1. Reset the default placeholder opacity in Firefox. (https://github.com/tailwindlabs/tailwindcss/issues/3300)
+2. Set the default placeholder color to the user's configured gray 400 color.
+*/
+
+.myUniquechatbot input::-moz-placeholder,
+.myUniquechatbot textarea::-moz-placeholder {
+  opacity: 1; /* 1 */
+  color: #9ca3af; /* 2 */
+}
+
+.myUniquechatbot input::placeholder,
+.myUniquechatbot textarea::placeholder {
+  opacity: 1; /* 1 */
+  color: #9ca3af; /* 2 */
+}
+
+/*
+Set the default cursor for buttons.
+*/
+
+.myUniquechatbot button,
+[role="button"] {
+  cursor: pointer;
+}
+
+/*
+Make sure disabled buttons don't get the pointer cursor.
+*/
+:disabled {
+  cursor: default;
+}
+
+/*
+1. Make replaced elements `display: block` by default. (https://github.com/mozdevs/cssremedy/issues/14)
+2. Add `vertical-align: middle` to align replaced elements more sensibly by default. (https://github.com/jensimmons/cssremedy/issues/14#issuecomment-634934210)
+   This can trigger a poorly considered lint error in some tools but is included by design.
+*/
+
+img,
+svg,
+video,
+canvas,
+audio,
+iframe,
+embed,
+object {
+  display: block; /* 1 */
+  vertical-align: middle; /* 2 */
+}
+
+/*
+Constrain images and videos to the parent width and preserve their intrinsic aspect ratio. (https://github.com/mozdevs/cssremedy/issues/14)
+*/
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Make elements with the HTML hidden attribute stay hidden by default */
+[hidden]:where(:not([hidden="until-found"])) {
+  display: none;
+}
+
+:root,
+[data-theme] {
+  color: hsl(var(--heroui-foreground));
+  background-color: hsl(var(--heroui-background));
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+.myUniquechatbot .fixed {
+  position: fixed;
+}
+.myUniquechatbot .absolute {
+  position: absolute;
+}
+.myUniquechatbot .relative {
+  position: relative;
+}
+.myUniquechatbot .sticky {
+  position: sticky;
+}
+.myUniquechatbot .inset-0 {
+  inset: 0px;
+}
+.myUniquechatbot .-right-3 {
+  right: -0.75rem;
+}
+.myUniquechatbot .-top-3 {
+  top: -0.75rem;
+}
+.myUniquechatbot .-top-8 {
+  top: -2rem;
+}
+.myUniquechatbot .bottom-0 {
+  bottom: 0px;
+}
+.myUniquechatbot .bottom-20 {
+  bottom: 5rem;
+}
+.myUniquechatbot .left-\[50\%\] {
+  left: 50%;
+}
+.myUniquechatbot .right-4 {
+  right: 1rem;
+}
+.myUniquechatbot .right-6 {
+  right: 1.5rem;
+}
+.myUniquechatbot .top-4 {
+  top: 1rem;
+}
+.myUniquechatbot .top-\[50\%\] {
+  top: 50%;
+}
+.myUniquechatbot .z-50 {
+  z-index: 50;
+}
+.myUniquechatbot .col-span-2 {
+  grid-column: span 2 / span 2;
+}
+.myUniquechatbot .col-span-full {
+  grid-column: 1 / -1;
+}
+.myUniquechatbot .col-start-1 {
+  grid-column-start: 1;
+}
+.myUniquechatbot .col-start-2 {
+  grid-column-start: 2;
+}
+.myUniquechatbot .col-start-3 {
+  grid-column-start: 3;
+}
+.myUniquechatbot .row-start-1 {
+  grid-row-start: 1;
+}
+.myUniquechatbot .row-start-2 {
+  grid-row-start: 2;
+}
+.myUniquechatbot .row-start-3 {
+  grid-row-start: 3;
+}
+.myUniquechatbot .m-0 {
+  margin: 0px;
+}
+.myUniquechatbot .mx-3 {
+  margin-left: 0.75rem;
+  margin-right: 0.75rem;
+}
+.myUniquechatbot .my-1\.5 {
+  margin-top: 0.375rem;
+  margin-bottom: 0.375rem;
+}
+.myUniquechatbot .my-2\.5 {
+  margin-top: 0.625rem;
+  margin-bottom: 0.625rem;
+}
+.myUniquechatbot .my-4 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+.myUniquechatbot .my-5 {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+.myUniquechatbot .-ml-1 {
+  margin-left: -0.25rem;
+}
+.myUniquechatbot .-ml-2 {
+  margin-left: -0.5rem;
+}
+.myUniquechatbot .-mr-1 {
+  margin-right: -0.25rem;
+}
+.myUniquechatbot .mb-10 {
+  margin-bottom: 2.5rem;
+}
+.myUniquechatbot .mb-2 {
+  margin-bottom: 0.5rem;
+}
+.myUniquechatbot .mb-3 {
+  margin-bottom: 0.75rem;
+}
+.myUniquechatbot .mb-4 {
+  margin-bottom: 1rem;
+}
+.myUniquechatbot .mb-5 {
+  margin-bottom: 1.25rem;
+}
+.myUniquechatbot .mb-8 {
+  margin-bottom: 2rem;
+}
+.myUniquechatbot .ml-6 {
+  margin-left: 1.5rem;
+}
+.myUniquechatbot .mr-2 {
+  margin-right: 0.5rem;
+}
+.myUniquechatbot .mr-3 {
+  margin-right: 0.75rem;
+}
+.myUniquechatbot .mt-1 {
+  margin-top: 0.25rem;
+}
+.myUniquechatbot .mt-2\.5 {
+  margin-top: 0.625rem;
+}
+.myUniquechatbot .mt-3 {
+  margin-top: 0.75rem;
+}
+.myUniquechatbot .mt-4 {
+  margin-top: 1rem;
+}
+.myUniquechatbot .mt-5 {
+  margin-top: 1.25rem;
+}
+.myUniquechatbot .mt-6 {
+  margin-top: 1.5rem;
+}
+.myUniquechatbot .mt-8 {
+  margin-top: 2rem;
+}
+.myUniquechatbot .box-border {
+  box-sizing: border-box;
+}
+.myUniquechatbot .line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+.myUniquechatbot .line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.myUniquechatbot .block {
+  display: block;
+}
+.myUniquechatbot .flex {
+  display: flex;
+}
+.myUniquechatbot .inline-flex {
+  display: inline-flex;
+}
+.myUniquechatbot .table {
+  display: table;
+}
+.myUniquechatbot .grid {
+  display: grid;
+}
+.myUniquechatbot .aspect-square {
+  aspect-ratio: 1 / 1;
+}
+.myUniquechatbot .size-10 {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+.myUniquechatbot .size-2\.5 {
+  width: 0.625rem;
+  height: 0.625rem;
+}
+.myUniquechatbot .size-4 {
+  width: 1rem;
+  height: 1rem;
+}
+.myUniquechatbot .size-6 {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+.myUniquechatbot .size-8 {
+  width: 2rem;
+  height: 2rem;
+}
+.myUniquechatbot .size-9 {
+  width: 2.25rem;
+  height: 2.25rem;
+}
+.myUniquechatbot .size-full {
+  width: 100%;
+  height: 100%;
+}
+.myUniquechatbot .h-10 {
+  height: 2.5rem;
+}
+.myUniquechatbot .h-12 {
+  height: 3rem;
+}
+.myUniquechatbot .h-2 {
+  height: 0.5rem;
+}
+.myUniquechatbot .h-8 {
+  height: 2rem;
+}
+.myUniquechatbot .h-9 {
+  height: 2.25rem;
+}
+.myUniquechatbot .h-\[calc\(100vh-324px\)\] {
+  height: calc(100vh - 324px);
+}
+.myUniquechatbot .max-h-40 {
+  max-height: 10rem;
+}
+.myUniquechatbot .min-h-8 {
+  min-height: 2rem;
+}
+.myUniquechatbot .min-h-\[610px\] {
+  min-height: 610px;
+}
+.myUniquechatbot .min-h-screen {
+  min-height: 100vh;
+}
+.myUniquechatbot .w-2 {
+  width: 0.5rem;
+}
+.myUniquechatbot .w-40 {
+  width: 10rem;
+}
+.myUniquechatbot .w-fit {
+  width: -moz-fit-content;
+  width: fit-content;
+}
+.myUniquechatbot .w-full {
+  width: 100%;
+}
+.myUniquechatbot .max-w-\[calc\(100\%-2rem\)\] {
+  max-width: calc(100% - 2rem);
+}
+ .myUniquechatbot .max-w-\[calc\(var\(--thread-max-width\)\*0\.8\)\] {
+  max-width: calc(var(--thread-max-width) * 0.8);
+}
+/* .myUniquechatbot .max-w-\[var\(--thread-max-width\)\] {
+  max-width: var(--thread-max-width);
+} */
+.myUniquechatbot .max-w-sm {
+  max-width: 24rem;
+}
+.myUniquechatbot .shrink-0 {
+  flex-shrink: 0;
+}
+.myUniquechatbot .flex-grow {
+  flex-grow: 1;
+}
+.myUniquechatbot .grow {
+  flex-grow: 1;
+}
+.myUniquechatbot .basis-0 {
+  flex-basis: 0px;
+}
+.myUniquechatbot .border-separate {
+  border-collapse: separate;
+}
+.myUniquechatbot .border-spacing-0 {
+  --tw-border-spacing-x: 0px;
+  --tw-border-spacing-y: 0px;
+  border-spacing: var(--tw-border-spacing-x) var(--tw-border-spacing-y);
+}
+.myUniquechatbot .translate-x-\[-50\%\] {
+  --tw-translate-x: -50%;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y))
+    rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y))
+    scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+.myUniquechatbot .translate-y-\[-50\%\] {
+  --tw-translate-y: -50%;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y))
+    rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y))
+    scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+.myUniquechatbot .translate-y-\[calc\(-50\%_-_2px\)\] {
+  --tw-translate-y: calc(-50% - 2px);
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y))
+    rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y))
+    scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+.myUniquechatbot .rotate-45 {
+  --tw-rotate: 45deg;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y))
+    rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y))
+    scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+@keyframes pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+.myUniquechatbot .animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+.myUniquechatbot .cursor-pointer {
+  cursor: pointer;
+}
+.myUniquechatbot .resize-none {
+  resize: none;
+}
+.myUniquechatbot .scroll-m-20 {
+  scroll-margin: 5rem;
+}
+.myUniquechatbot .list-decimal {
+  list-style-type: decimal;
+}
+.myUniquechatbot .list-disc {
+  list-style-type: disc;
+}
+.myUniquechatbot .auto-rows-auto {
+  grid-auto-rows: auto;
+}
+.myUniquechatbot .grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+.myUniquechatbot .grid-cols-\[auto_auto_1fr\] {
+  grid-template-columns: auto auto 1fr;
+}
+.myUniquechatbot .grid-cols-\[minmax\(72px\2c 1fr\)_auto\] {
+  grid-template-columns: minmax(72px, 1fr) auto;
+}
+.myUniquechatbot .grid-rows-\[auto_1fr\] {
+  grid-template-rows: auto 1fr;
+}
+.myUniquechatbot .flex-row {
+  flex-direction: row;
+}
+.myUniquechatbot .flex-col {
+  flex-direction: column;
+}
+.myUniquechatbot .flex-col-reverse {
+  flex-direction: column-reverse;
+}
+.myUniquechatbot .flex-wrap {
+  flex-wrap: wrap;
+}
+.myUniquechatbot .items-end {
+  align-items: flex-end;
+}
+.myUniquechatbot .items-center {
+  align-items: center;
+}
+.myUniquechatbot .items-stretch {
+  align-items: stretch;
+}
+.myUniquechatbot .justify-end {
+  justify-content: flex-end;
+}
+.myUniquechatbot .justify-center {
+  justify-content: center;
+}
+.myUniquechatbot .justify-between {
+  justify-content: space-between;
+}
+.myUniquechatbot .gap-1 {
+  gap: 0.25rem;
+}
+.myUniquechatbot .gap-1\.5 {
+  gap: 0.375rem;
+}
+.myUniquechatbot .gap-10 {
+  gap: 2.5rem;
+}
+.myUniquechatbot .gap-2 {
+  gap: 0.5rem;
+}
+.myUniquechatbot .gap-3 {
+  gap: 0.75rem;
+}
+.myUniquechatbot .gap-4 {
+  gap: 1rem;
+}
+.myUniquechatbot .gap-5 {
+  gap: 1.25rem;
+}
+.myUniquechatbot .gap-x-2 {
+  -moz-column-gap: 0.5rem;
+  column-gap: 0.5rem;
+}
+.myUniquechatbot .gap-y-2 {
+  row-gap: 0.5rem;
+}
+.myUniquechatbot .space-x-4 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(1rem * var(--tw-space-x-reverse));
+  margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+}
+.myUniquechatbot .space-y-4 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(1rem * var(--tw-space-y-reverse));
+}
+.myUniquechatbot .self-end {
+  align-self: flex-end;
+}
+.myUniquechatbot .overflow-hidden {
+  overflow: hidden;
+}
+.myUniquechatbot .overflow-x-auto {
+  overflow-x: auto;
+}
+.myUniquechatbot .overflow-y-auto {
+  overflow-y: auto;
+}
+.myUniquechatbot .overflow-y-scroll {
+  overflow-y: scroll;
+}
+.myUniquechatbot .scroll-smooth {
+  scroll-behavior: smooth;
+}
+.myUniquechatbot .text-ellipsis {
+  text-overflow: ellipsis;
+}
+.myUniquechatbot .whitespace-nowrap {
+  white-space: nowrap;
+}
+.myUniquechatbot .text-balance {
+  text-wrap: balance;
+}
+.myUniquechatbot .break-words {
+  overflow-wrap: break-word;
+}
+.myUniquechatbot .break-all {
+  word-break: break-all;
+}
+.myUniquechatbot .rounded {
+  border-radius: 0.25rem;
+}
+.myUniquechatbot .rounded-2xl {
+  border-radius: 1rem;
+}
+.myUniquechatbot .rounded-3xl {
+  border-radius: 1.5rem;
+}
+.myUniquechatbot .rounded-\[2px\] {
+  border-radius: 2px;
+}
+.myUniquechatbot .rounded-full {
+  border-radius: 9999px;
+}
+.myUniquechatbot .rounded-lg {
+  border-radius: 0.5rem;
+}
+.myUniquechatbot .rounded-md {
+  border-radius: 0.375rem;
+}
+.myUniquechatbot .rounded-xl {
+  border-radius: 0.75rem;
+}
+.myUniquechatbot .rounded-b-lg {
+  border-bottom-right-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+}
+.myUniquechatbot .rounded-t-lg {
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+.myUniquechatbot .border {
+  border-width: 1px;
+}
+.myUniquechatbot .border-b {
+  border-bottom-width: 1px;
+}
+.myUniquechatbot .border-l {
+  border-left-width: 1px;
+}
+.myUniquechatbot .border-l-2 {
+  border-left-width: 2px;
+}
+.myUniquechatbot .border-none {
+  border-style: none;
+}
+.myUniquechatbot .border-\[\#6A57F6\] {
+  --tw-border-opacity: 1;
+  border-color: rgb(106 87 246 / var(--tw-border-opacity, 1));
+}
+.myUniquechatbot .border-lightGray4 {
+  --tw-border-opacity: 1;
+  border-color: rgb(229 229 229 / var(--tw-border-opacity, 1));
+}
+.myUniquechatbot .border-purpuleColor {
+  --tw-border-opacity: 1;
+  border-color: rgb(77 55 245 / var(--tw-border-opacity, 1));
+}
+.myUniquechatbot .border-opacity-20 {
+  --tw-border-opacity: 0.2;
+}
+.myUniquechatbot .bg-\[\#F9F8F8\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(249 248 248 / var(--tw-bg-opacity, 1));
+}
+.myUniquechatbot .bg-background {
+  --tw-bg-opacity: 1;
+  background-color: hsl(
+    var(--heroui-background) /
+      var(--heroui-background-opacity, var(--tw-bg-opacity))
+  );
+}
+.myUniquechatbot .bg-black {
+  --tw-bg-opacity: 1;
+  background-color: rgb(0 0 0 / var(--tw-bg-opacity, 1));
+}
+.myUniquechatbot .bg-black\/50 {
+  background-color: rgb(0 0 0 / 0.5);
+}
+.myUniquechatbot .bg-gray-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(243 244 246 / var(--tw-bg-opacity, 1));
+}
+.myUniquechatbot .bg-inherit {
+  background-color: inherit;
+}
+.myUniquechatbot .bg-lightBlue {
+  --tw-bg-opacity: 1;
+  background-color: rgb(241 245 249 / var(--tw-bg-opacity, 1));
+}
+.myUniquechatbot .bg-lightGray2 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(249 249 249 / var(--tw-bg-opacity, 1));
+}
+.myUniquechatbot .bg-primaryColor {
+  --tw-bg-opacity: 1;
+  background-color: rgb(2 22 61 / var(--tw-bg-opacity, 1));
+}
+.myUniquechatbot .bg-red-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(239 68 68 / var(--tw-bg-opacity, 1));
+}
+.myUniquechatbot .bg-secondary {
+  --tw-bg-opacity: 1;
+  background-color: rgb(41 63 204 / var(--tw-bg-opacity, 1));
+}
+.myUniquechatbot .bg-transparent {
+  background-color: transparent;
+}
+.myUniquechatbot .bg-white {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
+}
+.myUniquechatbot .bg-zinc-900 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(24 24 27 / var(--tw-bg-opacity, 1));
+}
+.myUniquechatbot .bg-bgGradientBox {
+  background-image: linear-gradient(
+    87.46deg,
+    rgba(83, 135, 241, 0.14) 0%,
+    rgba(123, 115, 252, 0.14) 100%
+  );
+}
+.myUniquechatbot .bg-mediumBlueGradient {
+  background-image: linear-gradient(
+    87.46deg,
+    rgba(83, 135, 241, 1) 0%,
+    rgba(123, 115, 252, 1) 100%
+  );
+}
+.myUniquechatbot .fill-primaryColor {
+  fill: #02163d;
+}
+
+.myUniquechatbot .p-0 {
+  padding: 0px;
+}
+.myUniquechatbot .p-1 {
+  padding: 0.25rem;
+}
+.myUniquechatbot .p-2 {
+  padding: 0.5rem;
+}
+.myUniquechatbot .p-3 {
+  padding: 0.75rem;
+}
+.myUniquechatbot .p-4 {
+  padding: 1rem;
+}
+.myUniquechatbot .p-6 {
+  padding: 1.5rem;
+}
+.myUniquechatbot .px-0 {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+.myUniquechatbot .px-10 {
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
+}
+.myUniquechatbot .px-2 {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+.myUniquechatbot .px-2\.5 {
+  padding-left: 0.625rem;
+  padding-right: 0.625rem;
+}
+.myUniquechatbot .px-3 {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+.myUniquechatbot .px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+.myUniquechatbot .px-5 {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+.myUniquechatbot .px-6 {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+.myUniquechatbot .py-0 {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+.myUniquechatbot .py-1\.5 {
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
+}
+.myUniquechatbot .py-2 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+.myUniquechatbot .py-2\.5 {
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
+}
+.myUniquechatbot .py-4 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+.myUniquechatbot .pb-0 {
+  padding-bottom: 0px;
+}
+.myUniquechatbot .pb-4 {
+  padding-bottom: 1rem;
+}
+.myUniquechatbot .pl-6 {
+  padding-left: 1.5rem;
+}
+.myUniquechatbot .pt-0 {
+  padding-top: 0px;
+}
+.myUniquechatbot .text-left {
+  text-align: left;
+}
+.myUniquechatbot .text-center {
+  text-align: center;
+}
+.myUniquechatbot .text-start {
+  text-align: start;
+}
+.myUniquechatbot .text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+.myUniquechatbot .text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+.myUniquechatbot .text-4xl {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+}
+.myUniquechatbot .text-\[32px\] {
+  font-size: 32px;
+}
+.myUniquechatbot .text-base {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+.myUniquechatbot .text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+.myUniquechatbot .text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+.myUniquechatbot .text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+.myUniquechatbot .text-xs {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+.myUniquechatbot .font-bold {
+  font-weight: 700;
+}
+.myUniquechatbot .font-extrabold {
+  font-weight: 800;
+}
+.myUniquechatbot .font-medium {
+  font-weight: 500;
+}
+.myUniquechatbot .font-normal {
+  font-weight: 400;
+}
+.myUniquechatbot .font-semibold {
+  font-weight: 600;
+}
+.myUniquechatbot .lowercase {
+  text-transform: lowercase;
+}
+.myUniquechatbot .italic {
+  font-style: italic;
+}
+.myUniquechatbot .leading-7 {
+  line-height: 1.75rem;
+}
+.myUniquechatbot .leading-none {
+  line-height: 1;
+}
+.myUniquechatbot .tracking-tight {
+  letter-spacing: -0.025em;
+}
+.myUniquechatbot .text-\[\#6A57F6\] {
+  --tw-text-opacity: 1;
+  color: rgb(106 87 246 / var(--tw-text-opacity, 1));
+}
+.myUniquechatbot .text-\[\#8A8A8A\] {
+  --tw-text-opacity: 1;
+  color: rgb(138 138 138 / var(--tw-text-opacity, 1));
+}
+.myUniquechatbot .text-\[\#9A9A9A\] {
+  --tw-text-opacity: 1;
+  color: rgb(154 154 154 / var(--tw-text-opacity, 1));
+}
+.myUniquechatbot .text-cyanBlue {
+  --tw-text-opacity: 1;
+  color: rgb(4 37 103 / var(--tw-text-opacity, 1));
+}
+.myUniquechatbot .text-foreground {
+  --tw-text-opacity: 1;
+  color: hsl(
+    var(--heroui-foreground) /
+      var(--heroui-foreground-opacity, var(--tw-text-opacity))
+  );
+}
+.myUniquechatbot .text-gray-600 {
+  --tw-text-opacity: 1;
+  color: rgb(75 85 99 / var(--tw-text-opacity, 1));
+}
+.myUniquechatbot .text-gray-700 {
+  --tw-text-opacity: 1;
+  color: rgb(55 65 81 / var(--tw-text-opacity, 1));
+}
+.myUniquechatbot .text-gray-800 {
+  --tw-text-opacity: 1;
+  color: rgb(31 41 55 / var(--tw-text-opacity, 1));
+}
+.myUniquechatbot .text-primary-foreground {
+  --tw-text-opacity: 1;
+  color: hsl(
+    var(--heroui-primary-foreground) /
+      var(--heroui-primary-foreground-opacity, var(--tw-text-opacity))
+  );
+}
+.myUniquechatbot .text-primaryColor {
+  --tw-text-opacity: 1;
+  color: rgb(2 22 61 / var(--tw-text-opacity, 1));
+}
+.myUniquechatbot .text-secondary-foreground {
+  --tw-text-opacity: 1;
+  color: hsl(
+    var(--heroui-secondary-foreground) /
+      var(--heroui-secondary-foreground-opacity, var(--tw-text-opacity))
+  );
+}
+.myUniquechatbot .text-slateColor {
+  --tw-text-opacity: 1;
+  color: rgb(69 85 108 / var(--tw-text-opacity, 1));
+}
+.myUniquechatbot .text-textgray {
+  --tw-text-opacity: 1;
+  color: rgb(82 98 130 / var(--tw-text-opacity, 1));
+}
+.myUniquechatbot .text-white {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+}
+
+.myUniquechatbot .underline {
+  text-decoration-line: underline;
+}
+.myUniquechatbot .underline-offset-4 {
+  text-underline-offset: 4px;
+}
+.myUniquechatbot .antialiased {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.myUniquechatbot .opacity-70 {
+  opacity: 0.7;
+}
+.myUniquechatbot .shadow-lg {
+  --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+    0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color),
+    0 4px 6px -4px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
+    var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.myUniquechatbot .shadow-sm {
+  --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
+    var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.myUniquechatbot .shadow-xl {
+  --tw-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1),
+    0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 20px 25px -5px var(--tw-shadow-color),
+    0 8px 10px -6px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
+    var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.myUniquechatbot .outline-none {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+.myUniquechatbot .outline {
+  outline-style: solid;
+}
+.myUniquechatbot .ring-offset-background {
+  --tw-ring-offset-color: hsl(
+    var(--heroui-background) / var(--heroui-background-opacity, 1)
+  );
+}
+.myUniquechatbot .filter {
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast)
+    var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate)
+    var(--tw-sepia) var(--tw-drop-shadow);
+}
+.myUniquechatbot .transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 250ms;
+}
+.myUniquechatbot .transition-colors {
+  transition-property: color, background-color, border-color,
+    text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 250ms;
+}
+.myUniquechatbot .transition-opacity {
+  transition-property: opacity;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 250ms;
+}
+.myUniquechatbot .duration-200 {
+  transition-duration: 200ms;
+}
+.myUniquechatbot .ease-in {
+  transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
+}
+:root,
+.light,
+[data-theme="light"] {
+  color-scheme: light;
+  --heroui-background: 0 0% 100%;
+  --heroui-foreground-50: 0 0% 98.04%;
+  --heroui-foreground-100: 240 4.76% 95.88%;
+  --heroui-foreground-200: 240 5.88% 90%;
+  --heroui-foreground-300: 240 4.88% 83.92%;
+  --heroui-foreground-400: 240 5.03% 64.9%;
+  --heroui-foreground-500: 240 3.83% 46.08%;
+  --heroui-foreground-600: 240 5.2% 33.92%;
+  --heroui-foreground-700: 240 5.26% 26.08%;
+  --heroui-foreground-800: 240 3.7% 15.88%;
+  --heroui-foreground-900: 240 5.88% 10%;
+  --heroui-foreground: 201.81999999999994 24.44% 8.82%;
+  --heroui-divider: 0 0% 6.67%;
+  --heroui-divider-opacity: 0.15;
+  --heroui-focus: 212.01999999999998 100% 46.67%;
+  --heroui-overlay: 0 0% 0%;
+  --heroui-content1: 0 0% 100%;
+  --heroui-content1-foreground: 201.81999999999994 24.44% 8.82%;
+  --heroui-content2: 240 4.76% 95.88%;
+  --heroui-content2-foreground: 240 3.7% 15.88%;
+  --heroui-content3: 240 5.88% 90%;
+  --heroui-content3-foreground: 240 5.26% 26.08%;
+  --heroui-content4: 240 4.88% 83.92%;
+  --heroui-content4-foreground: 240 5.2% 33.92%;
+  --heroui-default-50: 0 0% 98.04%;
+  --heroui-default-100: 240 4.76% 95.88%;
+  --heroui-default-200: 240 5.88% 90%;
+  --heroui-default-300: 240 4.88% 83.92%;
+  --heroui-default-400: 240 5.03% 64.9%;
+  --heroui-default-500: 240 3.83% 46.08%;
+  --heroui-default-600: 240 5.2% 33.92%;
+  --heroui-default-700: 240 5.26% 26.08%;
+  --heroui-default-800: 240 3.7% 15.88%;
+  --heroui-default-900: 240 5.88% 10%;
+  --heroui-default-foreground: 0 0% 0%;
+  --heroui-default: 240 4.88% 83.92%;
+  --heroui-primary-50: 212.5 92.31% 94.9%;
+  --heroui-primary-100: 211.84000000000003 92.45% 89.61%;
+  --heroui-primary-200: 211.84000000000003 92.45% 79.22%;
+  --heroui-primary-300: 212.24 92.45% 68.82%;
+  --heroui-primary-400: 212.14 92.45% 58.43%;
+  --heroui-primary-500: 212.01999999999998 100% 46.67%;
+  --heroui-primary-600: 212.14 100% 38.43%;
+  --heroui-primary-700: 212.24 100% 28.82%;
+  --heroui-primary-800: 211.84000000000003 100% 19.22%;
+  --heroui-primary-900: 211.84000000000003 100% 9.61%;
+  --heroui-primary-foreground: 0 0% 100%;
+  --heroui-primary: 212.01999999999998 100% 46.67%;
+  --heroui-secondary-50: 270 61.54% 94.9%;
+  --heroui-secondary-100: 270 59.26% 89.41%;
+  --heroui-secondary-200: 270 59.26% 78.82%;
+  --heroui-secondary-300: 270 59.26% 68.24%;
+  --heroui-secondary-400: 270 59.26% 57.65%;
+  --heroui-secondary-500: 270 66.67% 47.06%;
+  --heroui-secondary-600: 270 66.67% 37.65%;
+  --heroui-secondary-700: 270 66.67% 28.24%;
+  --heroui-secondary-800: 270 66.67% 18.82%;
+  --heroui-secondary-900: 270 66.67% 9.41%;
+  --heroui-secondary-foreground: 0 0% 100%;
+  --heroui-secondary: 270 66.67% 47.06%;
+  --heroui-success-50: 146.66999999999996 64.29% 94.51%;
+  --heroui-success-100: 145.71000000000004 61.4% 88.82%;
+  --heroui-success-200: 146.2 61.74% 77.45%;
+  --heroui-success-300: 145.78999999999996 62.57% 66.47%;
+  --heroui-success-400: 146.01 62.45% 55.1%;
+  --heroui-success-500: 145.96000000000004 79.46% 43.92%;
+  --heroui-success-600: 146.01 79.89% 35.1%;
+  --heroui-success-700: 145.78999999999996 79.26% 26.47%;
+  --heroui-success-800: 146.2 79.78% 17.45%;
+  --heroui-success-900: 145.71000000000004 77.78% 8.82%;
+  --heroui-success-foreground: 0 0% 0%;
+  --heroui-success: 145.96000000000004 79.46% 43.92%;
+  --heroui-warning-50: 54.55000000000001 91.67% 95.29%;
+  --heroui-warning-100: 37.139999999999986 91.3% 90.98%;
+  --heroui-warning-200: 37.139999999999986 91.3% 81.96%;
+  --heroui-warning-300: 36.95999999999998 91.24% 73.14%;
+  --heroui-warning-400: 37.00999999999999 91.26% 64.12%;
+  --heroui-warning-500: 37.02999999999997 91.27% 55.1%;
+  --heroui-warning-600: 37.00999999999999 74.22% 44.12%;
+  --heroui-warning-700: 36.95999999999998 73.96% 33.14%;
+  --heroui-warning-800: 37.139999999999986 75% 21.96%;
+  --heroui-warning-900: 37.139999999999986 75% 10.98%;
+  --heroui-warning-foreground: 0 0% 0%;
+  --heroui-warning: 37.02999999999997 91.27% 55.1%;
+  --heroui-danger-50: 339.13 92% 95.1%;
+  --heroui-danger-100: 340 91.84% 90.39%;
+  --heroui-danger-200: 339.3299999999999 90% 80.39%;
+  --heroui-danger-300: 339.11 90.6% 70.78%;
+  --heroui-danger-400: 339 90% 60.78%;
+  --heroui-danger-500: 339.20000000000005 90.36% 51.18%;
+  --heroui-danger-600: 339 86.54% 40.78%;
+  --heroui-danger-700: 339.11 85.99% 30.78%;
+  --heroui-danger-800: 339.3299999999999 86.54% 20.39%;
+  --heroui-danger-900: 340 84.91% 10.39%;
+  --heroui-danger-foreground: 0 0% 100%;
+  --heroui-danger: 339.20000000000005 90.36% 51.18%;
+  --heroui-divider-weight: 1px;
+  --heroui-disabled-opacity: 0.5;
+  --heroui-font-size-tiny: 0.75rem;
+  --heroui-font-size-small: 0.875rem;
+  --heroui-font-size-medium: 1rem;
+  --heroui-font-size-large: 1.125rem;
+  --heroui-line-height-tiny: 1rem;
+  --heroui-line-height-small: 1.25rem;
+  --heroui-line-height-medium: 1.5rem;
+  --heroui-line-height-large: 1.75rem;
+  --heroui-radius-small: 8px;
+  --heroui-radius-medium: 12px;
+  --heroui-radius-large: 14px;
+  --heroui-border-width-small: 1px;
+  --heroui-border-width-medium: 2px;
+  --heroui-border-width-large: 3px;
+  --heroui-box-shadow-small: 0px 0px 5px 0px rgb(0 0 0 / 0.02),
+    0px 2px 10px 0px rgb(0 0 0 / 0.06), 0px 0px 1px 0px rgb(0 0 0 / 0.3);
+  --heroui-box-shadow-medium: 0px 0px 15px 0px rgb(0 0 0 / 0.03),
+    0px 2px 30px 0px rgb(0 0 0 / 0.08), 0px 0px 1px 0px rgb(0 0 0 / 0.3);
+  --heroui-box-shadow-large: 0px 0px 30px 0px rgb(0 0 0 / 0.04),
+    0px 30px 60px 0px rgb(0 0 0 / 0.12), 0px 0px 1px 0px rgb(0 0 0 / 0.3);
+  --heroui-hover-opacity: 0.8;
+}
+.dark,
+[data-theme="dark"] {
+  color-scheme: dark;
+  --heroui-background: 0 0% 0%;
+  --heroui-foreground-50: 240 5.88% 10%;
+  --heroui-foreground-100: 240 3.7% 15.88%;
+  --heroui-foreground-200: 240 5.26% 26.08%;
+  --heroui-foreground-300: 240 5.2% 33.92%;
+  --heroui-foreground-400: 240 3.83% 46.08%;
+  --heroui-foreground-500: 240 5.03% 64.9%;
+  --heroui-foreground-600: 240 4.88% 83.92%;
+  --heroui-foreground-700: 240 5.88% 90%;
+  --heroui-foreground-800: 240 4.76% 95.88%;
+  --heroui-foreground-900: 0 0% 98.04%;
+  --heroui-foreground: 210 5.56% 92.94%;
+  --heroui-focus: 212.01999999999998 100% 46.67%;
+  --heroui-overlay: 0 0% 0%;
+  --heroui-divider: 0 0% 100%;
+  --heroui-divider-opacity: 0.15;
+  --heroui-content1: 240 5.88% 10%;
+  --heroui-content1-foreground: 0 0% 98.04%;
+  --heroui-content2: 240 3.7% 15.88%;
+  --heroui-content2-foreground: 240 4.76% 95.88%;
+  --heroui-content3: 240 5.26% 26.08%;
+  --heroui-content3-foreground: 240 5.88% 90%;
+  --heroui-content4: 240 5.2% 33.92%;
+  --heroui-content4-foreground: 240 4.88% 83.92%;
+  --heroui-default-50: 240 5.88% 10%;
+  --heroui-default-100: 240 3.7% 15.88%;
+  --heroui-default-200: 240 5.26% 26.08%;
+  --heroui-default-300: 240 5.2% 33.92%;
+  --heroui-default-400: 240 3.83% 46.08%;
+  --heroui-default-500: 240 5.03% 64.9%;
+  --heroui-default-600: 240 4.88% 83.92%;
+  --heroui-default-700: 240 5.88% 90%;
+  --heroui-default-800: 240 4.76% 95.88%;
+  --heroui-default-900: 0 0% 98.04%;
+  --heroui-default-foreground: 0 0% 100%;
+  --heroui-default: 240 5.26% 26.08%;
+  --heroui-primary-50: 211.84000000000003 100% 9.61%;
+  --heroui-primary-100: 211.84000000000003 100% 19.22%;
+  --heroui-primary-200: 212.24 100% 28.82%;
+  --heroui-primary-300: 212.14 100% 38.43%;
+  --heroui-primary-400: 212.01999999999998 100% 46.67%;
+  --heroui-primary-500: 212.14 92.45% 58.43%;
+  --heroui-primary-600: 212.24 92.45% 68.82%;
+  --heroui-primary-700: 211.84000000000003 92.45% 79.22%;
+  --heroui-primary-800: 211.84000000000003 92.45% 89.61%;
+  --heroui-primary-900: 212.5 92.31% 94.9%;
+  --heroui-primary-foreground: 0 0% 100%;
+  --heroui-primary: 212.01999999999998 100% 46.67%;
+  --heroui-secondary-50: 270 66.67% 9.41%;
+  --heroui-secondary-100: 270 66.67% 18.82%;
+  --heroui-secondary-200: 270 66.67% 28.24%;
+  --heroui-secondary-300: 270 66.67% 37.65%;
+  --heroui-secondary-400: 270 66.67% 47.06%;
+  --heroui-secondary-500: 270 59.26% 57.65%;
+  --heroui-secondary-600: 270 59.26% 68.24%;
+  --heroui-secondary-700: 270 59.26% 78.82%;
+  --heroui-secondary-800: 270 59.26% 89.41%;
+  --heroui-secondary-900: 270 61.54% 94.9%;
+  --heroui-secondary-foreground: 0 0% 100%;
+  --heroui-secondary: 270 59.26% 57.65%;
+  --heroui-success-50: 145.71000000000004 77.78% 8.82%;
+  --heroui-success-100: 146.2 79.78% 17.45%;
+  --heroui-success-200: 145.78999999999996 79.26% 26.47%;
+  --heroui-success-300: 146.01 79.89% 35.1%;
+  --heroui-success-400: 145.96000000000004 79.46% 43.92%;
+  --heroui-success-500: 146.01 62.45% 55.1%;
+  --heroui-success-600: 145.78999999999996 62.57% 66.47%;
+  --heroui-success-700: 146.2 61.74% 77.45%;
+  --heroui-success-800: 145.71000000000004 61.4% 88.82%;
+  --heroui-success-900: 146.66999999999996 64.29% 94.51%;
+  --heroui-success-foreground: 0 0% 0%;
+  --heroui-success: 145.96000000000004 79.46% 43.92%;
+  --heroui-warning-50: 37.139999999999986 75% 10.98%;
+  --heroui-warning-100: 37.139999999999986 75% 21.96%;
+  --heroui-warning-200: 36.95999999999998 73.96% 33.14%;
+  --heroui-warning-300: 37.00999999999999 74.22% 44.12%;
+  --heroui-warning-400: 37.02999999999997 91.27% 55.1%;
+  --heroui-warning-500: 37.00999999999999 91.26% 64.12%;
+  --heroui-warning-600: 36.95999999999998 91.24% 73.14%;
+  --heroui-warning-700: 37.139999999999986 91.3% 81.96%;
+  --heroui-warning-800: 37.139999999999986 91.3% 90.98%;
+  --heroui-warning-900: 54.55000000000001 91.67% 95.29%;
+  --heroui-warning-foreground: 0 0% 0%;
+  --heroui-warning: 37.02999999999997 91.27% 55.1%;
+  --heroui-danger-50: 340 84.91% 10.39%;
+  --heroui-danger-100: 339.3299999999999 86.54% 20.39%;
+  --heroui-danger-200: 339.11 85.99% 30.78%;
+  --heroui-danger-300: 339 86.54% 40.78%;
+  --heroui-danger-400: 339.20000000000005 90.36% 51.18%;
+  --heroui-danger-500: 339 90% 60.78%;
+  --heroui-danger-600: 339.11 90.6% 70.78%;
+  --heroui-danger-700: 339.3299999999999 90% 80.39%;
+  --heroui-danger-800: 340 91.84% 90.39%;
+  --heroui-danger-900: 339.13 92% 95.1%;
+  --heroui-danger-foreground: 0 0% 100%;
+  --heroui-danger: 339.20000000000005 90.36% 51.18%;
+  --heroui-divider-weight: 1px;
+  --heroui-disabled-opacity: 0.5;
+  --heroui-font-size-tiny: 0.75rem;
+  --heroui-font-size-small: 0.875rem;
+  --heroui-font-size-medium: 1rem;
+  --heroui-font-size-large: 1.125rem;
+  --heroui-line-height-tiny: 1rem;
+  --heroui-line-height-small: 1.25rem;
+  --heroui-line-height-medium: 1.5rem;
+  --heroui-line-height-large: 1.75rem;
+  --heroui-radius-small: 8px;
+  --heroui-radius-medium: 12px;
+  --heroui-radius-large: 14px;
+  --heroui-border-width-small: 1px;
+  --heroui-border-width-medium: 2px;
+  --heroui-border-width-large: 3px;
+  --heroui-box-shadow-small: 0px 0px 5px 0px rgb(0 0 0 / 0.05),
+    0px 2px 10px 0px rgb(0 0 0 / 0.2),
+    inset 0px 0px 1px 0px rgb(255 255 255 / 0.15);
+  --heroui-box-shadow-medium: 0px 0px 15px 0px rgb(0 0 0 / 0.06),
+    0px 2px 30px 0px rgb(0 0 0 / 0.22),
+    inset 0px 0px 1px 0px rgb(255 255 255 / 0.15);
+  --heroui-box-shadow-large: 0px 0px 30px 0px rgb(0 0 0 / 0.07),
+    0px 30px 60px 0px rgb(0 0 0 / 0.26),
+    inset 0px 0px 1px 0px rgb(255 255 255 / 0.15);
+  --heroui-hover-opacity: 0.9;
+}
+/* @import "tw-animate-css"; */
+
+/* @custom-variant dark (&:is(.dark *)); */
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.141 0.005 285.823);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.141 0.005 285.823);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.141 0.005 285.823);
+  --primary: oklch(0.21 0.006 285.885);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.967 0.001 286.375);
+  --secondary-foreground: oklch(0.21 0.006 285.885);
+  --muted: oklch(0.967 0.001 286.375);
+  --muted-foreground: oklch(0.552 0.016 285.938);
+  --accent: oklch(0.967 0.001 286.375);
+  --accent-foreground: oklch(0.21 0.006 285.885);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.92 0.004 286.32);
+  --input: oklch(0.92 0.004 286.32);
+  --ring: oklch(0.705 0.015 286.067);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.141 0.005 285.823);
+  --sidebar-primary: oklch(0.21 0.006 285.885);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.967 0.001 286.375);
+  --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
+  --sidebar-border: oklch(0.92 0.004 286.32);
+  --sidebar-ring: oklch(0.705 0.015 286.067);
+}
+
+.dark {
+  --background: oklch(0.141 0.005 285.823);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.21 0.006 285.885);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.21 0.006 285.885);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.92 0.004 286.32);
+  --primary-foreground: oklch(0.21 0.006 285.885);
+  --secondary: oklch(0.274 0.006 286.033);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.274 0.006 286.033);
+  --muted-foreground: oklch(0.705 0.015 286.067);
+  --accent: oklch(0.274 0.006 286.033);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.552 0.016 285.938);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.21 0.006 285.885);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.274 0.006 286.033);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.552 0.016 285.938);
+}
+
+/* @layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+} */
+.myUniquechatbot .customs-slider .rc-slider {
+  height: 20px;
+}
+.myUniquechatbot .customs-slider .rc-slider .rc-slider-rail {
+  height: 10px;
+}
+.myUniquechatbot .customs-slider .rc-slider .rc-slider-track,
+.myUniquechatbot .customs-slider .rc-slider .rc-slider-tracks {
+  height: 10px;
+}
+.myUniquechatbot .customs-slider .rc-slider .rc-slider-step {
+  height: 10px;
+}
+.myUniquechatbot .customs-slider .rc-slider .rc-slider-handle {
+  width: 20px;
+  height: 20px;
+}
+.myUniquechatbot .chat-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.myUniquechatbot .hide-scrollbar::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.myUniquechatbot .chat-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.myUniquechatbot .chat-scroll::-webkit-scrollbar-thumb {
+  background-color: #d1d5db;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.myUniquechatbot .chat-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: #9ca3af;
+}
+
+.myUniquechatbot .first\:mt-0:first-child {
+  margin-top: 0px;
+}
+
+.myUniquechatbot .first\:rounded-tl-lg:first-child {
+  border-top-left-radius: 0.5rem;
+}
+
+.myUniquechatbot .first\:border-t:first-child {
+  border-top-width: 1px;
+}
+
+.myUniquechatbot .last\:mb-0:last-child {
+  margin-bottom: 0px;
+}
+
+.myUniquechatbot .last\:rounded-tr-lg:last-child {
+  border-top-right-radius: 0.5rem;
+}
+
+.myUniquechatbot .last\:border-r:last-child {
+  border-right-width: 1px;
+}
+
+.myUniquechatbot .hover\:bg-secondary\/80:hover {
+  background-color: rgb(41 63 204 / 0.8);
+}
+
+.myUniquechatbot .hover\:underline:hover {
+  text-decoration-line: underline;
+}
+
+.myUniquechatbot .hover\:opacity-100:hover {
+  opacity: 1;
+}
+
+.myUniquechatbot .focus\:ring-0:focus {
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0
+    var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0
+    calc(0px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow),
+    var(--tw-shadow, 0 0 #0000);
+}
+
+.myUniquechatbot .focus\:ring-2:focus {
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0
+    var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0
+    calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow),
+    var(--tw-shadow, 0 0 #0000);
+}
+
+.myUniquechatbot .focus\:ring-offset-2:focus {
+  --tw-ring-offset-width: 2px;
+}
+
+.myUniquechatbot .focus-visible\:outline-none:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.myUniquechatbot .focus-visible\:ring-2:focus-visible {
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0
+    var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0
+    calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow),
+    var(--tw-shadow, 0 0 #0000);
+}
+
+.myUniquechatbot .focus-visible\:ring-\[3px\]:focus-visible {
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0
+    var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0
+    calc(3px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow),
+    var(--tw-shadow, 0 0 #0000);
+}
+
+.myUniquechatbot .disabled\:pointer-events-none:disabled {
+  pointer-events: none;
+}
+
+.myUniquechatbot .disabled\:invisible:disabled {
+  visibility: hidden;
+}
+
+.myUniquechatbot .disabled\:cursor-not-allowed:disabled {
+  cursor: not-allowed;
+}
+
+.myUniquechatbot .disabled\:opacity-50:disabled {
+  opacity: 0.5;
+}
+
+.myUniquechatbot .has-\[\>svg\]\:px-2\.5:has(> svg) {
+  padding-left: 0.625rem;
+  padding-right: 0.625rem;
+}
+
+.myUniquechatbot .has-\[\>svg\]\:px-3:has(> svg) {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+.myUniquechatbot .has-\[\>svg\]\:px-4:has(> svg) {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.myUniquechatbot .data-\[floating\]\:absolute[data-floating] {
+  position: absolute;
+}
+
+.myUniquechatbot .data-\[floating\]\:rounded-md[data-floating] {
+  border-radius: 0.375rem;
+}
+
+.myUniquechatbot .data-\[floating\]\:border[data-floating] {
+  border-width: 1px;
+}
+
+.myUniquechatbot .data-\[floating\]\:bg-background[data-floating] {
+  --tw-bg-opacity: 1;
+  background-color: hsl(
+    var(--heroui-background) /
+      var(--heroui-background-opacity, var(--tw-bg-opacity))
+  );
+}
+
+.myUniquechatbot .data-\[floating\]\:p-1[data-floating] {
+  padding: 0.25rem;
+}
+
+.myUniquechatbot .data-\[floating\]\:shadow-sm[data-floating] {
+  --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
+    var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+@media (min-width: 640px) {
+  .myUniquechatbot .sm\:max-w-lg {
+    max-width: 32rem;
+  }
+
+  .myUniquechatbot .sm\:flex-row {
+    flex-direction: row;
+  }
+
+  .myUniquechatbot .sm\:justify-end {
+    justify-content: flex-end;
+  }
+
+  .myUniquechatbot .sm\:text-left {
+    text-align: left;
+  }
+}
+
+.myUniquechatbot
+  .\[\&\:last-child\>td\:first-child\]\:rounded-bl-lg:last-child
+  > td:first-child {
+  border-bottom-left-radius: 0.5rem;
+}
+
+.myUniquechatbot
+  .\[\&\:last-child\>td\:last-child\]\:rounded-br-lg:last-child
+  > td:last-child {
+  border-bottom-right-radius: 0.5rem;
+}
+
+.myUniquechatbot .\[\&\:where\(\>\*\)\]\:col-start-2:where(> *) {
+  grid-column-start: 2;
+}
+
+.myUniquechatbot .\[\&\>a\]\:text-xs > a {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.myUniquechatbot .\[\&\>a\]\:no-underline > a {
+  text-decoration-line: none;
+}
+
+.myUniquechatbot .\[\&\>li\]\:mt-2 > li {
+  margin-top: 0.5rem;
+}
+
+.myUniquechatbot .\[\&\>span\]\:text-xs > span {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.myUniquechatbot .\[\&\>svg\]\:size-4 > svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.myUniquechatbot .\[\&\>svg\]\:rounded-full > svg {
+  border-radius: 9999px;
+}
+
+.myUniquechatbot .\[\&\>svg\]\:bg-background > svg {
+  --tw-bg-opacity: 1;
+  background-color: hsl(
+    var(--heroui-background) /
+      var(--heroui-background-opacity, var(--tw-bg-opacity))
+  );
+}
+
+.myUniquechatbot .\[\&\[align\=center\]\]\:text-center[align="center"] {
+  text-align: center;
+}
+
+.myUniquechatbot .\[\&\[align\=right\]\]\:text-right[align="right"] {
+  text-align: right;
+}
+
+.myUniquechatbot
+  .\[\&_svg\:not\(\[class\*\=\'size-\'\]\)\]\:size-4
+  svg:not([class*="size-"]) {
+  width: 1rem;
+  height: 1rem;
+}
+
+.myUniquechatbot .\[\&_svg\]\:pointer-events-none svg {
+  pointer-events: none;
+}
+
+.myUniquechatbot .\[\&_svg\]\:shrink-0 svg {
+  flex-shrink: 0;
+}
+
+.myUniquechatbot .customs-slider .rc-slider {
+  height: 20px;
+}
+.myUniquechatbot .customs-slider .rc-slider .rc-slider-rail {
+  height: 10px;
+}
+.myUniquechatbot .customs-slider .rc-slider .rc-slider-track,
+.myUniquechatbot .customs-slider .rc-slider .rc-slider-tracks {
+  height: 10px;
+}
+.myUniquechatbot .customs-slider .rc-slider .rc-slider-step {
+  height: 10px;
+}
+.myUniquechatbot .customs-slider .rc-slider .rc-slider-handle {
+  width: 20px;
+  height: 20px;
+}
+.myUniquechatbot .chat-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.myUniquechatbot .hide-scrollbar::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.myUniquechatbot .chat-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.myUniquechatbot .chat-scroll::-webkit-scrollbar-thumb {
+  background-color: #d1d5db;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.myUniquechatbot .chat-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: #9ca3af;
+}
+.myUniquechatbot {
+  width: 100%;
+}
+.myUniquechatbot .pb-2 {
+  padding-bottom: 0.5rem;
+}
+.myUniquechatbot .bg-ChatBtnGradient {
+  background-image: linear-gradient(146.02deg, #48c2d4 7.64%, #1595ea 128.45%);
+}
+.myUniquechatbot .min-h-300 {
+  height: 100vh;
+  max-height: 512px;
+}
+.custom_input {
+  max-height: 52px !important;
+}
+
+  .bg_custom {
+  background: linear-gradient(to right, #2563eb, #3b82f6) !important;
+}
