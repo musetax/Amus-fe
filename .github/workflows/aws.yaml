@@ -29,8 +29,11 @@ jobs:
       - name: Generate .env
         if: github.ref_name == 'main'
         run: |
-          echo "NEXT_PUBLIC_BACKEND_API='https://amus-api.musetax.com'" > .env
+          echo "NEXT_PUBLIC_BACKEND_API='https://amus-api.musetax.com/v1/api/amus/'" > .env
           echo "NEXT_PUBLIC_FINANCIAL_API='https://staging.musetax.com/FinancialSuite/main/financial-life.html'" >> .env
+          echo "NEXT_PUBLIC_AUTH_API='https://onboarding-api.musetax.com/'" >> .env
+          echo "NEXT_PUBLIC_ONBOARDING_BASE_URL='https://onboarding-api.musetax.com'" >> .env
+          echo "NEXT_PUBLIC_CHECKBOOST_BASE_URL='https://checkboost.com/signin'" >> .env
 
           cat .env
           
