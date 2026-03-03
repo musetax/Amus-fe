@@ -2,8 +2,8 @@
 
 import { ComponentPropsWithoutRef, forwardRef } from "react";
 
-import { Button } from "@/components/chatbot/ui/button";
-import { cn } from "@/lib/utils";
+import { Button } from "../../../components/chatbot/ui/button";
+import { cn } from "../../../lib/utils";
 import {
   Tooltip,
   TooltipContent,

@@ -13,16 +13,16 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "../../components/ui/tooltip";
 import {
   Dialog,
   DialogTitle,
   DialogTrigger,
   DialogOverlay,
   DialogPortal,
-} from "@/components/ui/dialog";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { TooltipIconButton } from "@/components/assistant-ui/tooltip-icon-button";
+} from "../../components/ui/dialog";
+import { Avatar, AvatarImage, AvatarFallback } from "../../components/ui/avatar";
+import { TooltipIconButton } from "../../components/assistant-ui/tooltip-icon-button";
 import { DialogContent as DialogPrimitiveContent } from "@radix-ui/react-dialog";
 
 const useFileSrc = (file: File | undefined) => {
@@ -53,36 +53,41 @@ const useAttachmentSrc = () => {
       const src = a.content?.filter((c) => c.type === "image")[0]?.image;
       if (!src) return {};
       return { src };
-    }),
+    })
   );
 
   return useFileSrc(file) ?? src;
 };
 
-type AttachmentPreviewProps = {
-  src: string;
-};
+// type AttachmentPreviewProps = {
+//   src: string;
+// };
 
-const AttachmentPreview: FC<AttachmentPreviewProps> = ({ src }) => {
-  const [isLoaded, setIsLoaded] = useState(false);
+// const AttachmentPreview: FC<AttachmentPreviewProps> = ({ src }) => {
+//   const [isLoaded, setIsLoaded] = useState(false);
 
-  return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
-      src={src}
-      style={{
-        width: "auto",
-        height: "auto",
-        maxWidth: "75dvh",
-        maxHeight: "75dvh",
-        display: isLoaded ? "block" : "none",
-        overflow: "clip",
-      }}
-      onLoad={() => setIsLoaded(true)}
-      alt="Preview"
-    />
-  );
-};
+//   return (
+//     <div
+//       style={{
+//         maxWidth: "75dvh",
+//         maxHeight: "75dvh",
+//         overflow: "clip",
+//         display: isLoaded ? "block" : "none",
+//       }}
+
+//     >
+//       {/* <Image
+//         src={src}
+//         alt="Preview"
+//         width={0} // These 3 allow for intrinsic sizing
+//         height={0}
+//         sizes="75dvh"
+//         style={{ width: "auto", height: "auto" }}
+//         onLoad={() => setIsLoaded(true)}
+//       /> */}
+//     </div>
+//   );
+// };
 
 const AttachmentPreviewDialog: FC<PropsWithChildren> = ({ children }) => {
   const src = useAttachmentSrc();
@@ -91,14 +96,17 @@ const AttachmentPreviewDialog: FC<PropsWithChildren> = ({ children }) => {
 
   return (
     <Dialog>
-      <DialogTrigger className="hover:bg-accent/50 cursor-pointer transition-colors" asChild>
+      <DialogTrigger
+        className="hover:bg-accent/50 cursor-pointer transition-colors"
+        asChild
+      >
         {children}
       </DialogTrigger>
       <AttachmentDialogContent>
         <DialogTitle className="aui-sr-only">
           Image Attachment Preview
         </DialogTitle>
-        <AttachmentPreview src={src} />
+        {/* <AttachmentPreview src={src} /> */}
       </AttachmentDialogContent>
     </Dialog>
   );
