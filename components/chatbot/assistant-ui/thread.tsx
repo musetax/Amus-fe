@@ -702,6 +702,10 @@ const UserMessage: React.FC<UserMessageProps> = ({ image }) => {
   const message = useMessage();
   const time = formatTime(message?.createdAt || Date.now());
 
+  const firstName = typeof window !== "undefined" ? localStorage.getItem("userFirstName") || "" : "";
+  const lastName = typeof window !== "undefined" ? localStorage.getItem("userLastName") || "" : "";
+  const initials = (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
+
   return (
     <MessagePrimitive.Root
       className="grid auto-rows-auto grid-cols-[minmax(72px,1fr)_auto] gap-y-2 [&:where(>*)]:col-start-2 w-full max-w-[var(--thread-max-width)] "
@@ -738,7 +742,6 @@ const UserMessage: React.FC<UserMessageProps> = ({ image }) => {
             {time}
           </span>
         </div>
-        <BranchPicker className="col-span-full col-start-1 row-start-3 -mr-1 justify-end" />
         {image ? (
           <Image
             priority
@@ -754,6 +757,26 @@ const UserMessage: React.FC<UserMessageProps> = ({ image }) => {
             src={image}
             alt="useIcon"
           />
+        ) : initials ? (
+          <div
+            style={{
+              width: "25px",
+              height: "25px",
+              minWidth: "25px",
+              minHeight: "25px",
+              borderRadius: "50%",
+              background: "linear-gradient(135deg, #7C3AED, #4F46E5)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "9px",
+              fontWeight: "700",
+              color: "#ffffff",
+              flexShrink: 0,
+            }}
+          >
+            {initials}
+          </div>
         ) : (
           <Image
             priority
