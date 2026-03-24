@@ -99,6 +99,11 @@ export const Thread: any = ({
 
   const latest = assistantMessages[0];
   const suggestions = (latest?.metadata?.custom?.suggestions ?? []) as string[];
+  const isAnyStreaming = messages.some(
+    (msg: any) =>
+      msg.role === "assistant" &&
+      (msg.metadata?.custom?.streaming || msg.status?.type === "running"),
+  );
 
   // Handle tax chatbot completion - now using props
   const handleTaxChatbotComplete = (taxData: any) => {
@@ -133,6 +138,7 @@ export const Thread: any = ({
     enterManually: false,
     ocr: false,
   });
+  console.log(showScenarios, "showScenariosshowScenarios");
   const taxChatbotScrollRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
@@ -279,26 +285,44 @@ export const Thread: any = ({
                       <div className="min-h-8 flex-grow" />
                     </ThreadPrimitive.If> */}
 
-                      {!showScenarios &&
-                        suggestions.map((s, i) => (
-                          <div
-                            key={i}
-                            className="mt-1 px-4 flex w-full flex-col items-center justify-center gap-2"
-                          >
-                            <ThreadPrimitive.Suggestion
-                              key={i}
-                              prompt={s}
-                              autoSend
-                              method="replace"
-                              className="hover:bg-muted/80 flex max-w-sm grow basis-0 flex-col items-center justify-center rounded-lg border px-2 py-2 transition-colors ease-in custom-hover"
-                            >
-                              <span className="line-clamp-2 text-ellipsis text-sm font-medium">
+                       {!showScenarios && !isAnyStreaming &&
+                    (suggestions.length > 0 ? (
+                        <div style={{ paddingLeft: "12px", paddingRight: "12px", paddingTop: "8px", paddingBottom: "4px" }}>
+                          <p style={{ fontSize: "11px", fontWeight: "600", color: "#8A8FA8", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "8px" }}>
+                            Sample Strategist Commands
+                          </p>
+                          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+                            {suggestions.map((s, i) => (
+                              <ThreadPrimitive.Suggestion
+                                key={i}
+                                prompt={s}
+                                autoSend
+                                method="replace"
+                                style={{
+                                  display: "inline-flex",
+                                  alignItems: "center",
+                                  backgroundColor: "#ffffff",
+                                  border: "1px solid #D9D9E3",
+                                  borderRadius: "8px",
+                                  padding: "6px 14px",
+                                  fontSize: "13px",
+                                  fontWeight: "500",
+                                  color: "#1a1a2e",
+                                  cursor: "pointer",
+                                  whiteSpace: "nowrap",
+                                  transition: "background 0.15s",
+                                }}
+                              >
                                 {s}
-                              </span>
-                            </ThreadPrimitive.Suggestion>
+                              </ThreadPrimitive.Suggestion>
+                            ))}
                           </div>
-                        ))}
+                        </div>
+                      ) : (
+                        <ThreadWelcomeSuggestions />
+                      ))}
                     </ThreadPrimitive.Viewport>
+                   
 
                     <div className="sticky bg-[#ECE8F8] bottom-0 px-3 pt-3 flex w-full max-w-[var(--thread-max-width)] flex-col items-center justify-end rounded-t-lg pb-2">
                       <div
@@ -322,6 +346,7 @@ export const Thread: any = ({
                           Ask how to increase my take-home pay
                         </p>
                         <Composer />
+                        
                         <ThreadScrollToBottom />
                       </div>
                     </div>
@@ -550,32 +575,47 @@ const ThreadWelcome: FC<any> = ({ agentIntent }) => {
   );
 };
 
-// const ThreadWelcomeSuggestions: FC = () => {
-//   return (
-//     <div className="mt-3 flex w-full items-stretch justify-center gap-4">
-//       <ThreadPrimitive.Suggestion
-//         className="hover:bg-muted/80 flex  max-w-sm grow basis-0 flex-col items-center justify-center rounded-lg border p-3 transition-colors ease-in"
-//         prompt="How can I claim my tax refund?"
-//         method="replace"
-//         autoSend
-//       >
-//         <span className="line-clamp-2 text-ellipsis text-sm font-medium">
-//           How can I claim my tax refund?
-//         </span>
-//       </ThreadPrimitive.Suggestion>
-//       <ThreadPrimitive.Suggestion
-//         className="hover:bg-muted/80 flex max-w-sm grow basis-0 flex-col items-center justify-center rounded-lg border p-3 transition-colors ease-in"
-//         prompt="What is a W-4 Form?"
-//         method="replace"
-//         autoSend
-//       >
-//         <span className="line-clamp-2 text-ellipsis text-sm font-medium">
-//           What is a W-4 Form?
-//         </span>
-//       </ThreadPrimitive.Suggestion>
-//     </div>
-//   );
-// };
+const ThreadWelcomeSuggestions: FC = () => {
+  const defaultSuggestions = [
+    "How can I optimize my W-4?",
+    "Plan my retirement savings",
+    "Should I open an S-Corp?",
+    "Find tax credits",
+  ];
+  return (
+    <div style={{ paddingLeft: "12px", paddingRight: "12px", paddingTop: "8px", paddingBottom: "4px" }}>
+      <p style={{ fontSize: "11px", fontWeight: "600", color: "#8A8FA8", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "8px" }}>
+        Sample Strategist Commands
+      </p>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+        {defaultSuggestions.map((s, i) => (
+          <ThreadPrimitive.Suggestion
+            key={i}
+            prompt={s}
+            method="replace"
+            autoSend
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              backgroundColor: "#ffffff",
+              border: "1px solid #D9D9E3",
+              borderRadius: "8px",
+              padding: "6px 14px",
+              fontSize: "13px",
+              fontWeight: "500",
+              color: "#1a1a2e",
+              cursor: "pointer",
+              whiteSpace: "nowrap",
+              transition: "background 0.15s",
+            }}
+          >
+            {s}
+          </ThreadPrimitive.Suggestion>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 export const formatTime = (date: Date | string | number): string => {
   const d = new Date(date);
