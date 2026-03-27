@@ -333,7 +333,7 @@ export const Thread: any = ({
                           borderRadius: "12px",
                         }}
                       >
-                        <p
+                        {/* <p
                           style={{
                             fontSize: "12px",
                             fontWeight: "400",
@@ -344,7 +344,7 @@ export const Thread: any = ({
                           }}
                         >
                           Ask how to increase my take-home pay
-                        </p>
+                        </p> */}
                         <Composer />
                         
                         <ThreadScrollToBottom />
