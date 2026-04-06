@@ -117,6 +117,8 @@ function Assistant({
         setIsLoadingPayroll(true);
         const response = await getPayrollDetails(userId);
         setPayrollData(response);
+        if (response?.payroll?.first_name) localStorage.setItem("userFirstName", response.payroll.first_name);
+        if (response?.payroll?.last_name) localStorage.setItem("userLastName", response.payroll.last_name);
         setShowHomeScreen(true);
         setShowTaxChatbot(false);
       } catch (error: any) {
@@ -175,6 +177,8 @@ function Assistant({
       setIsLoadingPayroll(true);
       const response = await getPayrollDetails(userId);
       setPayrollData(response);
+      if (response?.payroll?.first_name) localStorage.setItem("userFirstName", response.payroll.first_name);
+      if (response?.payroll?.last_name) localStorage.setItem("userLastName", response.payroll.last_name);
     } catch (error: any) {
       console.error("Error fetching payroll on intent change:", error);
       setGlobalError(
